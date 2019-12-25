@@ -98,6 +98,7 @@ public final class MainModule extends AbstractModule {
     public static final Item LEMON = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.LEMON));
     public static final Item GRAPEFRUIT = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.GRAPEFRUIT));
     public static final Item EMPOWERED_CITRON = new ModItem(itemProp().rarity(Rarity.RARE).food(Foods.EMPOWERED_CITRON)) {
+        @Override
         public boolean hasEffect(ItemStack stack) {
             return true;
         }
