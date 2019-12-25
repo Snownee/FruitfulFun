@@ -10,7 +10,7 @@
     "1": {
       "parent": "fruittrees:block/flowers",
       "textures": {
-        "0": "fruittrees:block/flowers_lemon"
+        "0": "fruittrees:block/flowers_apple"
       }
     }
   }

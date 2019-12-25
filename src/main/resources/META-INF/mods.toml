@@ -21,6 +21,6 @@ description='''Huge thanks to my supporters:
 [[dependencies.fruittrees]]
     modId="forge"
     mandatory=true
-    versionRange="[30.0.16,)"
+    versionRange="[30.0.15,)"
     ordering="BEFORE"
     side="BOTH"
