@@ -1,0 +1,7 @@
+{
+  "parent": "block/door_top",
+  "textures": {
+    "bottom": "fruittrees:block/door_lower",
+    "top": "fruittrees:block/door_upper"
+  }
+}

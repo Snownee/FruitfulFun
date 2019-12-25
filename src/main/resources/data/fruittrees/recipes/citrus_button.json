@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "wooden_button",
+  "ingredients": [
+    {
+      "item": "fruittrees:citrus_planks"
+    }
+  ],
+  "result": {
+    "item": "fruittrees:citrus_button"
+  }
+}

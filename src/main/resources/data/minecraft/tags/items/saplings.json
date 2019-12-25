@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "fruittrees:citron_sapling",
+    "fruittrees:mandarin_sapling",
+    "fruittrees:orange_sapling",
+    "fruittrees:lime_sapling",
+    "fruittrees:lemon_sapling",
+    "fruittrees:grapefruit_sapling",
+    "fruittrees:pomelo_sapling",
+    "fruittrees:apple_sapling"
+  ]
+}

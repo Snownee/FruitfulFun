@@ -1,0 +1,14 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "fruittrees:block/leaves_lime"
+  },
+  "parts": {
+    "0": {
+      "parent": "fruittrees:block/leaves_lime"
+    },
+    "1": {
+      "parent": "fruittrees:block/fruit_md"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "age=0": { "model": "fruittrees:block/leaves_citron" },
+    "age=1": { "model": "fruittrees:block/leaves_citron" },
+    "age=2": { "model": "fruittrees:block/leaves_citron_2" },
+    "age=3": { "model": "fruittrees:block/leaves_citron_3" }
+  }
+}

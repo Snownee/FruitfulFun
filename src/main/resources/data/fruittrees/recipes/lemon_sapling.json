@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "fruittrees:lime_sapling"
+    },
+    {
+      "item": "fruittrees:citron_sapling"
+    }
+  ],
+  "result": {
+    "item": "fruittrees:lemon_sapling"
+  }
+}

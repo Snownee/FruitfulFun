@@ -1,0 +1,17 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "block/oak_leaves"
+  },
+  "parts": {
+    "0": {
+      "parent": "fruittrees:block/leaves_apple"
+    },
+    "1": {
+      "parent": "fruittrees:block/flowers",
+      "textures": {
+        "0": "fruittrees:block/flowers_lemon"
+      }
+    }
+  }
+}
