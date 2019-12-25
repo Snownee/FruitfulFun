@@ -57,7 +57,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     @Override
     public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return canGrow(state);
+        return canGrow(state) || state.get(AGE) == 1;
     }
 
     @Override
