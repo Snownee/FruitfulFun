@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
@@ -28,6 +30,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.BatEntity;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -229,6 +232,12 @@ public final class MainModule extends AbstractModule {
         pot.addPlant(LEMON_SAPLING.getRegistryName(), () -> POTTED_LEMON);
         pot.addPlant(GRAPEFRUIT_SAPLING.getRegistryName(), () -> POTTED_GRAPEFRUIT);
         pot.addPlant(APPLE_SAPLING.getRegistryName(), () -> POTTED_APPLE);
+
+        if (AxeItem.BLOCK_STRIPPING_MAP instanceof ImmutableMap) {
+            AxeItem.BLOCK_STRIPPING_MAP = Maps.newHashMap(AxeItem.BLOCK_STRIPPING_MAP);
+        }
+        AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_LOG, STRIPPED_CITRUS_LOG);
+        AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
     }
 
     @Override
