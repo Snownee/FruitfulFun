@@ -11,6 +11,7 @@ import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
@@ -109,50 +110,50 @@ public final class MainModule extends AbstractModule {
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock MANDARIN_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.MANDARIN, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock MANDARIN_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.MANDARIN, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock LIME_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.LIME, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock LIME_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.LIME, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock CITRON_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.CITRON, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock CITRON_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.CITRON, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock POMELO_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.POMELO, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock POMELO_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.POMELO, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock ORANGE_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.ORANGE, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock ORANGE_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.ORANGE, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock LEMON_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.LEMON, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock LEMON_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.LEMON, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock GRAPEFRUIT_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock GRAPEFRUIT_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock APPLE_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.APPLE, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock APPLE_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.APPLE, blockProp(Blocks.OAK_LEAVES)));
 
     public static final Set<Block> ALL_LEAVES = Sets.newConcurrentHashSet(Arrays.asList(MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES));
     public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType(() -> new FruitTreeTile(), ALL_LEAVES, null);
 
     @Group("building_blocks")
-    public static final LogBlock CITRUS_LOG = new LogBlock(MaterialColor.DIRT, blockProp(Blocks.JUNGLE_LOG));
+    public static final LogBlock CITRUS_LOG = init(new LogBlock(MaterialColor.DIRT, blockProp(Blocks.JUNGLE_LOG)));
     @Group("building_blocks")
-    public static final Block CITRUS_WOOD = new RotatedPillarBlock(blockProp(Blocks.JUNGLE_WOOD));
+    public static final Block CITRUS_WOOD = init(new RotatedPillarBlock(blockProp(Blocks.JUNGLE_WOOD)));
     @Group("building_blocks")
-    public static final Block STRIPPED_CITRUS_LOG = new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_LOG));
+    public static final Block STRIPPED_CITRUS_LOG = init(new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_LOG)));
     @Group("building_blocks")
-    public static final Block STRIPPED_CITRUS_WOOD = new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_WOOD));
+    public static final Block STRIPPED_CITRUS_WOOD = init(new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_WOOD)));
     @Group("building_blocks")
     public static final Block CITRUS_PLANKS = new ModBlock(blockProp(Blocks.JUNGLE_PLANKS));
     @Group("building_blocks")
-    public static final SlabBlock CITRUS_SLAB = new SlabBlock(blockProp(Blocks.JUNGLE_SLAB));
+    public static final SlabBlock CITRUS_SLAB = init(new SlabBlock(blockProp(Blocks.JUNGLE_SLAB)));
     @Group("building_blocks")
-    public static final StairsBlock CITRUS_STAIRS = new StairsBlock(() -> CITRUS_PLANKS.getDefaultState(), blockProp(Blocks.JUNGLE_STAIRS));
+    public static final StairsBlock CITRUS_STAIRS = init(new StairsBlock(() -> CITRUS_PLANKS.getDefaultState(), blockProp(Blocks.JUNGLE_STAIRS)));
     @Group("decorations")
-    public static final FenceBlock CITRUS_FENCE = new FenceBlock(blockProp(Blocks.JUNGLE_FENCE));
+    public static final FenceBlock CITRUS_FENCE = init(new FenceBlock(blockProp(Blocks.JUNGLE_FENCE)));
     @Group("redstone")
-    public static final FenceGateBlock CITRUS_FENCE_GATE = new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE));
+    public static final FenceGateBlock CITRUS_FENCE_GATE = init(new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE)));
     @Group("redstone")
     public static final TrapDoorBlock CITRUS_TRAPDOOR = new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR));
     @Group("redstone")
@@ -238,6 +239,12 @@ public final class MainModule extends AbstractModule {
         }
         AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_LOG, STRIPPED_CITRUS_LOG);
         AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
+
+        for (Fruits.Type type : Fruits.Type.values()) {
+            ComposterBlock.CHANCES.put(type.fruit, 0.5f);
+            ComposterBlock.CHANCES.put(type.leaves, 0.3f);
+            ComposterBlock.CHANCES.put(type.sapling.get(), 0.3f);
+        }
     }
 
     @Override

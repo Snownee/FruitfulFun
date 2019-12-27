@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraftforge.common.IExtensibleEnum;
@@ -33,10 +34,10 @@ public final class Fruits {
 
         public final Block log;
         public final LeavesBlock leaves;
-        public final Supplier<IPlantable> sapling;
+        public final Supplier<SaplingBlock> sapling;
         public final Item fruit;
 
-        private Type(Block log, LeavesBlock leaves, Supplier<IPlantable> sapling, Item fruit) {
+        private Type(Block log, LeavesBlock leaves, Supplier<SaplingBlock> sapling, Item fruit) {
             this.log = log;
             this.leaves = leaves;
             this.sapling = sapling;
