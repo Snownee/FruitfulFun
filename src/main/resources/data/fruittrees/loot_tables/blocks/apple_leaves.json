@@ -44,18 +44,6 @@
                   "condition": "minecraft:survives_explosion"
                 },
                 {
-                  "condition": "minecraft:random_chance",
-                  "chance": 0.2
-                }
-              ]
-            },
-            {
-              "type": "minecraft:item",
-              "conditions": [
-                {
-                  "condition": "minecraft:survives_explosion"
-                },
-                {
                   "condition": "minecraft:table_bonus",
                   "enchantment": "minecraft:fortune",
                   "chances": [
