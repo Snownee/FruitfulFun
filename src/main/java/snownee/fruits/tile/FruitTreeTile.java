@@ -40,7 +40,6 @@ public class FruitTreeTile extends BaseTile {
         String id = helper.getString("type");
         if (id != null) {
             type = Fruits.Type.valueOf(id);
-            System.out.println(type);
             if (type == null) {
                 type = Type.CITRON;
             }
