@@ -9,12 +9,14 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -42,7 +44,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
 
-    protected final Supplier<Fruits.Type> type;
+    public final Supplier<Fruits.Type> type;
 
     public FruitLeavesBlock(Supplier<Fruits.Type> type, Properties properties) {
         super(properties);
@@ -201,5 +203,13 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
+    }
+
+    @Override
+    public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, MobEntity entity) {
+        if (entity instanceof IFlyingAnimal) {
+            return PathNodeType.OPEN;
+        }
+        return null;
     }
 }

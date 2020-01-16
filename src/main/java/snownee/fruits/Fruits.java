@@ -47,5 +47,13 @@ public final class Fruits {
         public static Type create(String name, Block log, LeavesBlock leaves, Supplier<IPlantable> sapling, Item fruit) {
             throw new IllegalStateException("Enum not extended");
         }
+
+        public static Type parse(String name) {
+            try {
+                return Fruits.Type.valueOf(name);
+            } catch (Exception e) {
+                return Fruits.Type.CITRON;
+            }
+        }
     }
 }

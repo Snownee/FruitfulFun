@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "snownee.fruits.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "main.refmap.json",
+  "mixins": [
+    "MixinPollinateGoal",
+    "MixinBeeEntity",
+    "MixinFlyingNodeProcessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
