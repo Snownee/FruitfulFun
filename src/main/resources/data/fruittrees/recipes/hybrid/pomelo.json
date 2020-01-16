@@ -1,0 +1,14 @@
+{
+  "type": "fruittrees:hybriding",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:hybridization"
+    }
+  ],
+  "ingredients": [
+    { "fruit": "MANDARIN" },
+    { "fruit": "CITRON" }
+  ],
+  "result": "POMELO"
+}

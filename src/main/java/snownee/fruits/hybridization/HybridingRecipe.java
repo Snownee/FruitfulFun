@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.mojang.datafixers.util.Either;
 
 import net.minecraft.block.Block;
@@ -34,8 +35,7 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 
     @Override
     public boolean matches(HybridingContext inv, World worldIn) {
-        // TODO Auto-generated method stub
-        return false;
+        return ingredients.stream().allMatch(inv.ingredients::contains);
     }
 
     public Fruits.Type getResult(Set<Either<Fruits.Type, Block>> types) {
@@ -59,12 +59,15 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
             Fruits.Type result = Fruits.Type.parse(JSONUtils.getString(json, "result"));
             ImmutableSet.Builder<Either<Fruits.Type, Block>> builder = ImmutableSet.builder();
             JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
+            if (ingredients.size() < 2 || ingredients.size() > 5) {
+                throw new JsonSyntaxException("Size of ingredients has to be in [2, 5]");
+            }
             ingredients.forEach(e -> {
                 if (e.getAsJsonObject().has("block")) {
-                    Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getString(e, "block")));
+                    Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getString(e.getAsJsonObject(), "block")));
                     builder.add(Either.right(block));
                 } else {
-                    Fruits.Type type = Fruits.Type.parse(JSONUtils.getString(e, "fruit"));
+                    Fruits.Type type = Fruits.Type.parse(JSONUtils.getString(e.getAsJsonObject(), "fruit"));
                     builder.add(Either.left(type));
                 }
             });

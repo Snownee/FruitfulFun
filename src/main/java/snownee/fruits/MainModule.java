@@ -27,10 +27,6 @@ import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -38,14 +34,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
@@ -59,7 +49,6 @@ import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -339,52 +328,6 @@ public final class MainModule extends AbstractModule {
         ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
         ItemColors itemColors = event.getItemColors();
         itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES);
-    }
-
-    /*    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public void stitchTexture(TextureStitchEvent.Pre event) {
-        if (event.getMap().func_229223_g_().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/flowers_citron"));
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/flowers_lime"));
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/flowers_lemon"));
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/flowers_mandarin"));
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/flowers_pomelo"));
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/flowers_orange"));
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/flowers_grapefruit"));
-            event.addSprite(new ResourceLocation(Fruits.MODID, "block/fruit"));
-        }
-    }*/
-
-    @SubscribeEvent
-    public void onEntityJoin(EntityJoinWorldEvent event) {
-        World worldIn = event.getWorld();
-        if (!worldIn.isRemote && event.getEntity() instanceof LightningBoltEntity) {
-            BlockPos pos = event.getEntity().getPosition();
-            for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
-                BlockState state2 = worldIn.getBlockState(pos2);
-                if (state2.getBlock() == CITRON_LEAVES && state2.get(FruitLeavesBlock.AGE) == 3) {
-                    worldIn.setBlockState(pos2, state2.with(FruitLeavesBlock.AGE, 1));
-                    if (worldIn.getGameRules().getBoolean(GameRules.DO_TILE_DROPS) && !worldIn.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
-                    {
-                        ItemStack stack = new ItemStack(EMPOWERED_CITRON);
-                        double d0 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
-                        double d1 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
-                        double d2 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
-                        ItemEntity entityitem = new ItemEntity(worldIn, pos2.getX() + d0, pos2.getY() + d1, pos2.getZ() + d2, stack);
-                        entityitem.setDefaultPickupDelay();
-                        entityitem.setInvulnerable(true);
-                        worldIn.addEntity(entityitem);
-                        BatEntity bat = new BatEntity(EntityType.BAT, worldIn);
-                        bat.setPosition(pos2.getX() + d0, pos2.getY() + d1, pos2.getZ() + d2);
-                        bat.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 200, 10));
-                        bat.setCustomName(new TranslationTextComponent("fruittrees.forestbat"));
-                        bat.setCustomNameVisible(true);
-                        worldIn.addEntity(bat);
-                    }
-                }
-            }
-        }
     }
 
     private static final ResourceLocation OAK_LEAVES_LOOT_TABLE = new ResourceLocation("blocks/oak_leaves");

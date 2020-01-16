@@ -1,6 +1,5 @@
 package snownee.fruits.mixin;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -28,7 +27,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.Fruits;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.hybridization.HybridingContext;
-import snownee.fruits.hybridization.HybridingRecipe;
 import snownee.fruits.hybridization.Hybridization;
 import snownee.kiwi.util.NBTHelper;
 import snownee.kiwi.util.Util;
@@ -65,16 +63,12 @@ public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
 
     @Inject(method = "resetTask", at = @At("HEAD"))
     public void onComplete(CallbackInfo cir) {
-        System.out.println(this$0.field_226368_bH_);
         if (this$0.field_226368_bH_ == null) {
             return;
         }
         BlockState state = this$0.world.getBlockState(this$0.field_226368_bH_);
         Block block = state.getBlock();
-        Fruits.Type type = null;
-        if (block instanceof FruitLeavesBlock) {
-            type = ((FruitLeavesBlock) block).type.get();
-        }
+        Fruits.Type type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
         NBTHelper data = NBTHelper.of(this$0.getPersistentData());
         int count = data.getInt("FruitsCount");
         ListNBT list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
@@ -82,7 +76,6 @@ public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
             list = new ListNBT();
             data.setTag("FruitsList", list);
         }
-        System.out.println(list);
         String id = type != null ? type.name() : "_" + Util.trimRL(block.getRegistryName());
         if (!list.stream().anyMatch(e -> e.getString().equals(id))) {
             StringNBT stringNBT = StringNBT.func_229705_a_(id);
@@ -105,8 +98,14 @@ public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
                     ingredients.add(Either.left(_type));
                 }
             });
-            Optional<HybridingRecipe> recipe = this$0.world.getRecipeManager().getRecipe(Hybridization.RECIPE_TYPE, new HybridingContext(ingredients), this$0.world);
-            recipe.ifPresent(r -> System.out.println(r.getId()));
+            this$0.world.getRecipeManager().getRecipe(Hybridization.RECIPE_TYPE, new HybridingContext(ingredients), this$0.world).ifPresent(recipe -> {
+                data.remove("FruitsList");
+                data.setInt("FruitsCount", 0);
+                BlockState newState = recipe.getResult(ingredients).leaves.getDefaultState();
+                newState = newState.with(FruitLeavesBlock.AGE, 2);
+                newState = newState.with(FruitLeavesBlock.DISTANCE, state.get(FruitLeavesBlock.DISTANCE));
+                this$0.world.setBlockState(this$0.field_226368_bH_, newState);
+            });
         }
     }
 }

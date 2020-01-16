@@ -1,0 +1,15 @@
+{
+  "type": "fruittrees:hybriding",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:hybridization"
+    }
+  ],
+  "ingredients": [
+    { "fruit": "POMELO" },
+    { "fruit": "LEMON" },
+    { "fruit": "ORANGE" }
+  ],
+  "result": "GRAPEFRUIT"
+}

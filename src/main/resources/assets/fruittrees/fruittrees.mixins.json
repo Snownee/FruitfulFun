@@ -6,7 +6,9 @@
   "mixins": [
     "MixinPollinateGoal",
     "MixinBeeEntity",
-    "MixinFlyingNodeProcessor"
+    "MixinFlyingNodeProcessor",
+    "MixinWalkNodeProcessor",
+    "MixinServerWorld"
   ],
   "injectors": {
     "defaultRequire": 1
