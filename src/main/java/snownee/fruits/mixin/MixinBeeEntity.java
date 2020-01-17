@@ -15,6 +15,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.hybridization.Hybridization;
 
 @Mixin(BeeEntity.class)
 public abstract class MixinBeeEntity extends AnimalEntity {
@@ -29,7 +30,7 @@ public abstract class MixinBeeEntity extends AnimalEntity {
     @Overwrite
     private boolean func_226439_k_(BlockPos pos) {
         Block block = world.getBlockState(pos).getBlock();
-        return this.world.isBlockPresent(pos) && block instanceof FruitLeavesBlock || block.isIn(BlockTags.field_226149_I_);
+        return this.world.isBlockPresent(pos) && (Hybridization.INSTANCE != null && block instanceof FruitLeavesBlock) || block.isIn(BlockTags.field_226149_I_);
     }
 
     @Override

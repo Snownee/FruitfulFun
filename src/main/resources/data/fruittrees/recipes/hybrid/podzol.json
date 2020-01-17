@@ -7,8 +7,8 @@
     }
   ],
   "ingredients": [
-    { "fruit": "LIME" },
-    { "fruit": "MANDARIN" }
+    { "block": "blue_orchid" },
+    { "block": "oxeye_daisy" }
   ],
-  "result": { "fruit": "ORANGE" }
+  "result": { "block": "podzol" }
 }

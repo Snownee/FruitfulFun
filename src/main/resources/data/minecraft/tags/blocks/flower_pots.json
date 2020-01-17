@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "fruittrees:potted_apple",
+    "fruittrees:potted_citron",
+    "fruittrees:potted_grapefruit",
+    "fruittrees:potted_lemon",
+    "fruittrees:potted_lime",
+    "fruittrees:potted_mandarin",
+    "fruittrees:potted_orange",
+    "fruittrees:potted_pomelo"
+  ]
+}

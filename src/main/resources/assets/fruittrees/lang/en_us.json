@@ -1,4 +1,6 @@
 {
+"fruittrees": "Fruit Trees",
+
 "item.fruittrees.mandarin": "Mandarin",
 "item.fruittrees.lime": "Lime",
 "item.fruittrees.citron": "Citron",
@@ -7,6 +9,7 @@
 "item.fruittrees.lemon": "Lemon",
 "item.fruittrees.grapefruit": "Grapefruit",
 "item.fruittrees.empowered_citron": "Empowered Citron",
+"item.fruittrees.cherry": "Cherry",
 
 "block.fruittrees.mandarin_sapling": "Mandarin Sapling",
 "block.fruittrees.lime_sapling": "Lime Sapling",
@@ -16,6 +19,7 @@
 "block.fruittrees.lemon_sapling": "Lemon Sapling",
 "block.fruittrees.grapefruit_sapling": "Grapefruit Sapling",
 "block.fruittrees.apple_sapling": "Apple Oak Sapling",
+"block.fruittrees.cherry_sapling": "Cherry Sapling",
 
 "block.fruittrees.mandarin_leaves": "Mandarin Leaves",
 "block.fruittrees.lime_leaves": "Lime Leaves",
@@ -25,6 +29,7 @@
 "block.fruittrees.lemon_leaves": "Lemon Leaves",
 "block.fruittrees.grapefruit_leaves": "Grapefruit Leaves",
 "block.fruittrees.apple_leaves": "Apple Oak Leaves",
+"block.fruittrees.cherry_leaves": "Cherry Leaves",
 
 "block.fruittrees.citrus_log": "Citrus Log",
 "block.fruittrees.citrus_wood": "Citrus Wood",
@@ -39,6 +44,9 @@
 "block.fruittrees.citrus_pressure_plate": "Citrus Pressure Plate",
 "block.fruittrees.citrus_door": "Citrus Door",
 "block.fruittrees.citrus_trapdoor": "Citrus Trapdoor",
+
+"gui.fruittrees.jei.category.hybriding": "Bee Pollinating",
+"gui.fruittrees.jei.tip.flowering": "%s (Flowering)",
 
 "fruittrees.forestbat": "ForestBat"
 }

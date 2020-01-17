@@ -11,5 +11,5 @@
     { "fruit": "LEMON" },
     { "fruit": "ORANGE" }
   ],
-  "result": "GRAPEFRUIT"
+  "result": { "fruit": "GRAPEFRUIT" }
 }

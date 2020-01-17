@@ -8,7 +8,7 @@ import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.WalkNodeProcessor;
 import net.minecraft.world.IBlockReader;
-import snownee.fruits.NewMethods;
+import snownee.fruits.Hook;
 
 @Mixin(WalkNodeProcessor.class)
 public abstract class MixinWalkNodeProcessor extends NodeProcessor {
@@ -19,7 +19,7 @@ public abstract class MixinWalkNodeProcessor extends NodeProcessor {
             ), method = "getPathNodeType(Lnet/minecraft/world/IBlockReader;III)Lnet/minecraft/pathfinding/PathNodeType;"
     )
     private PathNodeType redirectGetPathNodeTypeRaw(IBlockReader blockaccessIn, int x, int y, int z) {
-        return NewMethods.func_227480_b_(blockaccessIn, x, y, z, entity);
+        return Hook.func_227480_b_(blockaccessIn, x, y, z, entity);
     }
 
 }

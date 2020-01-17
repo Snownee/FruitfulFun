@@ -15,6 +15,7 @@ import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
+import net.minecraft.block.FireBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.LogBlock;
 import net.minecraft.block.PressurePlateBlock;
@@ -231,8 +232,8 @@ public final class MainModule extends AbstractModule {
 
         for (Fruits.Type type : Fruits.Type.values()) {
             ComposterBlock.CHANCES.put(type.fruit, 0.5f);
-            ComposterBlock.CHANCES.put(type.leaves, 0.3f);
-            ComposterBlock.CHANCES.put(type.sapling.get(), 0.3f);
+            ComposterBlock.CHANCES.put(type.leaves.asItem(), 0.3f);
+            ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
         }
     }
 

@@ -7,8 +7,8 @@
     }
   ],
   "ingredients": [
-    { "fruit": "LIME" },
-    { "fruit": "MANDARIN" }
+    { "fruit": "APPLE" },
+    { "block": "poppy" }
   ],
-  "result": { "fruit": "ORANGE" }
+  "result": { "block": "rose_bush" }
 }

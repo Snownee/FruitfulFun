@@ -24,10 +24,10 @@ import snownee.kiwi.crafting.Recipe;
 
 public class HybridingRecipe extends Recipe<HybridingContext> {
 
-    protected final Fruits.Type result;
-    protected final ImmutableSet<Either<Fruits.Type, Block>> ingredients;
+    protected final Either<Fruits.Type, Block> result;
+    public final ImmutableSet<Either<Fruits.Type, Block>> ingredients;
 
-    public HybridingRecipe(ResourceLocation id, Fruits.Type result, ImmutableSet<Either<Fruits.Type, Block>> ingredients) {
+    public HybridingRecipe(ResourceLocation id, Either<Fruits.Type, Block> result, ImmutableSet<Either<Fruits.Type, Block>> ingredients) {
         super(id);
         this.result = result;
         this.ingredients = ingredients;
@@ -38,8 +38,12 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
         return ingredients.stream().allMatch(inv.ingredients::contains);
     }
 
-    public Fruits.Type getResult(Set<Either<Fruits.Type, Block>> types) {
+    public Either<Fruits.Type, Block> getResult(Set<Either<Fruits.Type, Block>> types) {
         return result;
+    }
+
+    public Block getResultAsBlock(Set<Either<Fruits.Type, Block>> types) {
+        return getResult(types).map(t -> t.leaves, b -> b);
     }
 
     @Override
@@ -56,27 +60,35 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 
         @Override
         public HybridingRecipe read(ResourceLocation recipeId, JsonObject json) {
-            Fruits.Type result = Fruits.Type.parse(JSONUtils.getString(json, "result"));
+            Either<Fruits.Type, Block> result = readIngredient(JSONUtils.getJsonObject(json, "result"));
             ImmutableSet.Builder<Either<Fruits.Type, Block>> builder = ImmutableSet.builder();
             JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
-            if (ingredients.size() < 2 || ingredients.size() > 5) {
-                throw new JsonSyntaxException("Size of ingredients has to be in [2, 5]");
+            if (ingredients.size() < 2 || ingredients.size() > 4) {
+                throw new JsonSyntaxException("Size of ingredients has to be in [2, 4]");
             }
-            ingredients.forEach(e -> {
-                if (e.getAsJsonObject().has("block")) {
-                    Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getString(e.getAsJsonObject(), "block")));
-                    builder.add(Either.right(block));
-                } else {
-                    Fruits.Type type = Fruits.Type.parse(JSONUtils.getString(e.getAsJsonObject(), "fruit"));
-                    builder.add(Either.left(type));
-                }
-            });
+            ingredients.forEach(e -> builder.add(readIngredient(e.getAsJsonObject())));
             return new HybridingRecipe(recipeId, result, builder.build());
+        }
+
+        protected static Either<Fruits.Type, Block> readIngredient(JsonObject object) {
+            if (object.has("block")) {
+                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getString(object, "block")));
+                return Either.right(block);
+            } else if (object.has("fruit")) {
+                Fruits.Type type = Fruits.Type.parse(JSONUtils.getString(object, "fruit"));
+                return Either.left(type);
+            }
+            throw new JsonSyntaxException("Expect key 'block' or 'fruit'");
         }
 
         @Override
         public HybridingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            Fruits.Type result = Fruits.Type.parse(buffer.readString(32767));
+            Either<Fruits.Type, Block> result;
+            if (buffer.readBoolean()) {
+                result = Either.left(Fruits.Type.parse(buffer.readString(32767)));
+            } else {
+                result = Either.right(buffer.readRegistryIdUnsafe(ForgeRegistries.BLOCKS));
+            }
             ImmutableSet.Builder<Either<Fruits.Type, Block>> builder = ImmutableSet.builder();
             int size = buffer.readByte(); // blocks
             for (int i = 0; i < size; i++) {
@@ -92,7 +104,13 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 
         @Override
         public void write(PacketBuffer buffer, HybridingRecipe recipe) {
-            buffer.writeString(recipe.result.name());
+            recipe.result.ifLeft(type -> {
+                buffer.writeBoolean(true);
+                buffer.writeString(type.name());
+            }).ifRight(block -> {
+                buffer.writeBoolean(false);
+                buffer.writeRegistryIdUnsafe(ForgeRegistries.BLOCKS, block);
+            });
             List<Fruits.Type> types = Lists.newArrayList();
             List<Block> blocks = Lists.newArrayList();
             recipe.ingredients.forEach(e -> e.map(types::add, blocks::add));
