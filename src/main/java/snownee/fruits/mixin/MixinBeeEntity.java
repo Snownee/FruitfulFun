@@ -3,6 +3,9 @@ package snownee.fruits.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,7 +14,6 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -27,10 +29,12 @@ public abstract class MixinBeeEntity extends AnimalEntity {
         super(type, world);
     }
 
-    @Overwrite
-    private boolean func_226439_k_(BlockPos pos) {
+    @Inject(at = @At("HEAD"), method = "func_226439_k_", cancellable = true)
+    public void canPollinate(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         Block block = world.getBlockState(pos).getBlock();
-        return this.world.isBlockPresent(pos) && (Hybridization.INSTANCE != null && block instanceof FruitLeavesBlock) || block.isIn(BlockTags.field_226149_I_);
+        if (Hybridization.INSTANCE != null && block instanceof FruitLeavesBlock) {
+            cir.setReturnValue(true);
+        }
     }
 
     @Override
