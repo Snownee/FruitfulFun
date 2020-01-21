@@ -14,6 +14,8 @@ import net.minecraft.item.Items;
 import net.minecraftforge.common.IExtensibleEnum;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.common.Mod;
+import snownee.kiwi.KiwiModule.LoadingCondition;
+import snownee.kiwi.LoadingContext;
 
 @Mod(Fruits.MODID)
 public final class Fruits {
@@ -55,5 +57,10 @@ public final class Fruits {
                 return Fruits.Type.CITRON;
             }
         }
+    }
+
+    @LoadingCondition("hybridization")
+    public static boolean shouldLoadHybridization(LoadingContext ctx) {
+        return Hook.mixin;
     }
 }

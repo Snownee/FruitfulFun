@@ -14,7 +14,7 @@ description='''Huge thanks to my supporters:
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[2.6.2, 2.9)"
+    versionRange="[2.6.3, 2.9)"
     ordering="BEFORE"
     side="BOTH"
 

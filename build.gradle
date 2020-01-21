@@ -144,5 +144,5 @@ publishing {
 apply plugin: 'org.spongepowered.mixin'
 
 mixin {
-    add sourceSets.main, "main.refmap.json"
+    add sourceSets.main, "mixins.fruittrees.refmap.json"
 }
