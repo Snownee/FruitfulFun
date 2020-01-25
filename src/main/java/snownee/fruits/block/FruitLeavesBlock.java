@@ -68,7 +68,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     }
 
     @Override
-    public void func_225535_a_/*grow*/(ServerWorld world, Random rand, BlockPos pos, BlockState state) {
+    public void grow(ServerWorld world, Random rand, BlockPos pos, BlockState state) {
         if (state.get(AGE) == 3) {
             world.setBlockState(pos, onPassiveGathered(world, pos, state));
             spawnAsEntity(world, pos, new ItemStack(type.get().fruit));
@@ -111,7 +111,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     }
 
     @Override
-    public void func_225542_b_/*randomTick*/(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
         if (shouldDecay(state)) {
             spawnDrops(state, world, pos);
             world.removeBlock(pos, false);
@@ -120,14 +120,14 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             boolean def = rand.nextInt(100) > 99 - FruitsConfig.growingSpeed;
 
             if (ForgeHooks.onCropsGrowPre(world, pos, state, def)) {
-                func_225535_a_/*grow*/(world, rand, pos, state);
+                grow(world, rand, pos, state);
                 ForgeHooks.onCropsGrowPost(world, pos, state);
             }
         }
     }
 
     @Override
-    public void func_225534_a_/*tick*/(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
         state = updateDistance(state, world, pos);
         if (state.get(PERSISTENT) && state.get(DISTANCE) != 1) {
             state = state.with(PERSISTENT, false);
@@ -177,14 +177,14 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 1, Math.max(0, pos.getY() - 2), pos.getZ() - 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1)) {
                 BlockState state = worldIn.getBlockState(pos2);
                 if (state.getBlock() instanceof FruitLeavesBlock && state.get(AGE) == 3) {
-                    ((FruitLeavesBlock) state.getBlock()).func_225535_a_/*grow*/((ServerWorld) worldIn, worldIn.rand, pos2, state);
+                    ((FruitLeavesBlock) state.getBlock()).grow((ServerWorld) worldIn, worldIn.rand, pos2, state);
                 }
             }
         }
     }
 
     @Override
-    public ActionResultType func_225533_a_/*onBlockActivated*/(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult ray) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult ray) {
         if (state.get(AGE) == 3 && worldIn.setBlockState(pos, state.with(AGE, 1))) {
             if (!worldIn.isRemote) {
                 ItemStack fruit = new ItemStack(type.get().fruit);

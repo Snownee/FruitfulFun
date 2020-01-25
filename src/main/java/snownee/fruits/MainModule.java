@@ -288,7 +288,7 @@ public final class MainModule extends AbstractModule {
         } else {
             leavesProvider = new SimpleBlockStateProvider(type.leaves.getDefaultState());
         }
-        return FEATURE.func_225566_b_((new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new BlobFoliagePlacer(2, 0))).func_225569_d_(4).func_227354_b_(2).func_227360_i_(3).func_227352_a_().setSapling(type.sapling.get()).func_225568_b_());
+        return FEATURE.func_225566_b_((new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new BlobFoliagePlacer(2, 0))).baseHeight(4).func_227354_b_(2).func_227360_i_(3).func_227352_a_().setSapling(type.sapling.get()).build());
     }
 
     @SubscribeEvent
@@ -298,7 +298,7 @@ public final class MainModule extends AbstractModule {
         BlockColors blockColors = event.getBlockColors();
         blockColors.register((state, world, pos, i) -> {
             if (i == 0) {
-                return blockColors.func_228054_a_(oakLeaves, world, pos, i);
+                return blockColors.getColor(oakLeaves, world, pos, i);
             }
             if (i == 1) {
                 Block block = state.getBlock();

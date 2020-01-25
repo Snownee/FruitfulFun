@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[30,)"
+loaderVersion="[31,)"
 [[mods]]
 modId="fruittrees"
 version="${file.jarVersion}"
@@ -14,13 +14,13 @@ description='''Huge thanks to my supporters:
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[2.6.3, 2.9)"
+    versionRange="[2.6.4, 2.10)"
     ordering="BEFORE"
     side="BOTH"
 
 [[dependencies.fruittrees]]
     modId="forge"
     mandatory=true
-    versionRange="[30.0.15,)"
+    versionRange="[31,)"
     ordering="BEFORE"
     side="BOTH"

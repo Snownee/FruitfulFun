@@ -57,7 +57,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
         background = guiHelper.createBlankDrawable(width, height);
         float f = (float) Math.atan((double) (1000 / 40.0F));
         float f1 = (float) Math.atan((double) (-10 / 40.0F));
-        bee = EntityType.field_226289_e_.create(Minecraft.getInstance().world);
+        bee = EntityType.BEE.create(Minecraft.getInstance().world);
         bee.renderYawOffset = 180.0F + f * 20.0F;
         bee.rotationYaw = 180.0F + f * 40.0F;
         bee.rotationPitch = -f1 * 20.0F;
@@ -95,24 +95,24 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
         RenderSystem.scalef(1.0F, 1.0F, -1.0F);
 
         MatrixStack matrixstack = new MatrixStack();
-        matrixstack.func_227861_a_(0.0D, 0.0D, 1000.0D);
-        matrixstack.func_227862_a_(20, 20, 20);
-        Quaternion quaternion = Vector3f.field_229183_f_.func_229187_a_(180.0F);
-        Quaternion quaternion1 = Vector3f.field_229179_b_.func_229187_a_(f1 * 20.0F);
+        matrixstack.translate(0.0D, 0.0D, 1000.0D);
+        matrixstack.scale(20, 20, 20);
+        Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
+        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
         quaternion.multiply(quaternion1);
-        matrixstack.func_227863_a_(quaternion);
+        matrixstack.rotate(quaternion);
 
         Minecraft mc = Minecraft.getInstance();
         EntityRendererManager entityrenderermanager = mc.getRenderManager();
         quaternion1.conjugate();
-        entityrenderermanager.func_229089_a_(quaternion1);
+        entityrenderermanager.setCameraOrientation(quaternion1);
         entityrenderermanager.setRenderShadow(false);
-        IRenderTypeBuffer.Impl irendertypebuffer$impl = mc.func_228019_au_().func_228487_b_();
+        IRenderTypeBuffer.Impl irendertypebuffer$impl = mc.getRenderTypeBuffers().getBufferSource();
 
         bee.ticksExisted = mc.player.ticksExisted;
-        entityrenderermanager.func_229084_a_(bee, 0.0D, 0.0D, 0.0D, mc.getRenderPartialTicks(), 1, matrixstack, irendertypebuffer$impl, 15728880);
+        entityrenderermanager.renderEntityStatic(bee, 0.0D, 0.0D, 0.0D, mc.getRenderPartialTicks(), 1, matrixstack, irendertypebuffer$impl, 15728880);
 
-        irendertypebuffer$impl.func_228461_a_();
+        irendertypebuffer$impl.finish();
         entityrenderermanager.setRenderShadow(true);
 
         RenderSystem.popMatrix();

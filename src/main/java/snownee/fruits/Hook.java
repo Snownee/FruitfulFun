@@ -112,7 +112,7 @@ public final class Hook {
                 return PathNodeType.DAMAGE_CACTUS;
             } else if (block == Blocks.SWEET_BERRY_BUSH) {
                 return PathNodeType.DAMAGE_OTHER;
-            } else if (block == Blocks.field_226907_mc_) {
+            } else if (block == Blocks.HONEY_BLOCK) {
                 return PathNodeType.STICKY_HONEY;
             } else if (block == Blocks.COCOA) {
                 return PathNodeType.COCOA;
@@ -183,7 +183,7 @@ public final class Hook {
         }
         String id = type != null ? type.name() : "_" + Util.trimRL(block.getRegistryName());
         if (!list.stream().anyMatch(e -> e.getString().equals(id))) {
-            StringNBT stringNBT = StringNBT.func_229705_a_(id);
+            StringNBT stringNBT = StringNBT.valueOf(id);
             if (list.size() < 5) {
                 list.add(stringNBT);
             } else {

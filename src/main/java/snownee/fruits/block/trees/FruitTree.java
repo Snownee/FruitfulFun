@@ -17,8 +17,8 @@ public class FruitTree extends Tree {
         this.typeSupplier = type;
     }
 
-    @Override
-    protected ConfiguredFeature<TreeFeatureConfig, ?> func_225546_b_(Random random) {
+    @Override // FIXME
+    protected ConfiguredFeature<TreeFeatureConfig, ?> func_225546_b_(Random random, boolean p_225546_2_) {
         Fruits.Type type = typeSupplier.get();
         return MainModule.buildTreeFeature(type, false);
     }
