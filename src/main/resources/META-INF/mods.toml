@@ -17,10 +17,3 @@ description='''Huge thanks to my supporters:
     versionRange="[2.6.4, 2.10)"
     ordering="BEFORE"
     side="BOTH"
-
-[[dependencies.fruittrees]]
-    modId="forge"
-    mandatory=true
-    versionRange="[31,)"
-    ordering="BEFORE"
-    side="BOTH"

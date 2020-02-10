@@ -15,7 +15,6 @@ import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.FireBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.LogBlock;
 import net.minecraft.block.PressurePlateBlock;
@@ -124,7 +123,7 @@ public final class MainModule extends AbstractModule {
     public static final FruitLeavesBlock APPLE_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.APPLE, blockProp(Blocks.OAK_LEAVES)));
 
     public static final Set<Block> ALL_LEAVES = Sets.newConcurrentHashSet(Arrays.asList(MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES));
-    public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType(() -> new FruitTreeTile(), ALL_LEAVES, null);
+    public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType(FruitTreeTile::new, ALL_LEAVES, null);
 
     @Group("building_blocks")
     public static final LogBlock CITRUS_LOG = init(new LogBlock(MaterialColor.DIRT, blockProp(Blocks.JUNGLE_LOG)));
