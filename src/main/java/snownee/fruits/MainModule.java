@@ -72,6 +72,7 @@ import snownee.kiwi.item.ModItem;
 @KiwiModule.Subscriber({ Bus.MOD, Bus.FORGE })
 public final class MainModule extends AbstractModule {
 
+    @SuppressWarnings("hiding")
     public static final class Foods {
         public static final Food MANDARIN = new Food.Builder().hunger(3).saturation(0.3f).build();
         public static final Food LIME = new Food.Builder().hunger(3).saturation(0.3f).build();
@@ -273,7 +274,7 @@ public final class MainModule extends AbstractModule {
             if (count > 0 || chance > 0) {
                 for (Fruits.Type type : types) {
                     ConfiguredFeature<?, ?> cf = buildTreeFeature(type, true);
-                    cf = cf.func_227228_a_(Placement.COUNT_EXTRA_HEIGHTMAP.func_227446_a_(new AtSurfaceWithExtraConfig(count, chance, 1)));
+                    cf = cf.withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
                     biome.addFeature(Decoration.VEGETAL_DECORATION, cf);
                 }
             }
@@ -287,7 +288,7 @@ public final class MainModule extends AbstractModule {
         } else {
             leavesProvider = new SimpleBlockStateProvider(type.leaves.getDefaultState());
         }
-        return FEATURE.func_225566_b_((new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new BlobFoliagePlacer(2, 0))).baseHeight(4).func_227354_b_(2).func_227360_i_(3).func_227352_a_().setSapling(type.sapling.get()).build());
+        return FEATURE.withConfiguration((new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new BlobFoliagePlacer(2, 0))).baseHeight(4).heightRandA(2).foliageHeight(3).ignoreVines().setSapling(type.sapling.get()).build());
     }
 
     @SubscribeEvent
@@ -330,6 +331,7 @@ public final class MainModule extends AbstractModule {
         itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES);
     }
 
+    @SuppressWarnings("unused")
     private static final ResourceLocation OAK_LEAVES_LOOT_TABLE = new ResourceLocation("blocks/oak_leaves");
 
     /*    @SubscribeEvent

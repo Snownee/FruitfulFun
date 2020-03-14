@@ -41,6 +41,8 @@ public abstract class MixinBeeEntity extends AnimalEntity {
     @Overwrite
     protected PathNavigator createNavigator(World worldIn) {
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, worldIn) {
+            @Override
+            @SuppressWarnings("deprecation")
             public boolean canEntityStandOnPos(BlockPos pos) {
                 BlockState state = world.getBlockState(pos.down());
                 if (!state.isAir()) {
@@ -50,6 +52,7 @@ public abstract class MixinBeeEntity extends AnimalEntity {
                 return state.getBlock() instanceof FruitLeavesBlock;
             }
 
+            @Override
             public void tick() {
                 if (!field_226370_bJ_.func_226503_k_()) {
                     super.tick();

@@ -43,7 +43,6 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
     private final IDrawable background;
     private final IGuiHelper guiHelper;
     private final BeeEntity bee;
-    private final EntityRendererManager renderer;
     private final IDrawable x;
     private final IDrawable line;
 
@@ -55,15 +54,15 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
         localizedName = I18n.format("gui.fruittrees.jei.category.hybriding");
         icon = guiHelper.createDrawableIngredient(MainModule.GRAPEFRUIT.getDefaultInstance());
         background = guiHelper.createBlankDrawable(width, height);
-        float f = (float) Math.atan((double) (1000 / 40.0F));
-        float f1 = (float) Math.atan((double) (-10 / 40.0F));
+        float f = (float) Math.atan(1000 / 40.0F);
+        float f1 = (float) Math.atan(-10 / 40.0F);
         bee = EntityType.BEE.create(Minecraft.getInstance().world);
         bee.renderYawOffset = 180.0F + f * 20.0F;
         bee.rotationYaw = 180.0F + f * 40.0F;
         bee.rotationPitch = -f1 * 20.0F;
         bee.rotationYawHead = bee.rotationYaw;
         bee.prevRotationYawHead = bee.rotationYaw;
-        renderer = Minecraft.getInstance().getRenderManager();
+        Minecraft.getInstance().getRenderManager();
         x = guiHelper.drawableBuilder(new ResourceLocation(Fruits.MODID, "textures/gui/jei.png"), 0, 0, 10, 11).setTextureSize(64, 64).build();
         line = guiHelper.drawableBuilder(new ResourceLocation(Fruits.MODID, "textures/gui/jei.png"), 12, 4, 31, 3).setTextureSize(64, 64).build();
     }
@@ -85,7 +84,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 
     @Override
     public void draw(HybridingRecipe recipe, double mouseX, double mouseY) {
-        float f1 = (float) Math.atan((double) (-10 / 40.0F));
+        float f1 = (float) Math.atan(-10 / 40.0F);
         x.draw(18, 22);
         line.draw(54, 26);
 

@@ -189,7 +189,6 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             if (!worldIn.isRemote) {
                 ItemStack fruit = new ItemStack(type.get().fruit);
                 if (playerIn instanceof FakePlayer) {
-                    float f = 0.5F;
                     double d0 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
                     double d1 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
                     double d2 = worldIn.rand.nextFloat() * 0.5F + 0.25D;

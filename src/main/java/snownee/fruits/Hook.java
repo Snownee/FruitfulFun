@@ -152,7 +152,7 @@ public final class Hook {
     }
 
     public static boolean canPollinate(BlockState state) {
-        if (state.isIn(BlockTags.field_226148_H_)) {
+        if (state.isIn(BlockTags.TALL_FLOWERS)) {
             if (state.getBlock() == Blocks.SUNFLOWER) {
                 return state.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER;
             } else {
@@ -171,7 +171,7 @@ public final class Hook {
     }
 
     public static void onPollinateComplete(BeeEntity bee) {
-        BlockState state = bee.world.getBlockState(bee.field_226368_bH_);
+        BlockState state = bee.world.getBlockState(bee.savedFlowerPos);
         Block block = state.getBlock();
         Fruits.Type type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
         NBTHelper data = NBTHelper.of(bee.getPersistentData());
@@ -206,13 +206,13 @@ public final class Hook {
             bee.world.getRecipeManager().getRecipe(Hybridization.RECIPE_TYPE, new HybridingContext(ingredients), bee.world).ifPresent(recipe -> {
                 Block newBlock = recipe.getResultAsBlock(ingredients);
                 boolean isLeaves = newBlock instanceof FruitLeavesBlock;
-                boolean isFlower = !isLeaves && newBlock.isIn(BlockTags.field_226149_I_); // flowers
+                boolean isFlower = !isLeaves && newBlock.isIn(BlockTags.FLOWERS);
                 boolean isMisc = !isLeaves && !isFlower;
                 if (!isMisc && (isLeaves != (block instanceof FruitLeavesBlock))) {
                     return;
                 }
-                BlockPos root = bee.field_226368_bH_;
-                if (block.isIn(BlockTags.field_226148_H_) && state.has(DoublePlantBlock.HALF) && state.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+                BlockPos root = bee.savedFlowerPos;
+                if (block.isIn(BlockTags.TALL_FLOWERS) && state.has(DoublePlantBlock.HALF) && state.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                     root = root.down();
                 } else if (isMisc && !newBlock.canSpawnInBlock() && !(block instanceof FruitLeavesBlock)) {
                     root = root.down();
@@ -223,7 +223,7 @@ public final class Hook {
                     newState = newState.with(FruitLeavesBlock.AGE, 2);
                     newState = newState.with(FruitLeavesBlock.DISTANCE, state.get(FruitLeavesBlock.DISTANCE));
                 } else if (isFlower) {
-                    if (newBlock.isIn(BlockTags.field_226148_H_) && newState.has(DoublePlantBlock.HALF)) {
+                    if (newBlock.isIn(BlockTags.TALL_FLOWERS) && newState.has(DoublePlantBlock.HALF)) {
                         newState = newState.with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER);
                         isBigFlower = true;
                     }

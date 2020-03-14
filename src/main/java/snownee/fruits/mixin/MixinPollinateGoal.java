@@ -28,7 +28,7 @@ public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
 
     @Inject(method = "resetTask", at = @At("HEAD"))
     public void onComplete(CallbackInfo cir) {
-        if (Hybridization.INSTANCE == null || this$0.field_226368_bH_ == null) {
+        if (Hybridization.INSTANCE == null || this$0.savedFlowerPos == null) {
             return;
         }
         Hook.onPollinateComplete(this$0);
