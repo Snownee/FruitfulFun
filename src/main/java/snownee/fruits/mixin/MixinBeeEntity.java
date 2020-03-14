@@ -23,7 +23,7 @@ import snownee.fruits.hybridization.Hybridization;
 public abstract class MixinBeeEntity extends AnimalEntity {
 
     @Shadow
-    public BeeEntity.PollinateGoal field_226370_bJ_;
+    public BeeEntity.PollinateGoal pollinateGoal;
 
     public MixinBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -54,7 +54,7 @@ public abstract class MixinBeeEntity extends AnimalEntity {
 
             @Override
             public void tick() {
-                if (!field_226370_bJ_.func_226503_k_()) {
+                if (!pollinateGoal.func_226503_k_()) {
                     super.tick();
                 }
             }
