@@ -14,7 +14,7 @@ import net.minecraftforge.fml.config.ModConfig;
 @EventBusSubscriber(bus = Bus.MOD)
 public final class FruitsConfig {
 
-    public static int growingSpeed = 15;
+    public static int growingSpeed = 5;
     public static boolean fruitDrops = true;
     public static float oakLeavesDropsAppleSapling = 0.2f;
 
