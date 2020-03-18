@@ -8,7 +8,7 @@
       "parent": "fruittrees:block/leaves_pomelo"
     },
     "1": {
-      "parent": "fruittrees:block/fruit_md"
+      "parent": "fruittrees:block/fruit_lg"
     }
   }
 }

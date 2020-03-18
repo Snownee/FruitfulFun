@@ -1,0 +1,13 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "fruittrees:block/leaves_cherry"
+  },
+  "parts": {
+    "0": {
+      "parent": "fruittrees:block/leaves_cherry"
+    },
+    "1": {
+    }
+  }
+}

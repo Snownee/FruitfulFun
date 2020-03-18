@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "fruittrees:block/cherry_slab" },
+    "type=top": { "model": "fruittrees:block/cherry_slab_top" },
+    "type=double": { "model": "fruittrees:block/cherry_planks" }
+  }
+}

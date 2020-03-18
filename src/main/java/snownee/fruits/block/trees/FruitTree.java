@@ -20,7 +20,7 @@ public class FruitTree extends Tree {
     @Override // FIXME
     protected ConfiguredFeature<TreeFeatureConfig, ?> getTreeFeature(Random random, boolean p_225546_2_) {
         Fruits.Type type = typeSupplier.get();
-        return MainModule.buildTreeFeature(type, false);
+        return MainModule.buildTreeFeature(type, false, null);
     }
 
 }

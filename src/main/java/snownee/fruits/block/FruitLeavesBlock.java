@@ -38,7 +38,9 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.ItemHandlerHelper;
 import snownee.fruits.Fruits;
 import snownee.fruits.FruitsConfig;
+import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.tile.FruitTreeTile;
+import snownee.fruits.world.gen.treedecorator.CarpetTreeDecorator;
 
 public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
@@ -173,11 +175,16 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
         super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
-        if (!worldIn.isRemote && worldIn instanceof ServerWorld && fallDistance >= 1 && entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity) {
+        if (!worldIn.isRemote && fallDistance >= 1 && entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity) {
             for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 1, Math.max(0, pos.getY() - 2), pos.getZ() - 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1)) {
                 BlockState state = worldIn.getBlockState(pos2);
-                if (state.getBlock() instanceof FruitLeavesBlock && state.get(AGE) == 3) {
-                    ((FruitLeavesBlock) state.getBlock()).grow((ServerWorld) worldIn, worldIn.rand, pos2, state);
+                if (state.getBlock() instanceof FruitLeavesBlock) {
+                    if (state.get(AGE) == 3) {
+                        ((FruitLeavesBlock) state.getBlock()).grow((ServerWorld) worldIn, worldIn.rand, pos2, state);
+                    }
+                    if (state.getBlock() instanceof CherryLeavesBlock) {
+                        CarpetTreeDecorator.placeCarpet(worldIn, pos2, ((CherryLeavesBlock) state.getBlock()).getCarpet().getDefaultState(), 3);
+                    }
                 }
             }
         }

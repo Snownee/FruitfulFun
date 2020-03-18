@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fruittrees:citrus_fence"
+    "fruittrees:citrus_fence",
+    "fruittrees:cherry_fence"
   ]
 }

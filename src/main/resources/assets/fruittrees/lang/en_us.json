@@ -10,6 +10,7 @@
 "item.fruittrees.grapefruit": "Grapefruit",
 "item.fruittrees.empowered_citron": "Empowered Citron",
 "item.fruittrees.cherry": "Cherry",
+"item.fruittrees.redlove": "Redlove Fruit",
 
 "block.fruittrees.mandarin_sapling": "Mandarin Sapling",
 "block.fruittrees.lime_sapling": "Lime Sapling",
@@ -20,6 +21,18 @@
 "block.fruittrees.grapefruit_sapling": "Grapefruit Sapling",
 "block.fruittrees.apple_sapling": "Apple Oak Sapling",
 "block.fruittrees.cherry_sapling": "Cherry Sapling",
+"block.fruittrees.redlove_sapling": "Redlove Sapling",
+
+"block.fruittrees.potted_mandarin": "Potted Mandarin Sapling",
+"block.fruittrees.potted_lime": "Potted Lime Sapling",
+"block.fruittrees.potted_citron": "Potted Citron Sapling",
+"block.fruittrees.potted_pomelo": "Potted Pomelo Sapling",
+"block.fruittrees.potted_orange": "Potted Orange Sapling",
+"block.fruittrees.potted_lemon": "Potted Lemon Sapling",
+"block.fruittrees.potted_grapefruit": "Potted Grapefruit Sapling",
+"block.fruittrees.potted_apple": "Potted Apple Oak Sapling",
+"block.fruittrees.potted_cherry": "Potted Cherry Sapling",
+"block.fruittrees.potted_redlove": "Potted Redlove Sapling",
 
 "block.fruittrees.mandarin_leaves": "Mandarin Leaves",
 "block.fruittrees.lime_leaves": "Lime Leaves",
@@ -30,6 +43,10 @@
 "block.fruittrees.grapefruit_leaves": "Grapefruit Leaves",
 "block.fruittrees.apple_leaves": "Apple Oak Leaves",
 "block.fruittrees.cherry_leaves": "Cherry Leaves",
+"block.fruittrees.redlove_leaves": "Redlove Leaves",
+
+"block.fruittrees.cherry_carpet": "Cherry Carpet",
+"block.fruittrees.redlove_carpet": "Redlove Carpet",
 
 "block.fruittrees.citrus_log": "Citrus Log",
 "block.fruittrees.citrus_wood": "Citrus Wood",
@@ -45,8 +62,22 @@
 "block.fruittrees.citrus_door": "Citrus Door",
 "block.fruittrees.citrus_trapdoor": "Citrus Trapdoor",
 
+"block.fruittrees.cherry_log": "Cherry Log",
+"block.fruittrees.cherry_wood": "Cherry Wood",
+"block.fruittrees.stripped_cherry_log": "Stripped Cherry Log",
+"block.fruittrees.stripped_cherry_wood": "Stripped Cherry Wood",
+"block.fruittrees.cherry_planks": "Cherry Planks",
+"block.fruittrees.cherry_stairs": "Cherry Stairs",
+"block.fruittrees.cherry_slab": "Cherry Slab",
+"block.fruittrees.cherry_fence": "Cherry Fence",
+"block.fruittrees.cherry_fence_gate": "Cherry Fence Gate",
+"block.fruittrees.cherry_button": "Cherry Button",
+"block.fruittrees.cherry_pressure_plate": "Cherry Pressure Plate",
+"block.fruittrees.cherry_door": "Cherry Door",
+"block.fruittrees.cherry_trapdoor": "Cherry Trapdoor",
+
 "gui.fruittrees.jei.category.hybriding": "Bee Pollinating",
-"gui.fruittrees.jei.tip.flowering": "%s (Flowering)",
+"gui.fruittrees.jei.tip.flowering": "%s (Blossom)",
 
 "fruittrees.forestbat": "ForestBat"
 }

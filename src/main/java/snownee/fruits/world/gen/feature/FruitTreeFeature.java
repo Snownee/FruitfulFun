@@ -23,7 +23,7 @@ public class FruitTreeFeature extends AbstractSmallTreeFeature<TreeFeatureConfig
     }
 
     @Override
-    public boolean func_225557_a_(IWorldGenerationReader world, Random rand, BlockPos pos, Set<BlockPos> p_225557_4_, Set<BlockPos> p_225557_5_, MutableBoundingBox box, TreeFeatureConfig config) {
+    public boolean func_225557_a_(IWorldGenerationReader world, Random rand, BlockPos pos, Set<BlockPos> trunkSet, Set<BlockPos> foliageSet, MutableBoundingBox box, TreeFeatureConfig config) {
         int i = config.baseHeight + rand.nextInt(config.heightRandA + 1) + rand.nextInt(config.heightRandB + 1);
         int j = config.trunkHeight >= 0 ? config.trunkHeight + rand.nextInt(config.trunkHeightRandom + 1) : i - (config.foliageHeight + rand.nextInt(config.foliageHeightRandom + 1));
         int k = config.foliagePlacer.func_225573_a_(rand, j, i, config);
@@ -33,8 +33,8 @@ public class FruitTreeFeature extends AbstractSmallTreeFeature<TreeFeatureConfig
         } else {
             BlockPos blockpos = optional.get();
             this.setDirtAt(world, blockpos.down(), blockpos);
-            config.foliagePlacer.func_225571_a_(world, rand, config, i, j, k, blockpos, p_225557_5_);
-            this.func_227213_a_(world, rand, i, blockpos, config.trunkTopOffset + rand.nextInt(config.trunkTopOffsetRandom + 1), p_225557_4_, box, config);
+            config.foliagePlacer.func_225571_a_(world, rand, config, i, j, k, blockpos, foliageSet);
+            this.func_227213_a_(world, rand, i, blockpos, config.trunkTopOffset + rand.nextInt(config.trunkTopOffsetRandom + 1), trunkSet, box, config);
             blockpos = blockpos.up(i);
             BlockState core = config.leavesProvider.getBlockState(rand, blockpos);
             if (core.getBlock() instanceof FruitLeavesBlock) {

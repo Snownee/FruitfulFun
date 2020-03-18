@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fruittrees:citrus_stairs"
+    "fruittrees:citrus_stairs",
+    "fruittrees:cherry_stairs"
   ]
 }

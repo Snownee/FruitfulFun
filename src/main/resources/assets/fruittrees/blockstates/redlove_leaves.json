@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": { "model": "fruittrees:block/leaves_redlove" },
+    "age=1": { "model": "fruittrees:block/leaves_redlove" },
+    "age=2": [
+      { "model": "fruittrees:block/leaves_redlove_2" },
+      { "model": "fruittrees:block/leaves_redlove_2", "y": 90 },
+      { "model": "fruittrees:block/leaves_redlove_2", "y": 180 }
+    ],
+    "age=3": [
+      { "model": "fruittrees:block/leaves_redlove_2" },
+      { "model": "fruittrees:block/leaves_redlove_2", "y": 90 },
+      { "model": "fruittrees:block/leaves_redlove_2", "y": 180 }
+    ]
+  }
+}
