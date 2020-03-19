@@ -23,22 +23,28 @@ import net.minecraft.block.StairsBlock;
 import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.particles.BasicParticleType;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import snownee.fruits.Fruits;
 import snownee.fruits.MainModule;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
+import snownee.fruits.cherry.client.particle.PetalParticle;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Group;
@@ -57,7 +63,7 @@ public class CherryModule extends AbstractModule {
     @SuppressWarnings("hiding")
     public static final class Foods {
         public static final Food CHERRY = new Food.Builder().hunger(3).saturation(0.3f).build();
-        public static final Food REDLOVE = new Food.Builder().hunger(5).saturation(0.6f).build();
+        public static final Food REDLOVE = new Food.Builder().hunger(5).saturation(0.6f).effect(() -> new EffectInstance(Effects.REGENERATION, 50), 1).build();
     }
 
     @Group("building_blocks")
@@ -116,8 +122,10 @@ public class CherryModule extends AbstractModule {
     @NoItem
     public static final FlowerPotBlock POTTED_REDLOVE = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> REDLOVE_SAPLING, blockProp(Blocks.POTTED_OAK_SAPLING));
 
-    public static final Item CHERRY = new ModItem(itemProp().group(ItemGroup.FOOD));
-    public static final Item REDLOVE = new ModItem(itemProp().group(ItemGroup.FOOD));
+    public static final Item CHERRY = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.CHERRY));
+    public static final Item REDLOVE = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.REDLOVE));
+
+    public static final BasicParticleType PETAL = new BasicParticleType(false);
 
     static {
         FruitTypeExtension.CHERRY = Fruits.Type.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
@@ -144,6 +152,12 @@ public class CherryModule extends AbstractModule {
         }
     }
 
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    protected void clientInit(FMLClientSetupEvent event) {
+        Minecraft.getInstance().particles.registerFactory(PETAL, PetalParticle.Factory::new);
+    }
+
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void handleBlockColor(ColorHandlerEvent.Block event) {
@@ -159,10 +173,10 @@ public class CherryModule extends AbstractModule {
                     return blockColors.getColor(birchLeaves, world, pos, i);
                 }
                 Block block = state.getBlock();
-                if (block == CHERRY_LEAVES)
-                    return 0xE45B55;
                 if (block == REDLOVE_LEAVES)
                     return 0xC22626;
+                if (block == CHERRY_LEAVES)
+                    return 0xE45B55;
             }
             return -1;
         }, CHERRY_LEAVES, REDLOVE_LEAVES);

@@ -221,7 +221,7 @@ public final class Hook {
                 boolean isBigFlower = false;
                 if (isLeaves) {
                     newState = newState.with(FruitLeavesBlock.AGE, 2);
-                    newState = newState.with(FruitLeavesBlock.DISTANCE, state.get(FruitLeavesBlock.DISTANCE));
+                    newState = newState.with(LeavesBlock.DISTANCE, state.get(LeavesBlock.DISTANCE));
                 } else if (isFlower) {
                     if (newBlock.isIn(BlockTags.TALL_FLOWERS) && newState.has(DoublePlantBlock.HALF)) {
                         newState = newState.with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER);
