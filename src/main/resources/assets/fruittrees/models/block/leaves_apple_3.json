@@ -5,7 +5,7 @@
   },
   "parts": {
     "0": {
-      "parent": "fruittrees:block/leaves_apple"
+      "parent": "block/oak_leaves"
     },
     "1": {
       "parent": "fruittrees:block/fruit_md"

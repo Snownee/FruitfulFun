@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "group": "wooden_door",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "fruittrees:cherry_planks"
+    }
+  },
+  "result": {
+    "item": "fruittrees:cherry_door",
+    "count": 3
+  }
+}

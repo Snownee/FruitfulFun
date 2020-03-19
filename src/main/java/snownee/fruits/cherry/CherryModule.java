@@ -120,8 +120,8 @@ public class CherryModule extends AbstractModule {
     public static final Item REDLOVE = new ModItem(itemProp().group(ItemGroup.FOOD));
 
     static {
-        FruitTypeExtension.CHERRY = Fruits.Type.create("cherry", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
-        FruitTypeExtension.REDLOVE = Fruits.Type.create("redlove", CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE);
+        FruitTypeExtension.CHERRY = Fruits.Type.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
+        FruitTypeExtension.REDLOVE = Fruits.Type.create("REDLOVE", CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE);
 
         MainModule.ALL_LEAVES.add(CHERRY_LEAVES);
         MainModule.ALL_LEAVES.add(REDLOVE_LEAVES);
@@ -150,6 +150,9 @@ public class CherryModule extends AbstractModule {
         BlockState birchLeaves = Blocks.BIRCH_LEAVES.getDefaultState();
         BlockColors blockColors = event.getBlockColors();
         blockColors.register((state, world, pos, i) -> {
+            if (i == 0) {
+                return blockColors.getColor(birchLeaves, world, pos, i);
+            }
             if (i == 1) {
                 int stage = state.get(FruitLeavesBlock.AGE);
                 if (stage < 3) {

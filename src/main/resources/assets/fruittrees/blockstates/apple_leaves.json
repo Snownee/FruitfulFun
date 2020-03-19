@@ -1,7 +1,7 @@
 {
   "variants": {
-    "age=0": { "model": "fruittrees:block/leaves_apple" },
-    "age=1": { "model": "fruittrees:block/leaves_apple" },
+    "age=0": { "model": "block/oak_leaves" },
+    "age=1": { "model": "block/oak_leaves" },
     "age=2": { "model": "fruittrees:block/leaves_apple_2" },
     "age=3": [
       { "model": "fruittrees:block/leaves_apple_3" },

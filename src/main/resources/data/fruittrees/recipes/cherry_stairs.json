@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "group": "wooden_stairs",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "fruittrees:cherry_planks"
+    }
+  },
+  "result": {
+    "item": "fruittrees:cherry_stairs",
+    "count": 4
+  }
+}

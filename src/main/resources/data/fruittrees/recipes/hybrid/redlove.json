@@ -1,0 +1,19 @@
+{
+  "type": "fruittrees:hybriding",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:hybridization"
+    },
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "ingredients": [
+    { "fruit": "APPLE" },
+    { "fruit": "CHERRY" },
+    { "block": "wither_rose" }
+  ],
+  "result": { "fruit": "REDLOVE" }
+}

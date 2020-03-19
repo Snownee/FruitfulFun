@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "group": "wooden_fence",
+  "pattern": [
+    "W#W",
+    "W#W"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "W": {
+      "item": "fruittrees:cherry_planks"
+    }
+  },
+  "result": {
+    "item": "fruittrees:cherry_fence",
+    "count": 3
+  }
+}

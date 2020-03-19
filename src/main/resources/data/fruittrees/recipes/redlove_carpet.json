@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "pattern": [
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "fruittrees:redlove_leaves"
+    }
+  },
+  "result": {
+    "item": "fruittrees:redlove_carpet",
+    "count": 6
+  }
+}

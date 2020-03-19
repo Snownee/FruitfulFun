@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "group": "wooden_button",
+  "ingredients": [
+    {
+      "item": "fruittrees:cherry_planks"
+    }
+  ],
+  "result": {
+    "item": "fruittrees:cherry_button"
+  }
+}

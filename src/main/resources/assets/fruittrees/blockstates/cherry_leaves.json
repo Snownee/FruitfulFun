@@ -2,11 +2,7 @@
   "variants": {
     "age=0": { "model": "fruittrees:block/leaves_cherry" },
     "age=1": { "model": "fruittrees:block/leaves_cherry" },
-    "age=2": { "model": "fruittrees:block/leaves_cherry_2" },
-    "age=3": [
-      { "model": "fruittrees:block/leaves_cherry_2" },
-      { "model": "fruittrees:block/leaves_cherry_2", "y": 90 },
-      { "model": "fruittrees:block/leaves_cherry_2", "y": 180 }
-    ]
+    "age=2": { "model": "fruittrees:block/leaves_cherry" },
+    "age=3": { "model": "fruittrees:block/leaves_cherry_2" }
   }
 }
