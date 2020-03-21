@@ -22,7 +22,7 @@ import snownee.fruits.hybridization.Hybridization;
 @Mixin(BeeEntity.class)
 public abstract class MixinBeeEntity extends AnimalEntity {
 
-    @Shadow
+    @Shadow(aliases = { "field_226370_bJ_", "bJ" })
     public BeeEntity.PollinateGoal pollinateGoal;
 
     public MixinBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
