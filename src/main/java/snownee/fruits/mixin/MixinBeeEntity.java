@@ -2,7 +2,6 @@ package snownee.fruits.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -21,9 +20,6 @@ import snownee.fruits.hybridization.Hybridization;
 
 @Mixin(BeeEntity.class)
 public abstract class MixinBeeEntity extends AnimalEntity {
-
-    @Shadow(aliases = { "field_226370_bJ_", "bJ" })
-    private BeeEntity.PollinateGoal pollinateGoal;
 
     public MixinBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -54,7 +50,7 @@ public abstract class MixinBeeEntity extends AnimalEntity {
 
             @Override
             public void tick() {
-                if (!pollinateGoal.func_226503_k_()) {
+                if (!((BeeEntity) entity).pollinateGoal.func_226503_k_()) {
                     super.tick();
                 }
             }
