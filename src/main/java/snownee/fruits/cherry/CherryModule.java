@@ -36,8 +36,8 @@ import net.minecraft.potion.Effects;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import snownee.fruits.Fruits;
 import snownee.fruits.MainModule;
@@ -57,7 +57,7 @@ import snownee.kiwi.item.ModItem;
 
 @KiwiModule(name = "cherry")
 @KiwiModule.Optional
-@KiwiModule.Subscriber(Bus.MOD)
+@KiwiModule.Subscriber({ Bus.MOD, Bus.FORGE })
 public class CherryModule extends AbstractModule {
 
     @SuppressWarnings("hiding")
@@ -152,9 +152,9 @@ public class CherryModule extends AbstractModule {
         }
     }
 
-    @Override
+    @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    protected void clientInit(FMLClientSetupEvent event) {
+    protected void clientInit(ParticleFactoryRegisterEvent event) {
         Minecraft.getInstance().particles.registerFactory(PETAL, PetalParticle.Factory::new);
     }
 

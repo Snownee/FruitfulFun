@@ -39,7 +39,7 @@ public class FruitTreeTile extends BaseTile {
         NBTHelper helper = NBTHelper.of(compound);
         String id = helper.getString("type");
         if (id != null) {
-            type = Fruits.Type.valueOf(id);
+            type = Fruits.Type.parse(id);
             if (type == null) {
                 type = Type.CITRON;
             }
