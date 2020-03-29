@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "apple",
+    "melon_slice",
+    "sweet_berries",
+    "sugar_cane",
+    "chorus_fruit",
+    "fruittrees:citron",
+    "fruittrees:mandarin",
+    "fruittrees:orange",
+    "fruittrees:lime",
+    "fruittrees:lemon",
+    "fruittrees:grapefruit",
+    "fruittrees:pomelo",
+    "fruittrees:cherry",
+    "fruittrees:redlove"
+  ]
+}
