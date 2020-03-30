@@ -166,7 +166,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         Entity entity = context.getEntity();
-        if (entity instanceof ItemEntity || entity instanceof IFlyingAnimal) {
+        if (entity instanceof ItemEntity || entity instanceof IFlyingAnimal || entity == null && state.getBlock().getClass() == CherryLeavesBlock.class) {
             return VoxelShapes.empty();
         }
         return VoxelShapes.fullCube();

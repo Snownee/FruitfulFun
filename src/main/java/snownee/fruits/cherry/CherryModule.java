@@ -94,12 +94,15 @@ public class CherryModule extends AbstractModule {
     @Group("redstone")
     public static final PressurePlateBlock CHERRY_PRESSURE_PLATE = new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.JUNGLE_DOOR));
 
+    public static final BasicParticleType PETAL_CHERRY = new BasicParticleType(false);
+    public static final BasicParticleType PETAL_REDLOVE = new BasicParticleType(false);
+
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final LeavesBlock CHERRY_LEAVES = new CherryLeavesBlock(() -> FruitTypeExtension.CHERRY, blockProp(Blocks.OAK_LEAVES));
+    public static final LeavesBlock CHERRY_LEAVES = new CherryLeavesBlock(() -> FruitTypeExtension.CHERRY, blockProp(Blocks.OAK_LEAVES), PETAL_CHERRY);
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final LeavesBlock REDLOVE_LEAVES = new CherryLeavesBlock(() -> FruitTypeExtension.REDLOVE, blockProp(Blocks.OAK_LEAVES));
+    public static final LeavesBlock REDLOVE_LEAVES = new CherryLeavesBlock(() -> FruitTypeExtension.REDLOVE, blockProp(Blocks.OAK_LEAVES), PETAL_REDLOVE);
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
@@ -124,8 +127,6 @@ public class CherryModule extends AbstractModule {
 
     public static final Item CHERRY = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.CHERRY));
     public static final Item REDLOVE = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.REDLOVE));
-
-    public static final BasicParticleType PETAL = new BasicParticleType(false);
 
     static {
         FruitTypeExtension.CHERRY = Fruits.Type.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
@@ -155,7 +156,8 @@ public class CherryModule extends AbstractModule {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     protected void clientInit(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(PETAL, PetalParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(PETAL_CHERRY, PetalParticle.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(PETAL_REDLOVE, PetalParticle.Factory::new);
     }
 
     @SubscribeEvent

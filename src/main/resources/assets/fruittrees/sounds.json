@@ -1,1 +1,14 @@
-{}
+{
+  "block.wooden_door.close": {
+    "sounds": [
+      "fruittrees:sliding_door_close"
+    ],
+    "subtitle": "subtitles.block.door.toggle"
+  },
+  "block.wooden_door.open": {
+    "sounds": [
+      "fruittrees:sliding_door_open"
+    ],
+    "subtitle": "subtitles.block.door.toggle"
+  }
+}
