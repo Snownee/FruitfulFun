@@ -72,8 +72,10 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public void grow(ServerWorld world, Random rand, BlockPos pos, BlockState state) {
         if (state.get(AGE) == 3) {
-            world.setBlockState(pos, onPassiveGathered(world, pos, state));
-            spawnAsEntity(world, pos, new ItemStack(type.get().fruit));
+            if (FruitsConfig.fruitDrops) {
+                world.setBlockState(pos, onPassiveGathered(world, pos, state));
+                spawnAsEntity(world, pos, new ItemStack(type.get().fruit));
+            }
         } else {
             world.setBlockState(pos, state.cycle(AGE));
         }
