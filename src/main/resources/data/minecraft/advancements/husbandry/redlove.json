@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:husbandry/safely_harvest_honey",
+  "display": {
+    "icon": {
+      "item": "fruittrees:redlove"
+    },
+    "title": {
+      "translate": "advancements.fruittrees.redlove.title"
+    },
+    "description": {
+      "translate": "advancements.fruittrees.redlove.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_redlove_sapling": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [{
+          "item": "fruittrees:redlove_sapling"
+        }]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_redlove_sapling"
+    ]
+  ]
+}

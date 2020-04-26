@@ -79,5 +79,12 @@
 "gui.fruittrees.jei.category.hybriding": "Bee Pollinating",
 "gui.fruittrees.jei.tip.flowering": "%s (Blossom)",
 
+"advancements.fruittrees.grapefruit.title": "Fragrance of Citrus",
+"advancements.fruittrees.grapefruit.description": "Hybridize a grapefruit tree",
+"advancements.fruittrees.redlove.title": "Welcome to Sakura Hall",
+"advancements.fruittrees.redlove.description": "Hybridize a redlove tree",
+"advancements.fruittrees.forestbat.title": "Accelerationist",
+"advancements.fruittrees.forestbat.description": "Meet forest bat",
+
 "fruittrees.forestbat": "ForestBat"
 }

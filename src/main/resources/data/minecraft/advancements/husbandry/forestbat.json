@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:husbandry/root",
+  "display": {
+    "icon": {
+      "item": "torch"
+    },
+    "title": {
+      "translate": "advancements.fruittrees.forestbat.title"
+    },
+    "description": {
+      "translate": "advancements.fruittrees.forestbat.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "has_empowered_citron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [{
+          "item": "fruittrees:empowered_citron"
+        }]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_empowered_citron"
+    ]
+  ]
+}
