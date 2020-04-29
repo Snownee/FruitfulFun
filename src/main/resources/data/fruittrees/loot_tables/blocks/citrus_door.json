@@ -6,6 +6,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "fruittrees:citrus_door",
+              "properties": {
+                "half": "lower"
+              }
+            }
+          ],
           "name": "fruittrees:citrus_door"
         }
       ],
