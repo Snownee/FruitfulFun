@@ -1,7 +1,7 @@
 {
   "loader": "forge:composite",
   "textures": {
-    "particle": "fruittrees:block/leaves_citron"
+    "particle": "block/fruittrees/leaves_citron"
   },
   "parts": {
     "0": {

@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "fruittrees:block/cherry_planks"
+    "all": "block/fruittrees/cherry_planks"
   }
 }

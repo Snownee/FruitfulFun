@@ -1,6 +1,6 @@
 {
   "parent": "block/leaves",
   "textures": {
-    "all": "fruittrees:block/leaves_orange"
+    "all": "block/fruittrees/leaves_orange"
   }
 }

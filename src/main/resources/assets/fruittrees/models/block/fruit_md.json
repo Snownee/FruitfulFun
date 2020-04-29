@@ -1,6 +1,6 @@
 {
   "textures": {
-    "0": "fruittrees:block/fruit"
+    "0": "block/fruittrees/fruit"
   },
   "elements": [
     {

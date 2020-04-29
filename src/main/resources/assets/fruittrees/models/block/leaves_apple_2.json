@@ -11,7 +11,7 @@
     "1": {
       "parent": "fruittrees:block/flowers",
       "textures": {
-        "0": "fruittrees:block/flowers_apple"
+        "0": "block/fruittrees/flowers_apple"
       }
     }
   }

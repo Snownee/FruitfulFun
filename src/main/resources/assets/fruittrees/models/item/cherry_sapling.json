@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": { 
-    "layer0": "fruittrees:block/sapling_cherry"
+    "layer0": "block/fruittrees/sapling_cherry"
   }
 }

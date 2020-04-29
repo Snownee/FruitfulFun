@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "fruittrees:block/leaves_redlove"
+    "all": "block/fruittrees/leaves_redlove"
   }
 }
