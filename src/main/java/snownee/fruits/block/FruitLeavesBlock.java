@@ -121,7 +121,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             world.removeBlock(pos, false);
         } else if (canGrow(state) && world.isAreaLoaded(pos, 1) && world.getLight(pos.up()) >= 9) {
 
-            boolean def = rand.nextInt(100) > 99 - FruitsConfig.growingSpeed;
+            boolean def = rand.nextInt(100) > (99 - FruitsConfig.growingSpeed);
 
             if (ForgeHooks.onCropsGrowPre(world, pos, state, def)) {
                 grow(world, rand, pos, state);

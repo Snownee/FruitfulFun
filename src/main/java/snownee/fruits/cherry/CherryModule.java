@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CarpetBlock;
-import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
@@ -33,6 +32,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -44,6 +45,7 @@ import snownee.fruits.MainModule;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
+import snownee.fruits.cherry.block.SlidingDoorBlock;
 import snownee.fruits.cherry.client.particle.PetalParticle;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
@@ -87,8 +89,7 @@ public class CherryModule extends AbstractModule {
     @Group("redstone")
     public static final TrapDoorBlock CHERRY_TRAPDOOR = new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR));
     @Group("redstone")
-    @RenderLayer(Layer.CUTOUT)
-    public static final DoorBlock CHERRY_DOOR = new DoorBlock(blockProp(Blocks.JUNGLE_DOOR));
+    public static final SlidingDoorBlock CHERRY_DOOR = new SlidingDoorBlock(blockProp(Blocks.JUNGLE_DOOR));
     @Group("redstone")
     public static final WoodButtonBlock CHERRY_BUTTON = new WoodButtonBlock(blockProp(Blocks.JUNGLE_TRAPDOOR));
     @Group("redstone")
@@ -127,6 +128,9 @@ public class CherryModule extends AbstractModule {
 
     public static final Item CHERRY = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.CHERRY));
     public static final Item REDLOVE = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.REDLOVE));
+
+    public static final SoundEvent OPEN_SOUND = new SoundEvent(new ResourceLocation(Fruits.MODID, "block.wooden_door.open"));
+    public static final SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(Fruits.MODID, "block.wooden_door.close"));
 
     static {
         FruitTypeExtension.CHERRY = Fruits.Type.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
