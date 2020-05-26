@@ -177,7 +177,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
         super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
-        if (!worldIn.isRemote && fallDistance >= 1 && entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity) {
+        if (!worldIn.isRemote && fallDistance >= 1 && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
             for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 1, Math.max(0, pos.getY() - 2), pos.getZ() - 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1)) {
                 BlockState state = worldIn.getBlockState(pos2);
                 if (state.getBlock() instanceof FruitLeavesBlock) {
