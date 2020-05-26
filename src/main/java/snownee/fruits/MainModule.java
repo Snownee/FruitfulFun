@@ -60,6 +60,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
 import snownee.fruits.cherry.CherryModule;
@@ -71,6 +72,7 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Group;
 import snownee.kiwi.KiwiModule.Subscriber.Bus;
+import snownee.kiwi.Name;
 import snownee.kiwi.NoItem;
 import snownee.kiwi.RenderLayer;
 import snownee.kiwi.RenderLayer.Layer;
@@ -215,7 +217,14 @@ public final class MainModule extends AbstractModule {
 
     public static final FruitTreeFeature FEATURE = new FruitTreeFeature(TreeFeatureConfig::func_227338_a_);
 
-    public static final TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = Registry.register(Registry.TREE_DECORATOR_TYPE, new ResourceLocation(Fruits.MODID, "carpet"), new TreeDecoratorType<>(CarpetTreeDecorator::new));
+    @Name("carpet")
+    public static final TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = new TreeDecoratorType<>(CarpetTreeDecorator::new);
+
+    static {
+        if (!ForgeRegistryEntry.class.isAssignableFrom(TreeDecoratorType.class)) {
+            Registry.register(Registry.TREE_DECORATOR_TYPE, new ResourceLocation(Fruits.MODID, "carpet"), CARPET_DECORATOR);
+        }
+    }
 
     public MainModule() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, FruitsConfig.spec, "fruits.toml");
