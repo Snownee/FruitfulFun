@@ -3,6 +3,8 @@ package snownee.fruits.block;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
@@ -29,6 +31,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -72,31 +75,60 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public void grow(ServerWorld world, Random rand, BlockPos pos, BlockState state) {
         if (state.get(AGE) == 3) {
-            if (FruitsConfig.fruitDrops) {
+            if (!world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS))
+                return;
+            switch (FruitsConfig.getDropMode(world)) {
+            case INDEPENDENT:
                 world.setBlockState(pos, onPassiveGathered(world, pos, state));
                 spawnAsEntity(world, pos, new ItemStack(type.get().fruit));
+                break;
+            case ONE_BY_ONE:
+                FruitTreeTile tile = findTile(world, pos, state);
+                if (tile != null && tile.canDrop()) {
+                    ItemStack stack = new ItemStack(type.get().fruit);
+                    if (!stack.isEmpty() && !world.restoringBlockSnapshots) { // do not drop items while restoring blockstates, prevents item dupe
+                        float f = 0.5F;
+                        double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
+                        double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
+                        double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
+                        ItemEntity itementity = new ItemEntity(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, stack);
+                        itementity.setDefaultPickupDelay();
+                        if (world.addEntity(itementity))
+                            tile.setOnlyItem(itementity);
+                    }
+                }
+                break;
+            default:
+                break;
             }
         } else {
             world.setBlockState(pos, state.cycle(AGE));
         }
     }
 
-    public BlockState onPassiveGathered(ServerWorld world, BlockPos pos, BlockState state) {
-        int death = 30;
+    @Nullable
+    public FruitTreeTile findTile(ServerWorld world, BlockPos pos, BlockState state) {
         if (state.hasTileEntity()) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof FruitTreeTile) {
-                death = ((FruitTreeTile) tile).updateDeathRate();
+                return (FruitTreeTile) tile;
             }
         } else {
             for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 2, pos.getY(), pos.getZ() - 2, pos.getX() + 2, pos.getY() + 3, pos.getZ() + 2)) {
                 TileEntity tile = world.getTileEntity(pos2);
                 if (tile instanceof FruitTreeTile) {
-                    death = ((FruitTreeTile) tile).updateDeathRate();
-                    break;
+                    return (FruitTreeTile) tile;
                 }
             }
         }
+        return null;
+    }
+
+    public BlockState onPassiveGathered(ServerWorld world, BlockPos pos, BlockState state) {
+        int death = 30;
+        FruitTreeTile tile = findTile(world, pos, state);
+        if (tile != null)
+            death = tile.updateDeathRate();
         if (death >= 50 || !state.hasTileEntity() && world.rand.nextInt(50) < death) {
             return state.with(AGE, 0);
         } else {

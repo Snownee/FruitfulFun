@@ -1,5 +1,6 @@
 package snownee.fruits.tile;
 
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import snownee.fruits.Fruits;
@@ -12,6 +13,7 @@ public class FruitTreeTile extends BaseTile {
 
     public Fruits.Type type = Fruits.Type.CITRON;
     private int deathRate = 0;
+    private ItemEntity onlyItem;
 
     public FruitTreeTile() {
         super(MainModule.FRUIT_TREE);
@@ -57,5 +59,13 @@ public class FruitTreeTile extends BaseTile {
         compound.putString("type", type.name());
         compound.putInt("death", deathRate);
         return compound;
+    }
+
+    public boolean canDrop() {
+        return onlyItem == null || !onlyItem.isAlive();
+    }
+
+    public void setOnlyItem(ItemEntity itementity) {
+        onlyItem = itementity;
     }
 }
