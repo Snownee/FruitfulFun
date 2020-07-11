@@ -1,16 +1,16 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[32,)"
 [[mods]]
 modId="fruittrees"
 version="${file.jarVersion}"
 displayName="Fruit Trees"
-authors="Snownee, WZD, Coco(几何), MalayP"
+authors="Snownee, WZD, MalayP"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/fruit-trees"
 description=""
 
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[2.6.4, 2.10)"
+    versionRange="[3.1.0, 3.7)"
     ordering="BEFORE"
     side="BOTH"

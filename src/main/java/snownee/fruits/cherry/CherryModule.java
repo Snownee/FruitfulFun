@@ -13,7 +13,6 @@ import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.LogBlock;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.SaplingBlock;
@@ -21,7 +20,6 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.block.WoodButtonBlock;
-import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.AxeItem;
@@ -57,7 +55,7 @@ import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
 
-@KiwiModule(name = "cherry")
+@KiwiModule("cherry")
 @KiwiModule.Optional
 @KiwiModule.Subscriber({ Bus.MOD, Bus.FORGE })
 public class CherryModule extends AbstractModule {
@@ -69,23 +67,23 @@ public class CherryModule extends AbstractModule {
     }
 
     @Group("building_blocks")
-    public static final LogBlock CHERRY_LOG = new LogBlock(MaterialColor.DIRT, blockProp(Blocks.OAK_LOG));
+    public static final RotatedPillarBlock CHERRY_LOG = new RotatedPillarBlock(blockProp(Blocks.OAK_LOG));
     @Group("building_blocks")
-    public static final Block CHERRY_WOOD = init(new RotatedPillarBlock(blockProp(Blocks.JUNGLE_WOOD)));
+    public static final Block CHERRY_WOOD = new RotatedPillarBlock(blockProp(Blocks.JUNGLE_WOOD));
     @Group("building_blocks")
-    public static final Block STRIPPED_CHERRY_LOG = init(new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_LOG)));
+    public static final Block STRIPPED_CHERRY_LOG = new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_LOG));
     @Group("building_blocks")
-    public static final Block STRIPPED_CHERRY_WOOD = init(new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_WOOD)));
+    public static final Block STRIPPED_CHERRY_WOOD = new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_WOOD));
     @Group("building_blocks")
     public static final Block CHERRY_PLANKS = new ModBlock(blockProp(Blocks.JUNGLE_PLANKS));
     @Group("building_blocks")
-    public static final SlabBlock CHERRY_SLAB = init(new SlabBlock(blockProp(Blocks.JUNGLE_SLAB)));
+    public static final SlabBlock CHERRY_SLAB = new SlabBlock(blockProp(Blocks.JUNGLE_SLAB));
     @Group("building_blocks")
-    public static final StairsBlock CHERRY_STAIRS = init(new StairsBlock(() -> CHERRY_PLANKS.getDefaultState(), blockProp(Blocks.JUNGLE_STAIRS)));
+    public static final StairsBlock CHERRY_STAIRS = new StairsBlock(() -> CHERRY_PLANKS.getDefaultState(), blockProp(Blocks.JUNGLE_STAIRS));
     @Group("decorations")
-    public static final FenceBlock CHERRY_FENCE = init(new FenceBlock(blockProp(Blocks.JUNGLE_FENCE)));
+    public static final FenceBlock CHERRY_FENCE = new FenceBlock(blockProp(Blocks.JUNGLE_FENCE));
     @Group("redstone")
-    public static final FenceGateBlock CHERRY_FENCE_GATE = init(new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE)));
+    public static final FenceGateBlock CHERRY_FENCE_GATE = new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE));
     @Group("redstone")
     public static final TrapDoorBlock CHERRY_TRAPDOOR = new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR));
     @Group("redstone")
@@ -107,10 +105,10 @@ public class CherryModule extends AbstractModule {
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final CarpetBlock CHERRY_CARPET = init(new CarpetBlock(DyeColor.PINK, blockProp(CHERRY_LEAVES)));
+    public static final CarpetBlock CHERRY_CARPET = new CarpetBlock(DyeColor.PINK, blockProp(CHERRY_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final CarpetBlock REDLOVE_CARPET = init(new CarpetBlock(DyeColor.WHITE, blockProp(REDLOVE_LEAVES)));
+    public static final CarpetBlock REDLOVE_CARPET = new CarpetBlock(DyeColor.WHITE, blockProp(REDLOVE_LEAVES));
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)

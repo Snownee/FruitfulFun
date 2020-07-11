@@ -6,8 +6,6 @@
   "mixins": [
     "MixinPollinateGoal",
     "MixinBeeEntity",
-    "MixinFlyingNodeProcessor",
-    "MixinWalkNodeProcessor",
     "MixinServerWorld"
   ],
   "injectors": {

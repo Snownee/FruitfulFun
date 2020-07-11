@@ -6,7 +6,7 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.Name;
 
-@KiwiModule(name = "hybridization")
+@KiwiModule("hybridization")
 @KiwiModule.Optional
 public class Hybridization extends AbstractModule {
 

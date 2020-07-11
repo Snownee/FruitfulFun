@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -21,8 +20,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityType;
@@ -30,7 +27,11 @@ import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import snownee.fruits.Fruits;
 import snownee.fruits.Fruits.Type;
 import snownee.fruits.MainModule;
@@ -83,15 +84,15 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
     }
 
     @Override
-    public void draw(HybridingRecipe recipe, double mouseX, double mouseY) {
+    public void draw(HybridingRecipe recipe, MatrixStack matrix, double mouseX, double mouseY) {
         float f1 = (float) Math.atan(-10 / 40.0F);
-        x.draw(18, 22);
-        line.draw(54, 26);
+        x.draw(matrix, 18, 22);
+        line.draw(matrix, 54, 26);
 
-        RenderSystem.pushMatrix();
+        matrix.push();
 
-        RenderSystem.translatef(70, 24, 1050.0F);
-        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
+        matrix.translate(70, 24, 1050);
+        matrix.scale(1, 1, -1);
 
         MatrixStack matrixstack = new MatrixStack();
         matrixstack.translate(0.0D, 0.0D, 1000.0D);
@@ -114,7 +115,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
         irendertypebuffer$impl.finish();
         entityrenderermanager.setRenderShadow(true);
 
-        RenderSystem.popMatrix();
+        matrix.pop();
     }
 
     @Override
@@ -157,13 +158,14 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
             }
             if (input) {
                 if (stack.getItem().isIn(ItemTags.LEAVES)) {
-                    String line = I18n.format("gui.fruittrees.jei.tip.flowering", tooltip.get(0));
+                    ITextComponent line = new TranslationTextComponent("gui.fruittrees.jei.tip.flowering", tooltip.get(0));
                     tooltip.set(0, line);
                 }
             } else {
-                boolean showAdvanced = Minecraft.getInstance().gameSettings.advancedItemTooltips || Screen.hasShiftDown();
+                boolean showAdvanced = Minecraft.getInstance().gameSettings.advancedItemTooltips || Screen./*hasShiftDown*/func_231173_s_();
                 if (showAdvanced) {
-                    tooltip.add(TextFormatting.DARK_GRAY + I18n.format("jei.tooltip.recipe.id", recipe.getId()));
+                    TranslationTextComponent recipeId = new TranslationTextComponent("jei.tooltip.recipe.id", recipe.getId());
+                    tooltip.add(recipeId.func_240699_a_(TextFormatting.DARK_GRAY));
                 }
             }
         });

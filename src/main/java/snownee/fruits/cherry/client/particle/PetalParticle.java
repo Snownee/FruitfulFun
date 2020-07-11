@@ -10,18 +10,18 @@ import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.world.World;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,7 +36,7 @@ public class PetalParticle extends SpriteTexturedParticle {
     private float prevParticleAngleX;
     private boolean inWater;
 
-    private PetalParticle(World world, double posX, double posY, double posZ) {
+    private PetalParticle(ClientWorld world, double posX, double posY, double posZ) {
         super(world, posX, posY, posZ);
         this.maxAge = 100;
         age = rand.nextInt(20);
@@ -129,7 +129,7 @@ public class PetalParticle extends SpriteTexturedParticle {
         int iy = (int) posY;
         int iz = (int) posZ;
         Chunk chunk = world.getChunk(ix >> 4, iz >> 4);
-        IFluidState fluidState = chunk.getFluidState(ix, iy, iz);
+        FluidState fluidState = chunk.getFluidState(ix, iy, iz);
         float height = fluidState.getHeight();
         if (fluidState.isTagged(FluidTags.WATER)) {
             if (!inWater && posY <= height + iy) {
@@ -139,15 +139,15 @@ public class PetalParticle extends SpriteTexturedParticle {
                 prevPosY = posY = height + iy;
             }
             if (inWater) {
-                Vec3d flow = fluidState.getFlow(world, new BlockPos(ix, iy, iz));
+                Vector3d flow = fluidState.getFlow(world, new BlockPos(ix, iy, iz));
                 motionX += flow.x * 0.02;
                 motionZ += flow.z * 0.02;
                 x = motionX;
                 z = motionZ;
             }
         } else if (inWater) {
-//            inWater = false;
-//            motionY = -0.1f;
+            //            inWater = false;
+            //            motionY = -0.1f;
         }
 
         double lastX = x; // [d0]
@@ -155,7 +155,7 @@ public class PetalParticle extends SpriteTexturedParticle {
         double lastZ = z; // < Create variable 'lastZ' and assign it to 'z'.
 
         if (x != 0.0D || y != 0.0D || z != 0.0D) {
-            Vec3d moveVec = Entity.collideBoundingBoxHeuristically((Entity) null, new Vec3d(x, y, z), this.getBoundingBox(), this.world, ISelectionContext.dummy(), new ReuseableStream<>(Stream.empty())); // [vec3d]
+            Vector3d moveVec = Entity.collideBoundingBoxHeuristically((Entity) null, new Vector3d(x, y, z), this.getBoundingBox(), this.world, ISelectionContext.dummy(), new ReuseableStream<>(Stream.empty())); // [vec3d]
             x = moveVec.x;
             y = moveVec.y;
             z = moveVec.z;
@@ -193,7 +193,7 @@ public class PetalParticle extends SpriteTexturedParticle {
 
     @Override
     public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
-        Vec3d vec3d = renderInfo.getProjectedView();
+        Vector3d vec3d = renderInfo.getProjectedView();
         float f = (float) (MathHelper.lerp(partialTicks, this.prevPosX, this.posX) - vec3d.getX());
         float f1 = (float) -vec3d.getY();
         if (inWater) {
@@ -253,10 +253,11 @@ public class PetalParticle extends SpriteTexturedParticle {
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             PetalParticle noteparticle = new PetalParticle(worldIn, x, y, z);
             noteparticle.selectSpriteRandomly(this.spriteSet);
             return noteparticle;
         }
+
     }
 }

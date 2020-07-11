@@ -1,5 +1,6 @@
 package snownee.fruits.tile;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
@@ -37,7 +38,7 @@ public class FruitTreeTile extends BaseTile {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
+    public void /*read*/ func_230337_a_(BlockState state, CompoundNBT compound) {
         NBTHelper helper = NBTHelper.of(compound);
         String id = helper.getString("type");
         if (id != null) {
@@ -50,7 +51,7 @@ public class FruitTreeTile extends BaseTile {
             type = types[MathHelper.clamp(helper.getInt("type"), 0, types.length)];
         }
         deathRate = helper.getInt("death");
-        super.read(compound);
+        super./*read*/func_230337_a_(state, compound);
     }
 
     @Override

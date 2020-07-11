@@ -87,7 +87,6 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
                 if (tile != null && tile.canDrop()) {
                     ItemStack stack = new ItemStack(type.get().fruit);
                     if (!stack.isEmpty() && !world.restoringBlockSnapshots) { // do not drop items while restoring blockstates, prevents item dupe
-                        float f = 0.5F;
                         double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
                         double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
                         double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
@@ -102,7 +101,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
                 break;
             }
         } else {
-            world.setBlockState(pos, state.cycle(AGE));
+            world.setBlockState(pos, state.func_235896_a_/*cycle*/(AGE));
         }
     }
 

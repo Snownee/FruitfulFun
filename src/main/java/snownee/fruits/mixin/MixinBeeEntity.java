@@ -11,9 +11,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.BeeEntity;
+import net.minecraft.pathfinding.FlyingNodeProcessor;
 import net.minecraft.pathfinding.FlyingPathNavigator;
+import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.hybridization.Hybridization;
@@ -50,9 +54,21 @@ public abstract class MixinBeeEntity extends AnimalEntity {
 
             @Override
             public void tick() {
-                if (!((BeeEntity) entity).pollinateGoal.func_226503_k_()) {
+                if (!((BeeEntity) entity).pollinateGoal.isRunning()) {
                     super.tick();
                 }
+            }
+
+            @Override
+            protected PathFinder getPathFinder(int p_179679_1_) {
+                this.nodeProcessor = new FlyingNodeProcessor() {
+                    @Override
+                    protected PathNodeType func_215744_a(IBlockReader world, boolean p_215744_2_, boolean p_215744_3_, BlockPos pos, PathNodeType nodeType) {
+                        return nodeType == PathNodeType.LEAVES ? PathNodeType.OPEN : super.func_215744_a(world, p_215744_2_, p_215744_3_, pos, nodeType);
+                    }
+                };
+                this.nodeProcessor.setCanEnterDoors(true);
+                return new PathFinder(this.nodeProcessor, p_179679_1_);
             }
         };
         flyingpathnavigator.setCanOpenDoors(false);

@@ -20,9 +20,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -76,7 +76,7 @@ public class SlidingDoorBlock extends DoorBlock {
             worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 35);
             worldIn.playEvent(player, 2001, blockpos, Block.getStateId(blockstate));
             ItemStack itemstack = player.getHeldItemMainhand();
-            if (!worldIn.isRemote && !player.isCreative() && player.canHarvestBlock(blockstate)) {
+            if (!worldIn.isRemote && !player.isCreative() && player./*canHarvestBlock*/func_234569_d_(blockstate)) {
                 Block.spawnDrops(state, worldIn, pos, (TileEntity) null, player, itemstack);
                 Block.spawnDrops(blockstate, worldIn, blockpos, (TileEntity) null, player, itemstack);
             }
@@ -118,14 +118,14 @@ public class SlidingDoorBlock extends DoorBlock {
         BlockState blockstate2 = iblockreader.getBlockState(blockpos4);
         BlockPos blockpos5 = blockpos1.offset(direction2);
         BlockState blockstate3 = iblockreader.getBlockState(blockpos5);
-        int i = (blockstate.isCollisionShapeOpaque(iblockreader, blockpos2) ? -1 : 0) + (blockstate1.isCollisionShapeOpaque(iblockreader, blockpos3) ? -1 : 0) + (blockstate2.isCollisionShapeOpaque(iblockreader, blockpos4) ? 1 : 0) + (blockstate3.isCollisionShapeOpaque(iblockreader, blockpos5) ? 1 : 0);
+        int i = (blockstate./*isCollisionShapeOpaque*/func_235785_r_(iblockreader, blockpos2) ? -1 : 0) + (blockstate1./*isCollisionShapeOpaque*/func_235785_r_(iblockreader, blockpos3) ? -1 : 0) + (blockstate2./*isCollisionShapeOpaque*/func_235785_r_(iblockreader, blockpos4) ? 1 : 0) + (blockstate3./*isCollisionShapeOpaque*/func_235785_r_(iblockreader, blockpos5) ? 1 : 0);
         boolean flag = blockstate.getBlock() == this && blockstate.get(HALF) == DoubleBlockHalf.LOWER;
         boolean flag1 = blockstate2.getBlock() == this && blockstate2.get(HALF) == DoubleBlockHalf.LOWER;
         if ((!flag || flag1) && i <= 0) {
             if ((!flag1 || flag) && i >= 0) {
                 int j = direction.getXOffset();
                 int k = direction.getZOffset();
-                Vec3d vec3d = p_208073_1_.getHitVec();
+                Vector3d vec3d = p_208073_1_.getHitVec();
                 double d0 = vec3d.x - blockpos.getX();
                 double d1 = vec3d.z - blockpos.getZ();
                 return (j >= 0 || !(d1 < 0.5D)) && (j <= 0 || !(d1 > 0.5D)) && (k >= 0 || !(d0 > 0.5D)) && (k <= 0 || !(d0 < 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT;
@@ -142,7 +142,7 @@ public class SlidingDoorBlock extends DoorBlock {
         if (this.material == Material.IRON) {
             return ActionResultType.PASS;
         } else {
-            state = state.cycle(OPEN);
+            state = state.func_235896_a_/*cycle*/(OPEN);
             worldIn.setBlockState(pos, state, 10);
             playSound(worldIn, pos, state.get(OPEN) == Boolean.TRUE);
             return ActionResultType.SUCCESS;
