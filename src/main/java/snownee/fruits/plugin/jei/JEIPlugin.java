@@ -25,14 +25,14 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
-        if (Hook.mixin && Registry.RECIPE_TYPE.containsKey(UID)) {
+        if (Fruits.mixin && Registry.RECIPE_TYPE.containsKey(UID)) {
             registration.addRecipeCategories(new HybridingCategory(registration.getJeiHelpers().getGuiHelper()));
         }
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        if (Hook.mixin && Registry.RECIPE_TYPE.containsKey(UID)) {
+        if (Fruits.mixin && Registry.RECIPE_TYPE.containsKey(UID)) {
             ClientWorld world = Minecraft.getInstance().world;
             RecipeManager recipeManager = world.getRecipeManager();
             registration.addRecipes(recipeManager.getRecipes(Hybridization.RECIPE_TYPE).values(), UID);

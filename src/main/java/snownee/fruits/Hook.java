@@ -39,8 +39,6 @@ import snownee.kiwi.util.Util;
 
 public final class Hook {
 
-    public static boolean mixin;
-
     private Hook() {}
 
     public static PathNodeType func_227480_b_(IBlockReader p_227480_0_, int p_227480_1_, int p_227480_2_, int p_227480_3_, MobEntity entity) {

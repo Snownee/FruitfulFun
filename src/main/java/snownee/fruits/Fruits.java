@@ -24,6 +24,8 @@ public final class Fruits {
 
     public static Logger logger = LogManager.getLogger(Fruits.NAME);
 
+    public static boolean mixin;
+
     public static enum Type implements IExtensibleEnum {
         MANDARIN(MainModule.CITRUS_LOG, MainModule.MANDARIN_LEAVES, () -> MainModule.MANDARIN_SAPLING, MainModule.MANDARIN),
         LIME(MainModule.CITRUS_LOG, MainModule.LIME_LEAVES, () -> MainModule.LIME_SAPLING, MainModule.LIME),
@@ -61,6 +63,6 @@ public final class Fruits {
 
     @LoadingCondition("hybridization")
     public static boolean shouldLoadHybridization(LoadingContext ctx) {
-        return Hook.mixin;
+        return mixin;
     }
 }
