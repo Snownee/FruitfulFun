@@ -171,7 +171,7 @@ public final class Hook {
     public static void onPollinateComplete(BeeEntity bee) {
         BlockState state = bee.world.getBlockState(bee.savedFlowerPos);
         Block block = state.getBlock();
-        Fruits.Type type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
+        FruitType type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
         NBTHelper data = NBTHelper.of(bee.getPersistentData());
         int count = data.getInt("FruitsCount");
         ListNBT list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
@@ -190,14 +190,14 @@ public final class Hook {
             data.setInt("FruitsCount", count + 1);
         }
         if (list.size() > 1) {
-            Set<Either<Fruits.Type, Block>> ingredients = Sets.newHashSet();
+            Set<Either<FruitType, Block>> ingredients = Sets.newHashSet();
             list.forEach(e -> {
                 String _id = e.getString();
                 if (_id.startsWith("_")) {
                     Block _block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(_id.substring(1)));
                     ingredients.add(Either.right(_block));
                 } else {
-                    Fruits.Type _type = Fruits.Type.parse(_id);
+                    FruitType _type = FruitType.parse(_id);
                     ingredients.add(Either.left(_type));
                 }
             });

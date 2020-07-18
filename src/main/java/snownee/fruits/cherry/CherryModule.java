@@ -41,6 +41,7 @@ import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import snownee.fruits.Fruits;
+import snownee.fruits.FruitType;
 import snownee.fruits.MainModule;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
@@ -133,8 +134,8 @@ public class CherryModule extends AbstractModule {
     public static final SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(Fruits.MODID, "block.wooden_door.close"));
 
     static {
-        FruitTypeExtension.CHERRY = Fruits.Type.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
-        FruitTypeExtension.REDLOVE = Fruits.Type.create("REDLOVE", CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE);
+        FruitTypeExtension.CHERRY = FruitType.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
+        FruitTypeExtension.REDLOVE = FruitType.create("REDLOVE", CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE);
 
         MainModule.ALL_LEAVES.add(CHERRY_LEAVES);
         MainModule.ALL_LEAVES.add(REDLOVE_LEAVES);

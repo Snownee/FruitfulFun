@@ -111,28 +111,28 @@ public final class MainModule extends AbstractModule {
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock MANDARIN_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.MANDARIN, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock MANDARIN_LEAVES = init(new FruitLeavesBlock(() -> FruitType.MANDARIN, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock LIME_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.LIME, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock LIME_LEAVES = init(new FruitLeavesBlock(() -> FruitType.LIME, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock CITRON_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.CITRON, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock CITRON_LEAVES = init(new FruitLeavesBlock(() -> FruitType.CITRON, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock POMELO_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.POMELO, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock POMELO_LEAVES = init(new FruitLeavesBlock(() -> FruitType.POMELO, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock ORANGE_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.ORANGE, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock ORANGE_LEAVES = init(new FruitLeavesBlock(() -> FruitType.ORANGE, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock LEMON_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.LEMON, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock LEMON_LEAVES = init(new FruitLeavesBlock(() -> FruitType.LEMON, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock GRAPEFRUIT_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock GRAPEFRUIT_LEAVES = init(new FruitLeavesBlock(() -> FruitType.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES)));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock APPLE_LEAVES = init(new FruitLeavesBlock(() -> Fruits.Type.APPLE, blockProp(Blocks.OAK_LEAVES)));
+    public static final FruitLeavesBlock APPLE_LEAVES = init(new FruitLeavesBlock(() -> FruitType.APPLE, blockProp(Blocks.OAK_LEAVES)));
 
     public static final Set<Block> ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES)));
     public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType(FruitTreeTile::new, ALL_LEAVES, null);
@@ -167,28 +167,28 @@ public final class MainModule extends AbstractModule {
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock MANDARIN_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.MANDARIN), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock MANDARIN_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.MANDARIN), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock LIME_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.LIME), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock LIME_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.LIME), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock CITRON_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.CITRON), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock CITRON_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.CITRON), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock POMELO_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.POMELO), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock POMELO_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.POMELO), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock ORANGE_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.ORANGE), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock ORANGE_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.ORANGE), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock LEMON_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.LEMON), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock LEMON_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.LEMON), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock GRAPEFRUIT_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.GRAPEFRUIT), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock GRAPEFRUIT_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.GRAPEFRUIT), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock APPLE_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.APPLE), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock APPLE_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.APPLE), blockProp(Blocks.OAK_SAPLING));
 
     @RenderLayer(Layer.CUTOUT)
     @NoItem
@@ -251,7 +251,7 @@ public final class MainModule extends AbstractModule {
             AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_LOG, STRIPPED_CITRUS_LOG);
             AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
 
-            for (Fruits.Type type : Fruits.Type.values()) {
+            for (FruitType type : FruitType.values()) {
                 ComposterBlock.CHANCES.put(type.fruit, 0.5f);
                 ComposterBlock.CHANCES.put(type.leaves.asItem(), 0.3f);
                 ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
@@ -263,7 +263,7 @@ public final class MainModule extends AbstractModule {
 
     @Override
     protected void postInit() {
-        List<Fruits.Type> types = Arrays.asList(Fruits.Type.CITRON, Fruits.Type.LIME, Fruits.Type.MANDARIN);
+        List<FruitType> types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
         for (Biome biome : Biome.BIOMES) {
             Biome.RainType rainType = biome.getPrecipitation();
             if (rainType != Biome.RainType.RAIN) {
@@ -296,7 +296,7 @@ public final class MainModule extends AbstractModule {
                 continue;
             }
             if (count > 0 || chance > 0) {
-                for (Fruits.Type type : types) {
+                for (FruitType type : types) {
                     ConfiguredFeature<?, ?> cf = buildTreeFeature(type, true, null);
                     cf = cf.withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
                     biome.addFeature(Decoration.VEGETAL_DECORATION, cf);
@@ -310,7 +310,7 @@ public final class MainModule extends AbstractModule {
         }
     }
 
-    public static ConfiguredFeature<TreeFeatureConfig, ?> buildTreeFeature(Fruits.Type type, boolean worldGen, BlockStateProvider carpetProvider) {
+    public static ConfiguredFeature<TreeFeatureConfig, ?> buildTreeFeature(FruitType type, boolean worldGen, BlockStateProvider carpetProvider) {
         BlockStateProvider leavesProvider;
         List<TreeDecorator> decorators;
         if (worldGen) {

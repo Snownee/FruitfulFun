@@ -39,8 +39,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.ItemHandlerHelper;
-import snownee.fruits.Fruits;
 import snownee.fruits.FruitsConfig;
+import snownee.fruits.FruitType;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.tile.FruitTreeTile;
 import snownee.fruits.world.gen.treedecorator.CarpetTreeDecorator;
@@ -49,9 +49,9 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
 
-    public final Supplier<Fruits.Type> type;
+    public final Supplier<FruitType> type;
 
-    public FruitLeavesBlock(Supplier<Fruits.Type> type, Properties properties) {
+    public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
         super(properties);
         this.type = type;
         this.setDefaultState(this.stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, false).with(AGE, 1));
@@ -87,7 +87,6 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
                 if (tile != null && tile.canDrop()) {
                     ItemStack stack = new ItemStack(type.get().fruit);
                     if (!stack.isEmpty() && !world.restoringBlockSnapshots) { // do not drop items while restoring blockstates, prevents item dupe
-                        float f = 0.5F;
                         double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
                         double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
                         double d2 = world.rand.nextFloat() * 0.5F + 0.25D;

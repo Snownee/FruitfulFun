@@ -10,7 +10,6 @@ import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import snownee.fruits.Fruits;
-import snownee.fruits.Hook;
 import snownee.fruits.hybridization.Hybridization;
 
 @JeiPlugin

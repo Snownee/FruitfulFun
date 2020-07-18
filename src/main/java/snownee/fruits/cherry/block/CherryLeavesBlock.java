@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import snownee.fruits.Fruits.Type;
+import snownee.fruits.FruitType;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.world.gen.treedecorator.CarpetTreeDecorator;
@@ -23,7 +23,7 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 
     protected final IParticleData particleType;
 
-    public CherryLeavesBlock(Supplier<Type> type, Properties properties, IParticleData particleType) {
+    public CherryLeavesBlock(Supplier<FruitType> type, Properties properties, IParticleData particleType) {
         super(type, properties);
         this.particleType = particleType;
     }

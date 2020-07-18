@@ -6,20 +6,20 @@ import java.util.function.Supplier;
 import net.minecraft.block.trees.Tree;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
-import snownee.fruits.Fruits;
+import snownee.fruits.FruitType;
 import snownee.fruits.MainModule;
 
 public class FruitTree extends Tree {
 
-    private final Supplier<Fruits.Type> typeSupplier;
+    private final Supplier<FruitType> typeSupplier;
 
-    public FruitTree(Supplier<Fruits.Type> type) {
+    public FruitTree(Supplier<FruitType> type) {
         this.typeSupplier = type;
     }
 
     @Override // FIXME
     protected ConfiguredFeature<TreeFeatureConfig, ?> getTreeFeature(Random random, boolean p_225546_2_) {
-        Fruits.Type type = typeSupplier.get();
+        FruitType type = typeSupplier.get();
         return MainModule.buildTreeFeature(type, false, null);
     }
 

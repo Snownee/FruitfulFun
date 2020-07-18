@@ -32,7 +32,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import snownee.fruits.Fruits;
-import snownee.fruits.Fruits.Type;
+import snownee.fruits.FruitType;
 import snownee.fruits.MainModule;
 import snownee.fruits.hybridization.HybridingRecipe;
 
@@ -124,7 +124,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 
     @Override
     public void setIngredients(HybridingRecipe recipe, IIngredients ingredients) {
-        Either<Type, Block> result = recipe.getResult(recipe.ingredients);
+        Either<FruitType, Block> result = recipe.getResult(recipe.ingredients);
         ImmutableList.Builder<ItemStack> outputs = ImmutableList.builder();
         result.ifLeft(t -> {
             outputs.add(t.sapling.get().asItem().getDefaultInstance(), t.fruit.asItem().getDefaultInstance());
@@ -136,8 +136,8 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
         ingredients.setInputs(VanillaTypes.ITEM, inputs);
     }
 
-    public static ItemStack asItem(Either<Fruits.Type, Block> either) {
-        Optional<Fruits.Type> left = either.left();
+    public static ItemStack asItem(Either<FruitType, Block> either) {
+        Optional<FruitType> left = either.left();
         if (left.isPresent()) {
             return left.get().leaves.asItem().getDefaultInstance();
         } else {
