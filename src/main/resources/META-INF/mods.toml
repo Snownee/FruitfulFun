@@ -11,6 +11,6 @@ description=""
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[2.6.4, 2.10)"
+    versionRange="[2.8, 2.12)"
     ordering="BEFORE"
     side="BOTH"
