@@ -35,34 +35,33 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
+import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
-import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.TwoLayerFeature;
+import net.minecraft.world.gen.foliageplacer.FoliagePlacerType;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
+import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.FruitTypeExtension;
 import snownee.fruits.tile.FruitTreeTile;
-import snownee.fruits.world.gen.feature.FruitTreeFeature;
+import snownee.fruits.world.gen.foliageplacer.FruitBlobFoliagePlacer;
 import snownee.fruits.world.gen.treedecorator.CarpetTreeDecorator;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
@@ -76,8 +75,8 @@ import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
 
 @KiwiModule
-@KiwiModule.Subscriber({ Bus.MOD, Bus.FORGE })
-public final class MainModule extends AbstractModule { // TODO block map colors?
+@KiwiModule.Subscriber(Bus.MOD)
+public final class CoreModule extends AbstractModule { // TODO block map colors?
 
     @SuppressWarnings("hiding")
     public static final class Foods {
@@ -107,31 +106,28 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock MANDARIN_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.MANDARIN, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock MANDARIN_LEAVES = new FruitLeavesBlock(() -> FruitType.MANDARIN, blockProp(Blocks.OAK_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock LIME_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.LIME, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock LIME_LEAVES = new FruitLeavesBlock(() -> FruitType.LIME, blockProp(Blocks.OAK_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock CITRON_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.CITRON, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock CITRON_LEAVES = new FruitLeavesBlock(() -> FruitType.CITRON, blockProp(Blocks.OAK_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock POMELO_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.POMELO, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock POMELO_LEAVES = new FruitLeavesBlock(() -> FruitType.POMELO, blockProp(Blocks.OAK_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock ORANGE_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.ORANGE, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock ORANGE_LEAVES = new FruitLeavesBlock(() -> FruitType.ORANGE, blockProp(Blocks.OAK_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock LEMON_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.LEMON, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock LEMON_LEAVES = new FruitLeavesBlock(() -> FruitType.LEMON, blockProp(Blocks.OAK_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock GRAPEFRUIT_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES));
+    public static final FruitLeavesBlock GRAPEFRUIT_LEAVES = new FruitLeavesBlock(() -> FruitType.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final FruitLeavesBlock APPLE_LEAVES = new FruitLeavesBlock(() -> Fruits.Type.APPLE, blockProp(Blocks.OAK_LEAVES));
-
-    public static final Set<Block> ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES)));
-    public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType(FruitTreeTile::new, ALL_LEAVES, null);
+    public static final FruitLeavesBlock APPLE_LEAVES = new FruitLeavesBlock(() -> FruitType.APPLE, blockProp(Blocks.OAK_LEAVES));
 
     @Group("building_blocks")
     public static final RotatedPillarBlock CITRUS_LOG = new RotatedPillarBlock(blockProp(Blocks.JUNGLE_LOG));
@@ -163,28 +159,28 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
 
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock MANDARIN_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.MANDARIN), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock MANDARIN_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.MANDARIN), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock LIME_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.LIME), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock LIME_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.LIME), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock CITRON_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.CITRON), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock CITRON_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.CITRON), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock POMELO_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.POMELO), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock POMELO_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.POMELO), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock ORANGE_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.ORANGE), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock ORANGE_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.ORANGE), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock LEMON_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.LEMON), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock LEMON_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.LEMON), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock GRAPEFRUIT_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.GRAPEFRUIT), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock GRAPEFRUIT_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.GRAPEFRUIT), blockProp(Blocks.OAK_SAPLING));
     @Group("decorations")
     @RenderLayer(Layer.CUTOUT)
-    public static final SaplingBlock APPLE_SAPLING = new SaplingBlock(new FruitTree(() -> Fruits.Type.APPLE), blockProp(Blocks.OAK_SAPLING));
+    public static final SaplingBlock APPLE_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.APPLE), blockProp(Blocks.OAK_SAPLING));
 
     @RenderLayer(Layer.CUTOUT)
     @NoItem
@@ -211,19 +207,17 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
     @NoItem
     public static final FlowerPotBlock POTTED_APPLE = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> APPLE_SAPLING, blockProp(Blocks.POTTED_JUNGLE_SAPLING));
 
-    public static final FruitTreeFeature FEATURE = new FruitTreeFeature(TreeFeatureConfig::func_227338_a_);
+    public static final Set<Block> ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES)));
+    public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType(FruitTreeTile::new, ALL_LEAVES, null);
 
     @Name("carpet")
-    public static final TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = new TreeDecoratorType<>(CarpetTreeDecorator::new);
+    public static final TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = new TreeDecoratorType<>(CarpetTreeDecorator.CODEC);
 
-    public MainModule() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, FruitsConfig.spec, "fruits.toml");
-    }
+    @Name("blob")
+    public static final FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC);
 
     @Override
     protected void init(FMLCommonSetupEvent event) {
-        FruitsConfig.refresh();
-
         try {
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
             pot.addPlant(MANDARIN_SAPLING.getRegistryName(), () -> POTTED_MANDARIN);
@@ -241,19 +235,19 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
             AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_LOG, STRIPPED_CITRUS_LOG);
             AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
 
-            for (Fruits.Type type : Fruits.Type.values()) {
+            for (FruitType type : FruitType.values()) {
                 ComposterBlock.CHANCES.put(type.fruit, 0.5f);
                 ComposterBlock.CHANCES.put(type.leaves.asItem(), 0.3f);
                 ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
             }
         } catch (Exception e) {
-            Fruits.logger.catching(e);
+            FruitsMod.logger.catching(e);
         }
     }
 
     @Override
     protected void postInit() {
-        List<Fruits.Type> types = Arrays.asList(Fruits.Type.CITRON, Fruits.Type.LIME, Fruits.Type.MANDARIN);
+        List<FruitType> types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
         for (Biome biome : Biome.BIOMES) {
             Biome.RainType rainType = biome.getPrecipitation();
             if (rainType != Biome.RainType.RAIN) {
@@ -286,7 +280,7 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
                 continue;
             }
             if (count > 0 || chance > 0) {
-                for (Fruits.Type type : types) {
+                for (FruitType type : types) {
                     ConfiguredFeature<?, ?> cf = buildTreeFeature(type, true, null);
                     cf = cf.withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
                     biome.addFeature(Decoration.VEGETAL_DECORATION, cf);
@@ -300,7 +294,7 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
         }
     }
 
-    public static ConfiguredFeature<TreeFeatureConfig, ?> buildTreeFeature(Fruits.Type type, boolean worldGen, BlockStateProvider carpetProvider) {
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> buildTreeFeature(FruitType type, boolean worldGen, BlockStateProvider carpetProvider) {
         BlockStateProvider leavesProvider;
         List<TreeDecorator> decorators;
         if (worldGen) {
@@ -309,12 +303,12 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
             } else {
                 decorators = ImmutableList.of(new BeehiveTreeDecorator(0.05F), new CarpetTreeDecorator(carpetProvider));
             }
-            leavesProvider = new WeightedBlockStateProvider().func_227407_a_(type.leaves.getDefaultState(), 2).func_227407_a_(type.leaves.getDefaultState().with(FruitLeavesBlock.AGE, 2), 1);
+            leavesProvider = new WeightedBlockStateProvider().addWeightedBlockstate(type.leaves.getDefaultState(), 2).addWeightedBlockstate(type.leaves.getDefaultState().with(FruitLeavesBlock.AGE, 2), 1);
         } else {
             decorators = ImmutableList.of();
             leavesProvider = new SimpleBlockStateProvider(type.leaves.getDefaultState());
         }
-        return FEATURE.withConfiguration((new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new BlobFoliagePlacer(2, 0))).baseHeight(4).heightRandA(2).foliageHeight(3).ignoreVines().setSapling(type.sapling.get()).decorators(decorators).build());
+        return Feature.field_236291_c_.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new FruitBlobFoliagePlacer(2, 0, 0, 0, 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines()/*.setSapling(type.sapling.get())*/./*decorators*/func_236703_a_(decorators).build());
     }
 
     @SubscribeEvent
@@ -357,28 +351,7 @@ public final class MainModule extends AbstractModule { // TODO block map colors?
         itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES);
     }
 
-    @SuppressWarnings("unused")
-    private static final ResourceLocation OAK_LEAVES_LOOT_TABLE = new ResourceLocation("blocks/oak_leaves");
-
-    /*    @SubscribeEvent
-    public void tweakLootTable(LootTableLoadEvent event) {
-        if (event.getName().equals(OAK_LEAVES_LOOT_TABLE)) {
-            LootTable table = event.getTable();
-            if (table.isFrozen()) {
-                return;
-            }
-            LootPool pool = table.getPool("main");
-            table.removePool("main");
-        }
-    }*/
-
-    @SubscribeEvent
-    public void breakBlock(BlockEvent.BreakEvent event) {
-        if (!event.getWorld().isRemote() && !event.getPlayer().isCreative() && event.getState().getBlock() == Blocks.OAK_LEAVES) {
-            if (event.getWorld().getRandom().nextFloat() < FruitsConfig.oakLeavesDropsAppleSapling) {
-                Block.spawnAsEntity(event.getWorld().getWorld(), event.getPos(), new ItemStack(APPLE_SAPLING));
-            }
-        }
-    }
+    //@SuppressWarnings("unused")
+    //private static final ResourceLocation OAK_LEAVES_LOOT_TABLE = new ResourceLocation("blocks/oak_leaves");
 
 }

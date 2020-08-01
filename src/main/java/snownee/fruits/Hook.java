@@ -24,12 +24,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.hybridization.HybridingContext;
 import snownee.fruits.hybridization.Hybridization;
+import snownee.kiwi.KiwiModule.LoadingCondition;
+import snownee.kiwi.LoadingContext;
 import snownee.kiwi.util.NBTHelper;
 import snownee.kiwi.util.Util;
 
 public final class Hook {
-
-    public static boolean mixin;
 
     private Hook() {}
 
@@ -42,13 +42,13 @@ public final class Hook {
     }
 
     public static boolean canPollinate(BlockState state) {
-        if (state./*isIn*/func_235714_a_(BlockTags.TALL_FLOWERS)) {
+        if (state.isIn(BlockTags.TALL_FLOWERS)) {
             if (state.getBlock() == Blocks.SUNFLOWER) {
                 return state.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER;
             } else {
                 return true;
             }
-        } else if (state./*isIn*/func_235714_a_(BlockTags.SMALL_FLOWERS)) {
+        } else if (state.isIn(BlockTags.SMALL_FLOWERS)) {
             return true;
         } else if (Hybridization.INSTANCE != null && state.getBlock() instanceof FruitLeavesBlock) {
             if (!((FruitLeavesBlock) state.getBlock()).canGrow(state)) {
@@ -63,7 +63,7 @@ public final class Hook {
     public static void onPollinateComplete(BeeEntity bee) {
         BlockState state = bee.world.getBlockState(bee.savedFlowerPos);
         Block block = state.getBlock();
-        Fruits.Type type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
+        FruitType type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
         NBTHelper data = NBTHelper.of(bee.getPersistentData());
         int count = data.getInt("FruitsCount");
         ListNBT list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
@@ -82,14 +82,14 @@ public final class Hook {
             data.setInt("FruitsCount", count + 1);
         }
         if (list.size() > 1) {
-            Set<Either<Fruits.Type, Block>> ingredients = Sets.newHashSet();
+            Set<Either<FruitType, Block>> ingredients = Sets.newHashSet();
             list.forEach(e -> {
                 String _id = e.getString();
                 if (_id.startsWith("_")) {
                     Block _block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(_id.substring(1)));
                     ingredients.add(Either.right(_block));
                 } else {
-                    Fruits.Type _type = Fruits.Type.parse(_id);
+                    FruitType _type = FruitType.parse(_id);
                     ingredients.add(Either.left(_type));
                 }
             });
@@ -102,7 +102,7 @@ public final class Hook {
                     return;
                 }
                 BlockPos root = bee.savedFlowerPos;
-                if (block.isIn(BlockTags.TALL_FLOWERS) && state./*has*/func_235901_b_(DoublePlantBlock.HALF) && state.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+                if (block.isIn(BlockTags.TALL_FLOWERS) && state.hasProperty(DoublePlantBlock.HALF) && state.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                     root = root.down();
                 } else if (isMisc && !newBlock.canSpawnInBlock() && !(block instanceof FruitLeavesBlock)) {
                     root = root.down();
@@ -113,7 +113,7 @@ public final class Hook {
                     newState = newState.with(FruitLeavesBlock.AGE, 2);
                     newState = newState.with(LeavesBlock.DISTANCE, state.get(LeavesBlock.DISTANCE));
                 } else if (isFlower) {
-                    if (newBlock.isIn(BlockTags.TALL_FLOWERS) && newState./*has*/func_235901_b_(DoublePlantBlock.HALF)) {
+                    if (newBlock.isIn(BlockTags.TALL_FLOWERS) && newState.hasProperty(DoublePlantBlock.HALF)) {
                         newState = newState.with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER);
                         isBigFlower = true;
                     }
@@ -129,5 +129,10 @@ public final class Hook {
                 }
             });
         }
+    }
+
+    @LoadingCondition("hybridization")
+    public static boolean shouldLoadHybridization(LoadingContext ctx) {
+        return FruitsMod.mixin;
     }
 }

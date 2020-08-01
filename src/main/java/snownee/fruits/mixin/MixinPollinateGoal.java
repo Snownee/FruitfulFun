@@ -24,7 +24,7 @@ public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
     }
 
     @Shadow
-    private final Predicate<BlockState> field_226492_c_ = Hook::canPollinate;
+    private final Predicate<BlockState> flowerPredicate = Hook::canPollinate;
 
     @Inject(method = "resetTask", at = @At("HEAD"))
     public void onComplete(CallbackInfo cir) {

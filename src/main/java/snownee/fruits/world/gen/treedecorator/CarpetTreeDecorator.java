@@ -4,39 +4,33 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.DynamicOps;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
-import snownee.fruits.MainModule;
+import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
+import snownee.fruits.CoreModule;
 
 public class CarpetTreeDecorator extends TreeDecorator {
-
-    private BlockStateProvider carpetProvider;
+    public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.field_236796_a_.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
+        return decorator.carpetProvider;
+    }).codec();
+    private final BlockStateProvider carpetProvider;
 
     public CarpetTreeDecorator(BlockStateProvider carpetProvider) {
-        super(MainModule.CARPET_DECORATOR);
         this.carpetProvider = carpetProvider;
     }
 
-    public <T> CarpetTreeDecorator(Dynamic<T> dynamic) {
-        this(Registry.BLOCK_STATE_PROVIDER_TYPE.getOrDefault(new ResourceLocation(dynamic.get("provider").get("type").asString().orElseThrow(RuntimeException::new))).func_227399_a_(dynamic.get("provider").orElseEmptyMap()));
-    }
-
     @Override
-    public <T> T serialize(DynamicOps<T> dynamicOps) {
-        return (new Dynamic<>(dynamicOps, dynamicOps.createMap(ImmutableMap.of(dynamicOps.createString("type"), dynamicOps.createString(Registry.TREE_DECORATOR_TYPE.getKey(this.field_227422_a_).toString()), dynamicOps.createString("provider"), this.carpetProvider.serialize(dynamicOps))))).getValue();
+    protected TreeDecoratorType<?> func_230380_a_() {
+        return CoreModule.CARPET_DECORATOR;
     }
 
     @Override

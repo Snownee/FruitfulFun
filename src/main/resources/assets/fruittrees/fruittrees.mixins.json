@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.fruittrees.refmap.json",
   "mixins": [
-    "MixinPollinateGoal",
-    "MixinBeeEntity",
-    "MixinServerWorld"
+    "MixinBeeEntity"
   ],
   "injectors": {
     "defaultRequire": 1

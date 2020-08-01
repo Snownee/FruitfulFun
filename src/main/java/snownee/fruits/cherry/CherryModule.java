@@ -38,8 +38,9 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import snownee.fruits.Fruits;
-import snownee.fruits.MainModule;
+import snownee.fruits.CoreModule;
+import snownee.fruits.FruitType;
+import snownee.fruits.FruitsMod;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
@@ -57,7 +58,7 @@ import snownee.kiwi.item.ModItem;
 
 @KiwiModule("cherry")
 @KiwiModule.Optional
-@KiwiModule.Subscriber({ Bus.MOD, Bus.FORGE })
+@KiwiModule.Subscriber(Bus.MOD)
 public class CherryModule extends AbstractModule {
 
     @SuppressWarnings("hiding")
@@ -127,15 +128,15 @@ public class CherryModule extends AbstractModule {
     public static final Item CHERRY = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.CHERRY));
     public static final Item REDLOVE = new ModItem(itemProp().group(ItemGroup.FOOD).food(Foods.REDLOVE));
 
-    public static final SoundEvent OPEN_SOUND = new SoundEvent(new ResourceLocation(Fruits.MODID, "block.wooden_door.open"));
-    public static final SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(Fruits.MODID, "block.wooden_door.close"));
+    public static final SoundEvent OPEN_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.open"));
+    public static final SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.close"));
 
     static {
-        FruitTypeExtension.CHERRY = Fruits.Type.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
-        FruitTypeExtension.REDLOVE = Fruits.Type.create("REDLOVE", CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE);
+        FruitTypeExtension.CHERRY = FruitType.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
+        FruitTypeExtension.REDLOVE = FruitType.create("REDLOVE", CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE);
 
-        MainModule.ALL_LEAVES.add(CHERRY_LEAVES);
-        MainModule.ALL_LEAVES.add(REDLOVE_LEAVES);
+        CoreModule.ALL_LEAVES.add(CHERRY_LEAVES);
+        CoreModule.ALL_LEAVES.add(REDLOVE_LEAVES);
     }
 
     @Override
@@ -151,7 +152,7 @@ public class CherryModule extends AbstractModule {
             AxeItem.BLOCK_STRIPPING_MAP.put(CHERRY_LOG, STRIPPED_CHERRY_LOG);
             AxeItem.BLOCK_STRIPPING_MAP.put(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
         } catch (Exception e) {
-            Fruits.logger.catching(e);
+            FruitsMod.logger.catching(e);
         }
     }
 

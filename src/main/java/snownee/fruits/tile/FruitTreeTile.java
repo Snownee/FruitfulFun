@@ -4,23 +4,22 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
-import snownee.fruits.Fruits;
-import snownee.fruits.Fruits.Type;
-import snownee.fruits.MainModule;
+import snownee.fruits.FruitType;
+import snownee.fruits.CoreModule;
 import snownee.kiwi.tile.BaseTile;
 import snownee.kiwi.util.NBTHelper;
 
 public class FruitTreeTile extends BaseTile {
 
-    public Fruits.Type type = Fruits.Type.CITRON;
+    public FruitType type = FruitType.CITRON;
     private int deathRate = 0;
     private ItemEntity onlyItem;
 
     public FruitTreeTile() {
-        super(MainModule.FRUIT_TREE);
+        super(CoreModule.FRUIT_TREE);
     }
 
-    public FruitTreeTile(Fruits.Type type) {
+    public FruitTreeTile(FruitType type) {
         this();
         this.type = type;
     }
@@ -38,20 +37,20 @@ public class FruitTreeTile extends BaseTile {
     }
 
     @Override
-    public void /*read*/ func_230337_a_(BlockState state, CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         NBTHelper helper = NBTHelper.of(compound);
         String id = helper.getString("type");
         if (id != null) {
-            type = Fruits.Type.parse(id);
+            type = FruitType.parse(id);
             if (type == null) {
-                type = Type.CITRON;
+                type = FruitType.CITRON;
             }
         } else {
-            Fruits.Type[] types = Fruits.Type.values();
+            FruitType[] types = FruitType.values();
             type = types[MathHelper.clamp(helper.getInt("type"), 0, types.length)];
         }
         deathRate = helper.getInt("death");
-        super./*read*/func_230337_a_(state, compound);
+        super.read(state, compound);
     }
 
     @Override

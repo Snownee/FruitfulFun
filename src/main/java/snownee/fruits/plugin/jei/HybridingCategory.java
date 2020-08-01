@@ -32,9 +32,9 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import snownee.fruits.Fruits;
-import snownee.fruits.Fruits.Type;
-import snownee.fruits.MainModule;
+import snownee.fruits.FruitType;
+import snownee.fruits.FruitsMod;
+import snownee.fruits.CoreModule;
 import snownee.fruits.hybridization.HybridingRecipe;
 
 public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
@@ -53,7 +53,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
     public HybridingCategory(IGuiHelper guiHelper) {
         this.guiHelper = guiHelper;
         localizedName = I18n.format("gui.fruittrees.jei.category.hybriding");
-        icon = guiHelper.createDrawableIngredient(MainModule.GRAPEFRUIT.getDefaultInstance());
+        icon = guiHelper.createDrawableIngredient(CoreModule.GRAPEFRUIT.getDefaultInstance());
         background = guiHelper.createBlankDrawable(width, height);
         float f = (float) Math.atan(1000 / 40.0F);
         float f1 = (float) Math.atan(-10 / 40.0F);
@@ -64,8 +64,8 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
         bee.rotationYawHead = bee.rotationYaw;
         bee.prevRotationYawHead = bee.rotationYaw;
         Minecraft.getInstance().getRenderManager();
-        x = guiHelper.drawableBuilder(new ResourceLocation(Fruits.MODID, "textures/gui/jei.png"), 0, 0, 10, 11).setTextureSize(64, 64).build();
-        line = guiHelper.drawableBuilder(new ResourceLocation(Fruits.MODID, "textures/gui/jei.png"), 12, 4, 31, 3).setTextureSize(64, 64).build();
+        x = guiHelper.drawableBuilder(new ResourceLocation(FruitsMod.MODID, "textures/gui/jei.png"), 0, 0, 10, 11).setTextureSize(64, 64).build();
+        line = guiHelper.drawableBuilder(new ResourceLocation(FruitsMod.MODID, "textures/gui/jei.png"), 12, 4, 31, 3).setTextureSize(64, 64).build();
     }
 
     @Override
@@ -125,7 +125,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 
     @Override
     public void setIngredients(HybridingRecipe recipe, IIngredients ingredients) {
-        Either<Type, Block> result = recipe.getResult(recipe.ingredients);
+        Either<FruitType, Block> result = recipe.getResult(recipe.ingredients);
         ImmutableList.Builder<ItemStack> outputs = ImmutableList.builder();
         result.ifLeft(t -> {
             outputs.add(t.sapling.get().asItem().getDefaultInstance(), t.fruit.asItem().getDefaultInstance());
@@ -137,8 +137,8 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
         ingredients.setInputs(VanillaTypes.ITEM, inputs);
     }
 
-    public static ItemStack asItem(Either<Fruits.Type, Block> either) {
-        Optional<Fruits.Type> left = either.left();
+    public static ItemStack asItem(Either<FruitType, Block> either) {
+        Optional<FruitType> left = either.left();
         if (left.isPresent()) {
             return left.get().leaves.asItem().getDefaultInstance();
         } else {
@@ -162,10 +162,10 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
                     tooltip.set(0, line);
                 }
             } else {
-                boolean showAdvanced = Minecraft.getInstance().gameSettings.advancedItemTooltips || Screen./*hasShiftDown*/func_231173_s_();
+                boolean showAdvanced = Minecraft.getInstance().gameSettings.advancedItemTooltips || Screen.hasShiftDown();
                 if (showAdvanced) {
                     TranslationTextComponent recipeId = new TranslationTextComponent("jei.tooltip.recipe.id", recipe.getId());
-                    tooltip.add(recipeId.func_240699_a_(TextFormatting.DARK_GRAY));
+                    tooltip.add(recipeId.mergeStyle(TextFormatting.DARK_GRAY));
                 }
             }
         });

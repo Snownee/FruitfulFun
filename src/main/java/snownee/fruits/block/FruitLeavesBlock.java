@@ -39,7 +39,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.ItemHandlerHelper;
-import snownee.fruits.Fruits;
+import snownee.fruits.FruitType;
 import snownee.fruits.FruitsConfig;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.tile.FruitTreeTile;
@@ -49,9 +49,9 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
 
-    public final Supplier<Fruits.Type> type;
+    public final Supplier<FruitType> type;
 
-    public FruitLeavesBlock(Supplier<Fruits.Type> type, Properties properties) {
+    public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
         super(properties);
         this.type = type;
         this.setDefaultState(this.stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, false).with(AGE, 1));
