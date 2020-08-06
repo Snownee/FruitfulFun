@@ -5,7 +5,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.BeeEntity;
@@ -25,8 +24,10 @@ public abstract class MixinBeeEntity extends AnimalEntity {
 
     @Inject(at = @At("HEAD"), method = "isFlowers", cancellable = true)
     public void fruits_isFlowers(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        Block block = world.getBlockState(pos).getBlock();
-        if (Hybridization.INSTANCE != null && block instanceof FruitLeavesBlock) {
+        if (Hybridization.INSTANCE == null) {
+            return;
+        }
+        if (world.isBlockPresent(pos) && world.getBlockState(pos).getBlock() instanceof FruitLeavesBlock) {
             cir.setReturnValue(true);
         }
     }
