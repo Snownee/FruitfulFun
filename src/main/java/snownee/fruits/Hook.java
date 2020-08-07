@@ -71,16 +71,21 @@ public final class Hook {
             list = new ListNBT();
             data.setTag("FruitsList", list);
         }
+        ListNBT list2 = list;
         String id = type != null ? type.name() : "_" + Util.trimRL(block.getRegistryName());
-        if (!list.stream().anyMatch(e -> e.getString().equals(id))) {
-            StringNBT stringNBT = StringNBT.valueOf(id);
-            if (list.size() < 5) {
-                list.add(stringNBT);
-            } else {
-                list.set(count % 5, stringNBT);
-            }
-            data.setInt("FruitsCount", count + 1);
+        if (list.stream().anyMatch(e -> e.getString().equals(id))) {
+            return;
         }
+        StringNBT stringNBT = StringNBT.valueOf(id);
+        int index;
+        if (list.size() < 5) {
+            index = list.size();
+            list.add(stringNBT);
+        } else {
+            index = count % 5;
+            list.set(index, stringNBT);
+        }
+        data.setInt("FruitsCount", count + 1);
         if (list.size() > 1) {
             Set<Either<FruitType, Block>> ingredients = Sets.newHashSet();
             list.forEach(e -> {
@@ -123,9 +128,12 @@ public final class Hook {
                     newState = newState.with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
                     safeSetBlock(bee.world, root.up(), newState);
                 }
-                if (placed || root.equals(bee.savedFlowerPos)) {
+                if (placed) {
                     data.remove("FruitsList");
                     data.setInt("FruitsCount", 0);
+                } else {
+                    list2.remove(index);
+                    data.setInt("FruitsCount", count);
                 }
             });
         }
