@@ -118,12 +118,12 @@ public final class Hook {
                         isBigFlower = true;
                     }
                 }
-                boolean success = Hook.safeSetBlock(bee.world, root, newState);
-                if (success && isBigFlower) {
+                boolean placed = safeSetBlock(bee.world, root, newState);
+                if (placed && isBigFlower) {
                     newState = newState.with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-                    Hook.safeSetBlock(bee.world, root.up(), newState);
+                    safeSetBlock(bee.world, root.up(), newState);
                 }
-                if (success) {
+                if (placed || root.equals(bee.savedFlowerPos)) {
                     data.remove("FruitsList");
                     data.setInt("FruitsCount", 0);
                 }
