@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
+import net.minecraft.world.gen.feature.FeatureSpread;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacerType;
@@ -23,8 +24,8 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
         return func_236740_a_(instance).apply(instance, FruitBlobFoliagePlacer::new);
     });
 
-    public FruitBlobFoliagePlacer(int i, int j, int k, int l, int m) {
-        super(i, j, k, l, m, CoreModule.BLOB_PLACER);
+    public FruitBlobFoliagePlacer(FeatureSpread p_i241995_1_, FeatureSpread p_i241995_2_, int p_i241995_3_) {
+        super(p_i241995_1_, p_i241995_2_, p_i241995_3_);
     }
 
     @Override

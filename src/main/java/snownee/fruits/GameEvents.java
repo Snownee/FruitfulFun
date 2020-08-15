@@ -26,9 +26,9 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void breakBlock(BlockEvent.BreakEvent event) {
-        if (!event.getWorld().isRemote() && !event.getPlayer().isCreative() && event.getState().getBlock() == Blocks.OAK_LEAVES) {
+        if (!event.getWorld().isRemote() && !event.getPlayer().isCreative() && event.getState().getBlock() == Blocks.OAK_LEAVES && event.getWorld() instanceof World) {
             if (event.getWorld().getRandom().nextFloat() < FruitsConfig.oakLeavesDropsAppleSapling) {
-                Block.spawnAsEntity(event.getWorld().getWorld(), event.getPos(), new ItemStack(CoreModule.APPLE_SAPLING));
+                Block.spawnAsEntity((World) event.getWorld(), event.getPos(), new ItemStack(CoreModule.APPLE_SAPLING));
             }
         }
     }
