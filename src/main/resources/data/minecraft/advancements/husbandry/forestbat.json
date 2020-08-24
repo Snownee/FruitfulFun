@@ -2,7 +2,7 @@
   "parent": "minecraft:husbandry/root",
   "display": {
     "icon": {
-      "item": "torch"
+      "item": "soul_torch"
     },
     "title": {
       "translate": "advancements.fruittrees.forestbat.title"
