@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "fruittrees:grapefruit"
+    }
+  ],
+  "result": {
+    "item": "fruittrees:snowflake_banner_pattern"
+  }
+}

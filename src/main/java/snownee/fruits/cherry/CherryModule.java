@@ -25,13 +25,17 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.AxeItem;
+import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,8 +44,8 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import snownee.fruits.Fruits;
 import snownee.fruits.FruitType;
+import snownee.fruits.Fruits;
 import snownee.fruits.MainModule;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
@@ -132,6 +136,9 @@ public class CherryModule extends AbstractModule {
 
     public static final SoundEvent OPEN_SOUND = new SoundEvent(new ResourceLocation(Fruits.MODID, "block.wooden_door.open"));
     public static final SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(Fruits.MODID, "block.wooden_door.close"));
+
+    public static final BannerPattern HEART = BannerPattern.create("HEART", "heart", "hrt", new ItemStack(REDLOVE));
+    public static final BannerPatternItem HEART_BANNER_PATTERN = new BannerPatternItem(HEART, itemProp().maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.UNCOMMON));
 
     static {
         FruitTypeExtension.CHERRY = FruitType.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
