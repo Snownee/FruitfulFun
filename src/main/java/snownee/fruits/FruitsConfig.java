@@ -19,6 +19,7 @@ public final class FruitsConfig {
     public static DropMode fruitDropModeMultiplayer = DropMode.ONE_BY_ONE;
     @Range(min = 0, max = 1)
     public static double oakLeavesDropsAppleSapling = 0.2;
+    public static boolean worldGen = true;
 
     public static DropMode getDropMode(World world) {
         return world.getServer().isDedicatedServer() ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;

@@ -11,7 +11,7 @@ import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import snownee.fruits.CustomFlyingPathNavigator;
+import snownee.fruits.FilteredFlyingPathNavigator;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.hybridization.Hybridization;
 
@@ -34,7 +34,7 @@ public abstract class MixinBeeEntity extends AnimalEntity {
 
     @Inject(at = @At("HEAD"), method = "createNavigator", cancellable = true)
     protected void fruits_createNavigator(World worldIn, CallbackInfoReturnable<PathNavigator> cir) {
-        CustomFlyingPathNavigator flyingpathnavigator = new CustomFlyingPathNavigator(this, worldIn);
+        FilteredFlyingPathNavigator flyingpathnavigator = new FilteredFlyingPathNavigator(this, worldIn);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanSwim(false);
         flyingpathnavigator.setCanEnterDoors(true);

@@ -12,9 +12,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import snownee.fruits.block.FruitLeavesBlock;
 
-public class CustomFlyingPathNavigator extends FlyingPathNavigator {
+public class FilteredFlyingPathNavigator extends FlyingPathNavigator {
 
-    public CustomFlyingPathNavigator(MobEntity entityIn, World worldIn) {
+    public FilteredFlyingPathNavigator(MobEntity entityIn, World worldIn) {
         super(entityIn, worldIn);
     }
 

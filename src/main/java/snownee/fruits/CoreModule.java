@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -35,6 +36,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.biome.Biome.Category;
+import net.minecraft.world.biome.Biome.Climate;
+import net.minecraft.world.biome.Biome.RainType;
+import net.minecraft.world.biome.Biome.TemperatureModifier;
+import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
@@ -42,8 +48,12 @@ import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureSpread;
+import net.minecraft.world.gen.feature.Features;
+import net.minecraft.world.gen.feature.SingleRandomFeature;
 import net.minecraft.world.gen.feature.TwoLayerFeature;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacerType;
+import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
@@ -51,10 +61,14 @@ import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
+import snownee.fruits.cherry.CherryModule;
+import snownee.fruits.cherry.FruitTypeExtension;
 import snownee.fruits.tile.FruitTreeTile;
 import snownee.fruits.world.gen.foliageplacer.FruitBlobFoliagePlacer;
 import snownee.fruits.world.gen.treedecorator.CarpetTreeDecorator;
@@ -211,8 +225,15 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
     @Name("blob")
     public static final FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC);
 
+    public CoreModule() {
+        MinecraftForge.EVENT_BUS.addListener(CoreModule::insertFeatures);
+    }
+
+    public static List<FruitType> types;
+
     @Override
     protected void init(FMLCommonSetupEvent event) {
+        types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
         try {
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
             pot.addPlant(MANDARIN_SAPLING.getRegistryName(), () -> POTTED_MANDARIN);
@@ -240,54 +261,48 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
         }
     }
 
-    //    @Override
-    //    protected void postInit() {
-    //        List<FruitType> types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
-    //        for (Biome biome : WorldGenRegistries.field_243657_i) {
-    //            Biome.RainType rainType = biome.getPrecipitation();
-    //            if (rainType != Biome.RainType.RAIN) {
-    //                continue;
-    //            }
-    //            Biome.Category category = biome.getCategory();
-    //            int count = 0;
-    //            float chance = 0;
-    //            switch (category) {
-    //            case JUNGLE:
-    //                count += 1;
-    //                break;
-    //            case FOREST:
-    //                chance += 0.05f;
-    //                break;
-    //            case PLAINS:
-    //                chance += 0.02f;
-    //                break;
-    //            default:
-    //                continue;
-    //            }
-    //            Biome.TempCategory temp = biome.getC
-    //            switch (temp) {
-    //            case WARM:
-    //                chance += 0.05f;
-    //                break;
-    //            case MEDIUM:
-    //                break;
-    //            default:
-    //                continue;
-    //            }
-    //            if (count > 0 || chance > 0) {
-    //                for (FruitType type : types) {
-    //                    ConfiguredFeature<?, ?> cf = buildTreeFeature(type, true, null);
-    //                    cf = cf.withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
-    //                    biome.addFeature(Decoration.VEGETAL_DECORATION, cf);
-    //                }
-    //            }
-    //            if (chance > 0 && FruitTypeExtension.CHERRY != null) {
-    //                ConfiguredFeature<?, ?> cf = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
-    //                cf = cf.withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
-    //                biome.addFeature(Decoration.VEGETAL_DECORATION, cf);
-    //            }
-    //        }
-    //    }
+    public static void insertFeatures(BiomeLoadingEvent event) {
+        if (!FruitsConfig.worldGen) {
+            return;
+        }
+        Climate climate = event.getClimate();
+        if (climate.field_242460_b != RainType.RAIN) {
+            return;
+        }
+        if (climate.field_242462_d == TemperatureModifier.FROZEN) {
+            return;
+        }
+        Category category = event.getCategory();
+        int count = 0;
+        float chance = 0;
+        switch (category) {
+        case JUNGLE:
+            count += 1;
+            break;
+        case FOREST:
+            chance += 0.05f;
+            break;
+        case PLAINS:
+            chance += 0.02f;
+            break;
+        default:
+            return;
+        }
+        if (count > 0 || chance > 0) {
+            ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
+            for (FruitType type : types) {
+                Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
+                builder.add(cf);
+            }
+            ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.withConfiguration(new SingleRandomFeature(builder.build())).withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
+            event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, cf);
+        }
+        if (chance > 0 && FruitTypeExtension.CHERRY != null) {
+            ConfiguredFeature<?, ?> cf = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
+            cf = cf.withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
+            event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, cf);
+        }
+    }
 
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> buildTreeFeature(FruitType type, boolean worldGen, BlockStateProvider carpetProvider) {
         BlockStateProvider leavesProvider;
@@ -303,7 +318,7 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
             decorators = ImmutableList.of();
             leavesProvider = new SimpleBlockStateProvider(type.leaves.getDefaultState());
         }
-        return Feature.field_236291_c_.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new FruitBlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines()/*.setSapling(type.sapling.get())*/./*decorators*/func_236703_a_(decorators).build()));
+        return Feature./*TREE*/field_236291_c_.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new FruitBlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines()/*.setSapling(type.sapling.get())*/./*decorators*/func_236703_a_(decorators).build()));
     }
 
     @SubscribeEvent
