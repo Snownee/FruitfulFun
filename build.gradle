@@ -91,6 +91,9 @@ repositories {
     maven {
         url = 'https://dist.creeper.host/Sponge/maven'
     }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
@@ -104,6 +107,8 @@ dependencies {
     compile 'org.spongepowered:mixin:0.8-SNAPSHOT'
     
     compile files("Kiwi-${minecraft_version}-${kiwi_version}-deobf.jar")
+    
+    compile fg.deobf("curse.maven:hwyla:3033593")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

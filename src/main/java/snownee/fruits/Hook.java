@@ -1,8 +1,10 @@
 package snownee.fruits;
 
-import java.util.Set;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 
 import net.minecraft.block.Block;
@@ -23,6 +25,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.hybridization.HybridingContext;
+import snownee.fruits.hybridization.HybridingRecipe;
 import snownee.fruits.hybridization.Hybridization;
 import snownee.kiwi.KiwiModule.LoadingCondition;
 import snownee.kiwi.LoadingContext;
@@ -65,41 +68,22 @@ public final class Hook {
         Block block = state.getBlock();
         FruitType type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
         NBTHelper data = NBTHelper.of(bee.getPersistentData());
-        int count = data.getInt("FruitsCount");
         ListNBT list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
         if (list == null) {
             list = new ListNBT();
             data.setTag("FruitsList", list);
         }
-        ListNBT list2 = list;
-        String id = type != null ? type.name() : "_" + Util.trimRL(block.getRegistryName());
-        if (list.stream().anyMatch(e -> e.getString().equals(id))) {
+        String newPollen = type != null ? type.name() : "_" + Util.trimRL(block.getRegistryName());
+        if (list.stream().anyMatch(e -> e.getString().equals(newPollen))) {
             return;
         }
-        StringNBT stringNBT = StringNBT.valueOf(id);
-        int index;
-        if (list.size() < 5) {
-            index = list.size();
-            list.add(stringNBT);
-        } else {
-            index = count % 5;
-            list.set(index, stringNBT);
-        }
-        data.setInt("FruitsCount", count + 1);
-        if (list.size() > 1) {
-            Set<Either<FruitType, Block>> ingredients = Sets.newHashSet();
-            list.forEach(e -> {
-                String _id = e.getString();
-                if (_id.startsWith("_")) {
-                    Block _block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(_id.substring(1)));
-                    ingredients.add(Either.right(_block));
-                } else {
-                    FruitType _type = FruitType.parse(_id);
-                    ingredients.add(Either.left(_type));
-                }
-            });
-            bee.world.getRecipeManager().getRecipe(Hybridization.RECIPE_TYPE, new HybridingContext(ingredients), bee.world).ifPresent(recipe -> {
-                Block newBlock = recipe.getResultAsBlock(ingredients);
+        StringNBT newPollenNBT = StringNBT.valueOf(newPollen);
+        if (list.size() >= 1) {
+            Collection<Either<FruitType, Block>> pollenList = readPollen(list);
+            pollenList.add(parsePollen(newPollen));
+            Optional<HybridingRecipe> recipe = bee.world.getRecipeManager().getRecipe(Hybridization.RECIPE_TYPE, new HybridingContext(pollenList), bee.world);
+            if (recipe.isPresent()) {
+                Block newBlock = recipe.get().getResultAsBlock(pollenList);
                 boolean isLeaves = newBlock instanceof FruitLeavesBlock;
                 boolean isFlower = !isLeaves && newBlock.isIn(BlockTags.FLOWERS);
                 boolean isMisc = !isLeaves && !isFlower;
@@ -130,12 +114,34 @@ public final class Hook {
                 }
                 if (placed) {
                     data.remove("FruitsList");
-                    data.setInt("FruitsCount", 0);
-                } else {
-                    list2.remove(index);
-                    data.setInt("FruitsCount", count);
+                    return;
                 }
-            });
+            }
+        }
+        /* off */
+        if (list.size() > 3) {
+            int toRemove = list.size() - 3;
+            while (toRemove --> 0) {
+                list.remove(0);
+            }
+        }
+        list.add(newPollenNBT);
+        /* on */
+    }
+
+    public static List<Either<FruitType, Block>> readPollen(ListNBT list) {
+        List<Either<FruitType, Block>> pollenList = Lists.newArrayList();
+        list.forEach(e -> pollenList.add(parsePollen(e.getString())));
+        return pollenList;
+    }
+
+    public static Either<FruitType, Block> parsePollen(String id) {
+        if (id.startsWith("_")) {
+            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id.substring(1)));
+            return Either.right(block);
+        } else {
+            FruitType type = FruitType.parse(id);
+            return Either.left(type);
         }
     }
 

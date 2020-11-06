@@ -1,7 +1,7 @@
 package snownee.fruits.hybridization;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 import com.mojang.datafixers.util.Either;
 
@@ -11,9 +11,9 @@ import snownee.kiwi.crafting.EmptyInventory;
 
 public class HybridingContext extends EmptyInventory {
 
-    public final Set<Either<FruitType, Block>> ingredients;
+    public final Collection<Either<FruitType, Block>> ingredients;
 
-    public HybridingContext(Set<Either<FruitType, Block>> ingredients) {
-        this.ingredients = Collections.unmodifiableSet(ingredients);
+    public HybridingContext(Collection<Either<FruitType, Block>> ingredients) {
+        this.ingredients = Collections.unmodifiableCollection(ingredients);
     }
 }
