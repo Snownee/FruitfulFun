@@ -1,7 +1,7 @@
 package snownee.fruits.hybridization;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -38,11 +38,11 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
         return ingredients.stream().allMatch(inv.ingredients::contains);
     }
 
-    public Either<FruitType, Block> getResult(Set<Either<FruitType, Block>> types) {
+    public Either<FruitType, Block> getResult(Collection<Either<FruitType, Block>> types) {
         return result;
     }
 
-    public Block getResultAsBlock(Set<Either<FruitType, Block>> types) {
+    public Block getResultAsBlock(Collection<Either<FruitType, Block>> types) {
         return getResult(types).map(t -> t.leaves, b -> b);
     }
 
