@@ -2,6 +2,6 @@
   "replace": false,
   "values": [
     "fruittrees:citrus_fence_gate",
-    "fruittrees:cherry_fence_gate"
+    { "id": "fruittrees:cherry_fence_gate", "required": false }
   ]
 }

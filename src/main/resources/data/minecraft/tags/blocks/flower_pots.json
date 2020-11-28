@@ -9,7 +9,7 @@
     "fruittrees:potted_mandarin",
     "fruittrees:potted_orange",
     "fruittrees:potted_pomelo",
-    "fruittrees:potted_cherry",
-    "fruittrees:potted_redlove"
+    { "id": "fruittrees:potted_cherry", "required": false },
+    { "id": "fruittrees:potted_redlove", "required": false }
   ]
 }

@@ -2,6 +2,6 @@
   "replace": false,
   "values": [
     "fruittrees:citrus_trapdoor",
-    "fruittrees:cherry_trapdoor"
+    { "id": "fruittrees:cherry_trapdoor", "required": false }
   ]
 }

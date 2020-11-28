@@ -13,7 +13,7 @@
     "fruittrees:lemon",
     "fruittrees:grapefruit",
     "fruittrees:pomelo",
-    "fruittrees:cherry",
-    "fruittrees:redlove"
+    { "id": "fruittrees:cherry", "required": false },
+    { "id": "fruittrees:redlove", "required": false }
   ]
 }

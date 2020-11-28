@@ -78,7 +78,7 @@ public final class Hook {
             return;
         }
         StringNBT newPollenNBT = StringNBT.valueOf(newPollen);
-        if (list.size() >= 1) {
+        if (!list.isEmpty()) {
             Collection<Either<FruitType, Block>> pollenList = readPollen(list);
             pollenList.add(parsePollen(newPollen));
             Optional<HybridingRecipe> recipe = bee.world.getRecipeManager().getRecipe(Hybridization.RECIPE_TYPE, new HybridingContext(pollenList), bee.world);

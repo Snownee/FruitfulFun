@@ -18,7 +18,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.resources.I18n;
@@ -30,11 +29,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitsMod;
-import snownee.fruits.CoreModule;
 import snownee.fruits.hybridization.HybridingRecipe;
 
 public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
@@ -160,12 +158,6 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
                 if (stack.getItem().isIn(ItemTags.LEAVES)) {
                     ITextComponent line = new TranslationTextComponent("gui.fruittrees.jei.tip.flowering", tooltip.get(0));
                     tooltip.set(0, line);
-                }
-            } else {
-                boolean showAdvanced = Minecraft.getInstance().gameSettings.advancedItemTooltips || Screen.hasShiftDown();
-                if (showAdvanced) {
-                    TranslationTextComponent recipeId = new TranslationTextComponent("jei.tooltip.recipe.id", recipe.getId());
-                    tooltip.add(recipeId.mergeStyle(TextFormatting.DARK_GRAY));
                 }
             }
         });

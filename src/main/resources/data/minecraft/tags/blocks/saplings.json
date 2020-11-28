@@ -9,7 +9,7 @@
     "fruittrees:grapefruit_sapling",
     "fruittrees:pomelo_sapling",
     "fruittrees:apple_sapling",
-    "fruittrees:cherry_sapling",
-    "fruittrees:redlove_sapling"
+    { "id": "fruittrees:cherry_sapling", "required": false },
+    { "id": "fruittrees:redlove_sapling", "required": false }
   ]
 }

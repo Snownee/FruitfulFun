@@ -86,5 +86,8 @@
 "advancements.fruittrees.forestbat.title": "Accelerationist",
 "advancements.fruittrees.forestbat.description": "Meet forest bat",
 
-"fruittrees.forestbat": "ForestBat"
+"fruittrees.forestbat": "ForestBat",
+
+"config.waila.plugin_fruittrees": "Fruit Trees",
+"config.waila.plugin_fruittrees.bee": "Bee"
 }

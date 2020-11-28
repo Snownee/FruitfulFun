@@ -9,7 +9,7 @@
     "fruittrees:grapefruit_leaves",
     "fruittrees:pomelo_leaves",
     "fruittrees:apple_leaves",
-    "fruittrees:cherry_leaves",
-    "fruittrees:redlove_leaves"
+    { "id": "fruittrees:cherry_leaves", "required": false },
+    { "id": "fruittrees:redlove_leaves", "required": false }
   ]
 }

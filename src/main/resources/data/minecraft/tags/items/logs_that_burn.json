@@ -2,6 +2,6 @@
   "replace": false,
   "values": [
     "#fruittrees:citrus_logs",
-    "#fruittrees:cherry_logs"
+    { "id": "#fruittrees:cherry_logs", "required": false }
   ]
 }
