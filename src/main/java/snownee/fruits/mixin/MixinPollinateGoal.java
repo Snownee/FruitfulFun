@@ -16,7 +16,7 @@ import snownee.fruits.hybridization.Hybridization;
 @Mixin(BeeEntity.PollinateGoal.class)
 public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
 
-    @Shadow(aliases = { "field_226491_b_", "b" })
+    @Shadow(aliases = { "field_226491_b_", "b" }, remap = false)
     private BeeEntity this$0;
 
     MixinPollinateGoal(BeeEntity bee) {
