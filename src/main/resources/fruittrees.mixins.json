@@ -5,7 +5,8 @@
   "refmap": "mixins.fruittrees.refmap.json",
   "mixins": [
     "MixinPollinateGoal",
-    "MixinBeeEntity"
+    "MixinBeeEntity",
+    "MixinRenderTypeLookup"
   ],
   "injectors": {
     "defaultRequire": 1

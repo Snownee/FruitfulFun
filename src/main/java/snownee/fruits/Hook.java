@@ -27,8 +27,6 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.hybridization.HybridingContext;
 import snownee.fruits.hybridization.HybridingRecipe;
 import snownee.fruits.hybridization.Hybridization;
-import snownee.kiwi.KiwiModule.LoadingCondition;
-import snownee.kiwi.LoadingContext;
 import snownee.kiwi.util.NBTHelper;
 import snownee.kiwi.util.Util;
 
@@ -145,8 +143,4 @@ public final class Hook {
         }
     }
 
-    @LoadingCondition("hybridization")
-    public static boolean shouldLoadHybridization(LoadingContext ctx) {
-        return FruitsMod.mixin;
-    }
 }

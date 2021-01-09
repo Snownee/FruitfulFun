@@ -11,6 +11,4 @@ public final class FruitsMod {
     public static final String NAME = "Fruit Trees";
 
     public static Logger logger = LogManager.getLogger(FruitsMod.NAME);
-
-    public static boolean mixin;
 }
