@@ -58,7 +58,7 @@ public class CarpetTreeDecorator extends TreeDecorator {
         while (++i < 5) {
             ground = pos.down(i);
             groundState = world.getBlockState(ground);
-            if (groundState.getBlock() != Blocks.GRASS && groundState.getBlock() != Blocks.FERN && !groundState.isAir(world, ground)) {
+            if (groundState.getBlock() != Blocks.GRASS && groundState.getBlock() != Blocks.FERN && !groundState.getBlock().isAir(groundState, world, ground)) {
                 if (i == 1) {
                     return false;
                 } else {

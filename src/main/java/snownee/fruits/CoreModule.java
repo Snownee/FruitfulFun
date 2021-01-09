@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -36,6 +37,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.biome.Biome.Climate;
 import net.minecraft.world.biome.Biome.RainType;
@@ -217,7 +220,7 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
     public static final FlowerPotBlock POTTED_APPLE = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> APPLE_SAPLING, blockProp(Blocks.POTTED_JUNGLE_SAPLING));
 
     public static final Set<Block> ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES)));
-    public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType(FruitTreeTile::new, ALL_LEAVES, null);
+    public static final TileEntityType<FruitTreeTile> FRUIT_TREE = new TileEntityType<>(FruitTreeTile::new, ALL_LEAVES, null);
 
     @Name("carpet")
     public static final TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = new TreeDecoratorType<>(CarpetTreeDecorator.CODEC);
@@ -259,6 +262,36 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
         } catch (Exception e) {
             FruitsMod.logger.catching(e);
         }
+
+        if (FruitsConfig.worldGen) {
+            ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
+            for (FruitType type : types) {
+                Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
+                builder.add(cf);
+            }
+            trees = builder.build();
+            cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
+            makeFeature("002", 0, .002f);
+            makeFeature("005", 0, .005f);
+            makeFeature("1", 1, 0);
+            trees = null;
+            cherry = null;
+        }
+    }
+
+    private List<Supplier<ConfiguredFeature<?, ?>>> trees;
+    private ConfiguredFeature<?, ?> cherry;
+    private static List<ConfiguredFeature<?, ?>> allFeatures = Lists.newArrayListWithExpectedSize(5);
+
+    private void makeFeature(String id, int count, float chance) {
+        ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.withConfiguration(new SingleRandomFeature(trees)).withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
+        Registry.register(WorldGenRegistries.field_243653_e, "fruittrees:trees_" + id, cf);
+        allFeatures.add(cf);
+        if (chance > 0 && FruitTypeExtension.CHERRY != null) {
+            cf = cherry.withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
+            Registry.register(WorldGenRegistries.field_243653_e, "fruittrees:cherry_" + id, cf);
+            allFeatures.add(cf);
+        }
     }
 
     public static void insertFeatures(BiomeLoadingEvent event) {
@@ -273,34 +306,23 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
             return;
         }
         Category category = event.getCategory();
-        int count = 0;
-        float chance = 0;
+        int i;
         switch (category) {
         case JUNGLE:
-            count += 1;
+            i = 4;
             break;
         case FOREST:
-            chance += 0.05f;
+            i = 2;
             break;
         case PLAINS:
-            chance += 0.02f;
+            i = 0;
             break;
         default:
             return;
         }
-        if (count > 0 || chance > 0) {
-            ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
-            for (FruitType type : types) {
-                Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
-                builder.add(cf);
-            }
-            ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.withConfiguration(new SingleRandomFeature(builder.build())).withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
-            event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, cf);
-        }
-        if (chance > 0 && FruitTypeExtension.CHERRY != null) {
-            ConfiguredFeature<?, ?> cf = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
-            cf = cf.withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
-            event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, cf);
+        event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, allFeatures.get(i));
+        if (category != Category.JUNGLE && FruitTypeExtension.CHERRY != null) {
+            event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, allFeatures.get(i + 1));
         }
     }
 
@@ -360,8 +382,5 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
         ItemColors itemColors = event.getItemColors();
         itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES);
     }
-
-    //@SuppressWarnings("unused")
-    //private static final ResourceLocation OAK_LEAVES_LOOT_TABLE = new ResourceLocation("blocks/oak_leaves");
 
 }
