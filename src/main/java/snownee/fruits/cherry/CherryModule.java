@@ -64,7 +64,7 @@ public class CherryModule extends AbstractModule {
     @SuppressWarnings("hiding")
     public static final class Foods {
         public static final Food CHERRY = new Food.Builder().hunger(3).saturation(0.3f).build();
-        public static final Food REDLOVE = new Food.Builder().hunger(5).saturation(0.6f).effect(() -> new EffectInstance(Effects.REGENERATION, 50), 1).build();
+        public static final Food REDLOVE = new Food.Builder().hunger(4).saturation(0.6f).effect(() -> new EffectInstance(Effects.REGENERATION, 50), 1).build();
     }
 
     @Group("building_blocks")

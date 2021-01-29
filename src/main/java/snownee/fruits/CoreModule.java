@@ -94,9 +94,9 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
         public static final Food MANDARIN = new Food.Builder().hunger(3).saturation(0.3f).build();
         public static final Food LIME = new Food.Builder().hunger(3).saturation(0.3f).build();
         public static final Food CITRON = new Food.Builder().hunger(3).saturation(0.3f).build();
-        public static final Food POMELO = new Food.Builder().hunger(5).saturation(0.3f).build();
+        public static final Food POMELO = new Food.Builder().hunger(4).saturation(0.3f).build();
         public static final Food ORANGE = new Food.Builder().hunger(3).saturation(0.5f).build();
-        public static final Food LEMON = new Food.Builder().hunger(4).saturation(0.3f).fastToEat().build();
+        public static final Food LEMON = new Food.Builder().hunger(2).saturation(1f).fastToEat().build();
         public static final Food GRAPEFRUIT = new Food.Builder().hunger(6).saturation(0.4f).build();
         public static final Food EMPOWERED_CITRON = new Food.Builder().hunger(3).saturation(5f).build();
     }
