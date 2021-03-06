@@ -1,0 +1,23 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "mekanism"
+		}
+	],
+  "type": "mekanism:sawing",
+  "input": {
+    "ingredient": {
+      "item": "fruittrees:cherry_fence_gate"
+    }
+  },
+  "mainOutput": {
+    "item": "fruittrees:cherry_planks",
+    "count": 2
+  },
+  "secondaryOutput": {
+    "item": "minecraft:stick",
+    "count": 4
+  },
+  "secondaryChance": 1
+}

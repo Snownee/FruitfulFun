@@ -1,0 +1,18 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "mekanism"
+		}
+	],
+  "type": "mekanism:sawing",
+  "input": {
+    "ingredient": {
+      "item": "fruittrees:citrus_door"
+    }
+  },
+  "mainOutput": {
+    "item": "fruittrees:citrus_planks",
+    "count": 2
+  }
+}

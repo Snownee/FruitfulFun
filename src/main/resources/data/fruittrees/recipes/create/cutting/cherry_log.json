@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "fruittrees:cherry_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "fruittrees:stripped_cherry_log",
+      "count": 1
+    }
+  ],
+  "processingTime": 50
+}
