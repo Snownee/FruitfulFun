@@ -29,12 +29,14 @@ import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.AxeItem;
+import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
@@ -226,6 +228,9 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
 
     @Name("blob")
     public static final FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC);
+
+    public static final BannerPattern SNOWFLAKE = BannerPattern.create("SNOWFLAKE", "snowflake", "sno", true);
+    public static final BannerPatternItem SNOWFLAKE_BANNER_PATTERN = new BannerPatternItem(SNOWFLAKE, itemProp().maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.UNCOMMON));
 
     public CoreModule() {
         MinecraftForge.EVENT_BUS.addListener(CoreModule::insertFeatures);

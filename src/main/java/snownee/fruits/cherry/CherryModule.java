@@ -23,13 +23,16 @@ import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.AxeItem;
+import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Rarity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -130,6 +133,9 @@ public class CherryModule extends AbstractModule {
 
     public static final SoundEvent OPEN_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.open"));
     public static final SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.close"));
+
+    public static final BannerPattern HEART = BannerPattern.create("HEART", "heart", "hrt", true);
+    public static final BannerPatternItem HEART_BANNER_PATTERN = new BannerPatternItem(HEART, itemProp().maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.UNCOMMON));
 
     static {
         FruitTypeExtension.CHERRY = FruitType.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
