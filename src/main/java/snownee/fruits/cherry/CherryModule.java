@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CarpetBlock;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
@@ -91,7 +92,10 @@ public class CherryModule extends AbstractModule {
     @Group("redstone")
     public static final TrapDoorBlock CHERRY_TRAPDOOR = new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR));
     @Group("redstone")
-    public static final SlidingDoorBlock CHERRY_DOOR = new SlidingDoorBlock(blockProp(Blocks.JUNGLE_DOOR));
+    @RenderLayer(Layer.CUTOUT)
+    public static final DoorBlock CHERRY_DOOR = new DoorBlock(blockProp(Blocks.JUNGLE_DOOR));
+    @Group("redstone")
+    public static final SlidingDoorBlock CHERRY_SLIDING_DOOR = new SlidingDoorBlock(blockProp(Blocks.JUNGLE_DOOR));
     @Group("redstone")
     public static final WoodButtonBlock CHERRY_BUTTON = new WoodButtonBlock(blockProp(Blocks.JUNGLE_TRAPDOOR));
     @Group("redstone")

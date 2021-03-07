@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "group": "wooden_door",
+  "pattern": [
+    "##",
+    "PP",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "fruittrees:cherry_planks"
+    },
+    "P": {
+      "item": "paper"
+    }
+  },
+  "result": {
+    "item": "fruittrees:cherry_sliding_door",
+    "count": 2
+  }
+}
