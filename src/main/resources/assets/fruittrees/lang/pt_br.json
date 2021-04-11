@@ -11,6 +11,43 @@
 "item.fruittrees.empowered_citron": "Cidra Empoderado",
 "item.fruittrees.cherry": "Cereja",
 "item.fruittrees.redlove": "Maça Redlove",
+  
+"item.fruittrees.heart_banner_pattern": "Desenho Para Estandarte",
+"item.fruittrees.heart_banner_pattern.desc": "Coração",
+"block.minecraft.banner.heart.white": "Coração Branco",
+"block.minecraft.banner.heart.orange": "Coração Laranja",
+"block.minecraft.banner.heart.magenta": "Coração Magenta",
+"block.minecraft.banner.heart.light_blue": "Coração Azul-Claro",
+"block.minecraft.banner.heart.yellow": "Coração Amarelo",
+"block.minecraft.banner.heart.lime": "Coração Verde-Limão",
+"block.minecraft.banner.heart.pink": "Coração Rosa",
+"block.minecraft.banner.heart.gray": "Coração Cinza",
+"block.minecraft.banner.heart.light_gray": "Coração Cinza-Claro",
+"block.minecraft.banner.heart.cyan": "Coração Ciano",
+"block.minecraft.banner.heart.purple": "Coração Roxo",
+"block.minecraft.banner.heart.blue": "Coração Azul",
+"block.minecraft.banner.heart.brown": "Coração Marrom",
+"block.minecraft.banner.heart.green": "Coração Verde",
+"block.minecraft.banner.heart.red": "Coração Vermelho",
+"block.minecraft.banner.heart.black": "Coração Preto",
+"item.fruittrees.snowflake_banner_pattern": "Desenho Para Estandarte",
+"item.fruittrees.snowflake_banner_pattern.desc": "Floco de Neve",
+"block.minecraft.banner.snowflake.white": "Floco de Neve Branco",
+"block.minecraft.banner.snowflake.orange": "Floco de Neve Laranja",
+"block.minecraft.banner.snowflake.magenta": "Floco de Neve Magenta",
+"block.minecraft.banner.snowflake.light_blue": "Floco de Neve Azul Claro",
+"block.minecraft.banner.snowflake.yellow": "Floco de Neve Amarelo",
+"block.minecraft.banner.snowflake.lime": "Floco de Neve Verde-Limão",
+"block.minecraft.banner.snowflake.pink": "Floco de Neve Rosa",
+"block.minecraft.banner.snowflake.gray": "Floco de Neve Cinza",
+"block.minecraft.banner.snowflake.light_gray": "Floco de Neve Cinza-Claro",
+"block.minecraft.banner.snowflake.cyan": "Floco de Neve Ciano",
+"block.minecraft.banner.snowflake.purple": "Floco de Neve Roxo",
+"block.minecraft.banner.snowflake.blue": "Floco de Neve Azul",
+"block.minecraft.banner.snowflake.brown": "Floco de Neve Marrom",
+"block.minecraft.banner.snowflake.green": "Floco de Neve Verde",
+"block.minecraft.banner.snowflake.red": "Floco de Neve Vermelho",
+"block.minecraft.banner.snowflake.black": "Floco de Neve Preto",
 
 "block.fruittrees.mandarin_sapling": "Muda de Tangerineira",
 "block.fruittrees.lime_sapling": "Muda de Limeira",
@@ -29,7 +66,7 @@
 "block.fruittrees.potted_pomelo": "Vaso de Muda de Pomeleira",
 "block.fruittrees.potted_orange": "Vaso de Muda de Laranjeira",
 "block.fruittrees.potted_lemon": "Vaso de Muda de Limoeiro",
-"block.fruittrees.potted_grapefruit": "Vaso de Muda de Limoeiro",
+"block.fruittrees.potted_grapefruit": "Vaso de Muda de Toranjeira",
 "block.fruittrees.potted_apple": "Vaso de Muda de Macieira",
 "block.fruittrees.potted_cherry": "Vaso de Muda de Cerejeira",
 "block.fruittrees.potted_redlove": "Vaso de Muda de Macieira Redlove",
@@ -44,6 +81,9 @@
 "block.fruittrees.apple_leaves": "Folhas de Macieira",
 "block.fruittrees.cherry_leaves": "Folhas de Cerejeira",
 "block.fruittrees.redlove_leaves": "Folhas de Macieira Redlove",
+  
+"block.fruittrees.cherry_carpet": "Tapete de Cerejeira",
+"block.fruittrees.redlove_carpet": "Tapete de Macieira Redlove",
 
 "block.fruittrees.citrus_log": "Tronco de Citrino",
 "block.fruittrees.citrus_wood": "Madeira de Citrino",
@@ -59,9 +99,6 @@
 "block.fruittrees.citrus_door": "Porta de Citrino",
 "block.fruittrees.citrus_trapdoor": "Alçapão de Citrino",
 
-"block.fruittrees.cherry_carpet": "Tapete de Cerejeira",
-"block.fruittrees.redlove_carpet": "Tapete de Macieira Redlove",
-  
 "block.fruittrees.cherry_log": "Tronco de Cerejeira",
 "block.fruittrees.cherry_wood": "Madeira de Cerejeira",
 "block.fruittrees.stripped_cherry_log": "Tronco de Cerejeira Descascado",
@@ -73,11 +110,22 @@
 "block.fruittrees.cherry_fence_gate": "Portão de Cerejeira",
 "block.fruittrees.cherry_button": "Botão de Cerejeira",
 "block.fruittrees.cherry_pressure_plate": "Placa de presão de Cerejeira",
-"block.fruittrees.cherry_door": "Porta de Cerejeira (WIP)",
+"block.fruittrees.cherry_door": "Porta de Cerejeira",
+"block.fruittrees.cherry_door": "Porta Corrediça de Cerejeira (WIP)",
 "block.fruittrees.cherry_trapdoor": "Alçapão de Cerejeira",
-  
+
 "gui.fruittrees.jei.category.hybriding": "Polinização de Abelhas",
 "gui.fruittrees.jei.tip.flowering": "%s (Floração)",
+  
+"advancements.fruittrees.grapefruit.title": "Fragrância cítrica",
+"advancements.fruittrees.grapefruit.description": "Hibridizar uma Toranjeira",
+"advancements.fruittrees.redlove.title": "Bem-vindo ao salão Sakura",
+"advancements.fruittrees.redlove.description": "Hibridizar uma Macieira Redlove",
+"advancements.fruittrees.forestbat.title": "Aceleracionista",
+"advancements.fruittrees.forestbat.description": "Conheça o Morcego da Floresta",
 
-"fruittrees.forestbat": "Morcego da Floresta"
+"fruittrees.forestbat": "Morcego da Floresta",
+
+"config.waila.plugin_fruittrees": "Fruit Trees",
+"config.waila.plugin_fruittrees.bee": "Abelhas"
 }
