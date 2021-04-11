@@ -2,6 +2,8 @@ package snownee.fruits.cherry.client.particle;
 
 import java.util.stream.Stream;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.particle.IAnimatedSprite;
@@ -10,6 +12,11 @@ import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.FluidState;
@@ -43,9 +50,9 @@ public class PetalParticle extends SpriteTexturedParticle {
         particleScale = 0.75f + rand.nextFloat() * 0.25f;
         particleAlpha = 0.7f + rand.nextFloat() * 0.3f;
 
-        float baseMotionX = 0.2f + rand.nextFloat() * 0.06f;
-        float baseMotionY = -0.5f;
-        float baseMotionZ = 0.3f + rand.nextFloat() * 0.06f;
+        float baseMotionX = 0.05f + rand.nextFloat() * 0.02f;
+        float baseMotionY = -0.1f;
+        float baseMotionZ = 0.075f + rand.nextFloat() * 0.02f;
 
         Vector3f motion = new Vector3f(baseMotionX, baseMotionY, baseMotionZ);
         motion.normalize();
@@ -59,13 +66,36 @@ public class PetalParticle extends SpriteTexturedParticle {
         this.motionY = motion.getY();
         this.motionZ = motion.getZ();
 
-        angleStepX = rand.nextFloat() * 0.1f;
-        angleStepZ = rand.nextFloat() * 0.1f;
+        angleStepX = 0.1f + rand.nextFloat() * 0.1f;
+        angleStepZ = 0.1f + rand.nextFloat() * 0.1f;
+    }
+
+    public enum RenderType implements IParticleRenderType {
+        INSTANCE;
+
+        public void beginRender(BufferBuilder p_217600_1_, TextureManager p_217600_2_) {
+            RenderSystem.disableCull();
+            RenderSystem.depthMask(true);
+            p_217600_2_.bindTexture(AtlasTexture.LOCATION_PARTICLES_TEXTURE);
+            RenderSystem.enableBlend();
+            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            RenderSystem.alphaFunc(516, 0.003921569F);
+            p_217600_1_.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+        }
+
+        public void finishRender(Tessellator p_217599_1_) {
+            p_217599_1_.draw();
+            RenderSystem.enableCull();
+        }
+
+        public String toString() {
+            return "PARTICLE_SHEET_TRANSLUCENT_NO_CULL";
+        }
     }
 
     @Override
     public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return RenderType.INSTANCE;
     }
 
     @Override

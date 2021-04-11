@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
@@ -70,6 +71,23 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
             double d1 = pos.getY() + rand.nextFloat();
             double d2 = pos.getZ() + rand.nextFloat();
             worldIn.addParticle(particleType, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+        }
+    }
+
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBlockHarvested(worldIn, pos, state, player);
+        if (worldIn.isRemote) {
+            int times = 5 + worldIn.rand.nextInt(6);
+            for (int i = 0; i < times; ++i) {
+                double x = worldIn.rand.nextGaussian() * 0.3D;
+                double y = worldIn.rand.nextGaussian() * 0.3D;
+                double z = worldIn.rand.nextGaussian() * 0.3D;
+                x += pos.getX() + .5;
+                y += pos.getY() + .5;
+                z += pos.getZ() + .5;
+                worldIn.addParticle(particleType, x, y, z, 0, 0, 0);
+            }
         }
     }
 }
