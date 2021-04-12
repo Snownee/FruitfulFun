@@ -7,14 +7,11 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FenceGateBlock;
@@ -28,7 +25,6 @@ import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.item.AxeItem;
 import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -36,6 +32,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
+import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.registry.Registry;
@@ -86,6 +83,7 @@ import snownee.kiwi.RenderLayer;
 import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
+import snownee.kiwi.util.DeferredActions;
 
 //TODO: 1.17: Forge 1.16.5-36.0.60 - Add support for custom WoodTypes
 @KiwiModule
@@ -233,6 +231,8 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
     public static final BannerPattern SNOWFLAKE = BannerPattern.create("SNOWFLAKE", "snowflake", "sno", true);
     public static final BannerPatternItem SNOWFLAKE_BANNER_PATTERN = new BannerPatternItem(SNOWFLAKE, itemProp().maxStackSize(1).group(ItemGroup.MISC).rarity(Rarity.UNCOMMON));
 
+    public static final INamedTag<Item> FOX_BREEDABLES = itemTag(FruitsMod.MODID, "fox_breedables");
+
     public CoreModule() {
         MinecraftForge.EVENT_BUS.addListener(CoreModule::insertFeatures);
     }
@@ -252,20 +252,18 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
             pot.addPlant(LEMON_SAPLING.getRegistryName(), () -> POTTED_LEMON);
             pot.addPlant(GRAPEFRUIT_SAPLING.getRegistryName(), () -> POTTED_GRAPEFRUIT);
             pot.addPlant(APPLE_SAPLING.getRegistryName(), () -> POTTED_APPLE);
-
-            if (AxeItem.BLOCK_STRIPPING_MAP instanceof ImmutableMap) {
-                AxeItem.BLOCK_STRIPPING_MAP = Collections.synchronizedMap(Maps.newHashMap(AxeItem.BLOCK_STRIPPING_MAP));
-            }
-            AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_LOG, STRIPPED_CITRUS_LOG);
-            AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
-
-            for (FruitType type : FruitType.values()) {
-                ComposterBlock.CHANCES.put(type.fruit, 0.5f);
-                ComposterBlock.CHANCES.put(type.leaves.asItem(), 0.3f);
-                ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
-            }
         } catch (Exception e) {
             FruitsMod.logger.catching(e);
+        }
+
+        DeferredActions.registerAxeConversion(CITRUS_LOG, STRIPPED_CITRUS_LOG);
+        DeferredActions.registerAxeConversion(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
+        for (FruitType type : FruitType.values()) {
+            DeferredActions.registerCompostable(0.5f, type.fruit);
+            DeferredActions.registerCompostable(0.3f, type.leaves);
+            DeferredActions.registerCompostable(0.3f, type.sapling.get());
+            DeferredActions.registerVillagerPickupable(type.fruit);
+            DeferredActions.registerVillagerCompostable(type.fruit);
         }
 
         if (FruitsConfig.worldGen) {

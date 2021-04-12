@@ -1,10 +1,5 @@
 package snownee.fruits.cherry;
 
-import java.util.Collections;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -23,7 +18,6 @@ import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.block.WoodButtonBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.item.AxeItem;
 import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Food;
@@ -59,6 +53,7 @@ import snownee.kiwi.RenderLayer;
 import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
+import snownee.kiwi.util.DeferredActions;
 
 @KiwiModule("cherry")
 @KiwiModule.Optional
@@ -155,15 +150,12 @@ public class CherryModule extends AbstractModule {
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
             pot.addPlant(CHERRY_SAPLING.getRegistryName(), () -> POTTED_CHERRY);
             pot.addPlant(REDLOVE_SAPLING.getRegistryName(), () -> POTTED_REDLOVE);
-
-            if (AxeItem.BLOCK_STRIPPING_MAP instanceof ImmutableMap) {
-                AxeItem.BLOCK_STRIPPING_MAP = Collections.synchronizedMap(Maps.newHashMap(AxeItem.BLOCK_STRIPPING_MAP));
-            }
-            AxeItem.BLOCK_STRIPPING_MAP.put(CHERRY_LOG, STRIPPED_CHERRY_LOG);
-            AxeItem.BLOCK_STRIPPING_MAP.put(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
         } catch (Exception e) {
             FruitsMod.logger.catching(e);
         }
+
+        DeferredActions.registerAxeConversion(CHERRY_LOG, STRIPPED_CHERRY_LOG);
+        DeferredActions.registerAxeConversion(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
     }
 
     @SubscribeEvent

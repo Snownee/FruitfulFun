@@ -6,6 +6,9 @@
   "mixins": [
     "MixinPollinateGoal",
     "MixinBeeEntity",
+    "MixinFoxEntity"
+  ],
+  "client": [
     "MixinRenderTypeLookup"
   ],
   "injectors": {

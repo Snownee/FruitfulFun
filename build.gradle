@@ -105,7 +105,7 @@ dependencies {
 
     compile 'org.spongepowered:mixin:0.8-SNAPSHOT'
 
-    implementation fg.deobf("curse.maven:kiwi-303657:3228367")
+    implementation fg.deobf("curse.maven:kiwi-303657:3273567")
 
     implementation fg.deobf("curse.maven:hwyla-253449:3033593")
 }
