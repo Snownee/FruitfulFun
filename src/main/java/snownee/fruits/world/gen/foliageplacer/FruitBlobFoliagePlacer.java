@@ -29,7 +29,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
     }
 
     @Override
-    protected FoliagePlacerType<?> func_230371_a_() {
+    protected FoliagePlacerType<?> getPlacerType() {
         return CoreModule.BLOB_PLACER;
     }
 

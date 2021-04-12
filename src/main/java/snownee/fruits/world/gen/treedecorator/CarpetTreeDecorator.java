@@ -20,7 +20,7 @@ import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import snownee.fruits.CoreModule;
 
 public class CarpetTreeDecorator extends TreeDecorator {
-    public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.field_236796_a_.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
+    public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.CODEC.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
         return decorator.carpetProvider;
     }).codec();
     private final BlockStateProvider carpetProvider;
@@ -30,7 +30,7 @@ public class CarpetTreeDecorator extends TreeDecorator {
     }
 
     @Override
-    protected TreeDecoratorType<?> func_230380_a_() {
+    protected TreeDecoratorType<?> getDecoratorType() {
         return CoreModule.CARPET_DECORATOR;
     }
 

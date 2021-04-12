@@ -101,7 +101,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
                 break;
             }
         } else {
-            world.setBlockState(pos, state.func_235896_a_/*cycle*/(AGE));
+            world.setBlockState(pos, state.cycleValue(AGE));
         }
     }
 

@@ -117,7 +117,7 @@ public class SlidingDoorBlock extends DoorBlock {
         if (this.material == Material.IRON) {
             return ActionResultType.PASS;
         } else {
-            state = state.func_235896_a_/*cycle*/(OPEN);
+            state = state.cycleValue(OPEN);
             worldIn.setBlockState(pos, state, 10);
             playSound(worldIn, pos, state.get(OPEN) == Boolean.TRUE);
             return ActionResultType.SUCCESS;
@@ -125,8 +125,8 @@ public class SlidingDoorBlock extends DoorBlock {
     }
 
     @Override
-    public void func_242663_a/*toggleDoor*/(World worldIn, BlockState state, BlockPos pos, boolean open) {
-        if (state.isIn(this) && state.get(OPEN) != open) {
+    public void openDoor(World worldIn, BlockState state, BlockPos pos, boolean open) {
+        if (state.matchesBlock(this) && state.get(OPEN) != open) {
             worldIn.setBlockState(pos, state.with(OPEN, Boolean.valueOf(open)), 10);
             this.playSound(worldIn, pos, open);
         }

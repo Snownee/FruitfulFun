@@ -3,7 +3,7 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
-        maven { url='https://dist.creeper.host/Sponge/maven' }
+        maven { url='https://repo.spongepowered.org/repository/maven-public/' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
@@ -33,7 +33,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20200723-1.16.1'
+    mappings channel: 'snapshot', version: '20210309-1.16.5'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -88,9 +88,7 @@ repositories {
         name = "jei"
         url = "https://dvs1.progwml6.com/files/maven"
     }
-    maven {
-        url = 'https://dist.creeper.host/Sponge/maven'
-    }
+    maven { url='https://repo.spongepowered.org/repository/maven-public/' }
     maven {
         url = "https://www.cursemaven.com"
     }
@@ -102,14 +100,14 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.6.4.86:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.6.4.86")
 
     compile 'org.spongepowered:mixin:0.8-SNAPSHOT'
 
-    compile files("Kiwi-1.16.3-${kiwi_version}-deobf.jar")
+    implementation fg.deobf("curse.maven:kiwi-303657:3228367")
 
-    compile fg.deobf("curse.maven:hwyla-253449:3033593")
+    implementation fg.deobf("curse.maven:hwyla-253449:3033593")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

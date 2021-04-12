@@ -87,6 +87,7 @@ import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
 
+//TODO: 1.17: Forge 1.16.5-36.0.60 - Add support for custom WoodTypes
 @KiwiModule
 @KiwiModule.Subscriber(Bus.MOD)
 public final class CoreModule extends AbstractModule { // TODO block map colors?
@@ -293,12 +294,12 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
     private static ConfiguredFeature<?, ?>[] allFeatures;
 
     private void makeFeature(String id, int count, float chance, int index) {
-        ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.withConfiguration(new SingleRandomFeature(trees)).withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
-        Registry.register(WorldGenRegistries.field_243653_e, "fruittrees:trees_" + id, cf);
+        ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.withConfiguration(new SingleRandomFeature(trees)).withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "fruittrees:trees_" + id, cf);
         allFeatures[index] = cf;
         if (chance > 0 && cherry != null) {
-            cf = cherry.withPlacement(Features.Placements.field_244001_l).withPlacement(Placement./*COUNT_EXTRA_HEIGHTMAP*/field_242902_f.configure(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
-            Registry.register(WorldGenRegistries.field_243653_e, "fruittrees:cherry_" + id, cf);
+            cf = cherry.withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "fruittrees:cherry_" + id, cf);
             allFeatures[index + 3] = cf;
         }
     }
@@ -308,10 +309,10 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
             return;
         }
         Climate climate = event.getClimate();
-        if (climate.field_242460_b != RainType.RAIN) {
+        if (climate.precipitation != RainType.RAIN) {
             return;
         }
-        if (climate.field_242462_d == TemperatureModifier.FROZEN) {
+        if (climate.temperatureModifier == TemperatureModifier.FROZEN) {
             return;
         }
         Category category = event.getCategory();
@@ -329,9 +330,9 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
         default:
             return;
         }
-        event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, allFeatures[i]);
+        event.getGeneration().withFeature(Decoration.VEGETAL_DECORATION, allFeatures[i]);
         if (category != Category.JUNGLE && FruitTypeExtension.CHERRY != null) {
-            event.getGeneration().func_242513_a(Decoration.VEGETAL_DECORATION, allFeatures[i + 3]);
+            event.getGeneration().withFeature(Decoration.VEGETAL_DECORATION, allFeatures[i + 3]);
         }
     }
 
@@ -349,7 +350,20 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
             decorators = ImmutableList.of();
             leavesProvider = new SimpleBlockStateProvider(type.leaves.getDefaultState());
         }
-        return Feature./*TREE*/field_236291_c_.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new FruitBlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines()/*.setSapling(type.sapling.get())*/./*decorators*/func_236703_a_(decorators).build()));
+        /* off */
+        return Feature.TREE.withConfiguration(
+                new BaseTreeFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(type.log.getDefaultState()),
+                        leavesProvider,
+                        new FruitBlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3),
+                        new StraightTrunkPlacer(4, 2, 0),
+                        new TwoLayerFeature(1, 0, 1)
+                )
+                .setIgnoreVines()
+                .setDecorators(decorators)
+                .build()
+        );
+        /* on */
     }
 
     @SubscribeEvent
