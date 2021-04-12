@@ -8,9 +8,7 @@ import snownee.kiwi.config.KiwiConfig.Range;
 public final class FruitsConfig {
 
     public enum DropMode {
-        NO_DROP,
-        INDEPENDENT,
-        ONE_BY_ONE
+        NO_DROP, INDEPENDENT, ONE_BY_ONE
     }
 
     @Range(min = 0, max = 100)
@@ -18,8 +16,12 @@ public final class FruitsConfig {
     public static DropMode fruitDropModeSingleplayer = DropMode.INDEPENDENT;
     public static DropMode fruitDropModeMultiplayer = DropMode.ONE_BY_ONE;
     @Range(min = 0, max = 1)
-    public static double oakLeavesDropsAppleSapling = 0.2;
+    public static float oakLeavesDropsAppleSapling = 0.2f;
     public static boolean worldGen = true;
+    @Range(min = 0, max = 1)
+    public static float treesGenInPlains = 0.004f;
+    @Range(min = 0, max = 1)
+    public static float treesGenInForest = 0.01f;
 
     public static DropMode getDropMode(World world) {
         return world.getServer().isDedicatedServer() ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;

@@ -281,8 +281,8 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
             } else {
                 allFeatures = new ConfiguredFeature[3];
             }
-            makeFeature("002", 0, .002f, 0);
-            makeFeature("005", 0, .005f, 1);
+            makeFeature("002", 0, FruitsConfig.treesGenInPlains, 0);
+            makeFeature("005", 0, FruitsConfig.treesGenInForest, 1);
             makeFeature("1", 1, 0, 2);
             trees = null;
             cherry = null;
@@ -294,6 +294,8 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
     private static ConfiguredFeature<?, ?>[] allFeatures;
 
     private void makeFeature(String id, int count, float chance, int index) {
+        if (count == 0 && chance == 0)
+            return;
         ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.withConfiguration(new SingleRandomFeature(trees)).withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "fruittrees:trees_" + id, cf);
         allFeatures[index] = cf;
@@ -318,22 +320,27 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
         Category category = event.getCategory();
         int i;
         switch (category) {
-        case JUNGLE:
-            i = 2;
+        case PLAINS:
+            i = 0;
             break;
         case FOREST:
             i = 1;
             break;
-        case PLAINS:
-            i = 0;
+        case JUNGLE:
+            i = 2;
             break;
         default:
             return;
         }
-        event.getGeneration().withFeature(Decoration.VEGETAL_DECORATION, allFeatures[i]);
+        insertFeature(event, allFeatures[i]);
         if (category != Category.JUNGLE && FruitTypeExtension.CHERRY != null) {
-            event.getGeneration().withFeature(Decoration.VEGETAL_DECORATION, allFeatures[i + 3]);
+            insertFeature(event, allFeatures[i + 3]);
         }
+    }
+
+    public static void insertFeature(BiomeLoadingEvent event, ConfiguredFeature<?, ?> cf) {
+        if (cf != null)
+            event.getGeneration().withFeature(Decoration.VEGETAL_DECORATION, cf);
     }
 
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> buildTreeFeature(FruitType type, boolean worldGen, BlockStateProvider carpetProvider) {
