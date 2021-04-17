@@ -9,7 +9,8 @@
     "MixinFoxEntity"
   ],
   "client": [
-    "MixinRenderTypeLookup"
+    "MixinRenderTypeLookup",
+    "MixinGameRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
