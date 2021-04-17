@@ -3,8 +3,9 @@ package snownee.fruits.cherry;
 import snownee.fruits.FruitType;
 
 public final class FruitTypeExtension {
-    private FruitTypeExtension() {}
+	private FruitTypeExtension() {
+	}
 
-    public static FruitType CHERRY;
-    public static FruitType REDLOVE;
+	public static FruitType CHERRY;
+	public static FruitType REDLOVE;
 }

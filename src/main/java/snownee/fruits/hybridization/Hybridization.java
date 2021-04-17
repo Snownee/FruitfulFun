@@ -10,12 +10,13 @@ import snownee.kiwi.Name;
 @KiwiModule.Optional
 public class Hybridization extends AbstractModule {
 
-    public static Hybridization INSTANCE;
+	public static Hybridization INSTANCE;
 
-    @Name("hybriding")
-    public static final IRecipeType<HybridingRecipe> RECIPE_TYPE = new IRecipeType() {};
+	@Name("hybriding")
+	public static final IRecipeType<HybridingRecipe> RECIPE_TYPE = new IRecipeType() {
+	};
 
-    @Name("hybriding")
-    public static final IRecipeSerializer<HybridingRecipe> SERIALIZER = new HybridingRecipe.Serializer();
+	@Name("hybriding")
+	public static final IRecipeSerializer<HybridingRecipe> SERIALIZER = new HybridingRecipe.Serializer();
 
 }

@@ -14,12 +14,12 @@ import snownee.fruits.block.FruitLeavesBlock;
 @Mixin(RenderTypeLookup.class)
 public class MixinRenderTypeLookup {
 
-    @Inject(at = @At("HEAD"), method = "canRenderInLayer", cancellable = true, remap = false)
-    private static void fruits_canRenderInLayer(BlockState state, RenderType type, CallbackInfoReturnable<Boolean> info) {
-        Block block = state.getBlock();
-        if (block instanceof FruitLeavesBlock) {
-            info.setReturnValue(type == RenderType.getCutoutMipped());
-        }
-    }
+	@Inject(at = @At("HEAD"), method = "canRenderInLayer", cancellable = true, remap = false)
+	private static void fruits_canRenderInLayer(BlockState state, RenderType type, CallbackInfoReturnable<Boolean> info) {
+		Block block = state.getBlock();
+		if (block instanceof FruitLeavesBlock) {
+			info.setReturnValue(type == RenderType.getCutoutMipped());
+		}
+	}
 
 }

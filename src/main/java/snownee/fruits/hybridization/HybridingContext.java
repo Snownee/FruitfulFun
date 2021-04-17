@@ -11,9 +11,9 @@ import snownee.kiwi.crafting.EmptyInventory;
 
 public class HybridingContext extends EmptyInventory {
 
-    public final Collection<Either<FruitType, Block>> ingredients;
+	public final Collection<Either<FruitType, Block>> ingredients;
 
-    public HybridingContext(Collection<Either<FruitType, Block>> ingredients) {
-        this.ingredients = Collections.unmodifiableCollection(ingredients);
-    }
+	public HybridingContext(Collection<Either<FruitType, Block>> ingredients) {
+		this.ingredients = Collections.unmodifiableCollection(ingredients);
+	}
 }

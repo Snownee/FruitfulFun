@@ -16,21 +16,21 @@ import snownee.fruits.hybridization.Hybridization;
 @Mixin(BeeEntity.PollinateGoal.class)
 public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
 
-    @Shadow(aliases = { "field_226491_b_", "b" }, remap = false)
-    private BeeEntity this$0;
+	@Shadow(aliases = { "field_226491_b_", "b" }, remap = false)
+	private BeeEntity this$0;
 
-    MixinPollinateGoal(BeeEntity bee) {
-        bee.super();
-    }
+	MixinPollinateGoal(BeeEntity bee) {
+		bee.super();
+	}
 
-    @Shadow
-    private final Predicate<BlockState> flowerPredicate = Hook::canPollinate;
+	@Shadow
+	private final Predicate<BlockState> flowerPredicate = Hook::canPollinate;
 
-    @Inject(method = "resetTask", at = @At("HEAD"))
-    public void onComplete(CallbackInfo cir) {
-        if (Hybridization.INSTANCE == null || this$0.savedFlowerPos == null) {
-            return;
-        }
-        Hook.onPollinateComplete(this$0);
-    }
+	@Inject(method = "resetTask", at = @At("HEAD"))
+	public void onComplete(CallbackInfo cir) {
+		if (Hybridization.INSTANCE == null || this$0.savedFlowerPos == null) {
+			return;
+		}
+		Hook.onPollinateComplete(this$0);
+	}
 }

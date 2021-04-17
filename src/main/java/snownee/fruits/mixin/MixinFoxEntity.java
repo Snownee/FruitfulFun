@@ -12,11 +12,11 @@ import snownee.fruits.CoreModule;
 @Mixin(FoxEntity.class)
 public class MixinFoxEntity {
 
-    @Inject(at = @At("HEAD"), method = "isBreedingItem", cancellable = true)
-    public void fruits_isBreedingItem(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
-        if (CoreModule.FOX_BREEDABLES.contains(stack.getItem())) {
-            info.setReturnValue(Boolean.TRUE);
-        }
-    }
+	@Inject(at = @At("HEAD"), method = "isBreedingItem", cancellable = true)
+	public void fruits_isBreedingItem(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
+		if (CoreModule.FOX_BREEDABLES.contains(stack.getItem())) {
+			info.setReturnValue(Boolean.TRUE);
+		}
+	}
 
 }

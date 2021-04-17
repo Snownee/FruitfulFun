@@ -18,27 +18,27 @@ import snownee.fruits.hybridization.Hybridization;
 @Mixin(BeeEntity.class)
 public abstract class MixinBeeEntity extends AnimalEntity {
 
-    public MixinBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
-        super(type, world);
-    }
+	public MixinBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
+		super(type, world);
+	}
 
-    @Inject(at = @At("HEAD"), method = "isFlowers", cancellable = true)
-    public void fruits_isFlowers(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (Hybridization.INSTANCE == null) {
-            return;
-        }
-        if (world.isBlockPresent(pos) && world.getBlockState(pos).getBlock() instanceof FruitLeavesBlock) {
-            cir.setReturnValue(true);
-        }
-    }
+	@Inject(at = @At("HEAD"), method = "isFlowers", cancellable = true)
+	public void fruits_isFlowers(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+		if (Hybridization.INSTANCE == null) {
+			return;
+		}
+		if (world.isBlockPresent(pos) && world.getBlockState(pos).getBlock() instanceof FruitLeavesBlock) {
+			cir.setReturnValue(true);
+		}
+	}
 
-    @Inject(at = @At("HEAD"), method = "createNavigator", cancellable = true)
-    protected void fruits_createNavigator(World worldIn, CallbackInfoReturnable<PathNavigator> cir) {
-        FilteredFlyingPathNavigator flyingpathnavigator = new FilteredFlyingPathNavigator(this, worldIn);
-        flyingpathnavigator.setCanOpenDoors(false);
-        flyingpathnavigator.setCanSwim(false);
-        flyingpathnavigator.setCanEnterDoors(true);
-        cir.setReturnValue(flyingpathnavigator);
-    }
+	@Inject(at = @At("HEAD"), method = "createNavigator", cancellable = true)
+	protected void fruits_createNavigator(World worldIn, CallbackInfoReturnable<PathNavigator> cir) {
+		FilteredFlyingPathNavigator flyingpathnavigator = new FilteredFlyingPathNavigator(this, worldIn);
+		flyingpathnavigator.setCanOpenDoors(false);
+		flyingpathnavigator.setCanSwim(false);
+		flyingpathnavigator.setCanEnterDoors(true);
+		cir.setReturnValue(flyingpathnavigator);
+	}
 
 }

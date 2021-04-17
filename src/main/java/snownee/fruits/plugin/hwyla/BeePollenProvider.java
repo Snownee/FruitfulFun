@@ -25,37 +25,37 @@ import snownee.kiwi.util.NBTHelper;
 
 public class BeePollenProvider implements IEntityComponentProvider, IServerDataProvider<Entity> {
 
-    public static final BeePollenProvider INSTANCE = new BeePollenProvider();
+	public static final BeePollenProvider INSTANCE = new BeePollenProvider();
 
-    @Override
-    public void appendBody(List<ITextComponent> tooltip, IEntityAccessor accessor, IPluginConfig config) {
-        if (!config.get(HwylaPlugin.BEE) || !(accessor.getEntity() instanceof BeeEntity)) {
-            return;
-        }
-        CompoundNBT data = accessor.getServerData();
-        if (!data.contains("pollen")) {
-            return;
-        }
-        ListNBT list = data.getList("pollen", Constants.NBT.TAG_STRING);
-        List<Either<FruitType, Block>> pollen = Hook.readPollen(list);
-        RenderableTextComponent[] components = new RenderableTextComponent[pollen.size()];
-        int i = 0;
-        for (Either<FruitType, Block> e : pollen) {
-            components[i] = e.map(type -> HwylaPlugin.item(new ItemStack(type.fruit)), block -> HwylaPlugin.item(new ItemStack(block)));
-            ++i;
-        }
-        tooltip.add(new RenderableTextComponent(components));
-    }
+	@Override
+	public void appendBody(List<ITextComponent> tooltip, IEntityAccessor accessor, IPluginConfig config) {
+		if (!config.get(HwylaPlugin.BEE) || !(accessor.getEntity() instanceof BeeEntity)) {
+			return;
+		}
+		CompoundNBT data = accessor.getServerData();
+		if (!data.contains("pollen")) {
+			return;
+		}
+		ListNBT list = data.getList("pollen", Constants.NBT.TAG_STRING);
+		List<Either<FruitType, Block>> pollen = Hook.readPollen(list);
+		RenderableTextComponent[] components = new RenderableTextComponent[pollen.size()];
+		int i = 0;
+		for (Either<FruitType, Block> e : pollen) {
+			components[i] = e.map(type -> HwylaPlugin.item(new ItemStack(type.fruit)), block -> HwylaPlugin.item(new ItemStack(block)));
+			++i;
+		}
+		tooltip.add(new RenderableTextComponent(components));
+	}
 
-    @Override
-    public void appendServerData(CompoundNBT tag, ServerPlayerEntity player, World world, Entity entity) {
-        if (entity instanceof BeeEntity) {
-            NBTHelper data = NBTHelper.of(entity.getPersistentData());
-            ListNBT list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
-            if (list != null) {
-                tag.put("pollen", list);
-            }
-        }
-    }
+	@Override
+	public void appendServerData(CompoundNBT tag, ServerPlayerEntity player, World world, Entity entity) {
+		if (entity instanceof BeeEntity) {
+			NBTHelper data = NBTHelper.of(entity.getPersistentData());
+			ListNBT list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
+			if (list != null) {
+				tag.put("pollen", list);
+			}
+		}
+	}
 
 }

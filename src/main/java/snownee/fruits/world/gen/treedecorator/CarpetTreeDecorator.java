@@ -20,60 +20,60 @@ import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import snownee.fruits.CoreModule;
 
 public class CarpetTreeDecorator extends TreeDecorator {
-    public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.CODEC.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
-        return decorator.carpetProvider;
-    }).codec();
-    private final BlockStateProvider carpetProvider;
+	public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.CODEC.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
+		return decorator.carpetProvider;
+	}).codec();
+	private final BlockStateProvider carpetProvider;
 
-    public CarpetTreeDecorator(BlockStateProvider carpetProvider) {
-        this.carpetProvider = carpetProvider;
-    }
+	public CarpetTreeDecorator(BlockStateProvider carpetProvider) {
+		this.carpetProvider = carpetProvider;
+	}
 
-    @Override
-    protected TreeDecoratorType<?> getDecoratorType() {
-        return CoreModule.CARPET_DECORATOR;
-    }
+	@Override
+	protected TreeDecoratorType<?> getDecoratorType() {
+		return CoreModule.CARPET_DECORATOR;
+	}
 
-    @Override
-    public void func_225576_a_(ISeedReader world, Random rand, List<BlockPos> trunkList, List<BlockPos> foliageList, Set<BlockPos> allBlocks, MutableBoundingBox boundingBox) {
-        if (foliageList.isEmpty()) {
-            return;
-        }
-        int y = foliageList.get(0).getY() + 1;
-        for (BlockPos pos : foliageList) {
-            if (pos.getY() > y) {
-                break;
-            }
-            if (placeCarpet(world, pos, carpetProvider.getBlockState(rand, pos), 19)) {
-                allBlocks.add(pos);
-                boundingBox.expandTo(new MutableBoundingBox(pos, pos));
-            }
-        }
-    }
+	@Override
+	public void func_225576_a_(ISeedReader world, Random rand, List<BlockPos> trunkList, List<BlockPos> foliageList, Set<BlockPos> allBlocks, MutableBoundingBox boundingBox) {
+		if (foliageList.isEmpty()) {
+			return;
+		}
+		int y = foliageList.get(0).getY() + 1;
+		for (BlockPos pos : foliageList) {
+			if (pos.getY() > y) {
+				break;
+			}
+			if (placeCarpet(world, pos, carpetProvider.getBlockState(rand, pos), 19)) {
+				allBlocks.add(pos);
+				boundingBox.expandTo(new MutableBoundingBox(pos, pos));
+			}
+		}
+	}
 
-    public static boolean placeCarpet(IWorld world, BlockPos pos, BlockState carpet, int flags) {
-        int i = 0;
-        BlockPos ground = pos;
-        BlockState groundState = Blocks.AIR.getDefaultState();
-        while (++i < 5) {
-            ground = pos.down(i);
-            groundState = world.getBlockState(ground);
-            if (groundState.getBlock() != Blocks.GRASS && groundState.getBlock() != Blocks.FERN && !groundState.getBlock().isAir(groundState, world, ground)) {
-                if (i == 1) {
-                    return false;
-                } else {
-                    break;
-                }
-            }
-        }
-        Block block = groundState.getBlock();
-        if (block == Blocks.SNOW || block == Blocks.ICE || block == Blocks.PACKED_ICE || block == Blocks.BARRIER || block == Blocks.HONEY_BLOCK || block == Blocks.SOUL_SAND) {
-            return false;
-        }
-        if (!Block.doesSideFillSquare(groundState.getCollisionShape(world, ground), Direction.UP)) {
-            return false;
-        }
-        return world.setBlockState(ground.up(), carpet, flags);
-    }
+	public static boolean placeCarpet(IWorld world, BlockPos pos, BlockState carpet, int flags) {
+		int i = 0;
+		BlockPos ground = pos;
+		BlockState groundState = Blocks.AIR.getDefaultState();
+		while (++i < 5) {
+			ground = pos.down(i);
+			groundState = world.getBlockState(ground);
+			if (groundState.getBlock() != Blocks.GRASS && groundState.getBlock() != Blocks.FERN && !groundState.getBlock().isAir(groundState, world, ground)) {
+				if (i == 1) {
+					return false;
+				} else {
+					break;
+				}
+			}
+		}
+		Block block = groundState.getBlock();
+		if (block == Blocks.SNOW || block == Blocks.ICE || block == Blocks.PACKED_ICE || block == Blocks.BARRIER || block == Blocks.HONEY_BLOCK || block == Blocks.SOUL_SAND) {
+			return false;
+		}
+		if (!Block.doesSideFillSquare(groundState.getCollisionShape(world, ground), Direction.UP)) {
+			return false;
+		}
+		return world.setBlockState(ground.up(), carpet, flags);
+	}
 
 }

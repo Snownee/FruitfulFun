@@ -11,16 +11,16 @@ import snownee.fruits.FruitType;
 
 public class FruitTree extends Tree {
 
-    private final Supplier<FruitType> typeSupplier;
+	private final Supplier<FruitType> typeSupplier;
 
-    public FruitTree(Supplier<FruitType> type) {
-        this.typeSupplier = type;
-    }
+	public FruitTree(Supplier<FruitType> type) {
+		this.typeSupplier = type;
+	}
 
-    @Override
-    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random random, boolean largeHive) {
-        FruitType type = typeSupplier.get();
-        return CoreModule.buildTreeFeature(type, false, null);
-    }
+	@Override
+	protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random random, boolean largeHive) {
+		FruitType type = typeSupplier.get();
+		return CoreModule.buildTreeFeature(type, false, null);
+	}
 
 }

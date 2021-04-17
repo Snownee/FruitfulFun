@@ -15,26 +15,26 @@ import snownee.fruits.hybridization.Hybridization;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-    public static final ResourceLocation UID = new ResourceLocation(FruitsMod.MODID, "hybriding");
+	public static final ResourceLocation UID = new ResourceLocation(FruitsMod.MODID, "hybriding");
 
-    @Override
-    public ResourceLocation getPluginUid() {
-        return UID;
-    }
+	@Override
+	public ResourceLocation getPluginUid() {
+		return UID;
+	}
 
-    @Override
-    public void registerCategories(IRecipeCategoryRegistration registration) {
-        if (Registry.RECIPE_TYPE.containsKey(UID)) {
-            registration.addRecipeCategories(new HybridingCategory(registration.getJeiHelpers().getGuiHelper()));
-        }
-    }
+	@Override
+	public void registerCategories(IRecipeCategoryRegistration registration) {
+		if (Registry.RECIPE_TYPE.containsKey(UID)) {
+			registration.addRecipeCategories(new HybridingCategory(registration.getJeiHelpers().getGuiHelper()));
+		}
+	}
 
-    @Override
-    public void registerRecipes(IRecipeRegistration registration) {
-        if (Registry.RECIPE_TYPE.containsKey(UID)) {
-            ClientWorld world = Minecraft.getInstance().world;
-            RecipeManager recipeManager = world.getRecipeManager();
-            registration.addRecipes(recipeManager.getRecipes(Hybridization.RECIPE_TYPE).values(), UID);
-        }
-    }
+	@Override
+	public void registerRecipes(IRecipeRegistration registration) {
+		if (Registry.RECIPE_TYPE.containsKey(UID)) {
+			ClientWorld world = Minecraft.getInstance().world;
+			RecipeManager recipeManager = world.getRecipeManager();
+			registration.addRecipes(recipeManager.getRecipes(Hybridization.RECIPE_TYPE).values(), UID);
+		}
+	}
 }
