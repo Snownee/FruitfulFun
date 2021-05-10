@@ -117,9 +117,7 @@ public class SlidingDoorBlock extends DoorBlock {
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (this.material != Material.IRON) {
-			state = state.cycleValue(OPEN);
-			worldIn.setBlockState(pos, state, 10);
-			playSound(worldIn, pos, state.get(OPEN) == Boolean.TRUE);
+			openDoor(worldIn, state, pos, !state.get(OPEN));
 			return ActionResultType.func_233537_a_(worldIn.isRemote);
 		}
 		return ActionResultType.PASS;
