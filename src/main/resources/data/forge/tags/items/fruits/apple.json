@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "apple",
+    { "id": "fruittrees:redlove", "required": false }
+  ]
+}

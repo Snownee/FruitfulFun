@@ -254,7 +254,7 @@ public final class CoreModule extends AbstractModule { // TODO block map colors?
 			.setCustomClientFactory((p, w) -> {
 				return new SlidingDoorEntity(w, new BlockPos(p.getPosX(), p.getPosY(), p.getPosZ()));
 			})
-			.build(null);
+			.build("fruittrees:door");
 	/* on */
 
 	public CoreModule() {
