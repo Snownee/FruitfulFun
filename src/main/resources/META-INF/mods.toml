@@ -17,3 +17,6 @@ license="ARR"
     versionRange="[3.5, 3.11)"
     ordering="BEFORE"
     side="BOTH"
+
+[modproperties.fruittrees]
+    catalogueItemIcon="fruittrees:grapefruit" #Support for Catalogue mod
