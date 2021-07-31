@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import snownee.fruits.FilteredFlyingPathNavigator;
@@ -41,4 +42,9 @@ public abstract class MixinBeeEntity extends AnimalEntity {
 		cir.setReturnValue(flyingpathnavigator);
 	}
 
+	@Override
+	public boolean isInvulnerableTo(DamageSource source) {
+		return source == DamageSource.WITHER || super.isInvulnerableTo(source);
+	}
+	
 }
