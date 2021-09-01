@@ -5,7 +5,7 @@ import java.util.Collections;
 
 import com.mojang.datafixers.util.Either;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import snownee.fruits.FruitType;
 import snownee.kiwi.crafting.EmptyInventory;
 

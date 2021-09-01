@@ -1,7 +1,7 @@
 package snownee.fruits.hybridization;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.Name;
@@ -13,10 +13,14 @@ public class Hybridization extends AbstractModule {
 	public static Hybridization INSTANCE;
 
 	@Name("hybriding")
-	public static final IRecipeType<HybridingRecipe> RECIPE_TYPE = new IRecipeType() {
+	public static final RecipeType<HybridingRecipe> RECIPE_TYPE = new RecipeType<>() {
+		@Override
+		public String toString() {
+			return "hybriding";
+		}
 	};
 
 	@Name("hybriding")
-	public static final IRecipeSerializer<HybridingRecipe> SERIALIZER = new HybridingRecipe.Serializer();
+	public static final RecipeSerializer<HybridingRecipe> SERIALIZER = new HybridingRecipe.Serializer();
 
 }

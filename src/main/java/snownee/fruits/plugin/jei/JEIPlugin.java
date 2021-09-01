@@ -5,10 +5,10 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeManager;
 import snownee.fruits.FruitsMod;
 import snownee.fruits.hybridization.Hybridization;
 
@@ -32,9 +32,9 @@ public class JEIPlugin implements IModPlugin {
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		if (Registry.RECIPE_TYPE.containsKey(UID)) {
-			ClientWorld world = Minecraft.getInstance().world;
+			ClientLevel world = Minecraft.getInstance().level;
 			RecipeManager recipeManager = world.getRecipeManager();
-			registration.addRecipes(recipeManager.getRecipes(Hybridization.RECIPE_TYPE).values(), UID);
+			registration.addRecipes(recipeManager.byType(Hybridization.RECIPE_TYPE).values(), UID);
 		}
 	}
 }

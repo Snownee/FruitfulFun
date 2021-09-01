@@ -22,3 +22,6 @@ eclipse
 run
 /logs/
 /.factorypath
+/.apt_generated_tests/
+
+/mixin-0.8.3.jar

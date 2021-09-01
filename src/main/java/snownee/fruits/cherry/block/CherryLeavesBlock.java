@@ -3,49 +3,49 @@ package snownee.fruits.cherry.block;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
-import snownee.fruits.world.gen.treedecorator.CarpetTreeDecorator;
+import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 
 public class CherryLeavesBlock extends FruitLeavesBlock {
 
-	protected final IParticleData particleType;
+	protected final ParticleOptions particleType;
 
-	public CherryLeavesBlock(Supplier<FruitType> type, Properties properties, IParticleData particleType) {
+	public CherryLeavesBlock(Supplier<FruitType> type, Properties properties, ParticleOptions particleType) {
 		super(type, properties);
 		this.particleType = particleType;
 	}
 
 	@Override
-	public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	public int getLightBlock(BlockState state, BlockGetter worldIn, BlockPos pos) {
 		return 0;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
 		return true;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
 		super.randomTick(state, world, pos, rand);
 		if (!canGrow(state) && rand.nextInt(20) == 0) {
 			return;
 		}
-		CarpetTreeDecorator.placeCarpet(world, pos, getCarpet().getDefaultState(), 3);
+		CarpetTreeDecorator.placeCarpet(world, pos, getCarpet().defaultBlockState(), world::setBlockAndUpdate);
 	}
 
 	public Block getCarpet() {
@@ -54,13 +54,13 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 		int i = rand.nextInt(15);
-		boolean raining = worldIn.isRainingAt(pos.up());
+		boolean raining = worldIn.isRainingAt(pos.above());
 		if (raining && i == 1) {
-			BlockPos blockpos = pos.down();
+			BlockPos blockpos = pos.below();
 			BlockState blockstate = worldIn.getBlockState(blockpos);
-			if (!blockstate.isSolid() || !blockstate.isSolidSide(worldIn, blockpos, Direction.UP)) {
+			if (!blockstate.canOcclude() || !blockstate.isFaceSturdy(worldIn, blockpos, Direction.UP)) {
 				double d0 = pos.getX() + rand.nextFloat();
 				double d1 = pos.getY() - 0.05D;
 				double d2 = pos.getZ() + rand.nextFloat();
@@ -75,14 +75,14 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
-	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-		super.onBlockHarvested(worldIn, pos, state, player);
-		if (worldIn.isRemote) {
-			int times = 5 + worldIn.rand.nextInt(6);
+	public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+		super.playerWillDestroy(worldIn, pos, state, player);
+		if (worldIn.isClientSide) {
+			int times = 5 + worldIn.random.nextInt(6);
 			for (int i = 0; i < times; ++i) {
-				double x = worldIn.rand.nextGaussian() * 0.3D;
-				double y = worldIn.rand.nextGaussian() * 0.3D;
-				double z = worldIn.rand.nextGaussian() * 0.3D;
+				double x = worldIn.random.nextGaussian() * 0.3D;
+				double y = worldIn.random.nextGaussian() * 0.3D;
+				double z = worldIn.random.nextGaussian() * 0.3D;
 				x += pos.getX() + .5;
 				y += pos.getY() + .5;
 				z += pos.getZ() + .5;

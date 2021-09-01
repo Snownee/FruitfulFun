@@ -2,38 +2,39 @@ package snownee.fruits.cherry.block;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.properties.DoorHingeSide;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Entity.RemovalReason;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.CoreModule;
 
 @SuppressWarnings("hiding")
 public class SlidingDoorBlock extends DoorBlock {
-	protected static final VoxelShape[] SOUTH_AABB = { Block.makeCuboidShape(0, 0, 3, 16, 16, 4), Block.makeCuboidShape(13, 0, 3, 29, 16, 4), Block.makeCuboidShape(-13, 0, 3, 3, 16, 4) };
-	protected static final VoxelShape[] NORTH_AABB = { Block.makeCuboidShape(0, 0, 12, 16, 16, 13), Block.makeCuboidShape(-13, 0, 12, 3, 16, 13), Block.makeCuboidShape(13, 0, 12, 29, 16, 13) };
-	protected static final VoxelShape[] WEST_AABB = { Block.makeCuboidShape(12, 0, 0, 13, 16, 16), Block.makeCuboidShape(12, 0, 13, 13, 16, 29), Block.makeCuboidShape(12, 0, -13, 13, 16, 3) };
-	protected static final VoxelShape[] EAST_AABB = { Block.makeCuboidShape(3, 0, 0, 4, 16, 16), Block.makeCuboidShape(3, 0, -13, 4, 16, 3), Block.makeCuboidShape(3, 0, 13, 4, 16, 29) };
+	protected static final VoxelShape[] SOUTH_AABB = { Block.box(0, 0, 3, 16, 16, 4), Block.box(13, 0, 3, 29, 16, 4), Block.box(-13, 0, 3, 3, 16, 4) };
+	protected static final VoxelShape[] NORTH_AABB = { Block.box(0, 0, 12, 16, 16, 13), Block.box(-13, 0, 12, 3, 16, 13), Block.box(13, 0, 12, 29, 16, 13) };
+	protected static final VoxelShape[] WEST_AABB = { Block.box(12, 0, 0, 13, 16, 16), Block.box(12, 0, 13, 13, 16, 29), Block.box(12, 0, -13, 13, 16, 3) };
+	protected static final VoxelShape[] EAST_AABB = { Block.box(3, 0, 0, 4, 16, 16), Block.box(3, 0, -13, 4, 16, 3), Block.box(3, 0, 13, 4, 16, 29) };
 	protected static final VoxelShape[][] AABB = { SOUTH_AABB, WEST_AABB, NORTH_AABB, EAST_AABB };
 
 	public SlidingDoorBlock(Block.Properties builder) {
@@ -41,68 +42,68 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		int index = 0;
-		if (state.get(OPEN) == Boolean.TRUE) {
+		if (state.getValue(OPEN) == Boolean.TRUE) {
 			++index;
-			if (state.get(HINGE) == DoorHingeSide.RIGHT) {
+			if (state.getValue(HINGE) == DoorHingeSide.RIGHT) {
 				++index;
 			}
 		}
-		return AABB[state.get(FACING).getHorizontalIndex()][index];
+		return AABB[state.getValue(FACING).get2DDataValue()][index];
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-		DoubleBlockHalf doubleblockhalf = stateIn.get(HALF);
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+		DoubleBlockHalf doubleblockhalf = stateIn.getValue(HALF);
 		if (facing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
-			return facingState.getBlock() == this && facingState.get(HALF) != doubleblockhalf ? stateIn.with(FACING, facingState.get(FACING)).with(OPEN, facingState.get(OPEN)).with(HINGE, facingState.get(HINGE)).with(POWERED, facingState.get(POWERED)) : Blocks.AIR.getDefaultState();
+			return facingState.is(this) && facingState.getValue(HALF) != doubleblockhalf ? stateIn.setValue(FACING, facingState.getValue(FACING)).setValue(OPEN, facingState.getValue(OPEN)).setValue(HINGE, facingState.getValue(HINGE)).setValue(POWERED, facingState.getValue(POWERED)) : Blocks.AIR.defaultBlockState();
 		} else {
-			return doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+			return doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 		}
 	}
 
-	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-		return false;
-	}
+	//    @Override
+	//    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+	//        return false;
+	//    }
 
 	@Override
 	@Nullable
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockPos blockpos = context.getPos();
-		if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context)) {
-			World world = context.getWorld();
-			boolean flag = world.isBlockPowered(blockpos) || world.isBlockPowered(blockpos.up());
-			return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(HINGE, this.getHingeSide(context)).with(POWERED, Boolean.valueOf(flag)).with(OPEN, Boolean.valueOf(flag)).with(HALF, DoubleBlockHalf.LOWER);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		BlockPos blockpos = context.getClickedPos();
+		if (blockpos.getY() < 255 && context.getLevel().getBlockState(blockpos.above()).canBeReplaced(context)) {
+			Level world = context.getLevel();
+			boolean flag = world.hasNeighborSignal(blockpos) || world.hasNeighborSignal(blockpos.above());
+			return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(HINGE, this.getHingeSide(context)).setValue(POWERED, Boolean.valueOf(flag)).setValue(OPEN, Boolean.valueOf(flag)).setValue(HALF, DoubleBlockHalf.LOWER);
 		} else {
 			return null;
 		}
 	}
 
-	private DoorHingeSide getHingeSide(BlockItemUseContext p_208073_1_) {
-		IBlockReader iblockreader = p_208073_1_.getWorld();
-		BlockPos blockpos = p_208073_1_.getPos();
-		Direction direction = p_208073_1_.getPlacementHorizontalFacing();
-		BlockPos blockpos1 = blockpos.up();
-		Direction direction1 = direction.rotateYCCW();
-		BlockPos blockpos2 = blockpos.offset(direction1);
+	private DoorHingeSide getHingeSide(BlockPlaceContext p_208073_1_) {
+		BlockGetter iblockreader = p_208073_1_.getLevel();
+		BlockPos blockpos = p_208073_1_.getClickedPos();
+		Direction direction = p_208073_1_.getHorizontalDirection();
+		BlockPos blockpos1 = blockpos.above();
+		Direction direction1 = direction.getCounterClockWise();
+		BlockPos blockpos2 = blockpos.relative(direction1);
 		BlockState blockstate = iblockreader.getBlockState(blockpos2);
-		BlockPos blockpos3 = blockpos1.offset(direction1);
+		BlockPos blockpos3 = blockpos1.relative(direction1);
 		BlockState blockstate1 = iblockreader.getBlockState(blockpos3);
-		Direction direction2 = direction.rotateY();
-		BlockPos blockpos4 = blockpos.offset(direction2);
+		Direction direction2 = direction.getClockWise();
+		BlockPos blockpos4 = blockpos.relative(direction2);
 		BlockState blockstate2 = iblockreader.getBlockState(blockpos4);
-		BlockPos blockpos5 = blockpos1.offset(direction2);
+		BlockPos blockpos5 = blockpos1.relative(direction2);
 		BlockState blockstate3 = iblockreader.getBlockState(blockpos5);
-		int i = (blockstate.hasOpaqueCollisionShape(iblockreader, blockpos2) ? -1 : 0) + (blockstate1.hasOpaqueCollisionShape(iblockreader, blockpos3) ? -1 : 0) + (blockstate2.hasOpaqueCollisionShape(iblockreader, blockpos4) ? 1 : 0) + (blockstate3.hasOpaqueCollisionShape(iblockreader, blockpos5) ? 1 : 0);
-		boolean flag = blockstate.getBlock() == this && blockstate.get(HALF) == DoubleBlockHalf.LOWER;
-		boolean flag1 = blockstate2.getBlock() == this && blockstate2.get(HALF) == DoubleBlockHalf.LOWER;
+		int i = (blockstate.isCollisionShapeFullBlock(iblockreader, blockpos2) ? -1 : 0) + (blockstate1.isCollisionShapeFullBlock(iblockreader, blockpos3) ? -1 : 0) + (blockstate2.isCollisionShapeFullBlock(iblockreader, blockpos4) ? 1 : 0) + (blockstate3.isCollisionShapeFullBlock(iblockreader, blockpos5) ? 1 : 0);
+		boolean flag = blockstate.getBlock() == this && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER;
+		boolean flag1 = blockstate2.getBlock() == this && blockstate2.getValue(HALF) == DoubleBlockHalf.LOWER;
 		if ((!flag || flag1) && i <= 0) {
 			if ((!flag1 || flag) && i >= 0) {
-				int j = direction.getXOffset();
-				int k = direction.getZOffset();
-				Vector3d vec3d = p_208073_1_.getHitVec();
+				int j = direction.getStepX();
+				int k = direction.getStepZ();
+				Vec3 vec3d = p_208073_1_.getClickLocation();
 				double d0 = vec3d.x - blockpos.getX();
 				double d1 = vec3d.z - blockpos.getZ();
 				return (j >= 0 || !(d1 < 0.5D)) && (j <= 0 || !(d1 > 0.5D)) && (k >= 0 || !(d0 > 0.5D)) && (k <= 0 || !(d0 < 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT;
@@ -115,61 +116,61 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if (this.material != Material.IRON) {
-			openDoor(worldIn, state, pos, !state.get(OPEN));
-			return ActionResultType.func_233537_a_(worldIn.isRemote);
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+		if (this.material != Material.METAL) {
+			setOpen(player, worldIn, state, pos, !state.getValue(OPEN));
+			return InteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
+	}
+
+	public void setOpen(@Nullable Entity p_153166_, Level p_153167_, BlockState p_153168_, BlockPos p_153169_, boolean p_153170_) {
+		if (p_153168_.is(this) && p_153168_.getValue(OPEN) != p_153170_) {
+			p_153167_.setBlock(p_153169_, p_153168_.setValue(OPEN, Boolean.valueOf(p_153170_)), 10);
+			this.playSound(p_153167_, p_153169_, p_153170_);
+			p_153167_.gameEvent(p_153166_, p_153170_ ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, p_153169_);
+		}
 	}
 
 	@Override
-	public void openDoor(World worldIn, BlockState state, BlockPos pos, boolean open) {
-		if (state.matchesBlock(this) && state.get(OPEN) != open) {
-			worldIn.setBlockState(pos, state.with(OPEN, Boolean.valueOf(open)), 10);
-			this.playSound(worldIn, pos, open);
-		}
-	}
-
-	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		boolean flag = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-		if (blockIn != this && flag != state.get(POWERED)) {
-			if (flag != state.get(OPEN)) {
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		boolean flag = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+		if (blockIn != this && flag != state.getValue(POWERED)) {
+			if (flag != state.getValue(OPEN)) {
 				this.playSound(worldIn, pos, flag);
 			}
 
-			worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(flag)).with(OPEN, Boolean.valueOf(flag)), 2);
+			worldIn.setBlock(pos, state.setValue(POWERED, Boolean.valueOf(flag)).setValue(OPEN, Boolean.valueOf(flag)), 2);
 		}
 
 	}
 
-	private void playSound(World worldIn, BlockPos pos, boolean isOpening) {
-		worldIn.playSound(null, pos, isOpening ? CoreModule.OPEN_SOUND : CoreModule.CLOSE_SOUND, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+	private void playSound(Level worldIn, BlockPos pos, boolean isOpening) {
+		worldIn.playSound(null, pos, isOpening ? CoreModule.OPEN_SOUND : CoreModule.CLOSE_SOUND, SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (worldIn.isRemote)
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (worldIn.isClientSide)
 			return;
-		if (!state.get(OPEN) || state.get(HALF) != DoubleBlockHalf.LOWER)
+		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER)
 			return;
-		if (oldState.getBlock() == this && oldState.get(OPEN))
+		if (oldState.getBlock() == this && oldState.getValue(OPEN))
 			return;
 		SlidingDoorEntity door = new SlidingDoorEntity(worldIn, pos);
-		worldIn.addEntity(door);
+		worldIn.addFreshEntity(door);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
-		if (worldIn.isRemote)
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		super.onRemove(state, worldIn, pos, newState, isMoving);
+		if (worldIn.isClientSide)
 			return;
-		if (!state.get(OPEN) || state.get(HALF) != DoubleBlockHalf.LOWER)
+		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER)
 			return;
-		if (newState.getBlock() == this && newState.get(OPEN))
+		if (newState.getBlock() == this && newState.getValue(OPEN))
 			return;
-		worldIn.getEntitiesWithinAABB(CoreModule.SLIDING_DOOR, new AxisAlignedBB(pos), e -> e.doorPos.equals(pos)).forEach(Entity::remove);
+		worldIn.getEntities(CoreModule.SLIDING_DOOR, new AABB(pos), e -> e.doorPos.equals(pos)).forEach(e -> e.remove(RemovalReason.KILLED));
 	}
 }

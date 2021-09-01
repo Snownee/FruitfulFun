@@ -6,8 +6,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -16,20 +18,17 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitsMod;
@@ -37,31 +36,31 @@ import snownee.fruits.hybridization.HybridingRecipe;
 
 public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 
-	private final String localizedName;
+	private final TranslatableComponent localizedName;
 	private final IDrawable icon;
 	private final IDrawable background;
 	private final IGuiHelper guiHelper;
-	private final BeeEntity bee;
+	private final Bee bee;
 	private final IDrawable x;
 	private final IDrawable line;
 
 	public static final int width = 116;
 	public static final int height = 54;
 
+	//InventoryScreen.renderEntityInInventory
 	public HybridingCategory(IGuiHelper guiHelper) {
 		this.guiHelper = guiHelper;
-		localizedName = I18n.format("gui.fruittrees.jei.category.hybriding");
+		localizedName = new TranslatableComponent("gui.fruittrees.jei.category.hybriding");
 		icon = guiHelper.createDrawableIngredient(CoreModule.GRAPEFRUIT.getDefaultInstance());
 		background = guiHelper.createBlankDrawable(width, height);
 		float f = (float) Math.atan(1000 / 40.0F);
 		float f1 = (float) Math.atan(-10 / 40.0F);
-		bee = EntityType.BEE.create(Minecraft.getInstance().world);
-		bee.renderYawOffset = 180.0F + f * 20.0F;
-		bee.rotationYaw = 180.0F + f * 40.0F;
-		bee.rotationPitch = -f1 * 20.0F;
-		bee.rotationYawHead = bee.rotationYaw;
-		bee.prevRotationYawHead = bee.rotationYaw;
-		Minecraft.getInstance().getRenderManager();
+		bee = EntityType.BEE.create(Minecraft.getInstance().level);
+		bee.yBodyRot = 180.0F + f * 20.0F;
+		bee.setYRot(180.0F + f * 40.0F);
+		bee.setXRot(-f1 * 20.0F);
+		bee.yHeadRot = bee.getYRot();
+		bee.yHeadRotO = bee.getYRot();
 		x = guiHelper.drawableBuilder(new ResourceLocation(FruitsMod.MODID, "textures/gui/jei.png"), 0, 0, 10, 11).setTextureSize(64, 64).build();
 		line = guiHelper.drawableBuilder(new ResourceLocation(FruitsMod.MODID, "textures/gui/jei.png"), 12, 4, 31, 3).setTextureSize(64, 64).build();
 	}
@@ -77,43 +76,43 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	}
 
 	@Override
-	public String getTitle() {
+	public Component getTitle() {
 		return localizedName;
 	}
 
 	@Override
-	public void draw(HybridingRecipe recipe, MatrixStack matrix, double mouseX, double mouseY) {
+	public void draw(HybridingRecipe recipe, PoseStack matrix, double mouseX, double mouseY) {
 		float f1 = (float) Math.atan(-10 / 40.0F);
 		x.draw(matrix, 18, 22);
 		line.draw(matrix, 54, 26);
 
-		matrix.push();
+		matrix.pushPose();
 
 		matrix.translate(70, 24, 1050);
 		matrix.scale(1, 1, -1);
 
-		MatrixStack matrixstack = new MatrixStack();
+		PoseStack matrixstack = new PoseStack();
 		matrixstack.translate(0.0D, 0.0D, 1000.0D);
 		matrixstack.scale(20, 20, 20);
 		Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
 		Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
-		quaternion.multiply(quaternion1);
-		matrixstack.rotate(quaternion);
+		quaternion.mul(quaternion1);
+		matrixstack.mulPose(quaternion);
 
 		Minecraft mc = Minecraft.getInstance();
-		EntityRendererManager entityrenderermanager = mc.getRenderManager();
-		quaternion1.conjugate();
-		entityrenderermanager.setCameraOrientation(quaternion1);
+		EntityRenderDispatcher entityrenderermanager = mc.getEntityRenderDispatcher();
+		quaternion1.conj();
+		entityrenderermanager.overrideCameraOrientation(quaternion1);
 		entityrenderermanager.setRenderShadow(false);
-		IRenderTypeBuffer.Impl irendertypebuffer$impl = mc.getRenderTypeBuffers().getBufferSource();
+		BufferSource irendertypebuffer$impl = mc.renderBuffers().bufferSource();
 
-		bee.ticksExisted = mc.player.ticksExisted;
-		entityrenderermanager.renderEntityStatic(bee, 0.0D, 0.0D, 0.0D, mc.getRenderPartialTicks(), 1, matrixstack, irendertypebuffer$impl, 15728880);
+		bee.tickCount = mc.player.tickCount;
+		entityrenderermanager.render(bee, 0.0D, 0.0D, 0.0D, mc.getFrameTime(), 1, matrixstack, irendertypebuffer$impl, 15728880);
 
-		irendertypebuffer$impl.finish();
+		irendertypebuffer$impl.endBatch();
 		entityrenderermanager.setRenderShadow(true);
 
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	@Override
@@ -155,8 +154,8 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 				return;
 			}
 			if (input) {
-				if (stack.getItem().isIn(ItemTags.LEAVES)) {
-					ITextComponent line = new TranslationTextComponent("gui.fruittrees.jei.tip.flowering", tooltip.get(0));
+				if (stack.is(ItemTags.LEAVES)) {
+					Component line = new TranslatableComponent("gui.fruittrees.jei.tip.flowering", tooltip.get(0));
 					tooltip.set(0, line);
 				}
 			}

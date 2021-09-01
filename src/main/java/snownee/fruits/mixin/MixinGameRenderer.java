@@ -16,10 +16,10 @@ public class MixinGameRenderer {
 
 	@Shadow
 	@Final
-	private Minecraft mc;
+	private Minecraft minecraft;
 
-	@Inject(at = @At("TAIL"), method = "getMouseOver")
-	public void fruits_getMouseOver(float partialTicks, CallbackInfo cir) {
-		Hook.modifyRayTraceResult(mc);
+	@Inject(at = @At("TAIL"), method = "pick")
+	public void fruits_pick(float partialTicks, CallbackInfo cir) {
+		Hook.modifyRayTraceResult(minecraft);
 	}
 }

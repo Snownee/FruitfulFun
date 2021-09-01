@@ -1,6 +1,6 @@
 package snownee.fruits.cherry.block;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 
 public class MovingSlidingDoorBlock extends Block {
 

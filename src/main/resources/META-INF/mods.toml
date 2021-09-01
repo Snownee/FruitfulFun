@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[33,)"
+loaderVersion="[37,)"
 license="ARR"
 
 [[mods]]
@@ -14,7 +14,7 @@ license="ARR"
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[3.5, 3.11)"
+    versionRange="[4, )"
     ordering="BEFORE"
     side="BOTH"
 

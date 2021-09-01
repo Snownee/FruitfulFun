@@ -20,7 +20,7 @@
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [{
-          "item": "fruittrees:grapefruit_sapling"
+          "items": ["fruittrees:grapefruit_sapling"]
         }]
       }
     }

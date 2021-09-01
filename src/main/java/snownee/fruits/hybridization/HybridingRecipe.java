@@ -10,19 +10,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.datafixers.util.Either;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import snownee.fruits.FruitType;
-import snownee.kiwi.crafting.Recipe;
+import snownee.kiwi.crafting.Simple;
 
-public class HybridingRecipe extends Recipe<HybridingContext> {
+public class HybridingRecipe extends Simple<HybridingContext> {
 
 	protected final Either<FruitType, Block> result;
 	public final ImmutableSet<Either<FruitType, Block>> ingredients;
@@ -34,7 +34,7 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 	}
 
 	@Override
-	public boolean matches(HybridingContext inv, World worldIn) {
+	public boolean matches(HybridingContext inv, Level worldIn) {
 		return ingredients.stream().allMatch(inv.ingredients::contains);
 	}
 
@@ -47,22 +47,22 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return Hybridization.SERIALIZER;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return Hybridization.RECIPE_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<HybridingRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HybridingRecipe> {
 
 		@Override
-		public HybridingRecipe read(ResourceLocation recipeId, JsonObject json) {
-			Either<FruitType, Block> result = readIngredient(JSONUtils.getJsonObject(json, "result"));
+		public HybridingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+			Either<FruitType, Block> result = readIngredient(GsonHelper.getAsJsonObject(json, "result"));
 			ImmutableSet.Builder<Either<FruitType, Block>> builder = ImmutableSet.builder();
-			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
+			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
 			if (ingredients.size() < 2 || ingredients.size() > 4) {
 				throw new JsonSyntaxException("Size of ingredients has to be in [2, 4]");
 			}
@@ -72,20 +72,20 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 
 		protected static Either<FruitType, Block> readIngredient(JsonObject object) {
 			if (object.has("block")) {
-				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(JSONUtils.getString(object, "block")));
+				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(object, "block")));
 				return Either.right(block);
 			} else if (object.has("fruit")) {
-				FruitType type = FruitType.parse(JSONUtils.getString(object, "fruit"));
+				FruitType type = FruitType.parse(GsonHelper.getAsString(object, "fruit"));
 				return Either.left(type);
 			}
 			throw new JsonSyntaxException("Expect key 'block' or 'fruit'");
 		}
 
 		@Override
-		public HybridingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+		public HybridingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			Either<FruitType, Block> result;
 			if (buffer.readBoolean()) {
-				result = Either.left(FruitType.parse(buffer.readString(32767)));
+				result = Either.left(FruitType.parse(buffer.readUtf(255)));
 			} else {
 				result = Either.right(buffer.readRegistryIdUnsafe(ForgeRegistries.BLOCKS));
 			}
@@ -97,16 +97,16 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 			}
 			size = buffer.readByte(); // types
 			for (int i = 0; i < size; i++) {
-				builder.add(Either.left(FruitType.parse(buffer.readString(32767))));
+				builder.add(Either.left(FruitType.parse(buffer.readUtf(255))));
 			}
 			return new HybridingRecipe(recipeId, result, builder.build());
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, HybridingRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, HybridingRecipe recipe) {
 			recipe.result.ifLeft(type -> {
 				buffer.writeBoolean(true);
-				buffer.writeString(type.name());
+				buffer.writeUtf(type.name(), 255);
 			}).ifRight(block -> {
 				buffer.writeBoolean(false);
 				buffer.writeRegistryIdUnsafe(ForgeRegistries.BLOCKS, block);
@@ -120,9 +120,10 @@ public class HybridingRecipe extends Recipe<HybridingContext> {
 			}
 			buffer.writeByte(types.size());
 			for (FruitType type : types) {
-				buffer.writeString(type.name());
+				buffer.writeUtf(type.name(), 255);
 			}
 		}
 
 	}
+
 }

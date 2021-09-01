@@ -20,7 +20,7 @@
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [{
-          "item": "fruittrees:empowered_citron"
+          "items": ["fruittrees:empowered_citron"]
         }]
       }
     }

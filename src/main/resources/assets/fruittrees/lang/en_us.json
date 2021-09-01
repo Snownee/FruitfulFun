@@ -98,6 +98,7 @@
 "block.fruittrees.citrus_pressure_plate": "Citrus Pressure Plate",
 "block.fruittrees.citrus_door": "Citrus Door",
 "block.fruittrees.citrus_trapdoor": "Citrus Trapdoor",
+"block.fruittrees.citrus_sign": "Citrus Sign",
 
 "block.fruittrees.cherry_log": "Cherry Log",
 "block.fruittrees.cherry_wood": "Cherry Wood",
@@ -113,6 +114,9 @@
 "block.fruittrees.cherry_door": "Cherry Door",
 "block.fruittrees.cherry_sliding_door": "Cherry Sliding Door (WIP)",
 "block.fruittrees.cherry_trapdoor": "Cherry Trapdoor",
+"block.fruittrees.cherry_sign": "Cherry Sign",
+
+"entity.fruittrees.sliding_door": "Sliding Door",
 
 "gui.fruittrees.jei.category.hybriding": "Bee Pollinating",
 "gui.fruittrees.jei.tip.flowering": "%s (Blossom)",
