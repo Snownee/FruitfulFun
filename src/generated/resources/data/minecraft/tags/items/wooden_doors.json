@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruittrees:cherry_door",
+      "required": false
+    },
+    {
+      "id": "fruittrees:cherry_sliding_door",
+      "required": false
+    },
+    "fruittrees:citrus_door"
+  ]
+}

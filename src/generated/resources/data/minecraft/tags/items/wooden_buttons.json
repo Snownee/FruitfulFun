@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruittrees:cherry_button",
+      "required": false
+    },
+    "fruittrees:citrus_button"
+  ]
+}

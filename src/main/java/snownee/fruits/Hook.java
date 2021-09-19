@@ -162,6 +162,7 @@ public final class Hook {
 				BlockPos pos = entity.blockPosition();
 				if (vec.y - pos.getY() >= 1)
 					pos = pos.above();
+				//mc.level.addParticle(ParticleTypes.ANGRY_VILLAGER, vec.x, vec.y, vec.z, 0, 0, 0);
 				mc.hitResult = new BlockHitResult(vec, Direction.UP, pos, false);
 			}
 		}

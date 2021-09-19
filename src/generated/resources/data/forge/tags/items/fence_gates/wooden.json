@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruittrees:cherry_fence_gate",
+      "required": false
+    },
+    "fruittrees:citrus_fence_gate"
+  ]
+}

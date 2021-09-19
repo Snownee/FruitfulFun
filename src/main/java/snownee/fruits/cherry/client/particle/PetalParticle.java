@@ -46,7 +46,7 @@ public class PetalParticle extends TextureSheetParticle {
 
 	private PetalParticle(ClientLevel world, double posX, double posY, double posZ) {
 		super(world, posX, posY, posZ);
-		this.lifetime = 100;
+		lifetime = 100;
 		age = random.nextInt(20);
 		quadSize = 0.75f + random.nextFloat() * 0.25f;
 		alpha = 0.7f + random.nextFloat() * 0.3f;
@@ -63,9 +63,9 @@ public class PetalParticle extends TextureSheetParticle {
 		vForce.transform(rot);
 		motion.mul(0.1f + random.nextFloat() * 0.05f);
 
-		this.xd = motion.x();
-		this.yd = motion.y();
-		this.zd = motion.z();
+		xd = motion.x();
+		yd = motion.y();
+		zd = motion.z();
 
 		angleStepX = 0.1f + random.nextFloat() * 0.1f;
 		angleStepZ = 0.1f + random.nextFloat() * 0.1f;
@@ -91,6 +91,7 @@ public class PetalParticle extends TextureSheetParticle {
 			RenderSystem.enableCull();
 		}
 
+		@Override
 		public String toString() {
 			return "PARTICLE_SHEET_TRANSLUCENT_NO_CULL";
 		}
@@ -113,45 +114,45 @@ public class PetalParticle extends TextureSheetParticle {
 
 	@Override
 	public void tick() {
-		this.xo = this.x;
-		this.yo = this.y;
-		this.zo = this.z;
-		this.oRoll = this.roll;
-		this.oRollX = this.rollX;
+		xo = x;
+		yo = y;
+		zo = z;
+		oRoll = roll;
+		oRollX = rollX;
 
-		if (this.age++ >= this.lifetime) {
-			this.remove();
+		if (age++ >= lifetime) {
+			remove();
 			return;
 		}
 
 		boolean lastOnGround = onGround;
 		if (!onGround && !inWater) {
 			float mul = age % 10 < 5 ? 0.03f : -0.03f;
-			this.xd += vForce.x() * mul;
-			this.yd += vForce.y() * mul;
-			this.zd += vForce.z() * mul;
+			xd += vForce.x() * mul;
+			yd += vForce.y() * mul;
+			zd += vForce.z() * mul;
 			roll += angleStepZ;
 			rollX += angleStepX;
 		}
 
-		this.move(this.xd, this.yd, this.zd);
+		move(xd, yd, zd);
 
-		if (this.onGround) {
+		if (onGround) {
 			if (onGround && !lastOnGround) {
 				age = lifetime - 20;
 			}
-			this.xd *= 0.5;
-			this.zd *= 0.5;
+			xd *= 0.5;
+			zd *= 0.5;
 		} else if (inWater) {
-			this.xd *= 0.66;
-			this.zd *= 0.66;
+			xd *= 0.66;
+			zd *= 0.66;
 		} else {
 			if (lastOnGround) {
 				age = lifetime - 60;
 			}
-			this.xd *= 1.001;
-			this.yd *= 0.998;
-			this.zd *= 1.001;
+			xd *= 1.001;
+			yd *= 0.998;
+			zd *= 1.001;
 		}
 	}
 
@@ -189,7 +190,7 @@ public class PetalParticle extends TextureSheetParticle {
 		double lastZ = pZ; // < Create variable 'lastZ' and assign it to 'z'.
 
 		if (pX != 0.0D || pY != 0.0D || pZ != 0.0D) {
-			Vec3 moveVec = Entity.collideBoundingBoxHeuristically((Entity) null, new Vec3(pX, pY, pZ), this.getBoundingBox(), this.level, CollisionContext.empty(), new RewindableStream<>(Stream.empty()));
+			Vec3 moveVec = Entity.collideBoundingBoxHeuristically((Entity) null, new Vec3(pX, pY, pZ), getBoundingBox(), level, CollisionContext.empty(), new RewindableStream<>(Stream.empty()));
 			pX = moveVec.x;
 			pY = moveVec.y;
 			pZ = moveVec.z;
@@ -201,23 +202,23 @@ public class PetalParticle extends TextureSheetParticle {
 				pY = Mth.clamp(targetY - y, -0.005, 0.02);
 			}
 
-			this.setBoundingBox(this.getBoundingBox().move(pX, pY, pZ));
-			this.setLocationFromBoundingbox();
+			setBoundingBox(getBoundingBox().move(pX, pY, pZ));
+			setLocationFromBoundingbox();
 		}
 
 		if (Math.abs(lastY) >= 1.0E-5F && Math.abs(pY) < 1.0E-5F) {
-			this.stoppedByCollision = true;
+			stoppedByCollision = true;
 		}
 
 		if (!inWater) {
-			this.onGround = lastY != pY && lastY < 0.0D;
+			onGround = lastY != pY && lastY < 0.0D;
 		}
 		if (lastX != pX) {
-			this.xd = 0.0D;
+			xd = 0.0D;
 		}
 
 		if (lastZ != pZ) {
-			this.zd = 0.0D;
+			zd = 0.0D;
 		}
 
 	}
@@ -225,13 +226,13 @@ public class PetalParticle extends TextureSheetParticle {
 	@Override
 	public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
 		Vec3 vec3d = renderInfo.getPosition();
-		float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - vec3d.x());
-		float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - vec3d.y());
-		float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - vec3d.z());
+		float f = (float) (Mth.lerp(partialTicks, xo, x) - vec3d.x());
+		float f1 = (float) (Mth.lerp(partialTicks, yo, y) - vec3d.y());
+		float f2 = (float) (Mth.lerp(partialTicks, zo, z) - vec3d.z());
 		Quaternion quaternion = new Quaternion(renderInfo.rotation());
 
-		float rx = Mth.lerp(partialTicks, this.oRollX, this.rollX);
-		float rz = Mth.lerp(partialTicks, this.oRoll, this.roll);
+		float rx = Mth.lerp(partialTicks, oRollX, rollX);
+		float rz = Mth.lerp(partialTicks, oRoll, roll);
 		if (onGround || inWater) {
 			quaternion = Vector3f.XP.rotationDegrees(90);
 			if (inWater) {
@@ -248,7 +249,7 @@ public class PetalParticle extends TextureSheetParticle {
 		Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
 		vector3f1.transform(quaternion);
 		Vector3f[] avector3f = new Vector3f[] { new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F) };
-		float f4 = this.getQuadSize(partialTicks);
+		float f4 = getQuadSize(partialTicks);
 		float alpha = f4 * this.alpha;
 		f4 *= quadSize * 0.15f;
 
@@ -259,15 +260,15 @@ public class PetalParticle extends TextureSheetParticle {
 			vector3f.add(f, f1, f2);
 		}
 
-		float f7 = this.getU0();
-		float f8 = this.getU1();
-		float f5 = this.getV0();
-		float f6 = this.getV1();
-		int j = this.getLightColor(partialTicks);
-		buffer.vertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).uv(f8, f6).color(this.rCol, this.gCol, this.bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).uv(f8, f5).color(this.rCol, this.gCol, this.bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).uv(f7, f5).color(this.rCol, this.gCol, this.bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).uv(f7, f6).color(this.rCol, this.gCol, this.bCol, alpha).uv2(j).endVertex();
+		float f7 = getU0();
+		float f8 = getU1();
+		float f5 = getV0();
+		float f6 = getV1();
+		int j = getLightColor(partialTicks);
+		buffer.vertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).uv(f8, f6).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+		buffer.vertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).uv(f8, f5).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+		buffer.vertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).uv(f7, f5).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+		buffer.vertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).uv(f7, f6).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -275,13 +276,13 @@ public class PetalParticle extends TextureSheetParticle {
 		private final SpriteSet spriteSet;
 
 		public Factory(SpriteSet sprite) {
-			this.spriteSet = sprite;
+			spriteSet = sprite;
 		}
 
 		@Override
 		public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			PetalParticle noteparticle = new PetalParticle(worldIn, x, y, z);
-			noteparticle.pickSprite(this.spriteSet);
+			noteparticle.pickSprite(spriteSet);
 			return noteparticle;
 		}
 

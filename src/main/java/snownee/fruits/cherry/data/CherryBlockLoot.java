@@ -1,6 +1,5 @@
 package snownee.fruits.cherry.data;
 
-import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
@@ -17,9 +16,9 @@ public class CherryBlockLoot extends CoreBlockLoot {
 	@Override
 	protected void _addTables() {
 		super._addTables();
-		handle(SlidingDoorBlock.class, $ -> BlockLoot.createDoorTable($));
+		handle(SlidingDoorBlock.class, $ -> createDoorTable($));
 		handle(CherryLeavesBlock.class, CoreBlockLoot::createFruitLeaves);
-		handle(CarpetBlock.class, $ -> BlockLoot.createSilkTouchOrShearsDispatchTable($, applyExplosionCondition($, LootItem.lootTableItem($))));
+		handle(CarpetBlock.class, $ -> createSilkTouchOrShearsDispatchTable($, applyExplosionCondition($, LootItem.lootTableItem($))));
 	}
 
 }

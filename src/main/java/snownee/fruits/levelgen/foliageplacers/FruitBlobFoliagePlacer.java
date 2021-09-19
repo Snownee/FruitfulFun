@@ -36,7 +36,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 	protected void createFoliage(LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, Random pRandom, TreeConfiguration pConfig, int pMaxFreeTreeHeight, FoliageAttachment pAttachment, int pFoliageHeight, int pFoliageRadius, int pOffset) {
 		for (int i = pOffset; i >= pOffset - pFoliageHeight; --i) {
 			int j = Math.max(pFoliageRadius + pAttachment.radiusOffset() - 1 - i / 2, 0);
-			this.placeLeavesRow(pLevel, pBlockSetter, pRandom, pConfig, pAttachment.pos(), j, i, pAttachment.doubleTrunk());
+			placeLeavesRow(pLevel, pBlockSetter, pRandom, pConfig, pAttachment.pos(), j, i, pAttachment.doubleTrunk());
 			BlockState core = pConfig.foliageProvider.getState(pRandom, pAttachment.pos());
 			if (core.getBlock() instanceof FruitLeavesBlock) {
 				core = core.setValue(LeavesBlock.DISTANCE, 1).setValue(LeavesBlock.PERSISTENT, true);

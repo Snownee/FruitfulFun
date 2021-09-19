@@ -54,7 +54,7 @@ public class SlidingDoorEntity extends Entity {
 			if (level.isLoaded(doorPos))
 				update(level.getBlockState(doorPos));
 		}
-		this.firstTick = false;
+		firstTick = false;
 	}
 
 	@Override
@@ -85,13 +85,14 @@ public class SlidingDoorEntity extends Entity {
 
 	@Override
 	public void setPos(double x, double y, double z) {
-		this.setPosRaw(x, y, z);
+		setPosRaw(x, y, z);
 	}
 
 	public boolean hitByEntity(Entity entityIn) {
-		return false;
+		return true;
 	}
 
+	@Override
 	public boolean canBeCollidedWith() {
 		return isAlive();
 	}
@@ -99,6 +100,11 @@ public class SlidingDoorEntity extends Entity {
 	@Override
 	public boolean canChangeDimensions() {
 		return false;
+	}
+
+	@Override
+	public boolean isPickable() {
+		return !isRemoved();
 	}
 
 	@Override

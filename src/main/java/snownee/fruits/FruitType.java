@@ -29,7 +29,7 @@ public enum FruitType implements IExtensibleEnum {
 	public final Supplier<SaplingBlock> sapling;
 	public final Item fruit;
 
-	private FruitType(Block log, LeavesBlock leaves, Supplier<SaplingBlock> sapling, Item fruit) {
+	FruitType(Block log, LeavesBlock leaves, Supplier<SaplingBlock> sapling, Item fruit) {
 		this.log = log;
 		this.leaves = leaves;
 		this.sapling = sapling;

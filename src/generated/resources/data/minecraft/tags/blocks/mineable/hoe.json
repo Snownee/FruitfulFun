@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "fruittrees:cherry_leaves",
+    "fruittrees:redlove_leaves",
+    "fruittrees:cherry_carpet",
+    "fruittrees:redlove_carpet",
+    "fruittrees:mandarin_leaves",
+    "fruittrees:lime_leaves",
+    "fruittrees:citron_leaves",
+    "fruittrees:pomelo_leaves",
+    "fruittrees:orange_leaves",
+    "fruittrees:lemon_leaves",
+    "fruittrees:grapefruit_leaves",
+    "fruittrees:apple_leaves"
+  ]
+}

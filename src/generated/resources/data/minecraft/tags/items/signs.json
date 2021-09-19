@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruittrees:cherry_sign",
+      "required": false
+    },
+    "fruittrees:citrus_sign"
+  ]
+}

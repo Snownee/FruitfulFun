@@ -19,7 +19,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.Features;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.entity.EntityType;
@@ -77,10 +76,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -90,6 +89,8 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.FruitTypeExtension;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
 import snownee.fruits.cherry.client.SlidingDoorRenderer;
+import snownee.fruits.data.CommonBlockTagsProvider;
+import snownee.fruits.data.CommonItemTagsProvider;
 import snownee.fruits.data.CoreBlockLoot;
 import snownee.fruits.levelgen.foliageplacers.FruitBlobFoliagePlacer;
 import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
@@ -250,8 +251,6 @@ public final class CoreModule extends AbstractModule {
 	public static final BannerPattern SNOWFLAKE = BannerPattern.create("SNOWFLAKE", "snowflake", "sno", true);
 	public static final BannerPatternItem SNOWFLAKE_BANNER_PATTERN = new BannerPatternItem(SNOWFLAKE, itemProp().stacksTo(1).tab(CreativeModeTab.TAB_MISC).rarity(Rarity.UNCOMMON));
 
-	public static final Tag.Named<Item> FOX_BREEDABLES = itemTag(FruitsMod.MODID, "fox_breedables");
-
 	public static SoundEvent OPEN_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.open"));
 	public static SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.close"));
 
@@ -331,9 +330,10 @@ public final class CoreModule extends AbstractModule {
 		event.enqueueWork(() -> WoodType.register(CITRUS_WOODTYPE));
 	}
 
-	@Override
-	protected void clientInit(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> Sheets.addWoodType(CITRUS_WOODTYPE));
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public void clientInit(ModelRegistryEvent event) {
+		Sheets.addWoodType(CITRUS_WOODTYPE);
 	}
 
 	@SubscribeEvent
@@ -471,6 +471,9 @@ public final class CoreModule extends AbstractModule {
 		DataGenerator generator = event.getGenerator();
 		if (event.includeServer()) {
 			generator.addProvider(new KiwiLootTableProvider(generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
+			CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, event.getExistingFileHelper());
+			generator.addProvider(blockTagsProvider);
+			generator.addProvider(new CommonItemTagsProvider(generator, blockTagsProvider, event.getExistingFileHelper()));
 		}
 	}
 

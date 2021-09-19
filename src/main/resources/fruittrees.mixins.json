@@ -6,7 +6,6 @@
   "mixins": [
     "MixinBeePollinateGoal",
     "MixinBee",
-    "MixinFox",
     "MixinBlockEntityType"
   ],
   "client": [

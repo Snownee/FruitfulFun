@@ -56,7 +56,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
 		super(properties);
 		this.type = type;
-		this.registerDefaultState(this.stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1));
+		registerDefaultState(stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1));
 	}
 
 	@Override
@@ -185,14 +185,14 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return this.defaultBlockState().setValue(PERSISTENT, true);
+		return defaultBlockState().setValue(PERSISTENT, true);
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		if (context instanceof EntityCollisionContext c && c.getEntity().isPresent()) {
 			Entity entity = c.getEntity().get();
-			if (!(entity instanceof ItemEntity || entity instanceof FlyingAnimal)) {
+			if ((!(entity instanceof ItemEntity) && !(entity instanceof FlyingAnimal))) {
 				return Shapes.block();
 			}
 		}

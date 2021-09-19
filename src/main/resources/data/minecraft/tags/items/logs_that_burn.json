@@ -1,7 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#fruittrees:citrus_logs",
-    { "id": "#fruittrees:cherry_logs", "required": false }
-  ]
-}

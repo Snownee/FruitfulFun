@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruittrees:cherry",
+      "required": false
+    },
+    {
+      "id": "fruittrees:redlove",
+      "required": false
+    },
+    "minecraft:apple",
+    "minecraft:melon_slice",
+    "minecraft:sweet_berries",
+    "minecraft:chorus_fruit",
+    "minecraft:glow_berries",
+    "fruittrees:citron",
+    "fruittrees:grapefruit",
+    "fruittrees:lemon",
+    "fruittrees:lime",
+    "fruittrees:mandarin",
+    "fruittrees:orange",
+    "fruittrees:pomelo"
+  ]
+}

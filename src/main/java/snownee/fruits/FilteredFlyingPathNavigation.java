@@ -37,7 +37,7 @@ public class FilteredFlyingPathNavigation extends FlyingPathNavigation {
 
 	@Override
 	protected PathFinder createPathFinder(int p_179679_1_) {
-		this.nodeEvaluator = new FlyNodeEvaluator() {
+		nodeEvaluator = new FlyNodeEvaluator() {
 			@Override
 			public BlockPathTypes getBlockPathType(BlockGetter pLevel, int pX, int pY, int pZ) {
 				BlockPathTypes types = super.getBlockPathType(pLevel, pX, pY, pZ);
@@ -47,7 +47,7 @@ public class FilteredFlyingPathNavigation extends FlyingPathNavigation {
 				return types;
 			}
 		};
-		this.nodeEvaluator.setCanPassDoors(true);
-		return new PathFinder(this.nodeEvaluator, p_179679_1_);
+		nodeEvaluator.setCanPassDoors(true);
+		return new PathFinder(nodeEvaluator, p_179679_1_);
 	}
 }

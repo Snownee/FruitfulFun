@@ -1,7 +1,6 @@
 package snownee.fruits.data;
 
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
@@ -28,10 +27,10 @@ public class CoreBlockLoot extends KiwiBlockLoot {
 
 	@Override
 	protected void _addTables() {
-		handleDefault($ -> BlockLoot.createSingleItemTable($));
-		handle(DoorBlock.class, $ -> BlockLoot.createDoorTable($));
-		handle(SlabBlock.class, $ -> BlockLoot.createSlabItemTable($));
-		handle(FlowerPotBlock.class, $ -> BlockLoot.createPotFlowerItemTable(((FlowerPotBlock) $).getContent()));
+		handleDefault($ -> createSingleItemTable($));
+		handle(DoorBlock.class, $ -> createDoorTable($));
+		handle(SlabBlock.class, $ -> createSlabItemTable($));
+		handle(FlowerPotBlock.class, $ -> createPotFlowerItemTable(((FlowerPotBlock) $).getContent()));
 		handle(FruitLeavesBlock.class, CoreBlockLoot::createFruitLeaves);
 	}
 

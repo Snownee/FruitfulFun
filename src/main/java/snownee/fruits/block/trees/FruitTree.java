@@ -14,7 +14,7 @@ public class FruitTree extends AbstractTreeGrower {
 	private final Supplier<FruitType> typeSupplier;
 
 	public FruitTree(Supplier<FruitType> type) {
-		this.typeSupplier = type;
+		typeSupplier = type;
 	}
 
 	@Override
