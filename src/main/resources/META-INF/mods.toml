@@ -14,7 +14,7 @@ license="ARR"
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[4, )"
+    versionRange="[4.1, )"
     ordering="BEFORE"
     side="BOTH"
 

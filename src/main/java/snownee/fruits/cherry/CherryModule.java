@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -40,6 +42,7 @@ import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitsMod;
@@ -48,6 +51,7 @@ import snownee.fruits.block.trees.FruitTree;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.block.SlidingDoorBlock;
 import snownee.fruits.cherry.client.particle.PetalParticle;
+import snownee.fruits.cherry.data.CherryBlockLoot;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
@@ -57,6 +61,7 @@ import snownee.kiwi.NoItem;
 import snownee.kiwi.RenderLayer;
 import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
+import snownee.kiwi.data.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.util.DeferredActions;
 
@@ -173,6 +178,14 @@ public class CherryModule extends AbstractModule {
 	@Override
 	protected void clientInit(FMLClientSetupEvent event) {
 		event.enqueueWork(() -> Sheets.addWoodType(CHERRY_WOODTYPE));
+	}
+
+	@Override
+	public void gatherData(GatherDataEvent event) {
+		DataGenerator generator = event.getGenerator();
+		if (event.includeServer()) {
+			generator.addProvider(new KiwiLootTableProvider(generator).add(CherryBlockLoot::new, LootContextParamSets.BLOCK));
+		}
 	}
 
 	@SubscribeEvent

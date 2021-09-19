@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.Features;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -71,6 +72,7 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorTy
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraft.world.level.levelgen.placement.FrequencyWithExtraChanceDecoratorConfiguration;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -80,6 +82,7 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.trees.FruitTree;
@@ -87,6 +90,7 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.FruitTypeExtension;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
 import snownee.fruits.cherry.client.SlidingDoorRenderer;
+import snownee.fruits.data.CoreBlockLoot;
 import snownee.fruits.levelgen.foliageplacers.FruitBlobFoliagePlacer;
 import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 import snownee.kiwi.AbstractModule;
@@ -98,6 +102,7 @@ import snownee.kiwi.NoItem;
 import snownee.kiwi.RenderLayer;
 import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
+import snownee.kiwi.data.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.util.DeferredActions;
 
@@ -459,6 +464,14 @@ public final class CoreModule extends AbstractModule {
 		ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
 		ItemColors itemColors = event.getItemColors();
 		itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES);
+	}
+
+	@Override
+	public void gatherData(GatherDataEvent event) {
+		DataGenerator generator = event.getGenerator();
+		if (event.includeServer()) {
+			generator.addProvider(new KiwiLootTableProvider(generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
+		}
 	}
 
 }
