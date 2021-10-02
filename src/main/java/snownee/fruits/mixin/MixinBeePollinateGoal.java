@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.Hook;
 import snownee.fruits.hybridization.Hybridization;
 
-@Mixin(targets = "net.minecraft.world.entity.animal.Bee$BeePollinateGoal")
+@Mixin(Bee.BeePollinateGoal.class)
 public abstract class MixinBeePollinateGoal {
 
 	@Shadow(aliases = { "f_28062_", "b" }, remap = false)

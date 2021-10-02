@@ -14,9 +14,16 @@ license="ARR"
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[4.1, )"
+    versionRange="[4.1, 5)"
+    ordering="BEFORE"
+    side="BOTH"
+
+[[dependencies.fruittrees]]
+    modId="forge"
+    mandatory=true
+    versionRange="[37.0.59, )"
     ordering="BEFORE"
     side="BOTH"
 
 [modproperties.fruittrees]
-    catalogueItemIcon="fruittrees:grapefruit" #Support for Catalogue mod
+    catalogueItemIcon="fruittrees:grapefruit"
