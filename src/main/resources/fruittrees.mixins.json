@@ -2,7 +2,7 @@
   "required": true,
   "package": "snownee.fruits.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "mixins.fruittrees.refmap.json",
+  "refmap": "fruittrees.refmap.json",
   "mixins": [
     "MixinBeePollinateGoal",
     "MixinBee",

@@ -38,9 +38,9 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.CoreModule;
@@ -175,9 +175,10 @@ public class CherryModule extends AbstractModule {
 		event.enqueueWork(() -> WoodType.register(CHERRY_WOODTYPE));
 	}
 
-	@Override
-	protected void clientInit(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> Sheets.addWoodType(CHERRY_WOODTYPE));
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public void clientInit(ModelRegistryEvent event) {
+		Sheets.addWoodType(CHERRY_WOODTYPE);
 	}
 
 	@Override
