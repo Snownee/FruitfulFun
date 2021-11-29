@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import snownee.fruits.FruitType;
-import snownee.kiwi.crafting.Simple;
+import snownee.kiwi.recipe.Simple;
 
 public class HybridingRecipe extends Simple<HybridingContext> {
 

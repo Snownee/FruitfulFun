@@ -7,7 +7,7 @@ import com.mojang.datafixers.util.Either;
 
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.FruitType;
-import snownee.kiwi.crafting.EmptyInventory;
+import snownee.kiwi.recipe.EmptyInventory;
 
 public class HybridingContext extends EmptyInventory {
 

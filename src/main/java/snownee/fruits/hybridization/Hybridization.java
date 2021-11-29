@@ -4,7 +4,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
-import snownee.kiwi.Name;
+import snownee.kiwi.KiwiModule.Name;
 
 @KiwiModule("hybridization")
 @KiwiModule.Optional

@@ -80,7 +80,6 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
@@ -97,15 +96,16 @@ import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
+import snownee.kiwi.KiwiModule.Name;
+import snownee.kiwi.KiwiModule.NoItem;
+import snownee.kiwi.KiwiModule.RenderLayer;
+import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.KiwiModule.Subscriber.Bus;
-import snownee.kiwi.Name;
-import snownee.kiwi.NoItem;
-import snownee.kiwi.RenderLayer;
-import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.data.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
-import snownee.kiwi.util.DeferredActions;
+import snownee.kiwi.loader.event.InitEvent;
+import snownee.kiwi.util.VanillaActions;
 
 @KiwiModule
 @KiwiModule.Subscriber(Bus.MOD)
@@ -281,9 +281,10 @@ public final class CoreModule extends AbstractModule {
 	public static List<FruitType> types;
 
 	@Override
-	protected void init(FMLCommonSetupEvent event) {
-		types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
-		try {
+	protected void init(InitEvent event) {
+		event.enqueueWork(() -> {
+			types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
+
 			FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
 			pot.addPlant(MANDARIN_SAPLING.getRegistryName(), () -> POTTED_MANDARIN);
 			pot.addPlant(LIME_SAPLING.getRegistryName(), () -> POTTED_LIME);
@@ -293,41 +294,39 @@ public final class CoreModule extends AbstractModule {
 			pot.addPlant(LEMON_SAPLING.getRegistryName(), () -> POTTED_LEMON);
 			pot.addPlant(GRAPEFRUIT_SAPLING.getRegistryName(), () -> POTTED_GRAPEFRUIT);
 			pot.addPlant(APPLE_SAPLING.getRegistryName(), () -> POTTED_APPLE);
-		} catch (Exception e) {
-			FruitsMod.logger.catching(e);
-		}
 
-		DeferredActions.registerAxeConversion(CITRUS_LOG, STRIPPED_CITRUS_LOG);
-		DeferredActions.registerAxeConversion(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
-		for (FruitType type : FruitType.values()) {
-			DeferredActions.registerCompostable(0.5f, type.fruit);
-			DeferredActions.registerCompostable(0.3f, type.leaves);
-			DeferredActions.registerCompostable(0.3f, type.sapling.get());
-			DeferredActions.registerVillagerPickupable(type.fruit);
-			DeferredActions.registerVillagerCompostable(type.fruit);
-		}
-
-		if (FruitsConfig.worldGen) {
-			ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
-			for (FruitType type : types) {
-				Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
-				builder.add(cf);
+			VanillaActions.registerAxeConversion(CITRUS_LOG, STRIPPED_CITRUS_LOG);
+			VanillaActions.registerAxeConversion(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
+			for (FruitType type : FruitType.values()) {
+				VanillaActions.registerCompostable(0.5f, type.fruit);
+				VanillaActions.registerCompostable(0.3f, type.leaves);
+				VanillaActions.registerCompostable(0.3f, type.sapling.get());
+				VanillaActions.registerVillagerPickupable(type.fruit);
+				VanillaActions.registerVillagerCompostable(type.fruit);
 			}
-			trees = builder.build();
-			if (FruitTypeExtension.CHERRY != null) {
-				cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleStateProvider(CherryModule.CHERRY_CARPET.defaultBlockState()));
-				allFeatures = new ConfiguredFeature[5];
-			} else {
-				allFeatures = new ConfiguredFeature[3];
-			}
-			makeFeature("002", 0, FruitsConfig.treesGenInPlains, 0);
-			makeFeature("005", 0, FruitsConfig.treesGenInForest, 1);
-			makeFeature("1", 1, 0, 2);
-			trees = null;
-			cherry = null;
-		}
 
-		event.enqueueWork(() -> WoodType.register(CITRUS_WOODTYPE));
+			if (FruitsConfig.worldGen) {
+				ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
+				for (FruitType type : types) {
+					Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
+					builder.add(cf);
+				}
+				trees = builder.build();
+				if (FruitTypeExtension.CHERRY != null) {
+					cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleStateProvider(CherryModule.CHERRY_CARPET.defaultBlockState()));
+					allFeatures = new ConfiguredFeature[5];
+				} else {
+					allFeatures = new ConfiguredFeature[3];
+				}
+				makeFeature("002", 0, FruitsConfig.treesGenInPlains, 0);
+				makeFeature("005", 0, FruitsConfig.treesGenInForest, 1);
+				makeFeature("1", 1, 0, 2);
+				trees = null;
+				cherry = null;
+			}
+
+			WoodType.register(CITRUS_WOODTYPE);
+		});
 	}
 
 	@SubscribeEvent

@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +30,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
@@ -76,7 +76,7 @@ public final class Hook {
 		Block block = state.getBlock();
 		FruitType type = block instanceof FruitLeavesBlock ? ((FruitLeavesBlock) block).type.get() : null;
 		NBTHelper data = NBTHelper.of(bee.getPersistentData());
-		ListTag list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
+		ListTag list = data.getTagList("FruitsList", Tag.TAG_STRING);
 		if (list == null) {
 			list = new ListTag();
 			data.setTag("FruitsList", list);

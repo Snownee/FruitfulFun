@@ -14,13 +14,13 @@ import mcp.mobius.waila.api.ui.IElement;
 import mcp.mobius.waila.api.ui.IElementHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.util.Constants;
 import snownee.fruits.FruitType;
 import snownee.fruits.Hook;
 import snownee.kiwi.util.NBTHelper;
@@ -38,7 +38,7 @@ public class BeePollenProvider implements IEntityComponentProvider, IServerDataP
 		if (!data.contains("pollen")) {
 			return;
 		}
-		ListTag list = data.getList("pollen", Constants.NBT.TAG_STRING);
+		ListTag list = data.getList("pollen", Tag.TAG_STRING);
 		List<Either<FruitType, Block>> pollen = Hook.readPollen(list);
 		List<IElement> elements = Lists.newArrayList();
 		IElementHelper helper = tooltip.getElementHelper();
@@ -53,7 +53,7 @@ public class BeePollenProvider implements IEntityComponentProvider, IServerDataP
 	public void appendServerData(CompoundTag tag, ServerPlayer player, Level world, Entity entity, boolean showDetails) {
 		if (entity instanceof Bee) {
 			NBTHelper data = NBTHelper.of(entity.getPersistentData());
-			ListTag list = data.getTagList("FruitsList", Constants.NBT.TAG_STRING);
+			ListTag list = data.getTagList("FruitsList", Tag.TAG_STRING);
 			if (list != null) {
 				tag.put("pollen", list);
 			}

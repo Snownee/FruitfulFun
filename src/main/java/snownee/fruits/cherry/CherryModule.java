@@ -41,11 +41,9 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
-import snownee.fruits.FruitsMod;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.trees.FruitTree;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
@@ -55,15 +53,16 @@ import snownee.fruits.cherry.data.CherryBlockLoot;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
+import snownee.kiwi.KiwiModule.Name;
+import snownee.kiwi.KiwiModule.NoItem;
+import snownee.kiwi.KiwiModule.RenderLayer;
+import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.KiwiModule.Subscriber.Bus;
-import snownee.kiwi.Name;
-import snownee.kiwi.NoItem;
-import snownee.kiwi.RenderLayer;
-import snownee.kiwi.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.data.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
-import snownee.kiwi.util.DeferredActions;
+import snownee.kiwi.loader.event.InitEvent;
+import snownee.kiwi.util.VanillaActions;
 
 @KiwiModule("cherry")
 @KiwiModule.Optional
@@ -160,19 +159,17 @@ public class CherryModule extends AbstractModule {
 	}
 
 	@Override
-	protected void init(FMLCommonSetupEvent event) {
-		try {
+	protected void init(InitEvent event) {
+		event.enqueueWork(() -> {
 			FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
 			pot.addPlant(CHERRY_SAPLING.getRegistryName(), () -> POTTED_CHERRY);
 			pot.addPlant(REDLOVE_SAPLING.getRegistryName(), () -> POTTED_REDLOVE);
-		} catch (Exception e) {
-			FruitsMod.logger.catching(e);
-		}
 
-		DeferredActions.registerAxeConversion(CHERRY_LOG, STRIPPED_CHERRY_LOG);
-		DeferredActions.registerAxeConversion(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
+			VanillaActions.registerAxeConversion(CHERRY_LOG, STRIPPED_CHERRY_LOG);
+			VanillaActions.registerAxeConversion(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
 
-		event.enqueueWork(() -> WoodType.register(CHERRY_WOODTYPE));
+			WoodType.register(CHERRY_WOODTYPE);
+		});
 	}
 
 	@SubscribeEvent
