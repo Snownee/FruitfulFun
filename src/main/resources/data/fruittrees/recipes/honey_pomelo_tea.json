@@ -1,0 +1,32 @@
+{
+  "type": "kiwi:shapeless_no_containers",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:food"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:fruits/pomelo"
+    },
+    {
+      "item": "honey_bottle"
+    },
+    {
+      "item": "sugar"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "item": "neapolitan:mint_leaves"
+        },
+        []
+      ]
+    }
+  ],
+  "result": {
+    "item": "fruittrees:honey_pomelo_tea"
+  }
+}
