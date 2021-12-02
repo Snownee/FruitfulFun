@@ -13,7 +13,7 @@ public class Hybridization extends AbstractModule {
 	public static Hybridization INSTANCE;
 
 	@Name("hybriding")
-	public static final IRecipeType<HybridingRecipe> RECIPE_TYPE = new IRecipeType() {
+	public static final IRecipeType<HybridingRecipe> RECIPE_TYPE = new IRecipeType<HybridingRecipe>() {
 	};
 
 	@Name("hybriding")
