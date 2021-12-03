@@ -42,10 +42,10 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
+import snownee.fruits.FruitsMod;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.fruits.block.trees.FruitTree;
+import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.block.SlidingDoorBlock;
 import snownee.fruits.cherry.client.particle.PetalParticle;
@@ -124,10 +124,10 @@ public class CherryModule extends AbstractModule {
 
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock CHERRY_SAPLING = new SaplingBlock(new FruitTree(() -> FruitTypeExtension.CHERRY), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.COLOR_PINK));
+	public static SaplingBlock CHERRY_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitTypeExtension.CHERRY), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.COLOR_PINK));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock REDLOVE_SAPLING = new SaplingBlock(new FruitTree(() -> FruitTypeExtension.REDLOVE), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.CRIMSON_NYLIUM));
+	public static SaplingBlock REDLOVE_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitTypeExtension.REDLOVE), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.CRIMSON_NYLIUM));
 
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
@@ -151,11 +151,8 @@ public class CherryModule extends AbstractModule {
 	public static SignItem CHERRY_SIGN_ITEM = new SignItem(itemProp().stacksTo(16).tab(CreativeModeTab.TAB_DECORATIONS), CHERRY_SIGN, CHERRY_WALL_SIGN);
 
 	static {
-		FruitTypeExtension.CHERRY = FruitType.create("CHERRY", CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY);
-		FruitTypeExtension.REDLOVE = FruitType.create("REDLOVE", CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE);
-
-		CoreModule.ALL_LEAVES.add(CHERRY_LEAVES);
-		CoreModule.ALL_LEAVES.add(REDLOVE_LEAVES);
+		FruitTypeExtension.CHERRY = FruitType.create("CHERRY", 0, CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY, CHERRY_CARPET);
+		FruitTypeExtension.REDLOVE = FruitType.create("REDLOVE", 2, CHERRY_LOG, REDLOVE_LEAVES, () -> REDLOVE_SAPLING, REDLOVE, REDLOVE_CARPET);
 	}
 
 	@Override
@@ -169,7 +166,10 @@ public class CherryModule extends AbstractModule {
 			VanillaActions.registerAxeConversion(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
 
 			WoodType.register(CHERRY_WOODTYPE);
-		});
+		}).whenComplete((v, ex) -> {
+			if (ex != null)
+				FruitsMod.logger.catching(ex);
+		}); // WTF??? workaround handle it
 	}
 
 	@SubscribeEvent

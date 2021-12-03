@@ -1,13 +1,13 @@
 package snownee.fruits.plugin.waila;
 
 import mcp.mobius.waila.api.Accessor;
-import mcp.mobius.waila.api.BlockAccessor;
 import mcp.mobius.waila.api.EntityAccessor;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
 import mcp.mobius.waila.api.event.WailaRayTraceEvent;
+import mcp.mobius.waila.impl.BlockAccessorImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -36,15 +36,15 @@ public class JadePlugin implements IWailaPlugin {
 	}
 
 	private void override(WailaRayTraceEvent event) {
-		Accessor accessor = event.getTarget();
+		Accessor<?> accessor = event.getAccessor();
 		if (accessor instanceof EntityAccessor) {
 			Entity entity = ((EntityAccessor) accessor).getEntity();
 			if (entity instanceof SlidingDoorEntity) {
 				BlockPos pos = ((SlidingDoorEntity) entity).doorPos;
 				Level level = accessor.getLevel();
 				BlockHitResult hitResult = new BlockHitResult(accessor.getHitResult().getLocation(), accessor.getPlayer().getDirection().getOpposite(), pos, false);
-				accessor = new BlockAccessor(level.getBlockState(pos), null, level, accessor.getPlayer(), accessor.getServerData(), hitResult, accessor.isServerConnected());
-				event.setTarget(accessor);
+				accessor = new BlockAccessorImpl(level.getBlockState(pos), null, level, accessor.getPlayer(), accessor.getServerData(), hitResult, accessor.isServerConnected());
+				event.setAccessor(accessor);
 			}
 		}
 	}

@@ -2,18 +2,18 @@ buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://maven.parchmentmc.org' }
+        //maven { url = 'https://maven.parchmentmc.org' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
+        //classpath 'org.parchmentmc:librarian:1.+'
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
+//apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
@@ -24,7 +24,7 @@ group = "${mod_base_package}.fruits" // http://maven.apache.org/guides/mini/guid
 archivesBaseName = mod_name
 
 // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
@@ -171,6 +171,11 @@ repositories {
 
 mixin {
     add sourceSets.main, "${mod_id}.refmap.json"
+    // Sets up the mixin config; this gets added to run configurations and the manifest in the final jar
+    config "${mod_id}.mixins.json"
+
+    // Enables exporting mixin-changed classes to .mixin.out in the run folder
+    debug.export = true
 }
 
 dependencies {
@@ -181,19 +186,19 @@ dependencies {
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
     
     // Real mod deobf dependency examples - these get remapped to your current mappings
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}") // Adds JEI API as a compile dependency
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
+    //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}") // Adds JEI API as a compile dependency
+    //runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
 	
-	implementation fg.deobf("curse.maven:jade-324717:3468298")
+	implementation fg.deobf("curse.maven:jade-324717:3544015")
 	//implementation fg.deobf("curse.maven:kiwi-303657:3468944")
 
     // Examples using mod jars from ./libs
-    implementation fg.deobf("libs:Kiwi-1.17.1:5.0.0")
-    //annotationProcessor "libs:Kiwi-1.17.1:5.0.0:processor"
-    annotationProcessor "libs:Kiwi-1.17.1:5.0.0"
+    implementation fg.deobf("libs:Kiwi-1.18:5.0.0")
+    //annotationProcessor "libs:Kiwi-1.18:5.0.0:processor"
+    annotationProcessor "libs:Kiwi-1.18:5.0.0"
 	
-    //implementation fg.deobf("libs:Jade-1.17.1:3.1.6")
+    //implementation fg.deobf("libs:Jade-1.18:3.1.6")
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -243,10 +248,10 @@ jar {
                 "Implementation-Title": project.name,
                 "Implementation-Version": mod_version,
                 "Implementation-Vendor": mod_authors,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "${mod_id}.mixins.json"
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+    exclude '**/*.bat'
 }
 
 // Example configuration to allow publishing using the maven-publish plugin

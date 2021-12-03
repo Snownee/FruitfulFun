@@ -18,10 +18,12 @@ public final class FruitsConfig {
 	@Range(min = 0, max = 1)
 	public static float oakLeavesDropsAppleSapling = 0.2f;
 	public static boolean worldGen = true;
-	@Range(min = 0, max = 1)
-	public static float treesGenInPlains = 0.004f;
-	@Range(min = 0, max = 1)
-	public static float treesGenInForest = 0.01f;
+	@Range(min = 2, max = 10000)
+	public static int treesGenChunksInPlains = 500;
+	@Range(min = 2, max = 10000)
+	public static int treesGenChunksInForest = 200;
+	@Range(min = 2, max = 10000)
+	public static int treesGenChunksInJungle = 10;
 
 	public static DropMode getDropMode(Level world) {
 		return world.getServer().isDedicatedServer() ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;

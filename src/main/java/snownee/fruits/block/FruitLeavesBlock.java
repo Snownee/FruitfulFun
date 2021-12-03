@@ -44,7 +44,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitsConfig;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
-import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 
 public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, EntityBlock {
@@ -143,8 +142,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			dropResources(state, world, pos);
 			world.removeBlock(pos, false);
 		} else if (canGrow(state) && world.isAreaLoaded(pos, 1) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
+			int r = rand.nextInt(100);
 
-			boolean def = rand.nextInt(100) > (99 - FruitsConfig.growingSpeed);
+			if (r < 10 && type.get().carpet != null) {
+				CarpetTreeDecorator.placeCarpet(world, pos, type.get().carpet.defaultBlockState(), world::setBlockAndUpdate);
+			}
+
+			boolean def = r > (99 - FruitsConfig.growingSpeed);
 
 			if (ForgeHooks.onCropsGrowPre(world, pos, state, def)) {
 				performBonemeal(world, rand, pos, state);
@@ -190,8 +194,8 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (context instanceof EntityCollisionContext c && c.getEntity().isPresent()) {
-			Entity entity = c.getEntity().get();
+		if (context instanceof EntityCollisionContext c && c.getEntity() != null) {
+			Entity entity = c.getEntity();
 			if ((!(entity instanceof ItemEntity) && !(entity instanceof FlyingAnimal))) {
 				return Shapes.block();
 			}
@@ -209,8 +213,8 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 					if (state.getValue(AGE) == 3) {
 						((FruitLeavesBlock) state.getBlock()).performBonemeal((ServerLevel) worldIn, worldIn.random, pos2, state);
 					}
-					if (state.getBlock() instanceof CherryLeavesBlock) {
-						CarpetTreeDecorator.placeCarpet(worldIn, pos2, ((CherryLeavesBlock) state.getBlock()).getCarpet().defaultBlockState(), worldIn::setBlockAndUpdate);
+					if (type.get().carpet != null) {
+						CarpetTreeDecorator.placeCarpet(worldIn, pos2, type.get().carpet.defaultBlockState(), worldIn::setBlockAndUpdate);
 					}
 				}
 			}
@@ -246,9 +250,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		return null;
 	}
 
+	public boolean hasBlockEntity(BlockState state) {
+		return state.getValue(PERSISTENT) && state.getValue(DISTANCE) == 1;
+	}
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState state) {
-		if (state.getValue(PERSISTENT) && state.getValue(DISTANCE) == 1) {
+		if (hasBlockEntity(state)) {
 			return new FruitTreeBlockEntity(pPos, state, type.get());
 		}
 		return null;

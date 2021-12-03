@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[37,)"
+loaderVersion="[38,)"
 license="ARR"
 
 [[mods]]
@@ -21,7 +21,7 @@ license="ARR"
 [[dependencies.fruittrees]]
     modId="forge"
     mandatory=true
-    versionRange="[37.0.59, )"
+    versionRange="[38, )"
     ordering="BEFORE"
     side="BOTH"
 

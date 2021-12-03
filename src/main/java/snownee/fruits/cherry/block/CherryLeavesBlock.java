@@ -7,18 +7,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.fruits.cherry.CherryModule;
-import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 
 public class CherryLeavesBlock extends FruitLeavesBlock {
 
@@ -37,19 +33,6 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	@Override
 	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
 		return true;
-	}
-
-	@Override
-	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
-		super.randomTick(state, world, pos, rand);
-		if (!canGrow(state) && rand.nextInt(20) == 0) {
-			return;
-		}
-		CarpetTreeDecorator.placeCarpet(world, pos, getCarpet().defaultBlockState(), world::setBlockAndUpdate);
-	}
-
-	public Block getCarpet() {
-		return this == CherryModule.REDLOVE_LEAVES ? CherryModule.REDLOVE_CARPET : CherryModule.CHERRY_CARPET;
 	}
 
 	@Override

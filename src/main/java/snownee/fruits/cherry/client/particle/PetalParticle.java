@@ -1,6 +1,6 @@
 package snownee.fruits.cherry.client.particle;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -25,12 +25,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RewindableStream;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -190,7 +188,7 @@ public class PetalParticle extends TextureSheetParticle {
 		double lastZ = pZ; // < Create variable 'lastZ' and assign it to 'z'.
 
 		if (pX != 0.0D || pY != 0.0D || pZ != 0.0D) {
-			Vec3 moveVec = Entity.collideBoundingBoxHeuristically((Entity) null, new Vec3(pX, pY, pZ), getBoundingBox(), level, CollisionContext.empty(), new RewindableStream<>(Stream.empty()));
+			Vec3 moveVec = Entity.collideBoundingBox((Entity) null, new Vec3(pX, pY, pZ), getBoundingBox(), level, List.of());
 			pX = moveVec.x;
 			pY = moveVec.y;
 			pZ = moveVec.z;

@@ -1,8 +1,7 @@
 package snownee.fruits;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -14,13 +13,16 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.worldgen.Features;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.WeightedListInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
@@ -63,14 +65,13 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.feature.stateproviders.SimpleStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.feature.treedecorators.BeehiveDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
-import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
-import net.minecraft.world.level.levelgen.placement.FrequencyWithExtraChanceDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.placement.CountPlacement;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -83,8 +84,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
-import snownee.fruits.block.trees.FruitTree;
-import snownee.fruits.cherry.CherryModule;
+import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.FruitTypeExtension;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
 import snownee.fruits.cherry.client.SlidingDoorRenderer;
@@ -191,28 +191,28 @@ public final class CoreModule extends AbstractModule {
 
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock MANDARIN_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.MANDARIN), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock MANDARIN_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.MANDARIN), blockProp(Blocks.OAK_SAPLING));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock LIME_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.LIME), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock LIME_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.LIME), blockProp(Blocks.OAK_SAPLING));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock CITRON_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.CITRON), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock CITRON_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.CITRON), blockProp(Blocks.OAK_SAPLING));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock POMELO_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.POMELO), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock POMELO_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.POMELO), blockProp(Blocks.OAK_SAPLING));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock ORANGE_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.ORANGE), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock ORANGE_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.ORANGE), blockProp(Blocks.OAK_SAPLING));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock LEMON_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.LEMON), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock LEMON_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.LEMON), blockProp(Blocks.OAK_SAPLING));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock GRAPEFRUIT_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.GRAPEFRUIT), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock GRAPEFRUIT_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.GRAPEFRUIT), blockProp(Blocks.OAK_SAPLING));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static SaplingBlock APPLE_SAPLING = new SaplingBlock(new FruitTree(() -> FruitType.APPLE), blockProp(Blocks.OAK_SAPLING));
+	public static SaplingBlock APPLE_SAPLING = new SaplingBlock(new FruitTreeGrower(() -> FruitType.APPLE), blockProp(Blocks.OAK_SAPLING));
 
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
@@ -239,14 +239,14 @@ public final class CoreModule extends AbstractModule {
 	@NoItem
 	public static FlowerPotBlock POTTED_APPLE = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> APPLE_SAPLING, blockProp(Blocks.POTTED_JUNGLE_SAPLING));
 
-	public static final Set<Block> ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(MANDARIN_LEAVES, LIME_LEAVES, CITRON_LEAVES, POMELO_LEAVES, ORANGE_LEAVES, LEMON_LEAVES, GRAPEFRUIT_LEAVES, APPLE_LEAVES)));
+	public static final Set<Block> ALL_LEAVES = Sets.newConcurrentHashSet();
 	public static BlockEntityType<FruitTreeBlockEntity> FRUIT_TREE = new BlockEntityType<>(FruitTreeBlockEntity::new, ALL_LEAVES, null);
 
 	@Name("carpet")
-	public static TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = new TreeDecoratorType<>(CarpetTreeDecorator.CODEC);
+	public static TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = Registry.register(Registry.TREE_DECORATOR_TYPES, "fruittrees:carpet", new TreeDecoratorType<>(CarpetTreeDecorator.CODEC));
 
 	@Name("blob")
-	public static FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC);
+	public static FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = Registry.register(Registry.FOLIAGE_PLACER_TYPES, "fruittrees:blob", new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC));
 
 	public static final BannerPattern SNOWFLAKE = BannerPattern.create("SNOWFLAKE", "snowflake", "sno", true);
 	public static final BannerPatternItem SNOWFLAKE_BANNER_PATTERN = new BannerPatternItem(SNOWFLAKE, itemProp().stacksTo(1).tab(CreativeModeTab.TAB_MISC).rarity(Rarity.UNCOMMON));
@@ -274,17 +274,15 @@ public final class CoreModule extends AbstractModule {
 	@Name("citrus_sign")
 	public static SignItem CITRUS_SIGN_ITEM = new SignItem(itemProp().stacksTo(16).tab(CreativeModeTab.TAB_DECORATIONS), CITRUS_SIGN, CITRUS_WALL_SIGN);
 
+	private ConfiguredFeature<?, ?> TREES_CF;
+
 	public CoreModule() {
 		MinecraftForge.EVENT_BUS.addListener(CoreModule::insertFeatures);
 	}
 
-	public static List<FruitType> types;
-
 	@Override
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
-			types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
-
 			FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
 			pot.addPlant(MANDARIN_SAPLING.getRegistryName(), () -> POTTED_MANDARIN);
 			pot.addPlant(LIME_SAPLING.getRegistryName(), () -> POTTED_LIME);
@@ -303,30 +301,32 @@ public final class CoreModule extends AbstractModule {
 				VanillaActions.registerCompostable(0.3f, type.sapling.get());
 				VanillaActions.registerVillagerPickupable(type.fruit);
 				VanillaActions.registerVillagerCompostable(type.fruit);
+
+				type.makeFeature();
 			}
 
 			if (FruitsConfig.worldGen) {
-				ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
-				for (FruitType type : types) {
-					Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
-					builder.add(cf);
+				ImmutableList.Builder<Supplier<PlacedFeature>> builder = ImmutableList.builder();
+				for (FruitType type : List.of(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN)) {
+					if (type.featureWG != null) {
+						builder.add(() -> type.featureWG.placed());
+					}
 				}
-				trees = builder.build();
-				if (FruitTypeExtension.CHERRY != null) {
-					cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleStateProvider(CherryModule.CHERRY_CARPET.defaultBlockState()));
-					allFeatures = new ConfiguredFeature[5];
-				} else {
-					allFeatures = new ConfiguredFeature[3];
-				}
-				makeFeature("002", 0, FruitsConfig.treesGenInPlains, 0);
-				makeFeature("005", 0, FruitsConfig.treesGenInForest, 1);
-				makeFeature("1", 1, 0, 2);
-				trees = null;
-				cherry = null;
+				TREES_CF = Feature.SIMPLE_RANDOM_SELECTOR.configured(new SimpleRandomFeatureConfiguration(builder.build()));
+				FeatureUtils.register("fruittrees:base_trees", TREES_CF);
+				allFeatures = new PlacedFeature[FruitTypeExtension.CHERRY != null ? 5 : 3];
+
+				makePlacedFeature("002", FruitsConfig.treesGenChunksInPlains, 0);
+				makePlacedFeature("005", FruitsConfig.treesGenChunksInForest, 1);
+				makePlacedFeature("1", FruitsConfig.treesGenChunksInJungle, 2);
 			}
 
 			WoodType.register(CITRUS_WOODTYPE);
-		});
+		}).whenComplete((v, ex) -> {
+			if (ex != null)
+				FruitsMod.logger.catching(ex);
+		}); // WTF??? workaround handle it
+
 	}
 
 	@SubscribeEvent
@@ -340,20 +340,16 @@ public final class CoreModule extends AbstractModule {
 		event.registerEntityRenderer(SLIDING_DOOR, SlidingDoorRenderer::new);
 	}
 
-	private List<Supplier<ConfiguredFeature<?, ?>>> trees;
-	private ConfiguredFeature<?, ?> cherry;
-	private static ConfiguredFeature<?, ?>[] allFeatures;
+	private static PlacedFeature[] allFeatures;
 
-	private void makeFeature(String id, int count, float chance, int index) {
-		if (count == 0 && chance == 0)
-			return;
-		ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.configured(new SimpleRandomFeatureConfiguration(trees)).decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(count, chance, 1)));
-		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, "fruittrees:trees_" + id, cf);
-		allFeatures[index] = cf;
-		if (chance > 0 && cherry != null) {
-			cf = cherry.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(count, chance / 2, 1)));
-			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, "fruittrees:cherry_" + id, cf);
-			allFeatures[index + 3] = cf;
+	private void makePlacedFeature(String id, int chunks, int index) {
+		SimpleWeightedRandomList<IntProvider> simpleweightedrandomlist = SimpleWeightedRandomList.<IntProvider>builder().add(ConstantInt.of(0), chunks - 1).add(ConstantInt.of(1), 1).build();
+		CountPlacement placement = CountPlacement.of(new WeightedListInt(simpleweightedrandomlist));
+		allFeatures[index] = TREES_CF.placed(VegetationPlacements.treePlacement(placement, LEMON_SAPLING));
+		PlacementUtils.register("fruittrees:trees_" + id, allFeatures[index]);
+		if (index != 2 && FruitTypeExtension.CHERRY != null) { //TODO hardcode
+			allFeatures[index + 3] = FruitTypeExtension.CHERRY.featureWG.placed(VegetationPlacements.treePlacement(placement, LEMON_SAPLING));
+			PlacementUtils.register("fruittrees:cherry_" + id, allFeatures[index + 3]);
 		}
 	}
 
@@ -383,45 +379,44 @@ public final class CoreModule extends AbstractModule {
 		default:
 			return;
 		}
-		insertFeature(event, allFeatures[i]);
+		event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, allFeatures[i]);
 		if (category != BiomeCategory.JUNGLE && FruitTypeExtension.CHERRY != null) {
-			insertFeature(event, allFeatures[i + 3]);
+			event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, allFeatures[i + 3]);
 		}
 	}
 
-	public static void insertFeature(BiomeLoadingEvent event, ConfiguredFeature<?, ?> cf) {
-		if (cf != null)
-			event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, cf);
-	}
-
-	public static ConfiguredFeature<TreeConfiguration, ?> buildTreeFeature(FruitType type, boolean worldGen, BlockStateProvider carpetProvider) {
+	public static ConfiguredFeature<TreeConfiguration, ?> buildTreeFeature(FruitType type, boolean worldGen, Block carpet) {
 		BlockStateProvider leavesProvider;
 		List<TreeDecorator> decorators;
 		if (worldGen) {
-			if (carpetProvider == null) {
+			if (carpet == null) {
 				decorators = ImmutableList.of(new BeehiveDecorator(0.05F));
 			} else {
-				decorators = ImmutableList.of(new BeehiveDecorator(0.05F), new CarpetTreeDecorator(carpetProvider));
+				decorators = ImmutableList.of(new BeehiveDecorator(0.05F), new CarpetTreeDecorator(BlockStateProvider.simple(carpet)));
 			}
 			leavesProvider = new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(type.leaves.defaultBlockState(), 2).add(type.leaves.defaultBlockState().setValue(FruitLeavesBlock.AGE, 2), 1));
 		} else {
 			decorators = ImmutableList.of();
-			leavesProvider = new SimpleStateProvider(type.leaves.defaultBlockState());
+			leavesProvider = BlockStateProvider.simple(type.leaves);
+		}
+		StringBuffer buf = new StringBuffer("fruittrees:");
+		buf.append(type.name().toLowerCase(Locale.ENGLISH));
+		if (worldGen) {
+			buf.append("_wg");
 		}
 		/* off */
-        return Feature.TREE.configured(
+        return FeatureUtils.register(buf.toString(), Feature.TREE.configured(
                 new TreeConfigurationBuilder(
-                        new SimpleStateProvider(type.log.defaultBlockState()),
+                        BlockStateProvider.simple(type.log),
                         new StraightTrunkPlacer(4, 2, 0),
                         leavesProvider,
-                        new SimpleStateProvider(type.sapling.get().defaultBlockState()),
                         new FruitBlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3),
                         new TwoLayersFeatureSize(1, 0, 1)
                 )
                 .ignoreVines()
                 .decorators(decorators)
                 .build()
-        );
+        ));
         /* on */
 	}
 

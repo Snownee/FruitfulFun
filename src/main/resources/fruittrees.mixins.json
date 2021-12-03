@@ -6,7 +6,8 @@
   "mixins": [
     "MixinBeePollinateGoal",
     "MixinBee",
-    "MixinBlockEntityType"
+    "MixinBlockEntityType",
+    "MixinBlockState"
   ],
   "client": [
     "MixinItemBlockRenderTypes",
