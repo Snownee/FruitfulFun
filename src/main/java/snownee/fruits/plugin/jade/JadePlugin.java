@@ -1,4 +1,4 @@
-package snownee.fruits.plugin.waila;
+package snownee.fruits.plugin.jade;
 
 import mcp.mobius.waila.api.Accessor;
 import mcp.mobius.waila.api.EntityAccessor;

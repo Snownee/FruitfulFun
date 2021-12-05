@@ -23,7 +23,6 @@ version = "${minecraft_version}-${mod_version}"
 group = "${mod_base_package}.fruits" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_name
 
-// Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -160,10 +159,10 @@ repositories {
     flatDir {
         dir 'libs'
     }
-    maven {
-        name = "jei"
-        url = "https://dvs1.progwml6.com/files/maven"
-    }
+    //maven {
+    //    name = "jei"
+    //    url = "https://dvs1.progwml6.com/files/maven"
+    //}
     maven {
         url = "https://www.cursemaven.com"
     }
@@ -191,12 +190,13 @@ dependencies {
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
 	
 	implementation fg.deobf("curse.maven:jade-324717:3544015")
-	//implementation fg.deobf("curse.maven:kiwi-303657:3468944")
+	implementation fg.deobf("curse.maven:kiwi-303657:3549979")
+    annotationProcessor "curse.maven:kiwi-303657:3549979"
 
     // Examples using mod jars from ./libs
-    implementation fg.deobf("libs:Kiwi-1.18:5.0.0")
+    //implementation fg.deobf("libs:Kiwi-1.18:5.0.0")
     //annotationProcessor "libs:Kiwi-1.18:5.0.0:processor"
-    annotationProcessor "libs:Kiwi-1.18:5.0.0"
+    //annotationProcessor "libs:Kiwi-1.18:5.0.0"
 	
     //implementation fg.deobf("libs:Jade-1.18:3.1.6")
 

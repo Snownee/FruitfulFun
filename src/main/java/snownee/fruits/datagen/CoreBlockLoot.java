@@ -1,4 +1,4 @@
-package snownee.fruits.data;
+package snownee.fruits.datagen;
 
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.resources.ResourceLocation;

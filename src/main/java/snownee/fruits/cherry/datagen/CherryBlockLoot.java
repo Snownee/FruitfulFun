@@ -1,10 +1,10 @@
-package snownee.fruits.cherry.data;
+package snownee.fruits.cherry.datagen;
 
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.block.SlidingDoorBlock;
-import snownee.fruits.data.CoreBlockLoot;
+import snownee.fruits.datagen.CoreBlockLoot;
 import snownee.kiwi.util.Util;
 
 public class CherryBlockLoot extends CoreBlockLoot {

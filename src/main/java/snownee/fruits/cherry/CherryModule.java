@@ -49,7 +49,7 @@ import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.block.SlidingDoorBlock;
 import snownee.fruits.cherry.client.particle.PetalParticle;
-import snownee.fruits.cherry.data.CherryBlockLoot;
+import snownee.fruits.cherry.datagen.CherryBlockLoot;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;

@@ -1,4 +1,4 @@
-package snownee.fruits.data;
+package snownee.fruits.datagen;
 
 import static net.minecraft.tags.ItemTags.createOptional;
 import static net.minecraft.world.item.Items.*;

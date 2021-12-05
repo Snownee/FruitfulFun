@@ -1,4 +1,4 @@
-package snownee.fruits.data;
+package snownee.fruits.datagen;
 
 import static net.minecraft.tags.BlockTags.*;
 import static snownee.fruits.CoreModule.*;
@@ -25,7 +25,7 @@ public class CommonBlockTagsProvider extends KiwiBlockTagsProvider {
 
 	@Override
 	protected void addTags() {
-		getModEntries(modId, registry).forEach(this::processTools);
+		getModEntries(modId, registry).forEach($ -> processTools($, false));
 
 		tag(CITRUS_LOGS).add(CITRUS_LOG, CITRUS_WOOD, STRIPPED_CITRUS_LOG, STRIPPED_CITRUS_WOOD);
 		addOptional(tag(CHERRY_LOGS), CHERRY_LOG, CHERRY_WOOD, STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD);
