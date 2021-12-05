@@ -1,4 +1,3 @@
-/*
 package snownee.fruits.plugin.jei;
 
 import mezz.jei.api.IModPlugin;
@@ -39,4 +38,3 @@ public class JEIPlugin implements IModPlugin {
 		}
 	}
 }
-*/
