@@ -165,6 +165,9 @@ public class CherryModule extends AbstractModule {
 			VanillaActions.registerAxeConversion(CHERRY_LOG, STRIPPED_CHERRY_LOG);
 			VanillaActions.registerAxeConversion(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
 
+			VanillaActions.registerCompostable(0.1F, CHERRY_CARPET);
+			VanillaActions.registerCompostable(0.1F, REDLOVE_CARPET);
+
 			WoodType.register(CHERRY_WOODTYPE);
 		}).whenComplete((v, ex) -> {
 			if (ex != null)
