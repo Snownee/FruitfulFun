@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(BlockEntityType.class)
-public class MixinBlockEntityType {
+public class BlockEntityTypeMixin {
 
 	@Inject(at = @At("HEAD"), method = "isValid", cancellable = true)
 	public void fruits_isValid(BlockState pState, CallbackInfoReturnable<Boolean> cir) {

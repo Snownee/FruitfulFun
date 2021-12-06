@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.block.FruitLeavesBlock;
 
 @Mixin(ItemBlockRenderTypes.class)
-public class MixinItemBlockRenderTypes {
+public class ItemBlockRenderTypesMixin {
 
 	@Inject(at = @At("HEAD"), method = "canRenderInLayer", cancellable = true, remap = false)
 	private static void fruits_canRenderInLayer(BlockState state, RenderType type, CallbackInfoReturnable<Boolean> info) {

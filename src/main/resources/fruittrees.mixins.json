@@ -4,14 +4,14 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "fruittrees.refmap.json",
   "mixins": [
-    "MixinBeePollinateGoal",
-    "MixinBee",
-    "MixinBlockEntityType",
-    "MixinBlockState"
+    "BeePollinateGoalMixin",
+    "BeeMixin",
+    "BlockEntityTypeMixin",
+    "BlockStateMixin"
   ],
   "client": [
-    "MixinItemBlockRenderTypes",
-    "MixinGameRenderer"
+    "ItemBlockRenderTypesMixin",
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

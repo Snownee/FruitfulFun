@@ -17,9 +17,9 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.hybridization.Hybridization;
 
 @Mixin(Bee.class)
-public abstract class MixinBee extends Animal {
+public abstract class BeeMixin extends Animal {
 
-	public MixinBee(EntityType<? extends Animal> type, Level level) {
+	public BeeMixin(EntityType<? extends Animal> type, Level level) {
 		super(type, level);
 	}
 

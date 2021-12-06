@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import snownee.fruits.Hook;
 
 @Mixin(GameRenderer.class)
-public class MixinGameRenderer {
+public class GameRendererMixin {
 
 	@Shadow
 	@Final

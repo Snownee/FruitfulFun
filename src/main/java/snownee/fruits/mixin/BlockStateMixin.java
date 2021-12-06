@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.block.FruitLeavesBlock;
 
 @Mixin(BlockStateBase.class)
-public abstract class MixinBlockState {
+public abstract class BlockStateMixin {
 
 	@Inject(at = @At("HEAD"), method = "hasBlockEntity", cancellable = true)
 	private void fruits_hasBlockEntity(CallbackInfoReturnable<Boolean> ci) {

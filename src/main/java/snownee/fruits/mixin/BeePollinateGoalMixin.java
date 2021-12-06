@@ -14,7 +14,7 @@ import snownee.fruits.Hook;
 import snownee.fruits.hybridization.Hybridization;
 
 @Mixin(Bee.BeePollinateGoal.class)
-public abstract class MixinBeePollinateGoal {
+public abstract class BeePollinateGoalMixin {
 
 	@Shadow(aliases = { "f_28062_", "b" }, remap = false)
 	private Bee this$0;
