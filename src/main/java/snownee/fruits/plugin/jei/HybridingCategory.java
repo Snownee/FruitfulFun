@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
 import com.mojang.math.Quaternion;
@@ -82,23 +83,21 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 
 	@Override
 	public void draw(HybridingRecipe recipe, PoseStack matrix, double mouseX, double mouseY) {
-		float f1 = (float) Math.atan(-10 / 40.0F);
 		x.draw(matrix, 18, 22);
 		line.draw(matrix, 54, 26);
 
 		matrix.pushPose();
 
-		matrix.translate(70, 24, 1050);
-		matrix.scale(1, 1, -1);
+		matrix.translate(70, 24, 0);
+		matrix.scale(20, 20, -20);
 
-		PoseStack matrixstack = new PoseStack();
-		matrixstack.translate(0.0D, 0.0D, 1000.0D);
-		matrixstack.scale(20, 20, 20);
+		float f1 = (float) Math.atan(-10 / 40.0F);
 		Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
 		Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
 		quaternion.mul(quaternion1);
-		matrixstack.mulPose(quaternion);
+		matrix.mulPose(quaternion);
 
+		//		Lighting.setupForEntityInInventory();
 		Minecraft mc = Minecraft.getInstance();
 		EntityRenderDispatcher entityrenderermanager = mc.getEntityRenderDispatcher();
 		quaternion1.conj();
@@ -107,10 +106,11 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 		BufferSource irendertypebuffer$impl = mc.renderBuffers().bufferSource();
 
 		bee.tickCount = mc.player.tickCount;
-		entityrenderermanager.render(bee, 0.0D, 0.0D, 0.0D, mc.getFrameTime(), 1, matrixstack, irendertypebuffer$impl, 15728880);
+		entityrenderermanager.render(bee, 0.0D, 0.0D, 0.0D, mc.getFrameTime(), 1, matrix, irendertypebuffer$impl, 15728880);
 
 		irendertypebuffer$impl.endBatch();
 		entityrenderermanager.setRenderShadow(true);
+		//		Lighting.setupFor3DItems();
 
 		matrix.popPose();
 	}
