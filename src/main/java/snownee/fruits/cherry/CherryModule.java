@@ -44,6 +44,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitsMod;
+import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
@@ -173,6 +174,10 @@ public class CherryModule extends AbstractModule {
 			if (ex != null)
 				FruitsMod.logger.catching(ex);
 		}); // WTF??? workaround handle it
+	}
+
+	public CherryModule() {
+		Hooks.cherry = true;
 	}
 
 	@SubscribeEvent

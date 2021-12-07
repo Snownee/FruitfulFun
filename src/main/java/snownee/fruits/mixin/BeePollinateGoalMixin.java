@@ -10,8 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.block.state.BlockState;
-import snownee.fruits.Hook;
-import snownee.fruits.hybridization.Hybridization;
+import snownee.fruits.Hooks;
 
 @Mixin(Bee.BeePollinateGoal.class)
 public abstract class BeePollinateGoalMixin {
@@ -20,13 +19,13 @@ public abstract class BeePollinateGoalMixin {
 	private Bee this$0;
 
 	@Shadow
-	private final Predicate<BlockState> VALID_POLLINATION_BLOCKS = Hook::canPollinate;
+	private final Predicate<BlockState> VALID_POLLINATION_BLOCKS = Hooks::canPollinate;
 
 	@Inject(method = "stop", at = @At("HEAD"))
 	public void onComplete(CallbackInfo cir) {
-		if (Hybridization.INSTANCE == null || this$0.getSavedFlowerPos() == null) {
+		if (!Hooks.hybridization || this$0.getSavedFlowerPos() == null) {
 			return;
 		}
-		Hook.onPollinateComplete(this$0);
+		Hooks.onPollinateComplete(this$0);
 	}
 }

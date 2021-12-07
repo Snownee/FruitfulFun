@@ -13,8 +13,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import snownee.fruits.FilteredFlyingPathNavigation;
+import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.fruits.hybridization.Hybridization;
 
 @Mixin(Bee.class)
 public abstract class BeeMixin extends Animal {
@@ -25,7 +25,7 @@ public abstract class BeeMixin extends Animal {
 
 	@Inject(at = @At("HEAD"), method = "isFlowerValid", cancellable = true)
 	public void fruits_isFlowerValid(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		if (Hybridization.INSTANCE == null) {
+		if (!Hooks.hybridization) {
 			return;
 		}
 		if (level.isLoaded(pos) && level.getBlockState(pos).getBlock() instanceof FruitLeavesBlock) {

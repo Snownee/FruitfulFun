@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import snownee.fruits.Hook;
+import snownee.fruits.Hooks;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
@@ -20,6 +20,6 @@ public class GameRendererMixin {
 
 	@Inject(at = @At("RETURN"), method = "pick")
 	public void fruits_pick(float partialTicks, CallbackInfo cir) {
-		Hook.modifyRayTraceResult(minecraft);
+		Hooks.modifyRayTraceResult(minecraft);
 	}
 }

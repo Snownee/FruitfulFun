@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.FruitType;
-import snownee.fruits.Hook;
+import snownee.fruits.Hooks;
 import snownee.kiwi.util.NBTHelper;
 
 public class BeePollenProvider implements IEntityComponentProvider, IServerDataProvider<Entity> {
@@ -39,7 +39,7 @@ public class BeePollenProvider implements IEntityComponentProvider, IServerDataP
 			return;
 		}
 		ListTag list = data.getList("pollen", Tag.TAG_STRING);
-		List<Either<FruitType, Block>> pollen = Hook.readPollen(list);
+		List<Either<FruitType, Block>> pollen = Hooks.readPollen(list);
 		List<IElement> elements = Lists.newArrayList();
 		IElementHelper helper = tooltip.getElementHelper();
 		for (Either<FruitType, Block> e : pollen) {

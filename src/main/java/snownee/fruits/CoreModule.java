@@ -314,7 +314,7 @@ public final class CoreModule extends AbstractModule {
 				}
 				TREES_CF = Feature.SIMPLE_RANDOM_SELECTOR.configured(new SimpleRandomFeatureConfiguration(builder.build()));
 				FeatureUtils.register("fruittrees:base_trees", TREES_CF);
-				allFeatures = new PlacedFeature[FruitTypeExtension.CHERRY != null ? 5 : 3];
+				allFeatures = new PlacedFeature[Hooks.cherry ? 5 : 3];
 
 				makePlacedFeature("002", FruitsConfig.treesGenChunksInPlains, 0);
 				makePlacedFeature("005", FruitsConfig.treesGenChunksInForest, 1);
@@ -347,7 +347,7 @@ public final class CoreModule extends AbstractModule {
 		CountPlacement placement = CountPlacement.of(new WeightedListInt(simpleweightedrandomlist));
 		allFeatures[index] = TREES_CF.placed(VegetationPlacements.treePlacement(placement, LEMON_SAPLING));
 		PlacementUtils.register("fruittrees:trees_" + id, allFeatures[index]);
-		if (index != 2 && FruitTypeExtension.CHERRY != null) { //TODO hardcode
+		if (index != 2 && Hooks.cherry) { //TODO hardcode
 			allFeatures[index + 3] = FruitTypeExtension.CHERRY.featureWG.placed(VegetationPlacements.treePlacement(placement, LEMON_SAPLING));
 			PlacementUtils.register("fruittrees:cherry_" + id, allFeatures[index + 3]);
 		}
@@ -380,7 +380,7 @@ public final class CoreModule extends AbstractModule {
 			return;
 		}
 		event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, allFeatures[i]);
-		if (category != BiomeCategory.JUNGLE && FruitTypeExtension.CHERRY != null) {
+		if (category != BiomeCategory.JUNGLE && Hooks.cherry) {
 			event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, allFeatures[i + 3]);
 		}
 	}

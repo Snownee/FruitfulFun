@@ -39,9 +39,12 @@ import snownee.fruits.hybridization.Hybridization;
 import snownee.kiwi.util.NBTHelper;
 import snownee.kiwi.util.Util;
 
-public final class Hook {
+public final class Hooks {
 
-	private Hook() {
+	public static boolean cherry;
+	public static boolean hybridization;
+
+	private Hooks() {
 	}
 
 	public static boolean safeSetBlock(Level world, BlockPos pos, BlockState state) {
@@ -61,7 +64,7 @@ public final class Hook {
 			}
 		} else if (state.is(BlockTags.SMALL_FLOWERS)) {
 			return true;
-		} else if (Hybridization.INSTANCE != null && state.getBlock() instanceof FruitLeavesBlock) {
+		} else if (hybridization && state.getBlock() instanceof FruitLeavesBlock) {
 			if (!((FruitLeavesBlock) state.getBlock()).canGrow(state)) {
 				return false;
 			}
