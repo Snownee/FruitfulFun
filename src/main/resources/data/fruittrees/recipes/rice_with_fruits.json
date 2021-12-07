@@ -1,0 +1,51 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:food"
+    },
+    {
+      "type": "kiwi:try_parse",
+      "value": {
+        "type": "kiwi:alternatives",
+        "list": [
+          {
+            "tag": "forge:grain/rice"
+          },
+          {
+            "tag": "forge:seeds/rice"
+          }
+        ]
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:fruits/mandarin"
+    },
+    {
+      "tag": "forge:fruits/apple"
+    },
+    {
+      "tag": "forge:fruits"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "tag": "forge:grain/rice"
+        },
+        {
+          "tag": "forge:seeds/rice"
+        }
+      ]
+    },
+    {
+      "item": "bamboo"
+    }
+  ],
+  "result": {
+    "item": "fruittrees:rice_with_fruits"
+  }
+}
