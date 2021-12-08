@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
+    }
+  ],
+  "pattern": [
+    "___",
+    "D D",
+    "___"
+  ],
+  "key": {
+    "_": {
+      "item": "fruittrees:cherry_slab"
+    },
+    "D": {
+      "item": "fruittrees:cherry_trapdoor"
+    }
+  },
+  "result": {
+    "item": "fruittrees:cherry_pantry"
+  }
+}
