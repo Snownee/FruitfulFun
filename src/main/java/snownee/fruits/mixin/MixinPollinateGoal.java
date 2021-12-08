@@ -20,6 +20,7 @@ public abstract class MixinPollinateGoal extends BeeEntity.PassiveGoal {
 	private BeeEntity this$0;
 
 	MixinPollinateGoal(BeeEntity bee) {
+		bee.super();
 	}
 
 	@Shadow
