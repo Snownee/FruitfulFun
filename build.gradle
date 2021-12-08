@@ -103,7 +103,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.6.4.86:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.6.4.86")
 
-    compile 'org.spongepowered:mixin:0.8-SNAPSHOT'
+    //compile 'org.spongepowered:mixin:0.8'
+    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
 
     implementation fg.deobf("curse.maven:kiwi-303657:3273567")
 
