@@ -74,7 +74,7 @@ public class SlidingDoorBlock extends DoorBlock {
 		if (blockpos.getY() < 255 && context.getWorld().getBlockState(blockpos.up()).isReplaceable(context)) {
 			World world = context.getWorld();
 			boolean flag = world.isBlockPowered(blockpos) || world.isBlockPowered(blockpos.up());
-			return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(HINGE, this.getHingeSide(context)).with(POWERED, Boolean.valueOf(flag)).with(OPEN, Boolean.valueOf(flag)).with(HALF, DoubleBlockHalf.LOWER);
+			return getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(HINGE, getHingeSide(context)).with(POWERED, flag).with(OPEN, flag).with(HALF, DoubleBlockHalf.LOWER);
 		} else {
 			return null;
 		}
@@ -105,7 +105,7 @@ public class SlidingDoorBlock extends DoorBlock {
 				Vector3d vec3d = p_208073_1_.getHitVec();
 				double d0 = vec3d.x - blockpos.getX();
 				double d1 = vec3d.z - blockpos.getZ();
-				return (j >= 0 || !(d1 < 0.5D)) && (j <= 0 || !(d1 > 0.5D)) && (k >= 0 || !(d0 > 0.5D)) && (k <= 0 || !(d0 < 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT;
+				return (j >= 0 || (d1 >= 0.5D)) && (j <= 0 || (d1 <= 0.5D)) && (k >= 0 || (d0 <= 0.5D)) && (k <= 0 || (d0 >= 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT;
 			} else {
 				return DoorHingeSide.LEFT;
 			}
@@ -116,7 +116,7 @@ public class SlidingDoorBlock extends DoorBlock {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if (this.material != Material.IRON) {
+		if (material != Material.IRON) {
 			openDoor(worldIn, state, pos, !state.get(OPEN));
 			return ActionResultType.func_233537_a_(worldIn.isRemote);
 		}
@@ -126,8 +126,8 @@ public class SlidingDoorBlock extends DoorBlock {
 	@Override
 	public void openDoor(World worldIn, BlockState state, BlockPos pos, boolean open) {
 		if (state.matchesBlock(this) && state.get(OPEN) != open) {
-			worldIn.setBlockState(pos, state.with(OPEN, Boolean.valueOf(open)), 10);
-			this.playSound(worldIn, pos, open);
+			worldIn.setBlockState(pos, state.with(OPEN, open), 10);
+			playSound(worldIn, pos, open);
 		}
 	}
 
@@ -136,10 +136,10 @@ public class SlidingDoorBlock extends DoorBlock {
 		boolean flag = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
 		if (blockIn != this && flag != state.get(POWERED)) {
 			if (flag != state.get(OPEN)) {
-				this.playSound(worldIn, pos, flag);
+				playSound(worldIn, pos, flag);
 			}
 
-			worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(flag)).with(OPEN, Boolean.valueOf(flag)), 2);
+			worldIn.setBlockState(pos, state.with(POWERED, flag).with(OPEN, flag), 2);
 		}
 
 	}

@@ -45,7 +45,7 @@ public class PetalParticle extends SpriteTexturedParticle {
 
 	private PetalParticle(ClientWorld world, double posX, double posY, double posZ) {
 		super(world, posX, posY, posZ);
-		this.maxAge = 100;
+		maxAge = 100;
 		age = rand.nextInt(20);
 		particleScale = 0.75f + rand.nextFloat() * 0.25f;
 		particleAlpha = 0.7f + rand.nextFloat() * 0.3f;
@@ -62,9 +62,9 @@ public class PetalParticle extends SpriteTexturedParticle {
 		vForce.transform(rot);
 		motion.mul(0.1f + rand.nextFloat() * 0.05f);
 
-		this.motionX = motion.getX();
-		this.motionY = motion.getY();
-		this.motionZ = motion.getZ();
+		motionX = motion.getX();
+		motionY = motion.getY();
+		motionZ = motion.getZ();
 
 		angleStepX = 0.1f + rand.nextFloat() * 0.1f;
 		angleStepZ = 0.1f + rand.nextFloat() * 0.1f;
@@ -73,6 +73,7 @@ public class PetalParticle extends SpriteTexturedParticle {
 	public enum RenderType implements IParticleRenderType {
 		INSTANCE;
 
+		@Override
 		public void beginRender(BufferBuilder p_217600_1_, TextureManager p_217600_2_) {
 			RenderSystem.disableCull();
 			RenderSystem.depthMask(true);
@@ -83,11 +84,13 @@ public class PetalParticle extends SpriteTexturedParticle {
 			p_217600_1_.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 		}
 
+		@Override
 		public void finishRender(Tessellator p_217599_1_) {
 			p_217599_1_.draw();
 			RenderSystem.enableCull();
 		}
 
+		@Override
 		public String toString() {
 			return "PARTICLE_SHEET_TRANSLUCENT_NO_CULL";
 		}
@@ -102,53 +105,52 @@ public class PetalParticle extends SpriteTexturedParticle {
 	public float getScale(float pTicks) {
 		if (maxAge - age < 10) {
 			float f = MathHelper.sin((float) ((maxAge - age - pTicks) / 20 * Math.PI));
-			f = MathHelper.clamp(f, 0, 1);
-			return f;
+			return MathHelper.clamp(f, 0, 1);
 		}
 		return 1;
 	}
 
 	@Override
 	public void tick() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		this.prevParticleAngle = this.particleAngle;
-		this.prevParticleAngleX = this.particleAngleX;
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
+		prevParticleAngle = particleAngle;
+		prevParticleAngleX = particleAngleX;
 
-		if (this.age++ >= this.maxAge) {
-			this.setExpired();
+		if (age++ >= maxAge) {
+			setExpired();
 			return;
 		}
 
 		boolean lastOnGround = onGround;
 		if (!onGround && !inWater) {
 			float mul = age % 10 < 5 ? 0.03f : -0.03f;
-			this.motionX += vForce.getX() * mul;
-			this.motionY += vForce.getY() * mul;
-			this.motionZ += vForce.getZ() * mul;
+			motionX += vForce.getX() * mul;
+			motionY += vForce.getY() * mul;
+			motionZ += vForce.getZ() * mul;
 			particleAngle += angleStepZ;
 			particleAngleX += angleStepX;
 		}
 
-		this.move(this.motionX, this.motionY, this.motionZ);
+		move(motionX, motionY, motionZ);
 
-		if (this.onGround) {
+		if (onGround) {
 			if (onGround && !lastOnGround) {
 				age = maxAge - 20;
 			}
-			this.motionX *= 0.5;
-			this.motionZ *= 0.5;
+			motionX *= 0.5;
+			motionZ *= 0.5;
 		} else if (inWater) {
-			this.motionX *= 0.66;
-			this.motionZ *= 0.66;
+			motionX *= 0.66;
+			motionZ *= 0.66;
 		} else {
 			if (lastOnGround) {
 				age = maxAge - 60;
 			}
-			this.motionX *= 1.001;
-			this.motionY *= 0.998;
-			this.motionZ *= 1.001;
+			motionX *= 1.001;
+			motionY *= 0.998;
+			motionZ *= 1.001;
 		}
 	}
 
@@ -185,7 +187,7 @@ public class PetalParticle extends SpriteTexturedParticle {
 		double lastZ = z; // < Create variable 'lastZ' and assign it to 'z'.
 
 		if (x != 0.0D || y != 0.0D || z != 0.0D) {
-			Vector3d moveVec = Entity.collideBoundingBoxHeuristically((Entity) null, new Vector3d(x, y, z), this.getBoundingBox(), this.world, ISelectionContext.dummy(), new ReuseableStream<>(Stream.empty())); // [vec3d]
+			Vector3d moveVec = Entity.collideBoundingBoxHeuristically((Entity) null, new Vector3d(x, y, z), getBoundingBox(), world, ISelectionContext.dummy(), new ReuseableStream<>(Stream.empty())); // [vec3d]
 			x = moveVec.x;
 			y = moveVec.y;
 			z = moveVec.z;
@@ -197,26 +199,26 @@ public class PetalParticle extends SpriteTexturedParticle {
 				y = MathHelper.clamp(targetY - posY, -0.005, 0.02);
 			}
 
-			this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
-			this.resetPositionToBB();
+			setBoundingBox(getBoundingBox().offset(x, y, z));
+			resetPositionToBB();
 		}
 
 		//           vvvvv Use 'lastY' instead of 'y'.
 		if (Math.abs(lastY) >= 1.0E-5F && Math.abs(y) < 1.0E-5F) {
-			this.collidedY = true;
+			collidedY = true;
 		}
 
 		//              vvvvv Use 'lastY' instead of 'y'.
 		if (!inWater) {
-			this.onGround = lastY != y && lastY < 0.0D;
+			onGround = lastY != y && lastY < 0.0D;
 		}
 		if (lastX != x) {
-			this.motionX = 0.0D;
+			motionX = 0.0D;
 		}
 
 		//  vvvvv Use 'lastZ' instead of 'z'
 		if (lastZ != z) {
-			this.motionZ = 0.0D;
+			motionZ = 0.0D;
 		}
 		//        }
 	}
@@ -224,18 +226,18 @@ public class PetalParticle extends SpriteTexturedParticle {
 	@Override
 	public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
 		Vector3d vec3d = renderInfo.getProjectedView();
-		float f = (float) (MathHelper.lerp(partialTicks, this.prevPosX, this.posX) - vec3d.getX());
+		float f = (float) (MathHelper.lerp(partialTicks, prevPosX, posX) - vec3d.getX());
 		float f1 = (float) -vec3d.getY();
 		if (inWater) {
 			f1 += posY;
 		} else {
-			f1 += MathHelper.lerp(partialTicks, this.prevPosY, this.posY);
+			f1 += MathHelper.lerp(partialTicks, prevPosY, posY);
 		}
-		float f2 = (float) (MathHelper.lerp(partialTicks, this.prevPosZ, this.posZ) - vec3d.getZ());
+		float f2 = (float) (MathHelper.lerp(partialTicks, prevPosZ, posZ) - vec3d.getZ());
 		Quaternion quaternion = new Quaternion(renderInfo.getRotation());
 
-		float rx = MathHelper.lerp(partialTicks, this.prevParticleAngleX, this.particleAngleX);
-		float rz = MathHelper.lerp(partialTicks, this.prevParticleAngle, this.particleAngle);
+		float rx = MathHelper.lerp(partialTicks, prevParticleAngleX, particleAngleX);
+		float rz = MathHelper.lerp(partialTicks, prevParticleAngle, particleAngle);
 		if (onGround || inWater) {
 			quaternion = Vector3f.XP.rotationDegrees(90);
 			if (inWater) {
@@ -252,7 +254,7 @@ public class PetalParticle extends SpriteTexturedParticle {
 		Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
 		vector3f1.transform(quaternion);
 		Vector3f[] avector3f = new Vector3f[] { new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F) };
-		float f4 = this.getScale(partialTicks);
+		float f4 = getScale(partialTicks);
 		float alpha = f4 * particleAlpha;
 		f4 *= particleScale * 0.15f;
 
@@ -263,15 +265,15 @@ public class PetalParticle extends SpriteTexturedParticle {
 			vector3f.add(f, f1, f2);
 		}
 
-		float f7 = this.getMinU();
-		float f8 = this.getMaxU();
-		float f5 = this.getMinV();
-		float f6 = this.getMaxV();
-		int j = this.getBrightnessForRender(partialTicks);
-		buffer.pos(avector3f[0].getX(), avector3f[0].getY(), avector3f[0].getZ()).tex(f8, f6).color(this.particleRed, this.particleGreen, this.particleBlue, alpha).lightmap(j).endVertex();
-		buffer.pos(avector3f[1].getX(), avector3f[1].getY(), avector3f[1].getZ()).tex(f8, f5).color(this.particleRed, this.particleGreen, this.particleBlue, alpha).lightmap(j).endVertex();
-		buffer.pos(avector3f[2].getX(), avector3f[2].getY(), avector3f[2].getZ()).tex(f7, f5).color(this.particleRed, this.particleGreen, this.particleBlue, alpha).lightmap(j).endVertex();
-		buffer.pos(avector3f[3].getX(), avector3f[3].getY(), avector3f[3].getZ()).tex(f7, f6).color(this.particleRed, this.particleGreen, this.particleBlue, alpha).lightmap(j).endVertex();
+		float f7 = getMinU();
+		float f8 = getMaxU();
+		float f5 = getMinV();
+		float f6 = getMaxV();
+		int j = getBrightnessForRender(partialTicks);
+		buffer.pos(avector3f[0].getX(), avector3f[0].getY(), avector3f[0].getZ()).tex(f8, f6).color(particleRed, particleGreen, particleBlue, alpha).lightmap(j).endVertex();
+		buffer.pos(avector3f[1].getX(), avector3f[1].getY(), avector3f[1].getZ()).tex(f8, f5).color(particleRed, particleGreen, particleBlue, alpha).lightmap(j).endVertex();
+		buffer.pos(avector3f[2].getX(), avector3f[2].getY(), avector3f[2].getZ()).tex(f7, f5).color(particleRed, particleGreen, particleBlue, alpha).lightmap(j).endVertex();
+		buffer.pos(avector3f[3].getX(), avector3f[3].getY(), avector3f[3].getZ()).tex(f7, f6).color(particleRed, particleGreen, particleBlue, alpha).lightmap(j).endVertex();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -279,13 +281,13 @@ public class PetalParticle extends SpriteTexturedParticle {
 		private final IAnimatedSprite spriteSet;
 
 		public Factory(IAnimatedSprite sprite) {
-			this.spriteSet = sprite;
+			spriteSet = sprite;
 		}
 
 		@Override
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			PetalParticle noteparticle = new PetalParticle(worldIn, x, y, z);
-			noteparticle.selectSpriteRandomly(this.spriteSet);
+			noteparticle.selectSpriteRandomly(spriteSet);
 			return noteparticle;
 		}
 

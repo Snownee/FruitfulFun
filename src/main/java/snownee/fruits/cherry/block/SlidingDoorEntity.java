@@ -57,7 +57,7 @@ public class SlidingDoorEntity extends Entity {
 			if (world.isBlockPresent(doorPos))
 				update(world.getBlockState(doorPos));
 		}
-		this.firstUpdate = false;
+		firstUpdate = false;
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class SlidingDoorEntity extends Entity {
 
 	@Override
 	public void setPosition(double x, double y, double z) {
-		this.setRawPosition(x, y, z);
+		setRawPosition(x, y, z);
 	}
 
 	@Override
@@ -96,10 +96,12 @@ public class SlidingDoorEntity extends Entity {
 		return ActionResultType.PASS;
 	}
 
+	@Override
 	public boolean hitByEntity(Entity entityIn) {
 		return false;
 	}
 
+	@Override
 	public boolean canBeCollidedWith() {
 		return isAlive();
 	}

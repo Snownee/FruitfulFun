@@ -4,8 +4,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
-import snownee.fruits.FruitType;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FruitType;
 import snownee.kiwi.tile.BaseTile;
 import snownee.kiwi.util.NBTHelper;
 

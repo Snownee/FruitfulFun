@@ -46,5 +46,5 @@ public abstract class MixinBeeEntity extends AnimalEntity {
 	public boolean isInvulnerableTo(DamageSource source) {
 		return source == DamageSource.WITHER || super.isInvulnerableTo(source);
 	}
-	
+
 }

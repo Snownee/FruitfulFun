@@ -152,7 +152,7 @@ public class CherryModule extends AbstractModule {
 		DeferredActions.registerAxeConversion(CHERRY_LOG, STRIPPED_CHERRY_LOG);
 		DeferredActions.registerAxeConversion(CHERRY_WOOD, STRIPPED_CHERRY_WOOD);
 		DeferredActions.registerCompostable(0.1F, CHERRY_CARPET);
-        DeferredActions.registerCompostable(0.1F, REDLOVE_CARPET);
+		DeferredActions.registerCompostable(0.1F, REDLOVE_CARPET);
 	}
 
 	@SubscribeEvent

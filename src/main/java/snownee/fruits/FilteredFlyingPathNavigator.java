@@ -38,13 +38,13 @@ public class FilteredFlyingPathNavigator extends FlyingPathNavigator {
 
 	@Override
 	protected PathFinder getPathFinder(int p_179679_1_) {
-		this.nodeProcessor = new FlyingNodeProcessor() {
+		nodeProcessor = new FlyingNodeProcessor() {
 			@Override
 			protected PathNodeType refineNodeType(IBlockReader world, boolean p_215744_2_, boolean p_215744_3_, BlockPos pos, PathNodeType nodeType) {
 				return nodeType == PathNodeType.LEAVES ? PathNodeType.OPEN : super.refineNodeType(world, p_215744_2_, p_215744_3_, pos, nodeType);
 			}
 		};
-		this.nodeProcessor.setCanEnterDoors(true);
-		return new PathFinder(this.nodeProcessor, p_179679_1_);
+		nodeProcessor.setCanEnterDoors(true);
+		return new PathFinder(nodeProcessor, p_179679_1_);
 	}
 }

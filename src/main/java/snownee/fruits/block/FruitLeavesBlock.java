@@ -54,7 +54,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 	public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
 		super(properties);
 		this.type = type;
-		this.setDefaultState(this.stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, false).with(AGE, 1));
+		setDefaultState(stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, false).with(AGE, 1));
 	}
 
 	@Override
@@ -193,7 +193,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(PERSISTENT, true);
+		return getDefaultState().with(PERSISTENT, true);
 	}
 
 	@Override
