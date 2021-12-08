@@ -2,6 +2,13 @@
   "type": "kiwi:shapeless_no_containers",
   "conditions": [
     {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "farmersdelight"
+      }
+    },
+    {
       "type": "kiwi:is_loaded",
       "module": "fruittrees:food"
     }
