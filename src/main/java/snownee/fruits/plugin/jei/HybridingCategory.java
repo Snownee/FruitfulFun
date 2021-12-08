@@ -92,13 +92,12 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 		matrix.translate(70, 24, 1050);
 		matrix.scale(1, 1, -1);
 
-		MatrixStack matrixstack = new MatrixStack();
-		matrixstack.translate(0.0D, 0.0D, 1000.0D);
-		matrixstack.scale(20, 20, 20);
+		matrix.translate(0.0D, 0.0D, 1000.0D);
+		matrix.scale(20, 20, 20);
 		Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
 		Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
 		quaternion.multiply(quaternion1);
-		matrixstack.rotate(quaternion);
+		matrix.rotate(quaternion);
 
 		Minecraft mc = Minecraft.getInstance();
 		EntityRendererManager entityrenderermanager = mc.getRenderManager();
@@ -108,7 +107,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 		IRenderTypeBuffer.Impl irendertypebuffer$impl = mc.getRenderTypeBuffers().getBufferSource();
 
 		bee.ticksExisted = mc.player.ticksExisted;
-		entityrenderermanager.renderEntityStatic(bee, 0.0D, 0.0D, 0.0D, mc.getRenderPartialTicks(), 1, matrixstack, irendertypebuffer$impl, 15728880);
+		entityrenderermanager.renderEntityStatic(bee, 0.0D, 0.0D, 0.0D, mc.getRenderPartialTicks(), 1, matrix, irendertypebuffer$impl, 15728880);
 
 		irendertypebuffer$impl.finish();
 		entityrenderermanager.setRenderShadow(true);
