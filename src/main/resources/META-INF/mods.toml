@@ -20,3 +20,4 @@ license="ARR"
 
 [modproperties.fruittrees]
     catalogueItemIcon="fruittrees:grapefruit" #Support for Catalogue mod
+    farmersdelightPantryCompat=[ "fruittrees:citrus_pantry", "fruittrees:cherry_pantry" ]
