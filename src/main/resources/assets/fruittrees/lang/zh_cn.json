@@ -12,6 +12,12 @@
 "item.fruittrees.cherry": "樱桃",
 "item.fruittrees.redlove": "红心果",
 
+"item.fruittrees.grapefruit_panna_cotta": "葡萄柚意式奶冻",
+"item.fruittrees.donauwelle": "多瑙河之波",
+"item.fruittrees.honey_pomelo_tea": "蜂蜜柚子茶",
+"item.fruittrees.rice_with_fruits": "水果竹筒饭",
+"item.fruittrees.lemon_roast_chicken": "柠檬烤鸡",
+
 "block.fruittrees.mandarin_sapling": "橘子树苗",
 "block.fruittrees.lime_sapling": "酸橙树苗",
 "block.fruittrees.citron_sapling": "香橼树苗",
@@ -61,6 +67,7 @@
 "block.fruittrees.citrus_pressure_plate": "柑橘木压力板",
 "block.fruittrees.citrus_door": "柑橘木门",
 "block.fruittrees.citrus_trapdoor": "柑橘木活板门",
+"block.fruittrees.citrus_pantry": "柑橘木橱柜",
 
 "block.fruittrees.cherry_log": "樱木原木",
 "block.fruittrees.cherry_wood": "樱木",
@@ -75,6 +82,7 @@
 "block.fruittrees.cherry_pressure_plate": "樱木压力板",
 "block.fruittrees.cherry_door": "樱木门 (WIP)",
 "block.fruittrees.cherry_trapdoor": "樱木活板门",
+"block.fruittrees.cherry_pantry": "樱木橱柜",
 
 "gui.fruittrees.jei.category.hybriding": "蜜蜂授粉",
 "gui.fruittrees.jei.tip.flowering": "开花的%s",
