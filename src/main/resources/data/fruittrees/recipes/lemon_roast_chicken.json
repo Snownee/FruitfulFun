@@ -2,13 +2,6 @@
   "type": "minecraft:crafting_shapeless",
   "conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:mod_loaded",
-        "modid": "farmersdelight"
-      }
-    },
-    {
       "type": "kiwi:is_loaded",
       "module": "fruittrees:food"
     }
@@ -43,7 +36,9 @@
         {
           "tag": "forge:flowers/lavender"
         },
-        []
+        {
+          "tag": "forge:fruits/lemon"
+        }
       ]
     },
     {

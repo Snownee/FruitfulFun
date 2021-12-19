@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "conditions": [
     {
-      "type": "forge:mod_loaded",
-      "modid": "farmersdelight"
+      "type": "forge:item_exists",
+      "item": "fruittrees:cherry_pantry"
     },
     {
       "type": "kiwi:is_loaded",

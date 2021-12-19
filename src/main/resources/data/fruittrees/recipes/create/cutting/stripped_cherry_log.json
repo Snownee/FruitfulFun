@@ -3,6 +3,10 @@
     {
       "type": "forge:mod_loaded",
       "modid": "create"
+    },
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruittrees:cherry"
     }
   ],
   "type": "create:cutting",
@@ -14,8 +18,8 @@
   "results": [
     {
       "item": "fruittrees:cherry_planks",
-      "count": 5
+      "count": 6
     }
   ],
-  "processingTime": 100
+  "processingTime": 50
 }
