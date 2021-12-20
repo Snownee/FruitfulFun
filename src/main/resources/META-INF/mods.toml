@@ -9,7 +9,6 @@ displayName="Fruit Trees"
 authors="Snownee, WZD, MalayP"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/fruit-trees"
 description=""
-license="ARR"
 
 [[dependencies.fruittrees]]
     modId="kiwi"
@@ -27,3 +26,4 @@ license="ARR"
 
 [modproperties.fruittrees]
     catalogueItemIcon="fruittrees:grapefruit"
+    farmersdelightPantryCompat=[ "fruittrees:citrus_pantry", "fruittrees:cherry_pantry" ]
