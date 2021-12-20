@@ -2,7 +2,7 @@
   "parent": "minecraft:block/orientable",
   "textures": {
     "side": "block/fruittrees/cherry_pantry_side",
-    "front": "block/fruittrees/cherry_pantry_front_open",
+    "front": "block/fruittrees/cherry_pantry_front_on",
     "top": "block/fruittrees/cherry_pantry_top"
   }
 }

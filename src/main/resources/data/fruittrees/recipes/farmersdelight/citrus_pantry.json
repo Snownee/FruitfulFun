@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "pattern": [
+    "___",
+    "D D",
+    "___"
+  ],
+  "key": {
+    "_": {
+      "item": "fruittrees:citrus_slab"
+    },
+    "D": {
+      "item": "fruittrees:citrus_trapdoor"
+    }
+  },
+  "result": {
+    "item": "fruittrees:citrus_pantry"
+  }
+}
