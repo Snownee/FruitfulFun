@@ -1,0 +1,10 @@
+{
+  "items": [
+    "fruittrees:cherry"
+  ],
+  "damage": 3,
+  "split": 3,
+  "knockback": 0.1,
+  "velocity_multiplier": 1.05,
+  "sound_pitch": 1.25
+}
