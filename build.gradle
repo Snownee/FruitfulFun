@@ -165,6 +165,9 @@ repositories {
     //}
     maven {
         url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -191,13 +194,12 @@ dependencies {
 	
 	implementation fg.deobf("curse.maven:jei-238222:3550020")
 	implementation fg.deobf("curse.maven:jade-324717:3544015")
-	implementation fg.deobf("curse.maven:kiwi-303657:3549979")
-    annotationProcessor "curse.maven:kiwi-303657:3549979"
+	//implementation fg.deobf("curse.maven:kiwi-303657:3573946")
+    //annotationProcessor "curse.maven:kiwi-303657:3573946"
 
     // Examples using mod jars from ./libs
-    //implementation fg.deobf("libs:Kiwi-1.18:5.0.0")
-    //annotationProcessor "libs:Kiwi-1.18:5.0.0:processor"
-    //annotationProcessor "libs:Kiwi-1.18:5.0.0"
+    implementation fg.deobf("libs:Kiwi-1.18-forge:5.2.2")
+    annotationProcessor "libs:Kiwi-1.18-forge:5.2.2"
 	
     //implementation fg.deobf("libs:Jade-1.18:3.1.6")
 

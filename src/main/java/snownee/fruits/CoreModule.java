@@ -27,7 +27,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BannerPatternItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -122,13 +121,20 @@ public final class CoreModule extends AbstractModule {
 		public static final FoodProperties EMPOWERED_CITRON = new FoodProperties.Builder().nutrition(3).saturationMod(5f).build();
 	}
 
-	public static Item MANDARIN = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.MANDARIN));
-	public static Item LIME = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.LIME));
-	public static Item CITRON = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.CITRON));
-	public static Item POMELO = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.POMELO));
-	public static Item ORANGE = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.ORANGE));
-	public static Item LEMON = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.LEMON));
-	public static Item GRAPEFRUIT = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.GRAPEFRUIT));
+	@Category("food")
+	public static Item MANDARIN = new ModItem(itemProp().food(Foods.MANDARIN));
+	@Category("food")
+	public static Item LIME = new ModItem(itemProp().food(Foods.LIME));
+	@Category("food")
+	public static Item CITRON = new ModItem(itemProp().food(Foods.CITRON));
+	@Category("food")
+	public static Item POMELO = new ModItem(itemProp().food(Foods.POMELO));
+	@Category("food")
+	public static Item ORANGE = new ModItem(itemProp().food(Foods.ORANGE));
+	@Category("food")
+	public static Item LEMON = new ModItem(itemProp().food(Foods.LEMON));
+	@Category("food")
+	public static Item GRAPEFRUIT = new ModItem(itemProp().food(Foods.GRAPEFRUIT));
 	public static Item EMPOWERED_CITRON = new ModItem(itemProp().rarity(Rarity.RARE).food(Foods.EMPOWERED_CITRON)) {
 		@Override
 		public boolean isFoil(ItemStack stack) {
@@ -249,7 +255,8 @@ public final class CoreModule extends AbstractModule {
 	public static FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = Registry.register(Registry.FOLIAGE_PLACER_TYPES, "fruittrees:blob", new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC));
 
 	public static final BannerPattern SNOWFLAKE = BannerPattern.create("SNOWFLAKE", "snowflake", "sno", true);
-	public static final BannerPatternItem SNOWFLAKE_BANNER_PATTERN = new BannerPatternItem(SNOWFLAKE, itemProp().stacksTo(1).tab(CreativeModeTab.TAB_MISC).rarity(Rarity.UNCOMMON));
+	@Category("misc")
+	public static final BannerPatternItem SNOWFLAKE_BANNER_PATTERN = new BannerPatternItem(SNOWFLAKE, itemProp().stacksTo(1).rarity(Rarity.UNCOMMON));
 
 	public static SoundEvent OPEN_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.open"));
 	public static SoundEvent CLOSE_SOUND = new SoundEvent(new ResourceLocation(FruitsMod.MODID, "block.wooden_door.close"));
@@ -272,7 +279,12 @@ public final class CoreModule extends AbstractModule {
 	@NoItem
 	public static WallSignBlock CITRUS_WALL_SIGN = new WallSignBlock(blockProp(Blocks.OAK_WALL_SIGN), CITRUS_WOODTYPE);
 	@Name("citrus_sign")
-	public static SignItem CITRUS_SIGN_ITEM = new SignItem(itemProp().stacksTo(16).tab(CreativeModeTab.TAB_DECORATIONS), CITRUS_SIGN, CITRUS_WALL_SIGN);
+	@Category("decorations")
+	public static SignItem CITRUS_SIGN_ITEM = new SignItem(itemProp().stacksTo(16), CITRUS_SIGN, CITRUS_WALL_SIGN);
+
+	// sqrt(vec(3, 4, 3))
+	public static CancellableGameEvent FRUIT_DROP = new CancellableGameEvent("fruittrees:fruit_drop", 6);
+	public static CancellableGameEvent LEAVES_TRAMPLE = new CancellableGameEvent("fruittrees:leaves_trample", 6);
 
 	private ConfiguredFeature<?, ?> TREES_CF;
 

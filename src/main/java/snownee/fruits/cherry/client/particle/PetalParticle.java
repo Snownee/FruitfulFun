@@ -104,8 +104,7 @@ public class PetalParticle extends TextureSheetParticle {
 	public float getQuadSize(float pTicks) {
 		if (lifetime - age < 10) {
 			float f = Mth.sin((float) ((lifetime - age - pTicks) / 20 * Math.PI));
-			f = Mth.clamp(f, 0, 1);
-			return f;
+			return Mth.clamp(f, 0, 1);
 		}
 		return 1;
 	}

@@ -2,7 +2,7 @@ package snownee.fruits;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;

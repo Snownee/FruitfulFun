@@ -9,7 +9,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BannerPatternItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
@@ -137,11 +136,14 @@ public class CherryModule extends AbstractModule {
 	@NoItem
 	public static FlowerPotBlock POTTED_REDLOVE = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> REDLOVE_SAPLING, blockProp(Blocks.POTTED_OAK_SAPLING));
 
-	public static Item CHERRY = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.CHERRY));
-	public static Item REDLOVE = new ModItem(itemProp().tab(CreativeModeTab.TAB_FOOD).food(Foods.REDLOVE));
+	@Category("food")
+	public static Item CHERRY = new ModItem(itemProp().food(Foods.CHERRY));
+	@Category("food")
+	public static Item REDLOVE = new ModItem(itemProp().food(Foods.REDLOVE));
 
 	public static final BannerPattern HEART = BannerPattern.create("HEART", "heart", "hrt", true);
-	public static final BannerPatternItem HEART_BANNER_PATTERN = new BannerPatternItem(HEART, itemProp().stacksTo(1).tab(CreativeModeTab.TAB_MISC).rarity(Rarity.UNCOMMON));
+	@Category("misc")
+	public static final BannerPatternItem HEART_BANNER_PATTERN = new BannerPatternItem(HEART, itemProp().stacksTo(1).rarity(Rarity.UNCOMMON));
 
 	public static final WoodType CHERRY_WOODTYPE = WoodType.create("fruittrees_cherry");
 	@NoItem
@@ -149,7 +151,8 @@ public class CherryModule extends AbstractModule {
 	@NoItem
 	public static WallSignBlock CHERRY_WALL_SIGN = new WallSignBlock(blockProp(Blocks.JUNGLE_WALL_SIGN), CHERRY_WOODTYPE);
 	@Name("cherry_sign")
-	public static SignItem CHERRY_SIGN_ITEM = new SignItem(itemProp().stacksTo(16).tab(CreativeModeTab.TAB_DECORATIONS), CHERRY_SIGN, CHERRY_WALL_SIGN);
+	@Category("decorations")
+	public static SignItem CHERRY_SIGN_ITEM = new SignItem(itemProp().stacksTo(16), CHERRY_SIGN, CHERRY_WALL_SIGN);
 
 	static {
 		FruitTypeExtension.CHERRY = FruitType.create("CHERRY", 0, CHERRY_LOG, CHERRY_LEAVES, () -> CHERRY_SAPLING, CHERRY, CHERRY_CARPET);
