@@ -68,7 +68,7 @@
 "block.fruittrees.citrus_door": "柑橘木门",
 "block.fruittrees.citrus_trapdoor": "柑橘木活板门",
 "block.fruittrees.citrus_sign": "柑橘木告示牌",
-"block.fruittrees.citrus_pantry": "柑橘木橱柜",
+"block.fruittrees.citrus_cabinet": "柑橘木橱柜",
 
 "block.fruittrees.cherry_log": "樱木原木",
 "block.fruittrees.cherry_wood": "樱木",
@@ -84,7 +84,7 @@
 "block.fruittrees.cherry_door": "樱木门 (WIP)",
 "block.fruittrees.cherry_trapdoor": "樱木活板门",
 "block.fruittrees.citrus_sign": "樱木告示牌",
-"block.fruittrees.cherry_pantry": "樱木橱柜",
+"block.fruittrees.cherry_cabinet": "樱木橱柜",
 
 "gui.fruittrees.jei.category.hybriding": "蜜蜂授粉",
 "gui.fruittrees.jei.tip.flowering": "开花的%s",

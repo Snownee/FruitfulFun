@@ -26,4 +26,4 @@ description=""
 
 [modproperties.fruittrees]
     catalogueItemIcon="fruittrees:grapefruit"
-    farmersdelightPantryCompat=[ "fruittrees:citrus_pantry", "fruittrees:cherry_pantry" ]
+    farmersdelightCabinetCompat=[ "fruittrees:citrus_cabinet", "fruittrees:cherry_cabinet" ]

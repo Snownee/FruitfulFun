@@ -3,7 +3,7 @@
   "conditions": [
     {
       "type": "forge:item_exists",
-      "item": "fruittrees:cherry_pantry"
+      "item": "fruittrees:cherry_cabinet"
     },
     {
       "type": "kiwi:is_loaded",
@@ -24,6 +24,6 @@
     }
   },
   "result": {
-    "item": "fruittrees:cherry_pantry"
+    "item": "fruittrees:cherry_cabinet"
   }
 }
