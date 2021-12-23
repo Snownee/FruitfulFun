@@ -66,8 +66,8 @@ a651c442203543dbe589ad77b40109c67f0caa41 data/fruittrees/loot_tables/blocks/redl
 f436a20286794ab4f31e2aac80445971e8838fd1 data/fruittrees/loot_tables/blocks/stripped_citrus_wood.json
 0ef42341d4b9e9a4849a1aa2aab85004be3f8778 data/fruittrees/tags/blocks/cherry_logs.json
 d8f7bbbea49acd4c048334b4126ff984be1da536 data/fruittrees/tags/blocks/citrus_logs.json
-0ef42341d4b9e9a4849a1aa2aab85004be3f8778 data/fruittrees/tags/items/cherry_logs.json
-d8f7bbbea49acd4c048334b4126ff984be1da536 data/fruittrees/tags/items/citrus_logs.json
+d8f7bbbea49acd4c048334b4126ff984be1da536 data/fruittrees/tags/items/cherry_logs.json
+0ef42341d4b9e9a4849a1aa2aab85004be3f8778 data/fruittrees/tags/items/citrus_logs.json
 d1078227d45a79f2c377489c9bd567eeb04c7464 data/minecraft/tags/blocks/fence_gates.json
 024331079faf61d4e61d456974957d27efd95ade data/minecraft/tags/blocks/flower_pots.json
 4515f475a3e6f95dfc3d3324f9052995305dfd23 data/minecraft/tags/blocks/leaves.json

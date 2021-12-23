@@ -24,8 +24,8 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 		super(pGenerator, pBlockTagsProvider, FruitsMod.MODID, existingFileHelper);
 	}
 
-	static final Tag.Named<Item> CITRUS_LOGS = createOptional(new ResourceLocation(FruitsMod.MODID, "cherry_logs"));
-	static final Tag.Named<Item> CHERRY_LOGS = createOptional(new ResourceLocation(FruitsMod.MODID, "citrus_logs"));
+	static final Tag.Named<Item> CITRUS_LOGS = createOptional(new ResourceLocation(FruitsMod.MODID, "citrus_logs"));
+	static final Tag.Named<Item> CHERRY_LOGS = createOptional(new ResourceLocation(FruitsMod.MODID, "cherry_logs"));
 	static final Tag.Named<Item> FRUITS = createOptional(new ResourceLocation("forge:fruits"));
 
 	@Override
