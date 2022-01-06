@@ -1,7 +1,5 @@
 package snownee.fruits.block.entity;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -17,8 +15,6 @@ import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.PositionSource;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
-import snownee.fruits.FruitsConfig;
-import snownee.fruits.FruitsConfig.DropMode;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.kiwi.block.entity.BaseBlockEntity;
 import snownee.kiwi.util.NBTHelper;
@@ -108,29 +104,19 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 
 	@Override
 	public boolean handleGameEvent(Level level, GameEvent gameEvent, Entity entity, BlockPos pos) {
-		if (deathRate >= 50)
-			return false;
-		if (gameEvent == CoreModule.FRUIT_DROP) {
-			if (CoreModule.FRUIT_DROP.isActive()) {
-				if (canDrop()) {
-					BlockState state = level.getBlockState(pos);
-					deathRate += 1;
-					@Nullable
-					ItemEntity itementity = FruitLeavesBlock.dropFruit(level, pos, state, getDeathRate());
-					DropMode mode = FruitsConfig.getDropMode(level);
-					if (mode == DropMode.ONE_BY_ONE) {
-						setOnlyItem(itementity);
-					}
-				}
-				CoreModule.FRUIT_DROP.swallow(this);
-				return true;
+		if (CoreModule.FRUIT_DROP.matches(gameEvent)) {
+			if (canDrop()) {
+				BlockState state = level.getBlockState(pos);
+				deathRate += 1;
+				// Do not remove block entity inside the loop of game event
+				CoreModule.FRUIT_DROP.runnable = FruitLeavesBlock.dropFruit(level, pos, state, getDeathRate());
 			}
-		} else if (gameEvent == CoreModule.LEAVES_TRAMPLE) {
-			if (CoreModule.LEAVES_TRAMPLE.isActive()) {
-				deathRate += 3;
-				CoreModule.LEAVES_TRAMPLE.swallow(this);
-				return true;
-			}
+			CoreModule.FRUIT_DROP.swallow(this);
+			return true;
+		} else if (CoreModule.LEAVES_TRAMPLE.matches(gameEvent)) {
+			deathRate += 3;
+			CoreModule.LEAVES_TRAMPLE.swallow(this);
+			return true;
 		}
 		return false;
 	}

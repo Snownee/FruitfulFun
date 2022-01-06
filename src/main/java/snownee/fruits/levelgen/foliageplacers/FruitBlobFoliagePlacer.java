@@ -55,7 +55,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 
 		for (int j = -p_161443_; j <= p_161443_ + i; ++j) {
 			for (int k = -p_161443_; k <= p_161443_ + i; ++k) {
-				if (!this.shouldSkipLocationSigned(p_161440_, j, p_161444_, k, p_161443_, p_161445_)) {
+				if (!shouldSkipLocationSigned(p_161440_, j, p_161444_, k, p_161443_, p_161445_)) {
 					blockpos$mutableblockpos.setWithOffset(p_161442_, j, p_161444_, k);
 					tryPlaceLeaf(p_161438_, p_161439_, p_161440_, p_161441_, blockpos$mutableblockpos);
 				}

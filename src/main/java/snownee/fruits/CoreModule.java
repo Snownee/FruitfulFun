@@ -283,7 +283,7 @@ public final class CoreModule extends AbstractModule {
 	public static SignItem CITRUS_SIGN_ITEM = new SignItem(itemProp().stacksTo(16), CITRUS_SIGN, CITRUS_WALL_SIGN);
 
 	// sqrt(vec(3, 4, 3))
-	public static CancellableGameEvent FRUIT_DROP = new CancellableGameEvent("fruittrees:fruit_drop", 6);
+	public static FruitDropGameEvent FRUIT_DROP = new FruitDropGameEvent("fruittrees:fruit_drop", 6);
 	public static CancellableGameEvent LEAVES_TRAMPLE = new CancellableGameEvent("fruittrees:leaves_trample", 6);
 
 	private ConfiguredFeature<?, ?> TREES_CF;

@@ -41,7 +41,7 @@ public class FoodModule extends AbstractModule {
 		public static final FoodProperties LEMON_ROAST_CHICKEN = new FoodProperties.Builder().nutrition(12).saturationMod(0.9F).effect(NOURISHED_PROVIDER, 1).build();
 	}
 
-	public static final Item GRAPEFRUIT_PANNA_COTTA = new Item(itemProp().food(Foods.GRAPEFRUIT_PANNA_COTTA));
+	public static final Item GRAPEFRUIT_PANNA_COTTA = new Item(itemProp().food(Foods.GRAPEFRUIT_PANNA_COTTA).tab(null));
 	public static final Item DONAUWELLE = new Item(itemProp().food(Foods.DONAUWELLE));
 	public static final Item HONEY_POMELO_TEA = new Item(itemProp().food(Foods.HONEY_POMELO_TEA).craftRemainder(Items.GLASS_BOTTLE));
 	public static final Item RICE_WITH_FRUITS = new Item(itemProp().food(Foods.RICE_WITH_FRUITS));

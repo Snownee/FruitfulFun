@@ -17,8 +17,12 @@ public class CancellableGameEvent extends GameEvent {
 	}
 
 	public GameEventListener post(LevelAccessor level, BlockPos pos, @Nullable Entity entity) {
-		this.receiver = null;
-		level.gameEvent(entity, this, pos);
+		receiver = null;
+		try {
+			level.gameEvent(entity, this, pos);
+		} catch (Exception e) {
+			FruitsMod.logger.catching(e);
+		}
 		GameEventListener receiver = this.receiver;
 		this.receiver = null;
 		return receiver;
@@ -33,6 +37,10 @@ public class CancellableGameEvent extends GameEvent {
 
 	public boolean isActive() {
 		return receiver == null;
+	}
+
+	public boolean matches(GameEvent gameEvent) {
+		return this == gameEvent && isActive();
 	}
 
 }

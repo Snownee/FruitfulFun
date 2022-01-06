@@ -1,6 +1,7 @@
 package snownee.fruits;
 
-import net.minecraft.world.level.Level;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.LevelAccessor;
 import snownee.kiwi.config.KiwiConfig;
 import snownee.kiwi.config.KiwiConfig.Range;
 
@@ -25,7 +26,8 @@ public final class FruitsConfig {
 	@Range(min = 2, max = 10000)
 	public static int treesGenChunksInJungle = 10;
 
-	public static DropMode getDropMode(Level world) {
-		return world.getServer().isDedicatedServer() ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;
+	public static DropMode getDropMode(LevelAccessor level) {
+		MinecraftServer server = level.getServer();
+		return (server != null && server.isDedicatedServer()) ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;
 	}
 }

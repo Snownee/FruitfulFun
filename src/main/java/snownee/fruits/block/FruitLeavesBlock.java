@@ -3,8 +3,6 @@ package snownee.fruits.block;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -83,12 +81,11 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		world.setBlockAndUpdate(pos, state.cycle(AGE));
 	}
 
-	@Nullable
-	public static ItemEntity dropFruit(Level level, BlockPos pos, BlockState state, float deathRate) {
+	public static Supplier<ItemEntity> dropFruit(Level level, BlockPos pos, BlockState state, float deathRate) {
 		if (level.isClientSide || state.getValue(AGE) != 3)
-			return null;
+			return () -> null;
 		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS))
-			return null;
+			return () -> null;
 		boolean die = deathRate == 1;
 		if (deathRate > 0) {
 			die = level.random.nextFloat() < deathRate;
@@ -97,21 +94,25 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (deathRate == 1) {
 			state = state.setValue(PERSISTENT, false);
 		}
-		level.setBlockAndUpdate(pos, state);
+		BlockState newState = state;
 
 		FruitType type = ((FruitLeavesBlock) state.getBlock()).type.get();
 		ItemStack stack = new ItemStack(type.fruit);
 		if (!stack.isEmpty() && !level.restoringBlockSnapshots) { // do not drop items while restoring blockstates, prevents item dupe
 			float f = EntityType.ITEM.getHeight() / 2.0F;
-			double d0 = (double) ((float) pos.getX() + 0.5F) + Mth.nextDouble(level.random, -0.25D, 0.25D);
-			double d1 = (double) ((float) pos.getY() + 0.5F) + Mth.nextDouble(level.random, -0.25D, 0.25D) - (double) f;
-			double d2 = (double) ((float) pos.getZ() + 0.5F) + Mth.nextDouble(level.random, -0.25D, 0.25D);
+			double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
+			double d1 = pos.getY() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D) - f;
+			double d2 = pos.getZ() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
 			ItemEntity itementity = new ItemEntity(level, d0, d1, d2, stack);
 			itementity.setDefaultPickUpDelay();
-			if (level.addFreshEntity(itementity))
-				return itementity;
+			if (level.addFreshEntity(itementity)) {
+				return () -> {
+					level.setBlockAndUpdate(pos, newState);
+					return itementity;
+				};
+			}
 		}
-		return null;
+		return () -> null;
 	}
 
 	@Override
@@ -135,7 +136,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				}
 				GameEventListener receiver = CoreModule.FRUIT_DROP.post(world, pos, null);
 				if (receiver == null) {
-					dropFruit(world, pos, state, 0.6F);
+					dropFruit(world, pos, state, 0.6F).get();
 				}
 			} else if (ForgeHooks.onCropsGrowPre(world, pos, state, def)) {
 				performBonemeal(world, rand, pos, state);
@@ -202,7 +203,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			for (BlockPos pos2 : BlockPos.betweenClosed(pos.getX() - 1, pos.getY() - 2, pos.getZ() - 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1)) {
 				BlockState state = worldIn.getBlockState(pos2);
 				if (state.getBlock() instanceof FruitLeavesBlock) {
-					dropFruit(worldIn, pos2, state, deathRate);
+					dropFruit(worldIn, pos2, state, deathRate).get();
 					if (type.get().carpet != null) {
 						CarpetTreeDecorator.placeCarpet(worldIn, pos2, type.get().carpet.defaultBlockState(), worldIn::setBlockAndUpdate);
 					}
