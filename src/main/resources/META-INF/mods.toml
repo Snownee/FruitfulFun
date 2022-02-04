@@ -20,7 +20,7 @@ description=""
 [[dependencies.fruittrees]]
     modId="forge"
     mandatory=true
-    versionRange="[38, )"
+    versionRange="[39.0.66, )"
     ordering="BEFORE"
     side="BOTH"
 

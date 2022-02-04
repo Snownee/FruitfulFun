@@ -120,7 +120,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (shouldDecay(state)) {
 			dropResources(state, world, pos);
 			world.removeBlock(pos, false);
-		} else if (canGrow(state) && world.isAreaLoaded(pos, 1) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
+		} else if (canGrow(state) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
 			int r = rand.nextInt(100);
 
 			if (r < 10 && type.get().carpet != null) {

@@ -12,7 +12,6 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
@@ -249,10 +248,10 @@ public final class CoreModule extends AbstractModule {
 	public static BlockEntityType<FruitTreeBlockEntity> FRUIT_TREE = new BlockEntityType<>(FruitTreeBlockEntity::new, ALL_LEAVES, null);
 
 	@Name("carpet")
-	public static TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = Registry.register(Registry.TREE_DECORATOR_TYPES, "fruittrees:carpet", new TreeDecoratorType<>(CarpetTreeDecorator.CODEC));
+	public static TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = new TreeDecoratorType<>(CarpetTreeDecorator.CODEC);
 
 	@Name("blob")
-	public static FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = Registry.register(Registry.FOLIAGE_PLACER_TYPES, "fruittrees:blob", new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC));
+	public static FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC);
 
 	public static final BannerPattern SNOWFLAKE = BannerPattern.create("SNOWFLAKE", "snowflake", "sno", true);
 	@Category("misc")
