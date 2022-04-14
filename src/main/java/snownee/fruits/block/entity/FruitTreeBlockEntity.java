@@ -27,7 +27,7 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 	private PositionSource source;
 
 	public FruitTreeBlockEntity(BlockPos pos, BlockState state) {
-		super(CoreModule.FRUIT_TREE, pos, state);
+		super(CoreModule.FRUIT_TREE.get(), pos, state);
 		source = new BlockPositionSource(pos);
 	}
 
@@ -104,18 +104,18 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 
 	@Override
 	public boolean handleGameEvent(Level level, GameEvent gameEvent, Entity entity, BlockPos pos) {
-		if (CoreModule.FRUIT_DROP.matches(gameEvent)) {
+		if (CoreModule.FRUIT_DROP.get().matches(gameEvent)) {
 			if (canDrop()) {
 				BlockState state = level.getBlockState(pos);
 				deathRate += 1;
 				// Do not remove block entity inside the loop of game event
-				CoreModule.FRUIT_DROP.runnable = FruitLeavesBlock.dropFruit(level, pos, state, getDeathRate());
+				CoreModule.FRUIT_DROP.get().runnable = FruitLeavesBlock.dropFruit(level, pos, state, getDeathRate());
 			}
-			CoreModule.FRUIT_DROP.swallow(this);
+			CoreModule.FRUIT_DROP.get().swallow(this);
 			return true;
-		} else if (CoreModule.LEAVES_TRAMPLE.matches(gameEvent)) {
+		} else if (CoreModule.LEAVES_TRAMPLE.get().matches(gameEvent)) {
 			deathRate += 3;
-			CoreModule.LEAVES_TRAMPLE.swallow(this);
+			CoreModule.LEAVES_TRAMPLE.get().swallow(this);
 			return true;
 		}
 		return false;

@@ -95,8 +95,9 @@ public final class Hooks {
 			Optional<HybridingRecipe> recipe = bee.level.getRecipeManager().getRecipeFor(Hybridization.RECIPE_TYPE, new HybridingContext(pollenList), bee.level);
 			if (recipe.isPresent()) {
 				Block newBlock = recipe.get().getResultAsBlock(pollenList);
+				BlockState newState = newBlock.defaultBlockState();
 				boolean isLeaves = newBlock instanceof FruitLeavesBlock;
-				boolean isFlower = !isLeaves && BlockTags.FLOWERS.contains(newBlock);
+				boolean isFlower = !isLeaves && newState.is(BlockTags.FLOWERS);
 				boolean isMisc = !isLeaves && !isFlower;
 				if (!isMisc && (isLeaves != (block instanceof FruitLeavesBlock))) {
 					return;
@@ -107,7 +108,6 @@ public final class Hooks {
 				} else if (isMisc && !newBlock.isPossibleToRespawnInThis() && !(block instanceof FruitLeavesBlock)) {
 					root = root.below();
 				}
-				BlockState newState = newBlock.defaultBlockState();
 				boolean isBigFlower = false;
 				if (isLeaves) {
 					newState = newState.setValue(FruitLeavesBlock.AGE, 2);

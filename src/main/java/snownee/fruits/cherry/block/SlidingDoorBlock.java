@@ -147,7 +147,7 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	private void playSound(Level worldIn, BlockPos pos, boolean isOpening) {
-		worldIn.playSound(null, pos, isOpening ? CoreModule.OPEN_SOUND : CoreModule.CLOSE_SOUND, SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
+		worldIn.playSound(null, pos, isOpening ? CoreModule.OPEN_SOUND.get() : CoreModule.CLOSE_SOUND.get(), SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.block;
+/*package snownee.fruits.cherry.block;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,3 +14,4 @@ public class SlidingDoorBlockEntity extends BlockEntity {
 	}
 
 }
+*/

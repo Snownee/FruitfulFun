@@ -43,7 +43,7 @@ public class BeePollenProvider implements IEntityComponentProvider, IServerDataP
 		List<IElement> elements = Lists.newArrayList();
 		IElementHelper helper = tooltip.getElementHelper();
 		for (Either<FruitType, Block> e : pollen) {
-			ItemStack stack = new ItemStack(e.map(type -> type.fruit, block -> block));
+			ItemStack stack = new ItemStack(e.map(type -> type.fruit.get(), block -> block));
 			elements.add(helper.item(stack));
 		}
 		tooltip.add(elements);

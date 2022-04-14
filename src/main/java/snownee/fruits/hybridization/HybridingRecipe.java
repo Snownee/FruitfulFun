@@ -43,7 +43,7 @@ public class HybridingRecipe extends Simple<HybridingContext> {
 	}
 
 	public Block getResultAsBlock(Collection<Either<FruitType, Block>> types) {
-		return getResult(types).map(t -> t.leaves, b -> b);
+		return getResult(types).map(t -> t.leaves.get(), b -> b);
 	}
 
 	@Override

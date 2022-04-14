@@ -30,7 +30,7 @@ public class CarpetTreeDecorator extends TreeDecorator {
 
 	@Override
 	protected TreeDecoratorType<?> type() {
-		return CoreModule.CARPET_DECORATOR;
+		return CoreModule.CARPET_DECORATOR.get();
 	}
 
 	@Override

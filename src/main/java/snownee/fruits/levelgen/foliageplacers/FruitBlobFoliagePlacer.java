@@ -29,7 +29,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 
 	@Override
 	protected FoliagePlacerType<?> type() {
-		return CoreModule.BLOB_PLACER;
+		return CoreModule.BLOB_PLACER.get();
 	}
 
 	@Override

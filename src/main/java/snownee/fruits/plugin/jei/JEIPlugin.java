@@ -15,7 +15,7 @@ import snownee.fruits.hybridization.Hybridization;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-	public static final ResourceLocation UID = new ResourceLocation(FruitsMod.MODID, "hybriding");
+	public static final ResourceLocation UID = new ResourceLocation(FruitsMod.ID, "hybriding");
 
 	@Override
 	public ResourceLocation getPluginUid() {

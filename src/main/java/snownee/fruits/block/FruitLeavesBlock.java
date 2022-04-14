@@ -97,7 +97,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		BlockState newState = state;
 
 		FruitType type = ((FruitLeavesBlock) state.getBlock()).type.get();
-		ItemStack stack = new ItemStack(type.fruit);
+		ItemStack stack = new ItemStack(type.fruit.get());
 		if (!stack.isEmpty() && !level.restoringBlockSnapshots) { // do not drop items while restoring blockstates, prevents item dupe
 			float f = EntityType.ITEM.getHeight() / 2.0F;
 			double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
@@ -124,7 +124,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			int r = rand.nextInt(100);
 
 			if (r < 10 && type.get().carpet != null) {
-				CarpetTreeDecorator.placeCarpet(world, pos, type.get().carpet.defaultBlockState(), world::setBlockAndUpdate);
+				CarpetTreeDecorator.placeCarpet(world, pos, type.get().carpet.get().defaultBlockState(), world::setBlockAndUpdate);
 			}
 
 			boolean def = r > (99 - FruitsConfig.growingSpeed);
@@ -134,7 +134,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				if (mode == DropMode.NO_DROP) {
 					return;
 				}
-				GameEventListener receiver = CoreModule.FRUIT_DROP.post(world, pos, null);
+				GameEventListener receiver = CoreModule.FRUIT_DROP.get().post(world, pos, null);
 				if (receiver == null) {
 					dropFruit(world, pos, state, 0.6F).get();
 				}
@@ -195,7 +195,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public void fallOn(Level worldIn, BlockState stateIn, BlockPos pos, Entity entityIn, float fallDistance) {
 		super.fallOn(worldIn, stateIn, pos, entityIn, fallDistance);
 		if (!worldIn.isClientSide && fallDistance >= 1 && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
-			GameEventListener receiver = CoreModule.LEAVES_TRAMPLE.post(worldIn, pos, entityIn);
+			GameEventListener receiver = CoreModule.LEAVES_TRAMPLE.get().post(worldIn, pos, entityIn);
 			float deathRate = 1;
 			if (receiver instanceof FruitTreeBlockEntity) {
 				deathRate = ((FruitTreeBlockEntity) receiver).getDeathRate();
@@ -205,7 +205,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				if (state.getBlock() instanceof FruitLeavesBlock) {
 					dropFruit(worldIn, pos2, state, deathRate).get();
 					if (type.get().carpet != null) {
-						CarpetTreeDecorator.placeCarpet(worldIn, pos2, type.get().carpet.defaultBlockState(), worldIn::setBlockAndUpdate);
+						CarpetTreeDecorator.placeCarpet(worldIn, pos2, type.get().carpet.get().defaultBlockState(), worldIn::setBlockAndUpdate);
 					}
 				}
 			}
@@ -216,7 +216,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult ray) {
 		if (state.getValue(AGE) == 3 && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 1))) {
 			if (!worldIn.isClientSide) {
-				ItemStack fruit = new ItemStack(type.get().fruit);
+				ItemStack fruit = new ItemStack(type.get().fruit.get());
 				if (playerIn instanceof FakePlayer) {
 					popResourceFromFace(worldIn, pos, ray.getDirection(), fruit);
 				} else {

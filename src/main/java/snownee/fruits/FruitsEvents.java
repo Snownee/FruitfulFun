@@ -28,7 +28,7 @@ public final class FruitsEvents {
 	public static void breakBlock(BlockEvent.BreakEvent event) {
 		if (!event.getWorld().isClientSide() && !event.getPlayer().isCreative() && event.getState().getBlock() == Blocks.OAK_LEAVES && event.getWorld() instanceof Level) {
 			if (event.getWorld().getRandom().nextFloat() < FruitsConfig.oakLeavesDropsAppleSapling) {
-				Block.popResource((Level) event.getWorld(), event.getPos(), new ItemStack(CoreModule.APPLE_SAPLING));
+				Block.popResource((Level) event.getWorld(), event.getPos(), CoreModule.APPLE_SAPLING.itemStack());
 			}
 		}
 	}
@@ -44,11 +44,11 @@ public final class FruitsEvents {
 		BlockPos pos = entityIn.blockPosition();
 		for (BlockPos pos2 : BlockPos.betweenClosed(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
 			BlockState state2 = world.getBlockState(pos2);
-			if (state2.getBlock() == CoreModule.CITRON_LEAVES && state2.getValue(FruitLeavesBlock.AGE) == 3) {
+			if (CoreModule.CITRON_LEAVES.is(state2) && state2.getValue(FruitLeavesBlock.AGE) == 3) {
 				world.setBlockAndUpdate(pos2, state2.setValue(FruitLeavesBlock.AGE, 1));
 				if (world.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) && !world.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
 				{
-					ItemStack stack = new ItemStack(CoreModule.EMPOWERED_CITRON);
+					ItemStack stack = CoreModule.EMPOWERED_CITRON.itemStack();
 					double d0 = world.random.nextFloat() * 0.5F + 0.25D;
 					double d1 = world.random.nextFloat() * 0.5F + 0.25D;
 					double d2 = world.random.nextFloat() * 0.5F + 0.25D;

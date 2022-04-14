@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.kiwi.data.provider.KiwiBlockLoot;
+import snownee.kiwi.datagen.provider.KiwiBlockLoot;
 import snownee.kiwi.util.Util;
 
 public class CoreBlockLoot extends KiwiBlockLoot {
@@ -42,7 +42,7 @@ public class CoreBlockLoot extends KiwiBlockLoot {
 		LootTable.Builder loot = createLeavesDrops(leavesBlock, type.sapling.get(), NORMAL_LEAVES_SAPLING_CHANCES);
 
 		LootPool.Builder pool = LootPool.lootPool();
-		pool.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(FruitLeavesBlock.AGE, 3))).add(LootItem.lootTableItem(type.fruit));
+		pool.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(FruitLeavesBlock.AGE, 3))).add(LootItem.lootTableItem(type.fruit.get()));
 		loot.withPool(pool);
 
 		return loot;

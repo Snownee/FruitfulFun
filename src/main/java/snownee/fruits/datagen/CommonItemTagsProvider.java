@@ -1,6 +1,5 @@
 package snownee.fruits.datagen;
 
-import static net.minecraft.tags.ItemTags.createOptional;
 import static net.minecraft.world.item.Items.*;
 import static snownee.fruits.CoreModule.*;
 import static snownee.fruits.cherry.CherryModule.*;
@@ -11,22 +10,25 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import snownee.fruits.FruitsMod;
-import snownee.kiwi.data.provider.TagsProviderHelper;
+import snownee.kiwi.datagen.provider.TagsProviderHelper;
 
 public class CommonItemTagsProvider extends ItemTagsProvider {
 
+	private final TagsProviderHelper<Item> helper;
+
 	public CommonItemTagsProvider(DataGenerator pGenerator, BlockTagsProvider pBlockTagsProvider, ExistingFileHelper existingFileHelper) {
-		super(pGenerator, pBlockTagsProvider, FruitsMod.MODID, existingFileHelper);
+		super(pGenerator, pBlockTagsProvider, FruitsMod.ID, existingFileHelper);
+		helper = new TagsProviderHelper<>(this);
 	}
 
-	static final Tag.Named<Item> CITRUS_LOGS = createOptional(new ResourceLocation(FruitsMod.MODID, "citrus_logs"));
-	static final Tag.Named<Item> CHERRY_LOGS = createOptional(new ResourceLocation(FruitsMod.MODID, "cherry_logs"));
-	static final Tag.Named<Item> FRUITS = createOptional(new ResourceLocation("forge:fruits"));
+	static final TagKey<Item> CITRUS_LOGS = ItemTags.create(new ResourceLocation(FruitsMod.ID, "citrus_logs"));
+	static final TagKey<Item> CHERRY_LOGS = ItemTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
+	static final TagKey<Item> FRUITS = ItemTags.create(new ResourceLocation("forge:fruits"));
 
 	@Override
 	protected void addTags() {
@@ -46,7 +48,9 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 		copy(CommonBlockTagsProvider.CITRUS_LOGS, CITRUS_LOGS);
 		copy(CommonBlockTagsProvider.CHERRY_LOGS, CHERRY_LOGS);
 
-		TagsProviderHelper.addOptional(tag(FRUITS), CHERRY, REDLOVE).add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES).add(CITRON, GRAPEFRUIT, LEMON, LIME, MANDARIN, ORANGE, POMELO);
+		tag(FRUITS).add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES);
+		helper.add(FRUITS, CITRON, GRAPEFRUIT, LEMON, LIME, MANDARIN, ORANGE, POMELO);
+		helper.optional(FRUITS, CHERRY, REDLOVE);
 		tag(ItemTags.FOX_FOOD).addTag(FRUITS);
 	}
 

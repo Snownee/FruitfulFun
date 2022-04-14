@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.client;
+/*package snownee.fruits.cherry.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -19,3 +19,4 @@ public class SlidingDoorBlockEntityRenderer implements BlockEntityRenderer<Slidi
 	}
 
 }
+*/
