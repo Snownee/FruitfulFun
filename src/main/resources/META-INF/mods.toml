@@ -13,7 +13,7 @@ description=""
 [[dependencies.fruittrees]]
     modId="kiwi"
     mandatory=true
-    versionRange="[6, 7)"
+    versionRange="[6.1, 7)"
     ordering="NONE"
     side="BOTH"
 
