@@ -11,9 +11,9 @@
     }
   ],
   "ingredients": [
-    { "fruit": "APPLE" },
-    { "fruit": "CHERRY" },
+    { "fruit": "apple" },
+    { "fruit": "cherry" },
     { "block": "wither_rose" }
   ],
-  "result": { "fruit": "REDLOVE" }
+  "result": { "fruit": "redlove" }
 }

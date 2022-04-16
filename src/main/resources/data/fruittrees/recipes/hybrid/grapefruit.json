@@ -7,9 +7,9 @@
     }
   ],
   "ingredients": [
-    { "fruit": "POMELO" },
-    { "fruit": "LEMON" },
-    { "fruit": "ORANGE" }
+    { "fruit": "pomelo" },
+    { "fruit": "lemon" },
+    { "fruit": "orange" }
   ],
-  "result": { "fruit": "GRAPEFRUIT" }
+  "result": { "fruit": "grapefruit" }
 }

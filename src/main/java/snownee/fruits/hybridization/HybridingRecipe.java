@@ -3,6 +3,7 @@ package snownee.fruits.hybridization;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
@@ -17,10 +18,13 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import snownee.fruits.FruitType;
+import snownee.fruits.FruitsMod;
 import snownee.kiwi.recipe.Simple;
+import snownee.kiwi.util.Util;
 
 public class HybridingRecipe extends Simple<HybridingContext> {
 
@@ -73,9 +77,11 @@ public class HybridingRecipe extends Simple<HybridingContext> {
 		protected static Either<FruitType, Block> readIngredient(JsonObject object) {
 			if (object.has("block")) {
 				Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(GsonHelper.getAsString(object, "block")));
+				Preconditions.checkArgument(block != Blocks.AIR);
 				return Either.right(block);
 			} else if (object.has("fruit")) {
-				FruitType type = FruitType.parse(GsonHelper.getAsString(object, "fruit"));
+				FruitType type = FruitType.REGISTRY.getValue(Util.RL(GsonHelper.getAsString(object, "fruit"), FruitsMod.ID));
+				Preconditions.checkNotNull(type);
 				return Either.left(type);
 			}
 			throw new JsonSyntaxException("Expect key 'block' or 'fruit'");
@@ -85,7 +91,7 @@ public class HybridingRecipe extends Simple<HybridingContext> {
 		public HybridingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			Either<FruitType, Block> result;
 			if (buffer.readBoolean()) {
-				result = Either.left(FruitType.parse(buffer.readUtf(255)));
+				result = Either.left(buffer.readRegistryIdUnsafe(FruitType.REGISTRY));
 			} else {
 				result = Either.right(buffer.readRegistryIdUnsafe(ForgeRegistries.BLOCKS));
 			}
@@ -97,7 +103,7 @@ public class HybridingRecipe extends Simple<HybridingContext> {
 			}
 			size = buffer.readByte(); // types
 			for (int i = 0; i < size; i++) {
-				builder.add(Either.left(FruitType.parse(buffer.readUtf(255))));
+				builder.add(Either.left(buffer.readRegistryIdUnsafe(FruitType.REGISTRY)));
 			}
 			return new HybridingRecipe(recipeId, result, builder.build());
 		}
@@ -106,7 +112,7 @@ public class HybridingRecipe extends Simple<HybridingContext> {
 		public void toNetwork(FriendlyByteBuf buffer, HybridingRecipe recipe) {
 			recipe.result.ifLeft(type -> {
 				buffer.writeBoolean(true);
-				buffer.writeUtf(type.name(), 255);
+				buffer.writeRegistryIdUnsafe(FruitType.REGISTRY, type);
 			}).ifRight(block -> {
 				buffer.writeBoolean(false);
 				buffer.writeRegistryIdUnsafe(ForgeRegistries.BLOCKS, block);
@@ -120,7 +126,7 @@ public class HybridingRecipe extends Simple<HybridingContext> {
 			}
 			buffer.writeByte(types.size());
 			for (FruitType type : types) {
-				buffer.writeUtf(type.name(), 255);
+				buffer.writeRegistryIdUnsafe(FruitType.REGISTRY, type);
 			}
 		}
 

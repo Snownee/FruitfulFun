@@ -7,8 +7,8 @@
     }
   ],
   "ingredients": [
-    { "fruit": "LIME" },
-    { "fruit": "CITRON" }
+    { "fruit": "lime" },
+    { "fruit": "citron" }
   ],
-  "result": { "fruit": "LEMON" }
+  "result": { "fruit": "lemon" }
 }

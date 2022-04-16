@@ -41,7 +41,6 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import snownee.fruits.FruitType;
 import snownee.fruits.FruitsMod;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -111,10 +110,10 @@ public class CherryModule extends AbstractModule {
 
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<FruitLeavesBlock> CHERRY_LEAVES = go(() -> new CherryLeavesBlock(() -> FruitTypeExtension.CHERRY, blockProp(Blocks.OAK_LEAVES).color(MaterialColor.COLOR_PINK), PETAL_CHERRY.get()));
+	public static final KiwiGO<FruitLeavesBlock> CHERRY_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.CHERRY, blockProp(Blocks.OAK_LEAVES).color(MaterialColor.COLOR_PINK), PETAL_CHERRY.get()));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<FruitLeavesBlock> REDLOVE_LEAVES = go(() -> new CherryLeavesBlock(() -> FruitTypeExtension.REDLOVE, blockProp(Blocks.OAK_LEAVES).color(MaterialColor.CRIMSON_NYLIUM), PETAL_REDLOVE.get()));
+	public static final KiwiGO<FruitLeavesBlock> REDLOVE_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.REDLOVE, blockProp(Blocks.OAK_LEAVES).color(MaterialColor.CRIMSON_NYLIUM), PETAL_REDLOVE.get()));
 
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
@@ -125,10 +124,10 @@ public class CherryModule extends AbstractModule {
 
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> CHERRY_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(FruitTypeExtension.CHERRY), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.COLOR_PINK)));
+	public static final KiwiGO<SaplingBlock> CHERRY_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(CherryFruitTypes.CHERRY), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.COLOR_PINK)));
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> REDLOVE_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(FruitTypeExtension.REDLOVE), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.CRIMSON_NYLIUM)));
+	public static final KiwiGO<SaplingBlock> REDLOVE_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(CherryFruitTypes.REDLOVE), blockProp(Blocks.OAK_SAPLING).color(MaterialColor.CRIMSON_NYLIUM)));
 
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
@@ -156,11 +155,6 @@ public class CherryModule extends AbstractModule {
 	@Name("cherry_sign")
 	@Category("decorations")
 	public static final KiwiGO<Item> CHERRY_SIGN_ITEM = go(() -> new SignItem(itemProp().stacksTo(Items.OAK_SIGN.getMaxStackSize()), CHERRY_SIGN.get(), CHERRY_WALL_SIGN.get()));
-
-	static {
-		FruitTypeExtension.CHERRY = FruitType.create("CHERRY", 0, CHERRY_LOG, CHERRY_LEAVES, CHERRY_SAPLING, CHERRY, CHERRY_CARPET);
-		FruitTypeExtension.REDLOVE = FruitType.create("REDLOVE", 2, CHERRY_LOG, REDLOVE_LEAVES, REDLOVE_SAPLING, REDLOVE, REDLOVE_CARPET);
-	}
 
 	@Override
 	protected void init(InitEvent event) {

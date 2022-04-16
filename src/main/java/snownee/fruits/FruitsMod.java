@@ -16,6 +16,8 @@ public final class FruitsMod {
 
 	public FruitsMod() {
 		MinecraftForge.EVENT_BUS.addListener(CoreModule::insertFeatures);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(FruitsEvents::addPackFinder);
+		var eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		eventBus.addListener(FruitsEvents::addPackFinder);
+		eventBus.addListener(FruitsEvents::newRegistry);
 	}
 }

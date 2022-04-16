@@ -1,10 +1,11 @@
 package snownee.fruits.block.entity;
 
+import java.util.Locale;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -13,15 +14,18 @@ import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.PositionSource;
+import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
+import snownee.fruits.FruitsMod;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.kiwi.block.entity.BaseBlockEntity;
 import snownee.kiwi.util.NBTHelper;
+import snownee.kiwi.util.Util;
 
 public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventListener {
 
-	public FruitType type = FruitType.CITRON;
+	public FruitType type = CoreFruitTypes.CITRON.get();
 	private int deathRate = 0;
 	private ItemEntity onlyItem;
 	private PositionSource source;
@@ -55,13 +59,10 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 		NBTHelper helper = NBTHelper.of(compound);
 		String id = helper.getString("type");
 		if (id != null) {
-			type = FruitType.parse(id);
+			type = FruitType.REGISTRY.getValue(Util.RL(id.toLowerCase(Locale.ENGLISH), FruitsMod.ID));
 			if (type == null) {
-				type = FruitType.CITRON;
+				type = CoreFruitTypes.CITRON.get();
 			}
-		} else {
-			FruitType[] types = FruitType.values();
-			type = types[Mth.clamp(helper.getInt("type"), 0, types.length)];
 		}
 		deathRate = helper.getInt("death");
 		super.load(compound);
@@ -69,7 +70,7 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 
 	@Override
 	protected void saveAdditional(CompoundTag compound) {
-		compound.putString("type", type.name());
+		compound.putString("type", Util.trimRL(type.getRegistryName(), FruitsMod.ID));
 		compound.putInt("death", deathRate);
 		super.saveAdditional(compound);
 	}

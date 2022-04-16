@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.Pack;
@@ -25,7 +26,10 @@ import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegistryBuilder;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.kiwi.Kiwi;
 
 @EventBusSubscriber
 public final class FruitsEvents {
@@ -37,6 +41,13 @@ public final class FruitsEvents {
 				consumer.accept(constructor.create("mod:fruittrees:conditional", new TextComponent(FruitsMod.NAME), true, FruitsConditionalResourcePack::new, section, Position.TOP, PackSource.DEFAULT, true));
 			});
 		}
+	}
+
+	public static void newRegistry(NewRegistryEvent event) {
+		event.create(new RegistryBuilder<FruitType>().setName(new ResourceLocation(FruitsMod.ID, "fruit_type")).setType(FruitType.class), v -> {
+			FruitType.REGISTRY = v;
+			Kiwi.registerRegistry(FruitType.REGISTRY, FruitType.class);
+		});
 	}
 
 	@SubscribeEvent

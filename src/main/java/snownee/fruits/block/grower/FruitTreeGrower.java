@@ -1,6 +1,7 @@
 package snownee.fruits.block.grower;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
@@ -10,15 +11,15 @@ import snownee.fruits.FruitType;
 
 public class FruitTreeGrower extends AbstractTreeGrower {
 
-	private final FruitType typeSupplier;
+	private final Supplier<FruitType> typeSupplier;
 
-	public FruitTreeGrower(FruitType type) {
-		typeSupplier = type;
+	public FruitTreeGrower(Supplier<FruitType> typeSupplier) {
+		this.typeSupplier = typeSupplier;
 	}
 
 	@Override
 	protected Holder<ConfiguredFeature<TreeConfiguration, ?>> getConfiguredFeature(Random pRandom, boolean pLargeHive) {
-		return typeSupplier.feature;
+		return typeSupplier.get().feature;
 	}
 
 }

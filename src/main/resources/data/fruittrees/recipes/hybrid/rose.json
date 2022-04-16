@@ -7,7 +7,7 @@
     }
   ],
   "ingredients": [
-    { "fruit": "APPLE" },
+    { "fruit": "apple" },
     { "block": "poppy" }
   ],
   "result": { "block": "rose_bush" }

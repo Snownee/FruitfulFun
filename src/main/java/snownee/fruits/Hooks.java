@@ -2,6 +2,7 @@ package snownee.fruits;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import com.google.common.collect.Lists;
@@ -84,7 +85,7 @@ public final class Hooks {
 			list = new ListTag();
 			data.setTag("FruitsList", list);
 		}
-		String newPollen = type != null ? type.name() : "_" + Util.trimRL(block.getRegistryName());
+		String newPollen = type != null ? Util.trimRL(type.getRegistryName(), FruitsMod.ID) : "_" + Util.trimRL(block.getRegistryName());
 		if (list.stream().anyMatch(e -> e.getAsString().equals(newPollen))) {
 			return;
 		}
@@ -153,7 +154,10 @@ public final class Hooks {
 			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id.substring(1)));
 			return Either.right(block);
 		} else {
-			FruitType type = FruitType.parse(id);
+			FruitType type = FruitType.REGISTRY.getValue(Util.RL(id.toLowerCase(Locale.ENGLISH), FruitsMod.ID));
+			if (type == null) {
+				type = CoreFruitTypes.CITRON.get();
+			}
 			return Either.left(type);
 		}
 	}
