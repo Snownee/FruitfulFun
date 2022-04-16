@@ -7,11 +7,10 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.ForgeRegistries;
+import snownee.fruits.Hooks;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
@@ -39,20 +38,15 @@ public class FoodModule extends AbstractModule {
 
 		public static final FoodProperties GRAPEFRUIT_PANNA_COTTA = new FoodProperties.Builder().nutrition(14).saturationMod(1).effect(SPEED_PROVIDER, 1).build();
 		public static final FoodProperties DONAUWELLE = new FoodProperties.Builder().nutrition(14).saturationMod(1).effect(REGENERATION_PROVIDER, 1).build();
-		public static final FoodProperties HONEY_POMELO_TEA = new FoodProperties.Builder().nutrition(1).saturationMod(0.3F).effect(COMFORT_PROVIDER, 1).build();
+		public static final FoodProperties HONEY_POMELO_TEA = new FoodProperties.Builder().nutrition(1).saturationMod(Hooks.farmersdelight ? 0.3F : 4).effect(COMFORT_PROVIDER, 1).alwaysEat().build();
 		public static final FoodProperties RICE_WITH_FRUITS = new FoodProperties.Builder().nutrition(9).saturationMod(0.6F).effect(COMFORT_PROVIDER, 1).build();
 		public static final FoodProperties LEMON_ROAST_CHICKEN = new FoodProperties.Builder().nutrition(12).saturationMod(0.9F).effect(NOURISHED_PROVIDER, 1).build();
 	}
 
-	public static final KiwiGO<Item> GRAPEFRUIT_PANNA_COTTA = go(() -> new Item(itemProp().food(Foods.GRAPEFRUIT_PANNA_COTTA)));
-	public static final KiwiGO<Item> DONAUWELLE = go(() -> new Item(itemProp().food(Foods.DONAUWELLE)));
-	public static final KiwiGO<Item> HONEY_POMELO_TEA = go(() -> new Item(itemProp().food(Foods.HONEY_POMELO_TEA).craftRemainder(Items.GLASS_BOTTLE)) {
-		@Override
-		public UseAnim getUseAnimation(ItemStack stack) {
-			return UseAnim.DRINK;
-		}
-	});
-	public static final KiwiGO<Item> RICE_WITH_FRUITS = go(() -> new Item(itemProp().food(Foods.RICE_WITH_FRUITS)));
-	public static final KiwiGO<Item> LEMON_ROAST_CHICKEN = go(() -> new Item(itemProp().food(Foods.LEMON_ROAST_CHICKEN).craftRemainder(Items.BOWL)));
+	public static final KiwiGO<Item> GRAPEFRUIT_PANNA_COTTA = go(() -> new FoodItem(itemProp().food(Foods.GRAPEFRUIT_PANNA_COTTA)));
+	public static final KiwiGO<Item> DONAUWELLE = go(() -> new FoodItem(itemProp().food(Foods.DONAUWELLE)));
+	public static final KiwiGO<Item> HONEY_POMELO_TEA = go(() -> new FoodItem(itemProp().food(Foods.HONEY_POMELO_TEA).craftRemainder(Items.GLASS_BOTTLE)));
+	public static final KiwiGO<Item> RICE_WITH_FRUITS = go(() -> new FoodItem(itemProp().food(Foods.RICE_WITH_FRUITS)));
+	public static final KiwiGO<Item> LEMON_ROAST_CHICKEN = go(() -> new FoodItem(itemProp().food(Foods.LEMON_ROAST_CHICKEN).craftRemainder(Items.BOWL)));
 
 }

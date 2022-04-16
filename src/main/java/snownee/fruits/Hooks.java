@@ -37,6 +37,7 @@ import snownee.fruits.cherry.block.SlidingDoorEntity;
 import snownee.fruits.hybridization.HybridingContext;
 import snownee.fruits.hybridization.HybridingRecipe;
 import snownee.fruits.hybridization.Hybridization;
+import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.NBTHelper;
 import snownee.kiwi.util.Util;
 
@@ -44,6 +45,7 @@ public final class Hooks {
 
 	public static boolean cherry;
 	public static boolean hybridization;
+	public static boolean farmersdelight = Platform.isModLoaded("farmersdelight");
 
 	private Hooks() {
 	}

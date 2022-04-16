@@ -14,6 +14,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -81,7 +82,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	}
 
 	@Override
-	public void draw(HybridingRecipe recipe, PoseStack matrix, double mouseX, double mouseY) {
+	public void draw(HybridingRecipe recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY) {
 		x.draw(matrix, 18, 22);
 		line.draw(matrix, 54, 26);
 
