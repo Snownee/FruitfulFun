@@ -3,7 +3,7 @@
   "conditions": [
     {
       "type": "forge:item_exists",
-      "modid": "fruittrees:citrus_cabinet"
+      "item": "fruittrees:citrus_cabinet"
     }
   ],
   "pattern": [

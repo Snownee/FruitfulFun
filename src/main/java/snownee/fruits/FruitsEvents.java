@@ -1,7 +1,15 @@
 package snownee.fruits;
 
+import java.util.function.Consumer;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.Pack.Position;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -12,11 +20,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -24,12 +30,12 @@ import snownee.fruits.block.FruitLeavesBlock;
 @EventBusSubscriber
 public final class FruitsEvents {
 
-	@SubscribeEvent
-	public static void breakBlock(BlockEvent.BreakEvent event) {
-		if (!event.getWorld().isClientSide() && !event.getPlayer().isCreative() && event.getState().getBlock() == Blocks.OAK_LEAVES && event.getWorld() instanceof Level) {
-			if (event.getWorld().getRandom().nextFloat() < FruitsConfig.oakLeavesDropsAppleSapling) {
-				Block.popResource((Level) event.getWorld(), event.getPos(), CoreModule.APPLE_SAPLING.itemStack());
-			}
+	public static void addPackFinder(AddPackFindersEvent event) {
+		if (event.getPackType() == PackType.SERVER_DATA) {
+			event.addRepositorySource((Consumer<Pack> consumer, Pack.PackConstructor constructor) -> {
+				PackMetadataSection section = new PackMetadataSection(new TextComponent("Fruit Trees Conditional Resources"), 9);
+				consumer.accept(constructor.create("mod:fruittrees:conditional", new TextComponent(FruitsMod.NAME), true, FruitsConditionalResourcePack::new, section, Position.TOP, PackSource.DEFAULT, true));
+			});
 		}
 	}
 

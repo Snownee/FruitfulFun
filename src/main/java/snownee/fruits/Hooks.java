@@ -122,8 +122,10 @@ public final class Hooks {
 				if (placed && isBigFlower) {
 					newState = newState.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
 					safeSetBlock(bee.level, root.above(), newState);
+					bee.level.levelEvent(1505, root.above(), 0); // bonemeal effects
 				}
 				if (placed) {
+					bee.level.levelEvent(1505, root, 0);
 					data.remove("FruitsList");
 					return;
 				}

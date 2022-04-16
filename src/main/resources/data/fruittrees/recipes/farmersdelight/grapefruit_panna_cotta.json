@@ -18,18 +18,6 @@
       "type": "kiwi:alternatives",
       "list": [
         {
-          "item": "neapolitan:dried_vanilla_pods"
-        },
-        {
-          "tag": "forge:crops/vanilla"
-        },
-        []
-      ]
-    },
-    {
-      "type": "kiwi:alternatives",
-      "list": [
-        {
           "tag": "forge:cream"
         },
         {
@@ -53,6 +41,18 @@
     },
     {
       "item": "sugar"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "item": "neapolitan:dried_vanilla_pods"
+        },
+        {
+          "tag": "forge:crops/vanilla"
+        },
+        []
+      ]
     }
   ],
   "experience": 0.35,

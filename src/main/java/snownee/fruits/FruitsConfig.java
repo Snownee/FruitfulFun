@@ -3,6 +3,7 @@ package snownee.fruits;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.LevelAccessor;
 import snownee.kiwi.config.KiwiConfig;
+import snownee.kiwi.config.KiwiConfig.LevelRestart;
 import snownee.kiwi.config.KiwiConfig.Range;
 
 @KiwiConfig
@@ -16,9 +17,10 @@ public final class FruitsConfig {
 	public static int growingSpeed = 5;
 	public static DropMode fruitDropModeSingleplayer = DropMode.INDEPENDENT;
 	public static DropMode fruitDropModeMultiplayer = DropMode.ONE_BY_ONE;
-	@Range(min = 0, max = 1)
-	public static float oakLeavesDropsAppleSapling = 0.2f;
-	public static boolean worldGen = true;
+	public static boolean appleSaplingFromHeroOfTheVillage = true;
+	@LevelRestart
+	public static boolean villageAppleTreeWorldGen = true;
+	public static boolean fruitTreesWorldGen = true;
 	@Range(min = 2, max = 10000)
 	public static int treesGenChunksInPlains = 500;
 	@Range(min = 2, max = 10000)

@@ -119,15 +119,17 @@
 "block.fruittrees.cherry_button": "Cherry Button",
 "block.fruittrees.cherry_pressure_plate": "Cherry Pressure Plate",
 "block.fruittrees.cherry_door": "Cherry Door",
-"block.fruittrees.cherry_sliding_door": "Cherry Sliding Door (WIP)",
+"block.fruittrees.cherry_sliding_door": "Cherry Sliding Door",
 "block.fruittrees.cherry_trapdoor": "Cherry Trapdoor",
 "block.fruittrees.cherry_sign": "Cherry Sign",
 "block.fruittrees.cherry_cabinet": "Cherry Cabinet",
 
 "entity.fruittrees.sliding_door": "Sliding Door",
 
-"gui.fruittrees.jei.category.hybriding": "Bee Pollinating",
-"gui.fruittrees.jei.tip.flowering": "%s (Blossom)",
+"gui.fruittrees.hybriding": "Bee Pollinating",
+"gui.fruittrees.tip.flowering": "Flowered %s",
+"gui.fruittrees.tip.appleSaplingFromHeroOfTheVillage": "Gift from baby villager, when you become hero of the village.",
+"gui.fruittrees.tip.villageAppleTreeWorldGen": "Apple trees sometimes grow in villages in plains.",
 
 "advancements.fruittrees.grapefruit.title": "Fragrance of Citrus",
 "advancements.fruittrees.grapefruit.description": "Hybridize a grapefruit tree",

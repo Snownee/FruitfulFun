@@ -50,7 +50,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	//InventoryScreen.renderEntityInInventory
 	public HybridingCategory(IGuiHelper guiHelper) {
 		this.guiHelper = guiHelper;
-		localizedName = new TranslatableComponent("gui.fruittrees.jei.category.hybriding");
+		localizedName = new TranslatableComponent("gui.fruittrees.hybriding");
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, CoreModule.GRAPEFRUIT.itemStack());
 		background = guiHelper.createBlankDrawable(width, height);
 		float f = (float) Math.atan(1000 / 40.0F);
@@ -148,7 +148,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 			IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).addItemStack(input).setBackground(guiHelper.getSlotDrawable(), -1, -1);
 			if (input.is(ItemTags.LEAVES)) {
 				slot.addTooltipCallback((IRecipeSlotView view, List<Component> tooltip) -> {
-					Component line = new TranslatableComponent("gui.fruittrees.jei.tip.flowering", tooltip.get(0));
+					Component line = new TranslatableComponent("gui.fruittrees.tip.flowering", tooltip.get(0));
 					tooltip.set(0, line);
 				});
 			}

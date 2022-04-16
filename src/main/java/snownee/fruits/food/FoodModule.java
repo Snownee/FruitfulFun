@@ -7,10 +7,13 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.UseAnim;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.ForgeRegistries;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 
 @KiwiModule("food")
@@ -41,10 +44,15 @@ public class FoodModule extends AbstractModule {
 		public static final FoodProperties LEMON_ROAST_CHICKEN = new FoodProperties.Builder().nutrition(12).saturationMod(0.9F).effect(NOURISHED_PROVIDER, 1).build();
 	}
 
-	public static final Item GRAPEFRUIT_PANNA_COTTA = new Item(itemProp().food(Foods.GRAPEFRUIT_PANNA_COTTA).tab(null));
-	public static final Item DONAUWELLE = new Item(itemProp().food(Foods.DONAUWELLE));
-	public static final Item HONEY_POMELO_TEA = new Item(itemProp().food(Foods.HONEY_POMELO_TEA).craftRemainder(Items.GLASS_BOTTLE));
-	public static final Item RICE_WITH_FRUITS = new Item(itemProp().food(Foods.RICE_WITH_FRUITS));
-	public static final Item LEMON_ROAST_CHICKEN = new Item(itemProp().food(Foods.LEMON_ROAST_CHICKEN).craftRemainder(Items.BOWL));
+	public static final KiwiGO<Item> GRAPEFRUIT_PANNA_COTTA = go(() -> new Item(itemProp().food(Foods.GRAPEFRUIT_PANNA_COTTA)));
+	public static final KiwiGO<Item> DONAUWELLE = go(() -> new Item(itemProp().food(Foods.DONAUWELLE)));
+	public static final KiwiGO<Item> HONEY_POMELO_TEA = go(() -> new Item(itemProp().food(Foods.HONEY_POMELO_TEA).craftRemainder(Items.GLASS_BOTTLE)) {
+		@Override
+		public UseAnim getUseAnimation(ItemStack stack) {
+			return UseAnim.DRINK;
+		}
+	});
+	public static final KiwiGO<Item> RICE_WITH_FRUITS = go(() -> new Item(itemProp().food(Foods.RICE_WITH_FRUITS)));
+	public static final KiwiGO<Item> LEMON_ROAST_CHICKEN = go(() -> new Item(itemProp().food(Foods.LEMON_ROAST_CHICKEN).craftRemainder(Items.BOWL)));
 
 }

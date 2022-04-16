@@ -111,11 +111,11 @@
 "block.fruittrees.cherry_button": "Bouton en cerisier",
 "block.fruittrees.cherry_pressure_plate": "Plaque de pression en cerisier",
 "block.fruittrees.cherry_door": "Porte en cerisier",
-"block.fruittrees.cherry_sliding_door": "Porte coulissante en cerisier (WIP)",
+"block.fruittrees.cherry_sliding_door": "Porte coulissante en cerisier",
 "block.fruittrees.cherry_trapdoor": "Trappe en cerisier",
 
-"gui.fruittrees.jei.category.hybriding": "Abeille pollinisatrice",
-"gui.fruittrees.jei.tip.flowering": "%s (Fleur)",
+"gui.fruittrees.hybriding": "Abeille pollinisatrice",
+"gui.fruittrees.tip.flowering": "%s (Fleur)",
 
 "advancements.fruittrees.grapefruit.title": "Le parfum du citron",
 "advancements.fruittrees.grapefruit.description": "Hybridez un pamplemoussier.",

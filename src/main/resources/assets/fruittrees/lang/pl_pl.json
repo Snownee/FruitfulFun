@@ -118,14 +118,14 @@
   "block.fruittrees.cherry_button": "Wiśniowy przycisk",
   "block.fruittrees.cherry_pressure_plate": "Wiśniowa płyta naciskowa",
   "block.fruittrees.cherry_door": "Wiśniowe drzwi",
-  "block.fruittrees.cherry_sliding_door": "Wiśniowe przesuwne drzwi (WIP)",
+  "block.fruittrees.cherry_sliding_door": "Wiśniowe przesuwne drzwi",
   "block.fruittrees.cherry_trapdoor": "Wiśniowa klapa",
   "block.fruittrees.cherry_sign": "Wiśniowa tabliczka",
   
   "entity.fruittrees.sliding_door": "Przesuwne drzwi",
   
-  "gui.fruittrees.jei.category.hybriding": "Zapylanie",
-  "gui.fruittrees.jei.tip.flowering": "%s (z kwiatami)",
+  "gui.fruittrees.hybriding": "Zapylanie",
+  "gui.fruittrees.tip.flowering": "%s (z kwiatami)",
   
   "advancements.fruittrees.grapefruit.title": "Zapach cytrusa",
   "advancements.fruittrees.grapefruit.description": "Wyhoduj drzewo grejpfrutowa",

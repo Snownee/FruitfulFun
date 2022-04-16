@@ -78,7 +78,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
@@ -292,10 +291,6 @@ public final class CoreModule extends AbstractModule {
 
 	private Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> TREES_CF;
 
-	public CoreModule() {
-		MinecraftForge.EVENT_BUS.addListener(CoreModule::insertFeatures);
-	}
-
 	@Override
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
@@ -321,7 +316,7 @@ public final class CoreModule extends AbstractModule {
 				type.makeFeature();
 			}
 
-			if (FruitsConfig.worldGen) {
+			if (FruitsConfig.fruitTreesWorldGen) {
 				List<Holder<PlacedFeature>> list = Lists.newArrayList();
 				for (FruitType type : List.of(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN)) {
 					if (type.featureWG != null) {
@@ -367,7 +362,7 @@ public final class CoreModule extends AbstractModule {
 	}
 
 	public static void insertFeatures(BiomeLoadingEvent event) {
-		if (!FruitsConfig.worldGen) {
+		if (!FruitsConfig.fruitTreesWorldGen) {
 			return;
 		}
 		ClimateSettings climate = event.getClimate();

@@ -2,13 +2,19 @@ package snownee.fruits.plugin.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
+import snownee.fruits.CoreModule;
+import snownee.fruits.FruitsConfig;
 import snownee.fruits.FruitsMod;
 import snownee.fruits.hybridization.Hybridization;
 
@@ -35,6 +41,21 @@ public class JEIPlugin implements IModPlugin {
 			ClientLevel world = Minecraft.getInstance().level;
 			RecipeManager recipeManager = world.getRecipeManager();
 			registration.addRecipes(recipeManager.byType(Hybridization.RECIPE_TYPE).values(), UID);
+		}
+
+		if (FruitsConfig.appleSaplingFromHeroOfTheVillage || FruitsConfig.villageAppleTreeWorldGen) {
+			String info = "";
+			if (FruitsConfig.appleSaplingFromHeroOfTheVillage) {
+				info = I18n.get("gui.fruittrees.tip.appleSaplingFromHeroOfTheVillage");
+			}
+			if (FruitsConfig.villageAppleTreeWorldGen) {
+				if (FruitsConfig.appleSaplingFromHeroOfTheVillage) {
+					info += "\n";
+				}
+				info += I18n.get("gui.fruittrees.tip.villageAppleTreeWorldGen");
+			}
+			ItemStack appleSapling = CoreModule.APPLE_SAPLING.itemStack();
+			registration.addIngredientInfo(appleSapling, VanillaTypes.ITEM, new TextComponent(info));
 		}
 	}
 }

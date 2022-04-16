@@ -76,8 +76,8 @@
 "block.fruittrees.cherry_door": "Дверь из вишневой древесины",
 "block.fruittrees.cherry_trapdoor": "Люк из вишневой древесины",
 
-"gui.fruittrees.jei.category.hybriding": "Пчелоопыляемый",
-"gui.fruittrees.jei.tip.flowering": "%s (Цветение)",
+"gui.fruittrees.hybriding": "Пчелоопыляемый",
+"gui.fruittrees.tip.flowering": "%s (Цветение)",
 
 "advancements.fruittrees.grapefruit.title": "Цитрусовый аромат",
 "advancements.fruittrees.grapefruit.description": "Выведите грепфрутово дерево",

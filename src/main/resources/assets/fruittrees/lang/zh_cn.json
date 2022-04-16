@@ -86,8 +86,8 @@
 "block.fruittrees.citrus_sign": "樱木告示牌",
 "block.fruittrees.cherry_cabinet": "樱木橱柜",
 
-"gui.fruittrees.jei.category.hybriding": "蜜蜂授粉",
-"gui.fruittrees.jei.tip.flowering": "开花的%s",
+"gui.fruittrees.hybriding": "蜜蜂授粉",
+"gui.fruittrees.tip.flowering": "开花的%s",
 
 "advancements.fruittrees.grapefruit.title": "橘势大好！",
 "advancements.fruittrees.grapefruit.description": "杂交出一棵西柚树",
