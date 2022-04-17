@@ -1,6 +1,5 @@
 {
   "type": "kiwi:shapeless",
-  "no_containers": true,
   "conditions": [
     {
       "type": "forge:not",
