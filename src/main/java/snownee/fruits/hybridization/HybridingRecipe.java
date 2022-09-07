@@ -20,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitsMod;
 import snownee.kiwi.recipe.Simple;
@@ -60,7 +59,7 @@ public class HybridingRecipe extends Simple<HybridingContext> {
 		return Hybridization.RECIPE_TYPE;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HybridingRecipe> {
+	public static class Serializer implements RecipeSerializer<HybridingRecipe> {
 
 		@Override
 		public HybridingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

@@ -126,6 +126,5 @@
 
 "fruittrees.forestbat": "Chauve-souris forestière",
 
-"config.waila.plugin_fruittrees": "Fruit Trees",
-"config.waila.plugin_fruittrees.bee": "Bee"
+"config.jade.plugin_fruittrees.bee": "Bee"
 }

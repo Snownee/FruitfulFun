@@ -1,10 +1,11 @@
 package snownee.fruits.cherry;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -36,11 +37,10 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.FruitsMod;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -57,16 +57,17 @@ import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.KiwiModule.NoItem;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
-import snownee.kiwi.KiwiModule.Subscriber.Bus;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
+import snownee.kiwi.loader.Platform;
+import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
 @KiwiModule("cherry")
 @KiwiModule.Optional
-@KiwiModule.Subscriber(Bus.MOD)
+@KiwiModule.Subscriber(modBus = true)
 public class CherryModule extends AbstractModule {
 
 	@SuppressWarnings("hiding")
@@ -141,12 +142,15 @@ public class CherryModule extends AbstractModule {
 	@Category("food")
 	public static final KiwiGO<Item> REDLOVE = go(() -> new ModItem(itemProp().food(Foods.REDLOVE)));
 
-	public static final BannerPattern HEART = BannerPattern.create("HEART", "heart", "hrt", true);
+	public static final KiwiGO<BannerPattern> HEART = go(() -> new BannerPattern("hrt"));
+
+	public static final TagKey<BannerPattern> HEART_TAG = tag(Registry.BANNER_PATTERN_REGISTRY, FruitsMod.ID, "pattern_item/heart");
+
 	@SuppressWarnings("deprecation")
 	@Category("misc")
-	public static final KiwiGO<Item> HEART_BANNER_PATTERN = go(() -> new BannerPatternItem(HEART, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
+	public static final KiwiGO<Item> HEART_BANNER_PATTERN = go(() -> new BannerPatternItem(HEART_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
 
-	public static final WoodType CHERRY_WOODTYPE = WoodType.create("fruittrees_cherry");
+	public static final WoodType CHERRY_WOODTYPE = WoodType.create("fruittrees:cherry");
 	@NoItem
 	public static final KiwiGO<Block> CHERRY_SIGN = go(() -> new StandingSignBlock(blockProp(Blocks.JUNGLE_SIGN), CHERRY_WOODTYPE));
 	@NoItem
@@ -160,8 +164,8 @@ public class CherryModule extends AbstractModule {
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
 			FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
-			pot.addPlant(CHERRY_SAPLING.get().getRegistryName(), POTTED_CHERRY);
-			pot.addPlant(REDLOVE_SAPLING.get().getRegistryName(), POTTED_REDLOVE);
+			pot.addPlant(CHERRY_SAPLING.key(), POTTED_CHERRY);
+			pot.addPlant(REDLOVE_SAPLING.key(), POTTED_REDLOVE);
 
 			VanillaActions.registerAxeConversion(CHERRY_LOG.get(), STRIPPED_CHERRY_LOG.get());
 			VanillaActions.registerAxeConversion(CHERRY_WOOD.get(), STRIPPED_CHERRY_WOOD.get());
@@ -178,35 +182,30 @@ public class CherryModule extends AbstractModule {
 
 	public CherryModule() {
 		Hooks.cherry = true;
-	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public void clientInit(ModelRegistryEvent event) {
-		Sheets.addWoodType(CHERRY_WOODTYPE);
+		if (Platform.isPhysicalClient()) {
+			Sheets.addWoodType(CHERRY_WOODTYPE);
+		}
 	}
 
 	@Override
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		if (event.includeServer()) {
-			generator.addProvider(new KiwiLootTableProvider(generator).add(CherryBlockLoot::new, LootContextParamSets.BLOCK));
-		}
+		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(generator).add(CherryBlockLoot::new, LootContextParamSets.BLOCK));
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	protected void clientInit(ParticleFactoryRegisterEvent event) {
-		Minecraft.getInstance().particleEngine.register(PETAL_CHERRY.get(), PetalParticle.Factory::new);
-		Minecraft.getInstance().particleEngine.register(PETAL_REDLOVE.get(), PetalParticle.Factory::new);
+	protected void clientInit(RegisterParticleProvidersEvent event) {
+		event.register(PETAL_CHERRY.get(), PetalParticle.Factory::new);
+		event.register(PETAL_REDLOVE.get(), PetalParticle.Factory::new);
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void handleBlockColor(ColorHandlerEvent.Block event) {
+	public void handleBlockColor(RegisterColorHandlersEvent.Block event) {
 		BlockState birchLeaves = Blocks.BIRCH_LEAVES.defaultBlockState();
 		BlockColors blockColors = event.getBlockColors();
-		blockColors.register((state, world, pos, i) -> {
+		event.register((state, world, pos, i) -> {
 			if (i == 0) {
 				return blockColors.getColor(birchLeaves, world, pos, i);
 			}

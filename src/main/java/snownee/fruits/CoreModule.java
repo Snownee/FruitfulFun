@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
@@ -32,10 +33,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
-import net.minecraft.world.level.biome.Biome.ClimateSettings;
-import net.minecraft.world.level.biome.Biome.Precipitation;
-import net.minecraft.world.level.biome.Biome.TemperatureModifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -55,7 +52,6 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleRandomFeatureConfiguration;
@@ -74,12 +70,10 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.grower.FruitTreeGrower;
@@ -99,15 +93,16 @@ import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.KiwiModule.NoItem;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
-import snownee.kiwi.KiwiModule.Subscriber.Bus;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
+import snownee.kiwi.loader.Platform;
+import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
 @KiwiModule
-@KiwiModule.Subscriber(Bus.MOD)
+@KiwiModule.Subscriber(modBus = true)
 public final class CoreModule extends AbstractModule {
 
 	public static final class Foods {
@@ -254,10 +249,13 @@ public final class CoreModule extends AbstractModule {
 	@Name("blob")
 	public static final KiwiGO<FoliagePlacerType<FruitBlobFoliagePlacer>> BLOB_PLACER = go(() -> new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC));
 
-	public static final BannerPattern SNOWFLAKE = BannerPattern.create("SNOWFLAKE", "snowflake", "sno", true);
+	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> new BannerPattern("sno"));
+
+	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registry.BANNER_PATTERN_REGISTRY, FruitsMod.ID, "pattern_item/snowflake");
+
 	@SuppressWarnings("deprecation")
 	@Category("misc")
-	public static final KiwiGO<Item> SNOWFLAKE_BANNER_PATTERN = go(() -> new BannerPatternItem(SNOWFLAKE, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
+	public static final KiwiGO<Item> SNOWFLAKE_BANNER_PATTERN = go(() -> new BannerPatternItem(SNOWFLAKE_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
 
 	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(() -> new SoundEvent(new ResourceLocation(FruitsMod.ID, "block.wooden_door.open")));
 	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(() -> new SoundEvent(new ResourceLocation(FruitsMod.ID, "block.wooden_door.close")));
@@ -274,7 +272,7 @@ public final class CoreModule extends AbstractModule {
 			.build("fruittrees:door");
 	/* on */
 
-	public static final WoodType CITRUS_WOODTYPE = WoodType.create("fruittrees_citrus");
+	public static final WoodType CITRUS_WOODTYPE = WoodType.create("fruittrees:citrus");
 	@NoItem
 	public static final KiwiGO<Block> CITRUS_SIGN = go(() -> new StandingSignBlock(blockProp(Blocks.OAK_SIGN), CITRUS_WOODTYPE));
 	@NoItem
@@ -290,18 +288,24 @@ public final class CoreModule extends AbstractModule {
 
 	private Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> TREES_CF;
 
+	public CoreModule() {
+		if (Platform.isPhysicalClient()) {
+			Sheets.addWoodType(CITRUS_WOODTYPE);
+		}
+	}
+
 	@Override
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
 			FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
-			pot.addPlant(MANDARIN_SAPLING.get().getRegistryName(), POTTED_MANDARIN);
-			pot.addPlant(LIME_SAPLING.get().getRegistryName(), POTTED_LIME);
-			pot.addPlant(CITRON_SAPLING.get().getRegistryName(), POTTED_CITRON);
-			pot.addPlant(POMELO_SAPLING.get().getRegistryName(), POTTED_POMELO);
-			pot.addPlant(ORANGE_SAPLING.get().getRegistryName(), POTTED_ORANGE);
-			pot.addPlant(LEMON_SAPLING.get().getRegistryName(), POTTED_LEMON);
-			pot.addPlant(GRAPEFRUIT_SAPLING.get().getRegistryName(), POTTED_GRAPEFRUIT);
-			pot.addPlant(APPLE_SAPLING.get().getRegistryName(), POTTED_APPLE);
+			pot.addPlant(MANDARIN_SAPLING.key(), POTTED_MANDARIN);
+			pot.addPlant(LIME_SAPLING.key(), POTTED_LIME);
+			pot.addPlant(CITRON_SAPLING.key(), POTTED_CITRON);
+			pot.addPlant(POMELO_SAPLING.key(), POTTED_POMELO);
+			pot.addPlant(ORANGE_SAPLING.key(), POTTED_ORANGE);
+			pot.addPlant(LEMON_SAPLING.key(), POTTED_LEMON);
+			pot.addPlant(GRAPEFRUIT_SAPLING.key(), POTTED_GRAPEFRUIT);
+			pot.addPlant(APPLE_SAPLING.key(), POTTED_APPLE);
 
 			VanillaActions.registerAxeConversion(CITRUS_LOG.get(), STRIPPED_CITRUS_LOG.get());
 			VanillaActions.registerAxeConversion(CITRUS_WOOD.get(), STRIPPED_CITRUS_WOOD.get());
@@ -339,12 +343,6 @@ public final class CoreModule extends AbstractModule {
 	}
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public void clientInit(ModelRegistryEvent event) {
-		Sheets.addWoodType(CITRUS_WOODTYPE);
-	}
-
-	@SubscribeEvent
 	protected void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerEntityRenderer(SLIDING_DOOR, SlidingDoorRenderer::new);
 	}
@@ -359,16 +357,16 @@ public final class CoreModule extends AbstractModule {
 			allFeatures[index + 3] = PlacementUtils.register("fruittrees:cherry_" + id, CherryFruitTypes.CHERRY.get().featureWG, VegetationPlacements.treePlacement(placement, CoreModule.LEMON_SAPLING.get()));
 		}
 	}
-
+/*
 	public static void insertFeatures(BiomeLoadingEvent event) {
 		if (!FruitsConfig.fruitTreesWorldGen) {
 			return;
 		}
 		ClimateSettings climate = event.getClimate();
-		if (climate.precipitation != Precipitation.RAIN) {
+		if (climate.precipitation() != Precipitation.RAIN) {
 			return;
 		}
-		if (climate.temperatureModifier == TemperatureModifier.FROZEN) {
+		if (climate.temperatureModifier() == TemperatureModifier.FROZEN) {
 			return;
 		}
 		BiomeCategory category = event.getCategory();
@@ -390,7 +388,7 @@ public final class CoreModule extends AbstractModule {
 		if (category != BiomeCategory.JUNGLE && Hooks.cherry) {
 			event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, allFeatures[i + 3]);
 		}
-	}
+	}*/
 
 	public static Holder<ConfiguredFeature<TreeConfiguration, ?>> buildTreeFeature(FruitType type, boolean worldGen, Supplier<Block> carpet) {
 		BlockStateProvider leavesProvider;
@@ -406,29 +404,29 @@ public final class CoreModule extends AbstractModule {
 			decorators = ImmutableList.of();
 			leavesProvider = BlockStateProvider.simple(type.leaves.get());
 		}
-		StringBuffer buf = new StringBuffer(type.getRegistryName().toString());
+		StringBuffer buf = new StringBuffer(FruitType.REGISTRY.getKey(type).toString());
 		if (worldGen) {
 			buf.append("_wg");
 		}
 		/* off */
-        return FeatureUtils.register(buf.toString(), Feature.TREE,
-                new TreeConfigurationBuilder(
-                        BlockStateProvider.simple(type.log.get()),
-                        new StraightTrunkPlacer(4, 2, 0),
-                        leavesProvider,
-                        new FruitBlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3),
-                        new TwoLayersFeatureSize(1, 0, 1)
-                )
-                .ignoreVines()
-                .decorators(decorators)
-                .build()
-        );
-        /* on */
+		return FeatureUtils.register(buf.toString(), Feature.TREE,
+				new TreeConfigurationBuilder(
+						BlockStateProvider.simple(type.log.get()),
+						new StraightTrunkPlacer(4, 2, 0),
+						leavesProvider,
+						new FruitBlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3),
+						new TwoLayersFeatureSize(1, 0, 1)
+				)
+						.ignoreVines()
+						.decorators(decorators)
+						.build()
+		);
+		/* on */
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void handleBlockColor(ColorHandlerEvent.Block event) {
+	public void handleBlockColor(RegisterColorHandlersEvent.Block event) {
 		BlockState oakLeaves = Blocks.OAK_LEAVES.defaultBlockState();
 		BlockColors blockColors = event.getBlockColors();
 		blockColors.register((state, world, pos, i) -> {
@@ -459,21 +457,20 @@ public final class CoreModule extends AbstractModule {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public void handleItemColor(ColorHandlerEvent.Item event) {
+	public void handleItemColor(RegisterColorHandlersEvent.Item event) {
 		ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
 		ItemColors itemColors = event.getItemColors();
-		itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES.get(), LIME_LEAVES.get(), CITRON_LEAVES.get(), POMELO_LEAVES.get(), ORANGE_LEAVES.get(), LEMON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), APPLE_LEAVES.get());
+		event.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES.get(), LIME_LEAVES.get(), CITRON_LEAVES.get(), POMELO_LEAVES.get(), ORANGE_LEAVES.get(), LEMON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), APPLE_LEAVES.get());
 	}
 
 	@Override
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		if (event.includeServer()) {
-			generator.addProvider(new KiwiLootTableProvider(generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
-			CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, event.getExistingFileHelper());
-			generator.addProvider(blockTagsProvider);
-			generator.addProvider(new CommonItemTagsProvider(generator, blockTagsProvider, event.getExistingFileHelper()));
-		}
+		boolean includeServer = event.includeServer();
+		generator.addProvider(includeServer, new KiwiLootTableProvider(generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
+		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, event.getExistingFileHelper());
+		generator.addProvider(includeServer, blockTagsProvider);
+		generator.addProvider(includeServer, new CommonItemTagsProvider(generator, blockTagsProvider, event.getExistingFileHelper()));
 	}
 
 }

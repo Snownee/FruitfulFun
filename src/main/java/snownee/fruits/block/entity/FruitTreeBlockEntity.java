@@ -6,12 +6,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
-import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.GameEvent.Message;
 import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.PositionSource;
 import snownee.fruits.CoreFruitTypes;
@@ -70,7 +69,7 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 
 	@Override
 	protected void saveAdditional(CompoundTag compound) {
-		compound.putString("type", Util.trimRL(type.getRegistryName(), FruitsMod.ID));
+		compound.putString("type", Util.trimRL(FruitType.REGISTRY.getKey(type), FruitsMod.ID));
 		compound.putInt("death", deathRate);
 		super.saveAdditional(compound);
 	}
@@ -104,17 +103,18 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 	}
 
 	@Override
-	public boolean handleGameEvent(Level level, GameEvent gameEvent, Entity entity, BlockPos pos) {
-		if (CoreModule.FRUIT_DROP.get().matches(gameEvent)) {
+	public boolean handleGameEvent(ServerLevel level, Message message) {
+		if (CoreModule.FRUIT_DROP.get().matches(message.gameEvent())) {
 			if (canDrop()) {
-				BlockState state = level.getBlockState(pos);
+				BlockState state = message.context().affectedState();
 				deathRate += 1;
+				BlockPos pos = new BlockPos(message.source());
 				// Do not remove block entity inside the loop of game event
 				CoreModule.FRUIT_DROP.get().runnable = FruitLeavesBlock.dropFruit(level, pos, state, getDeathRate());
 			}
 			CoreModule.FRUIT_DROP.get().swallow(this);
 			return true;
-		} else if (CoreModule.LEAVES_TRAMPLE.get().matches(gameEvent)) {
+		} else if (CoreModule.LEAVES_TRAMPLE.get().matches(message.gameEvent())) {
 			deathRate += 3;
 			CoreModule.LEAVES_TRAMPLE.get().swallow(this);
 			return true;

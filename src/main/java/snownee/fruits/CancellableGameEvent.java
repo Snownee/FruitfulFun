@@ -1,5 +1,7 @@
 package snownee.fruits;
 
+import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -16,10 +18,10 @@ public class CancellableGameEvent extends GameEvent {
 		super(id, radius);
 	}
 
-	public GameEventListener post(LevelAccessor level, BlockPos pos, @Nullable Entity entity) {
+	public GameEventListener post(LevelAccessor level, BlockPos pos, @Nullable Entity entity, @Nullable BlockState state) {
 		receiver = null;
 		try {
-			level.gameEvent(entity, this, pos);
+			level.gameEvent(this, pos, GameEvent.Context.of(entity, state));
 		} catch (Exception e) {
 			FruitsMod.logger.catching(e);
 		}

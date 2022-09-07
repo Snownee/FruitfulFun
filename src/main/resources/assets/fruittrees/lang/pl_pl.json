@@ -1,6 +1,6 @@
 {
   "fruittrees": "Drzewa owocowe",
-  
+
   "item.fruittrees.mandarin": "Mandarynka",
   "item.fruittrees.lime": "Limonka",
   "item.fruittrees.citron": "Cytron",
@@ -11,13 +11,13 @@
   "item.fruittrees.empowered_citron": "Wzmocniony cytron",
   "item.fruittrees.cherry": "Wiśnia",
   "item.fruittrees.redlove": "Jabłko Redlove",
-  
+
   "item.fruittrees.grapefruit_panna_cotta": "Grejpfrutowa Panna Cotta",
   "item.fruittrees.donauwelle": "Fale Dunaju",
   "item.fruittrees.honey_pomelo_tea": "Herbata z pomelo z miodem",
   "item.fruittrees.rice_with_fruits": "Ryż gotowany na parze z owocami w bambusie",
   "item.fruittrees.lemon_roast_chicken": "Pieczony kurczak z cebulą",
-  
+
   "item.fruittrees.heart_banner_pattern": "Wzór sztandaru",
   "item.fruittrees.heart_banner_pattern.desc": "Figura serca",
   "block.minecraft.banner.heart.white": "Biała figura serca",
@@ -54,7 +54,7 @@
   "block.minecraft.banner.snowflake.green": "Zielona figura płatka śniegu",
   "block.minecraft.banner.snowflake.red": "Czerwona figura płatka śniegu",
   "block.minecraft.banner.snowflake.black": "Czarna figura płatka śniegu",
-  
+
   "block.fruittrees.mandarin_sapling": "Sadzonka mandarynki",
   "block.fruittrees.lime_sapling": "Sadzonka limonki",
   "block.fruittrees.citron_sapling": "Sadzonka cytronu",
@@ -65,7 +65,7 @@
   "block.fruittrees.apple_sapling": "Sadzonka jabłoni",
   "block.fruittrees.cherry_sapling": "Sadzonka wiśni",
   "block.fruittrees.redlove_sapling": "Sadzonka jabłoni Redlove",
-  
+
   "block.fruittrees.potted_mandarin": "Sadzonka mandarynki w doniczce",
   "block.fruittrees.potted_lime": "Sadzonka limonki w doniczce",
   "block.fruittrees.potted_citron": "Sadzonka cytronu w doniczce",
@@ -76,7 +76,7 @@
   "block.fruittrees.potted_apple": "Sadzonka jabłoni w doniczce",
   "block.fruittrees.potted_cherry": "Sadzonka wiśni w doniczce",
   "block.fruittrees.potted_redlove": "Sadzonka jabłoni Redlove w doniczce",
-  
+
   "block.fruittrees.mandarin_leaves": "Liście mandarynki",
   "block.fruittrees.lime_leaves": "Liście limonki",
   "block.fruittrees.citron_leaves": "Liście cytronu",
@@ -87,10 +87,10 @@
   "block.fruittrees.apple_leaves": "Liście jabłoni",
   "block.fruittrees.cherry_leaves": "Liście wiśni",
   "block.fruittrees.redlove_leaves": "Liście jabłoni Redlove",
-  
+
   "block.fruittrees.cherry_carpet": "Opadłe liście wiśni",
   "block.fruittrees.redlove_carpet": "Opadłe liście jabłoni Redlove",
-  
+
   "block.fruittrees.citrus_log": "Cytrusowa kłoda",
   "block.fruittrees.citrus_wood": "Cytrusowe drewno",
   "block.fruittrees.stripped_citrus_log": "Okorowana cytrusowa kłoda",
@@ -105,7 +105,7 @@
   "block.fruittrees.citrus_door": "Cytrusowe drzwi",
   "block.fruittrees.citrus_trapdoor": "Cytrusowa klapa",
   "block.fruittrees.citrus_sign": "Cytrusowa tabliczka",
-  
+
   "block.fruittrees.cherry_log": "Wiśniowa kłoda",
   "block.fruittrees.cherry_wood": "Wiśniowe drewno",
   "block.fruittrees.stripped_cherry_log": "Okorowana wiśniowa kłoda",
@@ -121,21 +121,21 @@
   "block.fruittrees.cherry_sliding_door": "Wiśniowe przesuwne drzwi",
   "block.fruittrees.cherry_trapdoor": "Wiśniowa klapa",
   "block.fruittrees.cherry_sign": "Wiśniowa tabliczka",
-  
+
   "entity.fruittrees.sliding_door": "Przesuwne drzwi",
-  
+
   "gui.fruittrees.hybriding": "Zapylanie",
   "gui.fruittrees.tip.flowering": "%s (z kwiatami)",
-  
+
   "advancements.fruittrees.grapefruit.title": "Zapach cytrusa",
   "advancements.fruittrees.grapefruit.description": "Wyhoduj drzewo grejpfrutowa",
   "advancements.fruittrees.redlove.title": "Witamy w krainie wiśni",
   "advancements.fruittrees.redlove.description": "Wyhoduj jabłoń Redlove",
   "advancements.fruittrees.forestbat.title": "Przyspieszenie",
   "advancements.fruittrees.forestbat.description": "Spotkaj leśnego nietoperza",
-  
+
   "fruittrees.forestbat": "Leśny nietoperz",
-  
-  "config.waila.plugin_fruittrees": "Drzewa owocowe",
-  "config.waila.plugin_fruittrees.bee": "Pszczoła"
+
+  "config.jade.plugin_fruittrees": "Drzewa owocowe",
+  "config.jade.plugin_fruittrees.bee": "Pszczoła"
 }

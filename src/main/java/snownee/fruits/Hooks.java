@@ -11,6 +11,7 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -87,7 +88,7 @@ public final class Hooks {
 			list = new ListTag();
 			data.setTag("FruitsList", list);
 		}
-		String newPollen = type != null ? Util.trimRL(type.getRegistryName(), FruitsMod.ID) : "_" + Util.trimRL(block.getRegistryName());
+		String newPollen = type != null ? Util.trimRL(FruitType.REGISTRY.getKey(type), FruitsMod.ID) : "_" + Util.trimRL(Registry.BLOCK.getKey(block));
 		if (list.stream().anyMatch(e -> e.getAsString().equals(newPollen))) {
 			return;
 		}

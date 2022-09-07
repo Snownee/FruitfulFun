@@ -43,7 +43,7 @@ public class FoodItem extends ModItem {
 				ItemStack milk = Items.MILK_BUCKET.getDefaultInstance();
 				entity.getActiveEffectsMap().values().stream().filter($ -> !$.getEffect().isBeneficial() && $.isCurativeItem(milk)).map(MobEffectInstance::getEffect).toList().forEach(player::removeEffect);
 			}
-			level.gameEvent(entity, GameEvent.DRINKING_FINISH, entity.eyeBlockPosition());
+			entity.gameEvent(GameEvent.DRINK);
 			if (player == null || !player.getAbilities().instabuild) {
 				stack.shrink(1);
 			}

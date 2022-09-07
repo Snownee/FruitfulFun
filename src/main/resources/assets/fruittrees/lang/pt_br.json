@@ -11,7 +11,7 @@
 "item.fruittrees.empowered_citron": "Cidra Empoderado",
 "item.fruittrees.cherry": "Cereja",
 "item.fruittrees.redlove": "Maça Redlove",
-  
+
 "item.fruittrees.heart_banner_pattern": "Desenho Para Estandarte",
 "item.fruittrees.heart_banner_pattern.desc": "Coração",
 "block.minecraft.banner.heart.white": "Coração Branco",
@@ -81,7 +81,7 @@
 "block.fruittrees.apple_leaves": "Folhas de Macieira",
 "block.fruittrees.cherry_leaves": "Folhas de Cerejeira",
 "block.fruittrees.redlove_leaves": "Folhas de Macieira Redlove",
-  
+
 "block.fruittrees.cherry_carpet": "Tapete de Cerejeira",
 "block.fruittrees.redlove_carpet": "Tapete de Macieira Redlove",
 
@@ -116,7 +116,7 @@
 
 "gui.fruittrees.hybriding": "Polinização de Abelhas",
 "gui.fruittrees.tip.flowering": "%s (Floração)",
-  
+
 "advancements.fruittrees.grapefruit.title": "Fragrância cítrica",
 "advancements.fruittrees.grapefruit.description": "Hibridizar uma Toranjeira",
 "advancements.fruittrees.redlove.title": "Bem-vindo ao salão Sakura",
@@ -126,6 +126,5 @@
 
 "fruittrees.forestbat": "Morcego da Floresta",
 
-"config.waila.plugin_fruittrees": "Fruit Trees",
-"config.waila.plugin_fruittrees.bee": "Abelhas"
+"config.jade.plugin_fruittrees.bee": "Abelhas"
 }

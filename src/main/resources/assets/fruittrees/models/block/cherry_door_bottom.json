@@ -1,5 +1,5 @@
 {
-  "parent": "block/door_bottom",
+  "parent": "block/door_bottom_left",
   "textures": {
     "bottom": "block/fruittrees/cherry_door_lower",
     "top": "block/fruittrees/cherry_door_upper"

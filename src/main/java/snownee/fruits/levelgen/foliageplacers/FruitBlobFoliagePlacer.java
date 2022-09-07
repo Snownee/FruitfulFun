@@ -1,12 +1,12 @@
 package snownee.fruits.levelgen.foliageplacers;
 
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -33,7 +33,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 	}
 
 	@Override
-	protected void createFoliage(LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, Random pRandom, TreeConfiguration pConfig, int pMaxFreeTreeHeight, FoliageAttachment pAttachment, int pFoliageHeight, int pFoliageRadius, int pOffset) {
+	protected void createFoliage(LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, RandomSource pRandom, TreeConfiguration pConfig, int pMaxFreeTreeHeight, FoliageAttachment pAttachment, int pFoliageHeight, int pFoliageRadius, int pOffset) {
 		for (int i = pOffset; i >= pOffset - pFoliageHeight; --i) {
 			int j = Math.max(pFoliageRadius + pAttachment.radiusOffset() - 1 - i / 2, 0);
 			placeLeavesRow(pLevel, pBlockSetter, pRandom, pConfig, pAttachment.pos(), j, i, pAttachment.doubleTrunk());
@@ -49,7 +49,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 
 	// Here we replaced TreeFeature.validTreePos to avoid our FruitTreeBlockEntity being replaced
 	@Override
-	protected void placeLeavesRow(LevelSimulatedReader p_161438_, BiConsumer<BlockPos, BlockState> p_161439_, Random p_161440_, TreeConfiguration p_161441_, BlockPos p_161442_, int p_161443_, int p_161444_, boolean p_161445_) {
+	protected void placeLeavesRow(LevelSimulatedReader p_161438_, BiConsumer<BlockPos, BlockState> p_161439_, RandomSource p_161440_, TreeConfiguration p_161441_, BlockPos p_161442_, int p_161443_, int p_161444_, boolean p_161445_) {
 		int i = p_161445_ ? 1 : 0;
 		BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
@@ -63,7 +63,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 		}
 	}
 
-	protected static void tryPlaceLeaf(LevelSimulatedReader p_161432_, BiConsumer<BlockPos, BlockState> p_161433_, Random p_161434_, TreeConfiguration p_161435_, BlockPos p_161436_) {
+	protected static void tryPlaceLeaf(LevelSimulatedReader p_161432_, BiConsumer<BlockPos, BlockState> p_161433_, RandomSource p_161434_, TreeConfiguration p_161435_, BlockPos p_161436_) {
 		if (validTreePos(p_161432_, p_161436_)) {
 			p_161433_.accept(p_161436_, p_161435_.foliageProvider.getState(p_161434_, p_161436_));
 		}

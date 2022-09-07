@@ -10,12 +10,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.kiwi.KiwiGO;
 
-public class FruitType extends ForgeRegistryEntry<FruitType> {
+public class FruitType {
 
 	public static IForgeRegistry<FruitType> REGISTRY;
 

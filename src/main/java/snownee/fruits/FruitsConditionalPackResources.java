@@ -2,11 +2,11 @@ package snownee.fruits;
 
 import snownee.kiwi.loader.Platform;
 
-public class FruitsConditionalResourcePack extends ConditionalResourcePack {
+public class FruitsConditionalPackResources extends ConditionalPackResources {
 
 	boolean farmersdelight = Platform.isModLoaded("farmersdelight");
 
-	public FruitsConditionalResourcePack() {
+	public FruitsConditionalPackResources() {
 		super(FruitsMod.ID);
 	}
 

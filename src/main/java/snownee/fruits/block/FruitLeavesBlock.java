@@ -1,12 +1,12 @@
 package snownee.fruits.block;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -58,12 +58,12 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
 		super(properties);
 		this.type = type;
-		registerDefaultState(stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1));
+		registerDefaultState(stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1).setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(DISTANCE, PERSISTENT, AGE);
+		builder.add(DISTANCE, PERSISTENT, AGE, WATERLOGGED);
 	}
 
 	@Override
@@ -72,12 +72,12 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+	public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
 		return state.getValue(AGE) != 3;
 	}
 
 	@Override
-	public void performBonemeal(ServerLevel world, Random rand, BlockPos pos, BlockState state) {
+	public void performBonemeal(ServerLevel world, RandomSource rand, BlockPos pos, BlockState state) {
 		world.setBlockAndUpdate(pos, state.cycle(AGE));
 	}
 
@@ -116,7 +116,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
 		if (shouldDecay(state)) {
 			dropResources(state, world, pos);
 			world.removeBlock(pos, false);
@@ -134,7 +134,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				if (mode == DropMode.NO_DROP) {
 					return;
 				}
-				GameEventListener receiver = CoreModule.FRUIT_DROP.get().post(world, pos, null);
+				GameEventListener receiver = CoreModule.FRUIT_DROP.get().post(world, pos, null, state);
 				if (receiver == null) {
 					dropFruit(world, pos, state, 0.6F).get();
 				}
@@ -146,7 +146,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
 		state = updateDistance(state, world, pos);
 		if (state.getValue(PERSISTENT) && state.getValue(DISTANCE) != 1) {
 			state = state.setValue(PERSISTENT, false);
@@ -195,7 +195,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public void fallOn(Level worldIn, BlockState stateIn, BlockPos pos, Entity entityIn, float fallDistance) {
 		super.fallOn(worldIn, stateIn, pos, entityIn, fallDistance);
 		if (!worldIn.isClientSide && fallDistance >= 1 && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
-			GameEventListener receiver = CoreModule.LEAVES_TRAMPLE.get().post(worldIn, pos, entityIn);
+			GameEventListener receiver = CoreModule.LEAVES_TRAMPLE.get().post(worldIn, pos, entityIn, stateIn);
 			float deathRate = 1;
 			if (receiver instanceof FruitTreeBlockEntity) {
 				deathRate = ((FruitTreeBlockEntity) receiver).getDeathRate();
@@ -229,7 +229,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		if (entity instanceof FlyingAnimal) {
 			return BlockPathTypes.OPEN;
 		}
@@ -249,9 +249,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public <T extends BlockEntity> GameEventListener getListener(Level level, T blockEntity) {
-		if (level.isClientSide)
-			return null;
+	public <T extends BlockEntity> GameEventListener getListener(ServerLevel level, T blockEntity) {
 		return blockEntity instanceof FruitTreeBlockEntity ? (FruitTreeBlockEntity) blockEntity : null;
 	}
 }

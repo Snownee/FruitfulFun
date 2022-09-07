@@ -2,6 +2,8 @@ package snownee.fruits;
 
 import java.util.function.Supplier;
 
+import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -21,8 +23,8 @@ public class FruitDropGameEvent extends CancellableGameEvent {
 	}
 
 	@Override
-	public GameEventListener post(LevelAccessor level, BlockPos pos, @Nullable Entity entity) {
-		GameEventListener listener = super.post(level, pos, entity);
+	public GameEventListener post(LevelAccessor level, BlockPos pos, @Nullable Entity entity, @Nullable BlockState state) {
+		GameEventListener listener = super.post(level, pos, entity, state);
 		if (runnable != null) {
 			ItemEntity itemEntity = runnable.get();
 			runnable = null;

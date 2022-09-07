@@ -3,8 +3,7 @@ package snownee.fruits;
 import java.util.function.Consumer;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
@@ -23,7 +22,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.AddPackFindersEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.NewRegistryEvent;
@@ -37,22 +36,22 @@ public final class FruitsEvents {
 	public static void addPackFinder(AddPackFindersEvent event) {
 		if (event.getPackType() == PackType.SERVER_DATA) {
 			event.addRepositorySource((Consumer<Pack> consumer, Pack.PackConstructor constructor) -> {
-				PackMetadataSection section = new PackMetadataSection(new TextComponent("Fruit Trees Conditional Resources"), 9);
-				consumer.accept(constructor.create("mod:fruittrees:conditional", new TextComponent(FruitsMod.NAME), true, FruitsConditionalResourcePack::new, section, Position.TOP, PackSource.DEFAULT, true));
+				PackMetadataSection section = new PackMetadataSection(Component.literal("Fruit Trees Conditional Resources"), 9);
+				consumer.accept(constructor.create("mod:fruittrees:conditional", Component.literal(FruitsMod.NAME), true, FruitsConditionalPackResources::new, section, Position.TOP, PackSource.DEFAULT, true));
 			});
 		}
 	}
 
 	public static void newRegistry(NewRegistryEvent event) {
-		event.create(new RegistryBuilder<FruitType>().setName(new ResourceLocation(FruitsMod.ID, "fruit_type")).setType(FruitType.class), v -> {
+		event.create(new RegistryBuilder<FruitType>().setName(new ResourceLocation(FruitsMod.ID, "fruit_type")), v -> {
 			FruitType.REGISTRY = v;
-			Kiwi.registerRegistry(FruitType.REGISTRY, FruitType.class);
+			Kiwi.registerRegistry(v, FruitType.class);
 		});
 	}
 
 	@SubscribeEvent
-	public static void onLightningBolt(EntityJoinWorldEvent event) {
-		Level world = event.getWorld();
+	public static void onLightningBolt(EntityJoinLevelEvent event) {
+		Level world = event.getLevel();
 		Entity entity = event.getEntity();
 		if (world.isClientSide || !(entity instanceof LightningBolt)) {
 			return;
@@ -76,7 +75,7 @@ public final class FruitsEvents {
 					Bat bat = new Bat(EntityType.BAT, world);
 					bat.setPos(pos2.getX() + d0, pos2.getY() + d1, pos2.getZ() + d2);
 					bat.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 10));
-					bat.setCustomName(new TranslatableComponent("fruittrees.forestbat"));
+					bat.setCustomName(Component.translatable("fruittrees.forestbat"));
 					bat.setCustomNameVisible(true);
 					world.addFreshEntity(bat);
 				}

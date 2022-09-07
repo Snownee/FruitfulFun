@@ -1,57 +1,51 @@
 package snownee.fruits.plugin.jade;
 
-import mcp.mobius.waila.api.Accessor;
-import mcp.mobius.waila.api.EntityAccessor;
-import mcp.mobius.waila.api.IWailaClientRegistration;
-import mcp.mobius.waila.api.IWailaCommonRegistration;
-import mcp.mobius.waila.api.IWailaPlugin;
-import mcp.mobius.waila.api.TooltipPosition;
-import mcp.mobius.waila.api.WailaPlugin;
-import mcp.mobius.waila.api.event.WailaRayTraceEvent;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.world.phys.HitResult;
 import snownee.fruits.FruitsMod;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
+import snownee.jade.api.Accessor;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaCommonRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
-public class JadePlugin implements IWailaPlugin {
+public class JadeCompat implements IWailaPlugin {
 
-	static final ResourceLocation ITEM = new ResourceLocation("item");
 	public static final ResourceLocation BEE = new ResourceLocation(FruitsMod.ID, "bee");
 	private static IWailaClientRegistration client;
-
-	public JadePlugin() {
-		MinecraftForge.EVENT_BUS.addListener(this::override);
-	}
 
 	@Override
 	public void register(IWailaCommonRegistration registration) {
 		registration.registerEntityDataProvider(BeePollenProvider.INSTANCE, Bee.class);
-		registration.addConfig(BEE, true);
 	}
 
 	@Override
 	public void registerClient(IWailaClientRegistration registration) {
-		registration.registerComponentProvider(BeePollenProvider.INSTANCE, TooltipPosition.BODY, Bee.class);
+		registration.registerEntityComponent(BeePollenProvider.INSTANCE, Bee.class);
+		registration.addRayTraceCallback(this::override);
 		client = registration;
 	}
 
-	private void override(WailaRayTraceEvent event) {
-		Accessor<?> accessor = event.getAccessor();
+	private @Nullable Accessor<?> override(HitResult hit, @Nullable Accessor<?> accessor, @Nullable Accessor<?> original) {
 		if (accessor instanceof EntityAccessor) {
 			Entity entity = ((EntityAccessor) accessor).getEntity();
 			if (entity instanceof SlidingDoorEntity) {
 				BlockPos pos = ((SlidingDoorEntity) entity).doorPos;
 				Level level = accessor.getLevel();
 				BlockHitResult hitResult = new BlockHitResult(accessor.getHitResult().getLocation(), accessor.getPlayer().getDirection().getOpposite(), pos, false);
-				accessor = client.createBlockAccessor(level.getBlockState(pos), null, level, accessor.getPlayer(), accessor.getServerData(), hitResult, accessor.isServerConnected());
-				event.setAccessor(accessor);
+				return client.blockAccessor().blockState(level.getBlockState(pos)).level(level).player(accessor.getPlayer()).hit(hitResult).build();
 			}
 		}
+		return accessor;
 	}
 }

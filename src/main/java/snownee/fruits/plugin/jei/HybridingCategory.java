@@ -18,12 +18,12 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
@@ -37,7 +37,7 @@ import snownee.fruits.hybridization.HybridingRecipe;
 
 public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 
-	private final TranslatableComponent localizedName;
+	private final Component localizedName;
 	private final IDrawable icon;
 	private final IDrawable background;
 	private final IGuiHelper guiHelper;
@@ -51,8 +51,8 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	//InventoryScreen.renderEntityInInventory
 	public HybridingCategory(IGuiHelper guiHelper) {
 		this.guiHelper = guiHelper;
-		localizedName = new TranslatableComponent("gui.fruittrees.hybriding");
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, CoreModule.GRAPEFRUIT.itemStack());
+		localizedName = Component.translatable("gui.fruittrees.hybriding");
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, CoreModule.GRAPEFRUIT.itemStack());
 		background = guiHelper.createBlankDrawable(width, height);
 		float f = (float) Math.atan(1000 / 40.0F);
 		float f1 = (float) Math.atan(-10 / 40.0F);
@@ -88,7 +88,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 
 		matrix.pushPose();
 
-		matrix.translate(70, 24, 0);
+		matrix.translate(70, 24, 100);
 		matrix.scale(20, 20, -20);
 
 		float f1 = (float) Math.atan(-10 / 40.0F);
@@ -113,11 +113,6 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 		//		Lighting.setupFor3DItems();
 
 		matrix.popPose();
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return JEIPlugin.UID;
 	}
 
 	public static ItemStack asItem(Either<FruitType, Block> either) {
@@ -149,7 +144,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 			IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, x, y).addItemStack(input).setBackground(guiHelper.getSlotDrawable(), -1, -1);
 			if (input.is(ItemTags.LEAVES)) {
 				slot.addTooltipCallback((IRecipeSlotView view, List<Component> tooltip) -> {
-					Component line = new TranslatableComponent("gui.fruittrees.tip.flowering", tooltip.get(0));
+					Component line = Component.translatable("gui.fruittrees.tip.flowering", tooltip.get(0));
 					tooltip.set(0, line);
 				});
 			}
@@ -166,8 +161,8 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	}
 
 	@Override
-	public Class<? extends HybridingRecipe> getRecipeClass() {
-		return HybridingRecipe.class;
+	public RecipeType<HybridingRecipe> getRecipeType() {
+		return JEICompat.RECIPE_TYPE;
 	}
 
 }

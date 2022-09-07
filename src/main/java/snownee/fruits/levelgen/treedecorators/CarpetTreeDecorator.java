@@ -1,7 +1,5 @@
 package snownee.fruits.levelgen.treedecorators;
 
-import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 import com.mojang.serialization.Codec;
@@ -34,16 +32,16 @@ public class CarpetTreeDecorator extends TreeDecorator {
 	}
 
 	@Override
-	public void place(LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, Random pRandom, List<BlockPos> pLogPositions, List<BlockPos> pLeafPositions) {
-		if (pLeafPositions.isEmpty()) {
+	public void place(Context context) {
+		if (context.leaves().isEmpty()) {
 			return;
 		}
-		int y = pLeafPositions.get(0).getY() + 1;
-		for (BlockPos pos : pLeafPositions) {
+		int y = context.leaves().get(0).getY() + 1;
+		for (BlockPos pos : context.leaves()) {
 			if (pos.getY() > y) {
 				break;
 			}
-			placeCarpet(pLevel, pos, carpetProvider.getState(pRandom, pos), pBlockSetter);
+			placeCarpet(context.level(), pos, carpetProvider.getState(context.random(), pos), context::setBlock);
 		}
 	}
 

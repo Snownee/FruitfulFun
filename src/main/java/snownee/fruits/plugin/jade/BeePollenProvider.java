@@ -5,16 +5,10 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 
-import mcp.mobius.waila.api.EntityAccessor;
-import mcp.mobius.waila.api.IEntityComponentProvider;
-import mcp.mobius.waila.api.IServerDataProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
-import mcp.mobius.waila.api.ui.IElement;
-import mcp.mobius.waila.api.ui.IElementHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
@@ -23,6 +17,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.FruitType;
 import snownee.fruits.Hooks;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IEntityComponentProvider;
+import snownee.jade.api.IServerDataProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.IElement;
+import snownee.jade.api.ui.IElementHelper;
 import snownee.kiwi.util.NBTHelper;
 
 public class BeePollenProvider implements IEntityComponentProvider, IServerDataProvider<Entity> {
@@ -31,7 +32,7 @@ public class BeePollenProvider implements IEntityComponentProvider, IServerDataP
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-		if (!config.get(JadePlugin.BEE) || !(accessor.getEntity() instanceof Bee)) {
+		if (!config.get(JadeCompat.BEE) || !(accessor.getEntity() instanceof Bee)) {
 			return;
 		}
 		CompoundTag data = accessor.getServerData();
@@ -58,6 +59,11 @@ public class BeePollenProvider implements IEntityComponentProvider, IServerDataP
 				tag.put("pollen", list);
 			}
 		}
+	}
+
+	@Override
+	public ResourceLocation getUid() {
+		return JadeCompat.BEE;
 	}
 
 }

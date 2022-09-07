@@ -1,27 +1,32 @@
 package snownee.fruits.plugin.jei;
 
+import java.util.List;
+
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitsConfig;
 import snownee.fruits.FruitsMod;
+import snownee.fruits.hybridization.HybridingRecipe;
 import snownee.fruits.hybridization.Hybridization;
 
 @JeiPlugin
-public class JEIPlugin implements IModPlugin {
+public class JEICompat implements IModPlugin {
 
 	public static final ResourceLocation UID = new ResourceLocation(FruitsMod.ID, "hybriding");
+	public static final RecipeType<HybridingRecipe> RECIPE_TYPE = new RecipeType<>(UID, HybridingRecipe.class);
 
 	@Override
 	public ResourceLocation getPluginUid() {
@@ -40,7 +45,7 @@ public class JEIPlugin implements IModPlugin {
 		if (Registry.RECIPE_TYPE.containsKey(UID)) {
 			ClientLevel world = Minecraft.getInstance().level;
 			RecipeManager recipeManager = world.getRecipeManager();
-			registration.addRecipes(recipeManager.byType(Hybridization.RECIPE_TYPE).values(), UID);
+			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.byType(Hybridization.RECIPE_TYPE).values()));
 		}
 
 		if (FruitsConfig.appleSaplingFromHeroOfTheVillage || FruitsConfig.villageAppleTreeWorldGen) {
@@ -55,7 +60,7 @@ public class JEIPlugin implements IModPlugin {
 				info += I18n.get("gui.fruittrees.tip.villageAppleTreeWorldGen");
 			}
 			ItemStack appleSapling = CoreModule.APPLE_SAPLING.itemStack();
-			registration.addIngredientInfo(appleSapling, VanillaTypes.ITEM, new TextComponent(info));
+			registration.addIngredientInfo(appleSapling, VanillaTypes.ITEM_STACK, Component.literal(info));
 		}
 	}
 }
