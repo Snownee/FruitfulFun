@@ -43,9 +43,9 @@ public class FruitType {
 	}
 
 	void makeFeature() {
-		feature = CoreModule.buildTreeFeature(this, false, null);
+		feature = CoreModule.makeConfiguredFeature(this, false, null);
 		if (tier == 0)
-			featureWG = CoreModule.buildTreeFeature(this, true, carpet);
+			featureWG = CoreModule.makeConfiguredFeature(this, true, carpet);
 	}
 
 }

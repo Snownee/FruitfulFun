@@ -33,6 +33,7 @@ public class JEICompat implements IModPlugin {
 		return UID;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		if (Registry.RECIPE_TYPE.containsKey(UID)) {
@@ -40,6 +41,7 @@ public class JEICompat implements IModPlugin {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		if (Registry.RECIPE_TYPE.containsKey(UID)) {

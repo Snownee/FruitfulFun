@@ -1,10 +1,16 @@
 package snownee.fruits;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
@@ -13,12 +19,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
@@ -33,6 +44,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -52,6 +64,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleRandomFeatureConfiguration;
@@ -72,8 +85,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.JsonCodecProvider;
+import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.grower.FruitTreeGrower;
@@ -83,6 +101,7 @@ import snownee.fruits.cherry.client.SlidingDoorRenderer;
 import snownee.fruits.datagen.CommonBlockTagsProvider;
 import snownee.fruits.datagen.CommonItemTagsProvider;
 import snownee.fruits.datagen.CoreBlockLoot;
+import snownee.fruits.levelgen.MultiFilteredAddFeaturesBiomeModifier;
 import snownee.fruits.levelgen.foliageplacers.FruitBlobFoliagePlacer;
 import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 import snownee.kiwi.AbstractModule;
@@ -97,7 +116,6 @@ import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
-import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
@@ -286,6 +304,14 @@ public final class CoreModule extends AbstractModule {
 	public static final KiwiGO<FruitDropGameEvent> FRUIT_DROP = go(() -> new FruitDropGameEvent("fruittrees:fruit_drop", 6));
 	public static final KiwiGO<CancellableGameEvent> LEAVES_TRAMPLE = go(() -> new CancellableGameEvent("fruittrees:leaves_trample", 6));
 
+	public static final KiwiGO<Codec<MultiFilteredAddFeaturesBiomeModifier>> ADD_FEATURES = go(() -> RecordCodecBuilder.create(builder -> builder.group(
+	/* off */
+			Codec.list(Biome.LIST_CODEC).fieldOf("requires").forGetter(MultiFilteredAddFeaturesBiomeModifier::requires),
+			Codec.list(Biome.LIST_CODEC).fieldOf("excludes").forGetter(MultiFilteredAddFeaturesBiomeModifier::excludes),
+			PlacedFeature.LIST_CODEC.fieldOf("features").forGetter(MultiFilteredAddFeaturesBiomeModifier::features),
+			GenerationStep.Decoration.CODEC.fieldOf("step").forGetter(MultiFilteredAddFeaturesBiomeModifier::step)
+	).apply(builder, MultiFilteredAddFeaturesBiomeModifier::new)), () -> ForgeRegistries.BIOME_MODIFIER_SERIALIZERS.get());
+	/* on */
 	private Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> TREES_CF;
 
 	public CoreModule() {
@@ -315,31 +341,27 @@ public final class CoreModule extends AbstractModule {
 				VanillaActions.registerCompostable(0.3f, type.sapling.get());
 				VanillaActions.registerVillagerPickupable(type.fruit.get());
 				VanillaActions.registerVillagerCompostable(type.fruit.get());
-
-				type.makeFeature();
 			}
-
-			if (FruitsConfig.fruitTreesWorldGen) {
-				List<Holder<PlacedFeature>> list = Lists.newArrayList();
-				for (KiwiGO<FruitType> type : List.of(CoreFruitTypes.CITRON, CoreFruitTypes.LIME, CoreFruitTypes.MANDARIN)) {
-					if (type.get().featureWG != null) {
-						list.add(PlacementUtils.inlinePlaced(type.get().featureWG));
-					}
-				}
-				TREES_CF = FeatureUtils.register("fruittrees:base_trees", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(list)));
-				allFeatures = new Holder[Hooks.cherry ? 5 : 3];
-
-				makePlacedFeature("002", FruitsConfig.treesGenChunksInPlains, 0);
-				makePlacedFeature("005", FruitsConfig.treesGenChunksInForest, 1);
-				makePlacedFeature("1", FruitsConfig.treesGenChunksInJungle, 2);
-			}
-
+			registerConfiguredFeatures();
 			WoodType.register(CITRUS_WOODTYPE);
 		}).whenComplete((v, ex) -> {
 			if (ex != null)
 				FruitsMod.logger.catching(ex);
 		}); // WTF??? workaround handle it
+	}
 
+	private void registerConfiguredFeatures() {
+		for (FruitType type : FruitType.REGISTRY.getValues()) {
+			type.makeFeature();
+		}
+
+		List<Holder<PlacedFeature>> list = Lists.newArrayList();
+		for (KiwiGO<FruitType> type : List.of(CoreFruitTypes.CITRON, CoreFruitTypes.LIME, CoreFruitTypes.MANDARIN)) {
+			if (type.get().featureWG != null) {
+				list.add(PlacementUtils.inlinePlaced(type.get().featureWG));
+			}
+		}
+		TREES_CF = FeatureUtils.register("fruittrees:base_trees", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(list)));
 	}
 
 	@SubscribeEvent
@@ -347,17 +369,13 @@ public final class CoreModule extends AbstractModule {
 		event.registerEntityRenderer(SLIDING_DOOR, SlidingDoorRenderer::new);
 	}
 
-	private static Holder<PlacedFeature>[] allFeatures;
-
-	private void makePlacedFeature(String id, int chunks, int index) {
+	private void makePlacedFeature(String id, int chunks, Holder<ConfiguredFeature<?, ?>> cf, Map<ResourceLocation, PlacedFeature> registry) {
 		SimpleWeightedRandomList<IntProvider> simpleweightedrandomlist = SimpleWeightedRandomList.<IntProvider>builder().add(ConstantInt.of(0), chunks - 1).add(ConstantInt.of(1), 1).build();
 		CountPlacement placement = CountPlacement.of(new WeightedListInt(simpleweightedrandomlist));
-		allFeatures[index] = PlacementUtils.register("fruittrees:trees_" + id, TREES_CF, VegetationPlacements.treePlacement(placement, CoreModule.LEMON_SAPLING.get()));
-		if (index != 2 && Hooks.cherry) { //TODO hardcode
-			allFeatures[index + 3] = PlacementUtils.register("fruittrees:cherry_" + id, CherryFruitTypes.CHERRY.get().featureWG, VegetationPlacements.treePlacement(placement, CoreModule.LEMON_SAPLING.get()));
-		}
+		registry.put(RL(id), new PlacedFeature(cf, VegetationPlacements.treePlacement(placement, CoreModule.LEMON_SAPLING.get())));
 	}
-/*
+
+	/*
 	public static void insertFeatures(BiomeLoadingEvent event) {
 		if (!FruitsConfig.fruitTreesWorldGen) {
 			return;
@@ -390,7 +408,7 @@ public final class CoreModule extends AbstractModule {
 		}
 	}*/
 
-	public static Holder<ConfiguredFeature<TreeConfiguration, ?>> buildTreeFeature(FruitType type, boolean worldGen, Supplier<Block> carpet) {
+	public static Holder<ConfiguredFeature<TreeConfiguration, ?>> makeConfiguredFeature(FruitType type, boolean worldGen, Supplier<Block> carpet) {
 		BlockStateProvider leavesProvider;
 		List<TreeDecorator> decorators;
 		if (worldGen) {
@@ -417,9 +435,9 @@ public final class CoreModule extends AbstractModule {
 						new FruitBlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3),
 						new TwoLayersFeatureSize(1, 0, 1)
 				)
-						.ignoreVines()
-						.decorators(decorators)
-						.build()
+				.ignoreVines()
+				.decorators(decorators)
+				.build()
 		);
 		/* on */
 	}
@@ -429,7 +447,7 @@ public final class CoreModule extends AbstractModule {
 	public void handleBlockColor(RegisterColorHandlersEvent.Block event) {
 		BlockState oakLeaves = Blocks.OAK_LEAVES.defaultBlockState();
 		BlockColors blockColors = event.getBlockColors();
-		blockColors.register((state, world, pos, i) -> {
+		event.register((state, world, pos, i) -> {
 			if (i == 0) {
 				return blockColors.getColor(oakLeaves, world, pos, i);
 			}
@@ -467,10 +485,49 @@ public final class CoreModule extends AbstractModule {
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		boolean includeServer = event.includeServer();
+		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 		generator.addProvider(includeServer, new KiwiLootTableProvider(generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
-		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, event.getExistingFileHelper());
+		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, existingFileHelper);
 		generator.addProvider(includeServer, blockTagsProvider);
-		generator.addProvider(includeServer, new CommonItemTagsProvider(generator, blockTagsProvider, event.getExistingFileHelper()));
+		generator.addProvider(includeServer, new CommonItemTagsProvider(generator, blockTagsProvider, existingFileHelper));
+
+		registerConfiguredFeatures();
+		RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());
+		var citrusCF = ops.registry(Registry.CONFIGURED_FEATURE_REGISTRY).get().getOrCreateHolderOrThrow(TREES_CF.unwrapKey().get().cast(Registry.CONFIGURED_FEATURE_REGISTRY).get());
+		var cherryCF = ops.registry(Registry.CONFIGURED_FEATURE_REGISTRY).get().getOrCreateHolderOrThrow(CherryFruitTypes.CHERRY.get().featureWG.unwrapKey().get().cast(Registry.CONFIGURED_FEATURE_REGISTRY).get());
+		Map<ResourceLocation, PlacedFeature> allPlaced = Maps.newHashMap();
+		makePlacedFeature("citrus_002", 500, citrusCF, allPlaced);
+		makePlacedFeature("citrus_005", 200, citrusCF, allPlaced);
+		makePlacedFeature("citrus_1", 10, citrusCF, allPlaced);
+		makePlacedFeature("cherry_002", 500, cherryCF, allPlaced);
+		makePlacedFeature("cherry_005", 200, cherryCF, allPlaced);
+		generator.addProvider(includeServer, forDataPackRegistry(generator, existingFileHelper, ops, Registry.PLACED_FEATURE_REGISTRY, allPlaced));
+
+		var biomes = ops.registry(Registry.BIOME_REGISTRY).get();
+		var plains = biomes.getOrCreateTag(Tags.Biomes.IS_PLAINS);
+		var forest = biomes.getOrCreateTag(BiomeTags.IS_FOREST);
+		var jungle = biomes.getOrCreateTag(BiomeTags.IS_JUNGLE);
+		var cold = biomes.getOrCreateTag(Tags.Biomes.IS_COLD);
+		var magical = biomes.getOrCreateTag(Tags.Biomes.IS_MAGICAL);
+		var mushroom = biomes.getOrCreateTag(Tags.Biomes.IS_MUSHROOM);
+		var dead = biomes.getOrCreateTag(Tags.Biomes.IS_DEAD);
+		var dry = biomes.getOrCreateTag(Tags.Biomes.IS_DRY);
+		List<HolderSet<Biome>> excludes = List.of(cold, magical, mushroom, dead, dry);
+
+		/* off */
+		Map<ResourceLocation, BiomeModifier> modifiers = Map.of(
+						RL("citrus_plains"), new MultiFilteredAddFeaturesBiomeModifier(List.of(plains), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("citrus_002"))), GenerationStep.Decoration.VEGETAL_DECORATION),
+						RL("citrus_forest"), new MultiFilteredAddFeaturesBiomeModifier(List.of(forest), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("citrus_005"))), GenerationStep.Decoration.VEGETAL_DECORATION),
+						RL("citrus_jungle"), new MultiFilteredAddFeaturesBiomeModifier(List.of(jungle), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("citrus_1"))), GenerationStep.Decoration.VEGETAL_DECORATION),
+						RL("cherry_plains"), new MultiFilteredAddFeaturesBiomeModifier(List.of(plains), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("cherry_002"))), GenerationStep.Decoration.VEGETAL_DECORATION),
+						RL("cherry_forest"), new MultiFilteredAddFeaturesBiomeModifier(List.of(forest), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("cherry_005"))), GenerationStep.Decoration.VEGETAL_DECORATION)
+				);
+		/* on */
+		generator.addProvider(includeServer, forDataPackRegistry(generator, existingFileHelper, ops, ForgeRegistries.Keys.BIOME_MODIFIERS, modifiers));
+	}
+
+	private static <T> DataProvider forDataPackRegistry(DataGenerator dataGenerator, ExistingFileHelper existingFileHelper, RegistryOps<JsonElement> registryOps, ResourceKey<Registry<T>> registryKey, Map<ResourceLocation, T> idToObjectMap) {
+		return JsonCodecProvider.forDatapackRegistry(dataGenerator, existingFileHelper, FruitsMod.ID, registryOps, registryKey, idToObjectMap);
 	}
 
 }

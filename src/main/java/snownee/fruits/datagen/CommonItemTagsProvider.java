@@ -14,6 +14,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FruitsMod;
 import snownee.kiwi.datagen.provider.TagsProviderHelper;
 
@@ -28,6 +29,7 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 
 	static final TagKey<Item> CITRUS_LOGS = ItemTags.create(new ResourceLocation(FruitsMod.ID, "citrus_logs"));
 	static final TagKey<Item> CHERRY_LOGS = ItemTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
+//	static final TagKey<Item> ALL_LEAVES = ItemTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
 	static final TagKey<Item> FRUITS = ItemTags.create(new ResourceLocation("forge:fruits"));
 
 	@Override
@@ -42,7 +44,7 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 		copy(BlockTags.WOODEN_PRESSURE_PLATES, ItemTags.WOODEN_PRESSURE_PLATES);
 		copy(BlockTags.SAPLINGS, ItemTags.SAPLINGS);
 		copy(BlockTags.STANDING_SIGNS, ItemTags.SIGNS);
-		copy(BlockTags.LEAVES, ItemTags.LEAVES);
+		copy(CoreModule.ALL_LEAVES, ItemTags.LEAVES);
 		copy(Tags.Blocks.FENCE_GATES_WOODEN, Tags.Items.FENCE_GATES_WOODEN);
 
 		copy(CommonBlockTagsProvider.CITRUS_LOGS, CITRUS_LOGS);

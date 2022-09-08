@@ -9,27 +9,20 @@ import snownee.kiwi.config.KiwiConfig.Range;
 @KiwiConfig
 public final class FruitsConfig {
 
-	public enum DropMode {
-		NO_DROP, INDEPENDENT, ONE_BY_ONE
-	}
+    public enum DropMode {
+        NO_DROP, INDEPENDENT, ONE_BY_ONE
+    }
 
-	@Range(min = 0, max = 100)
-	public static int growingSpeed = 5;
-	public static DropMode fruitDropModeSingleplayer = DropMode.INDEPENDENT;
-	public static DropMode fruitDropModeMultiplayer = DropMode.ONE_BY_ONE;
-	public static boolean appleSaplingFromHeroOfTheVillage = true;
-	@LevelRestart
-	public static boolean villageAppleTreeWorldGen = true;
-	public static boolean fruitTreesWorldGen = true;
-	@Range(min = 2, max = 10000)
-	public static int treesGenChunksInPlains = 500;
-	@Range(min = 2, max = 10000)
-	public static int treesGenChunksInForest = 200;
-	@Range(min = 2, max = 10000)
-	public static int treesGenChunksInJungle = 10;
+    @Range(min = 0, max = 100)
+    public static int growingSpeed = 5;
+    public static DropMode fruitDropModeSingleplayer = DropMode.INDEPENDENT;
+    public static DropMode fruitDropModeMultiplayer = DropMode.ONE_BY_ONE;
+    public static boolean appleSaplingFromHeroOfTheVillage = true;
+    @LevelRestart
+    public static boolean villageAppleTreeWorldGen = true;
 
-	public static DropMode getDropMode(LevelAccessor level) {
-		MinecraftServer server = level.getServer();
-		return (server != null && server.isDedicatedServer()) ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;
-	}
+    public static DropMode getDropMode(LevelAccessor level) {
+        MinecraftServer server = level.getServer();
+        return (server != null && server.isDedicatedServer()) ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;
+    }
 }

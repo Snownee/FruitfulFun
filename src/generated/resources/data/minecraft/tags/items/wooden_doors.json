@@ -1,6 +1,6 @@
 {
-  "replace": false,
   "values": [
+    "fruittrees:citrus_door",
     {
       "id": "fruittrees:cherry_door",
       "required": false
@@ -8,7 +8,6 @@
     {
       "id": "fruittrees:cherry_sliding_door",
       "required": false
-    },
-    "fruittrees:citrus_door"
+    }
   ]
 }

@@ -1,10 +1,9 @@
 {
-  "replace": false,
   "values": [
+    "fruittrees:citrus_stairs",
     {
       "id": "fruittrees:cherry_stairs",
       "required": false
-    },
-    "fruittrees:citrus_stairs"
+    }
   ]
 }

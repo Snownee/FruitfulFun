@@ -1,10 +1,9 @@
 {
-  "replace": false,
   "values": [
+    "fruittrees:citrus_fence",
     {
       "id": "fruittrees:cherry_fence",
       "required": false
-    },
-    "fruittrees:citrus_fence"
+    }
   ]
 }

@@ -4,10 +4,6 @@
     {
       "type": "forge:item_exists",
       "item": "fruittrees:cherry_cabinet"
-    },
-    {
-      "type": "kiwi:is_loaded",
-      "module": "fruittrees:cherry"
     }
   ],
   "pattern": [

@@ -3,10 +3,6 @@
     {
       "type": "forge:mod_loaded",
       "modid": "create"
-    },
-    {
-      "type": "kiwi:is_loaded",
-      "module": "fruittrees:cherry"
     }
   ],
   "type": "create:cutting",

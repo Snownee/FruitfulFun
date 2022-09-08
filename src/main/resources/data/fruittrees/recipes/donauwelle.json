@@ -4,10 +4,6 @@
     {
       "type": "kiwi:is_loaded",
       "module": "fruittrees:food"
-    },
-    {
-      "type": "kiwi:is_loaded",
-      "module": "fruittrees:cherry"
     }
   ],
   "ingredients": [

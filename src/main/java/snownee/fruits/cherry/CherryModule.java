@@ -42,7 +42,6 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import snownee.fruits.FruitsMod;
-import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
@@ -61,16 +60,13 @@ import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
-import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
 @KiwiModule("cherry")
-@KiwiModule.Optional
 @KiwiModule.Subscriber(modBus = true)
 public class CherryModule extends AbstractModule {
 
-	@SuppressWarnings("hiding")
 	public static final class Foods {
 		public static final FoodProperties CHERRY = new FoodProperties.Builder().nutrition(3).saturationMod(0.3f).build();
 		public static final FoodProperties REDLOVE = new FoodProperties.Builder().nutrition(4).saturationMod(0.6f).effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 50), 1).build();
@@ -181,7 +177,6 @@ public class CherryModule extends AbstractModule {
 	}
 
 	public CherryModule() {
-		Hooks.cherry = true;
 		if (Platform.isPhysicalClient()) {
 			Sheets.addWoodType(CHERRY_WOODTYPE);
 		}

@@ -1,10 +1,9 @@
 {
-  "replace": false,
   "values": [
+    "fruittrees:citrus_slab",
     {
       "id": "fruittrees:cherry_slab",
       "required": false
-    },
-    "fruittrees:citrus_slab"
+    }
   ]
 }

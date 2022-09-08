@@ -1,0 +1,22 @@
+// 1.19.1	2022-09-08T20:26:07.6401371	Tags for minecraft:block
+8cdde066f5516d15cbdfa4f243915c27cf1f7c86 data/forge/tags/blocks/fence_gates.json
+8cdde066f5516d15cbdfa4f243915c27cf1f7c86 data/forge/tags/blocks/fence_gates/wooden.json
+10aa50822b731fb5ec0c09c7fe413bac20e56678 data/fruittrees/tags/blocks/cherry_logs.json
+de5004c40e0126668e0f26d06a8499c950a1ffcb data/fruittrees/tags/blocks/citrus_logs.json
+aef8b4aca1376c0920c85e615db761e4ad733e53 data/fruittrees/tags/blocks/leaves.json
+b5d33f2f254b5d79d9359c7d8bb084ee943b9fbb data/minecraft/tags/blocks/flower_pots.json
+af76bb58987f5a8260c07e62ab9d929761734c17 data/minecraft/tags/blocks/leaves.json
+c00051882fe67da786016fd9ac9dcf119fe0758a data/minecraft/tags/blocks/logs_that_burn.json
+c24a77f905276c92ef38840352582eb7211f11b2 data/minecraft/tags/blocks/mineable/axe.json
+ad6700ceeb81b9c0c90c554184d8688236675f38 data/minecraft/tags/blocks/mineable/hoe.json
+e92e3bb24bb2a33b051e9f925af214839839cbce data/minecraft/tags/blocks/planks.json
+a10b27b53f915e2e626c7bcd4b66773a5f44822c data/minecraft/tags/blocks/saplings.json
+b1c4b825ca6358675784636ba39e17d6c68ff063 data/minecraft/tags/blocks/standing_signs.json
+4b68d78e91217a214041002b4e5004230aad2f4d data/minecraft/tags/blocks/wall_signs.json
+af019b8eaa5f5500f4d82b9a78799daeda72bba3 data/minecraft/tags/blocks/wooden_buttons.json
+ae1064dc702d24b2fa1865fe021309e290f5cd5d data/minecraft/tags/blocks/wooden_doors.json
+33a29c0fbe395c8dec4afa181bcc93d9d8a66450 data/minecraft/tags/blocks/wooden_fences.json
+df4ede227cd1c7126bb5eed91fcedee02ff0be37 data/minecraft/tags/blocks/wooden_pressure_plates.json
+28186975d625b53ced61d2d508edb10bbb3d49e7 data/minecraft/tags/blocks/wooden_slabs.json
+06997654d413dfd17d3ecb352c5dc80fbdce8b15 data/minecraft/tags/blocks/wooden_stairs.json
+12354565656ca370703b920ae2e1f17862ae47a6 data/minecraft/tags/blocks/wooden_trapdoors.json

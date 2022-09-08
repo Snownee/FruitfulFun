@@ -7,10 +7,6 @@
         "type": "kiwi:is_loaded",
         "module": "fruittrees:hybridization"
       }
-    },
-    {
-      "type": "kiwi:is_loaded",
-      "module": "fruittrees:cherry"
     }
   ],
   "ingredients": [

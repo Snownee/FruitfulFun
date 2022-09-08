@@ -11,11 +11,6 @@
   "customEntries": [
     {
       "output": {
-        "item": "fruittrees:apple_sapling"
-      }
-    },
-    {
-      "output": {
         "item": "fruittrees:lime_sapling"
       }
     },

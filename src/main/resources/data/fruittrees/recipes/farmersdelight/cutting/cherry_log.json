@@ -3,10 +3,6 @@
     {
       "type": "forge:mod_loaded",
       "modid": "farmersdelight"
-    },
-    {
-      "type": "kiwi:is_loaded",
-      "module": "fruittrees:cherry"
     }
   ],
   "type": "farmersdelight:cutting",
