@@ -14,7 +14,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 @Mixin(ItemBlockRenderTypes.class)
 public class ItemBlockRenderTypesMixin {
 
-	@Inject(at = @At(value = "RETURN", ordinal = 0), method = "getChunkRenderType", cancellable = true, remap = false)
+	@Inject(at = @At(value = "RETURN", ordinal = 0), method = "getChunkRenderType", cancellable = true)
 	private static void fruits_getChunkRenderType(BlockState state, CallbackInfoReturnable<RenderType> info) {
 		Block block = state.getBlock();
 		if (block instanceof FruitLeavesBlock) {
