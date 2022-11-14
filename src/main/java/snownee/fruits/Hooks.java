@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -173,6 +174,8 @@ public final class Hooks {
 				BlockPos pos = entity.blockPosition();
 				if (vec.y - pos.getY() >= 1)
 					pos = pos.above();
+				AABB intersection = entity.getBoundingBox().intersect(new AABB(pos));
+				vec = intersection.getCenter();
 				//mc.level.addParticle(ParticleTypes.ANGRY_VILLAGER, vec.x, vec.y, vec.z, 0, 0, 0);
 				mc.hitResult = new BlockHitResult(vec, Direction.UP, pos, false);
 			}
