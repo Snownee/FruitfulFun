@@ -59,7 +59,7 @@ import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
-import snownee.kiwi.loader.Platform;
+import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
@@ -170,16 +170,15 @@ public class CherryModule extends AbstractModule {
 			VanillaActions.registerCompostable(0.1F, REDLOVE_CARPET.get());
 
 			WoodType.register(CHERRY_WOODTYPE);
-		}).whenComplete((v, ex) -> {
-			if (ex != null)
-				FruitsMod.logger.catching(ex);
-		}); // WTF??? workaround handle it
+		});
 	}
 
-	public CherryModule() {
-		if (Platform.isPhysicalClient()) {
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	protected void clientInit(ClientInitEvent event) {
+		event.enqueueWork(() -> {
 			Sheets.addWoodType(CHERRY_WOODTYPE);
-		}
+		});
 	}
 
 	@Override

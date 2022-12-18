@@ -115,7 +115,7 @@ import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
-import snownee.kiwi.loader.Platform;
+import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
@@ -314,12 +314,6 @@ public final class CoreModule extends AbstractModule {
 	/* on */
 	private Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> TREES_CF;
 
-	public CoreModule() {
-		if (Platform.isPhysicalClient()) {
-			Sheets.addWoodType(CITRUS_WOODTYPE);
-		}
-	}
-
 	@Override
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
@@ -344,10 +338,15 @@ public final class CoreModule extends AbstractModule {
 			}
 			registerConfiguredFeatures();
 			WoodType.register(CITRUS_WOODTYPE);
-		}).whenComplete((v, ex) -> {
-			if (ex != null)
-				FruitsMod.logger.catching(ex);
-		}); // WTF??? workaround handle it
+		});
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	protected void clientInit(ClientInitEvent event) {
+		event.enqueueWork(() -> {
+			Sheets.addWoodType(CITRUS_WOODTYPE);
+		});
 	}
 
 	private void registerConfiguredFeatures() {
