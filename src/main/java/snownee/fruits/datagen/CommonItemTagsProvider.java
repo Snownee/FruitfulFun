@@ -29,7 +29,6 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 
 	static final TagKey<Item> CITRUS_LOGS = ItemTags.create(new ResourceLocation(FruitsMod.ID, "citrus_logs"));
 	static final TagKey<Item> CHERRY_LOGS = ItemTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
-//	static final TagKey<Item> ALL_LEAVES = ItemTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
 	static final TagKey<Item> FRUITS = ItemTags.create(new ResourceLocation("forge:fruits"));
 
 	@Override

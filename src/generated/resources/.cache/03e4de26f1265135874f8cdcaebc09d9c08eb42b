@@ -1,11 +1,11 @@
-// 1.19.1	2022-09-08T20:26:07.6501095	Tags for minecraft:item
+// 1.19.2	2022-12-19T18:32:24.7977499	Tags for minecraft:item
 8cdde066f5516d15cbdfa4f243915c27cf1f7c86 data/forge/tags/items/fence_gates/wooden.json
 eb872483ecb6b99d5800a2411b38d1dde7e4e103 data/forge/tags/items/fruits.json
 de5004c40e0126668e0f26d06a8499c950a1ffcb data/fruittrees/tags/items/cherry_logs.json
 10aa50822b731fb5ec0c09c7fe413bac20e56678 data/fruittrees/tags/items/citrus_logs.json
 8da3bf1486053efd5b44292800ad9c65d3553da6 data/minecraft/tags/items/fox_food.json
 aef8b4aca1376c0920c85e615db761e4ad733e53 data/minecraft/tags/items/leaves.json
-c00051882fe67da786016fd9ac9dcf119fe0758a data/minecraft/tags/items/logs_that_burn.json
+b66a57406644dc9e43fba5dc53d579ef05c7d9cd data/minecraft/tags/items/logs_that_burn.json
 e92e3bb24bb2a33b051e9f925af214839839cbce data/minecraft/tags/items/planks.json
 a10b27b53f915e2e626c7bcd4b66773a5f44822c data/minecraft/tags/items/saplings.json
 b1c4b825ca6358675784636ba39e17d6c68ff063 data/minecraft/tags/items/signs.json

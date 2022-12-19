@@ -24,8 +24,8 @@ public class CommonBlockTagsProvider extends KiwiBlockTagsProvider {
 		helper = new TagsProviderHelper<>(this);
 	}
 
-	static final TagKey<Block> CITRUS_LOGS = BlockTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
-	static final TagKey<Block> CHERRY_LOGS = BlockTags.create(new ResourceLocation(FruitsMod.ID, "citrus_logs"));
+	static final TagKey<Block> CITRUS_LOGS = BlockTags.create(new ResourceLocation(FruitsMod.ID, "citrus_logs"));
+	static final TagKey<Block> CHERRY_LOGS = BlockTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
 
 	@Override
 	protected void addTags() {
