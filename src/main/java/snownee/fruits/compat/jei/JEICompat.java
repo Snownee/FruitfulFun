@@ -1,4 +1,4 @@
-package snownee.fruits.plugin.jei;
+package snownee.fruits.compat.jei;
 
 import java.util.List;
 

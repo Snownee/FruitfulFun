@@ -1,4 +1,4 @@
-package snownee.fruits.plugin.jade;
+package snownee.fruits.compat.jade;
 
 import java.util.List;
 
