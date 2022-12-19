@@ -39,6 +39,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import snownee.fruits.FruitsMod;
@@ -59,7 +60,6 @@ import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
-import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
@@ -174,17 +174,14 @@ public class CherryModule extends AbstractModule {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	protected void clientInit(ClientInitEvent event) {
-		event.enqueueWork(() -> {
-			Sheets.addWoodType(CHERRY_WOODTYPE);
-		});
-	}
-
-	@Override
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(generator).add(CherryBlockLoot::new, LootContextParamSets.BLOCK));
+	}
+
+	@SubscribeEvent
+	protected void clientInit(TextureStitchEvent.Pre event) {
+		Sheets.addWoodType(CHERRY_WOODTYPE);
 	}
 
 	@SubscribeEvent

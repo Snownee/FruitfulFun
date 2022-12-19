@@ -85,6 +85,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
@@ -115,7 +116,6 @@ import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
-import snownee.kiwi.loader.event.ClientInitEvent;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
@@ -341,12 +341,9 @@ public final class CoreModule extends AbstractModule {
 		});
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	protected void clientInit(ClientInitEvent event) {
-		event.enqueueWork(() -> {
-			Sheets.addWoodType(CITRUS_WOODTYPE);
-		});
+	@SubscribeEvent
+	protected void clientInit(TextureStitchEvent.Pre event) {
+		Sheets.addWoodType(CITRUS_WOODTYPE);
 	}
 
 	private void registerConfiguredFeatures() {
