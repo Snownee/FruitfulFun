@@ -3,7 +3,7 @@
   "textures": {
     "particle": "block/fruittrees/leaves_citron"
   },
-  "parts": {
+  "children": {
     "0": {
       "parent": "fruittrees:block/leaves_citron"
     },

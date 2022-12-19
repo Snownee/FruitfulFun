@@ -4,7 +4,7 @@
   "textures": {
     "particle": "block/oak_leaves"
   },
-  "parts": {
+  "children": {
     "0": {
       "parent": "block/oak_leaves"
     },
