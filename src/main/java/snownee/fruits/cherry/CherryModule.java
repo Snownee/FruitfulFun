@@ -180,6 +180,7 @@ public class CherryModule extends AbstractModule {
 	}
 
 	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	protected void clientInit(TextureStitchEvent.Pre event) {
 		Sheets.addWoodType(CHERRY_WOODTYPE);
 	}

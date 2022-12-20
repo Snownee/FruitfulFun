@@ -342,6 +342,7 @@ public final class CoreModule extends AbstractModule {
 	}
 
 	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	protected void clientInit(TextureStitchEvent.Pre event) {
 		Sheets.addWoodType(CITRUS_WOODTYPE);
 	}
