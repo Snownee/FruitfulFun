@@ -35,9 +35,9 @@ public final class FruitsEvents {
 
 	public static void addPackFinder(AddPackFindersEvent event) {
 		if (event.getPackType() == PackType.SERVER_DATA) {
-			event.addRepositorySource((Consumer<Pack> consumer, Pack.PackConstructor constructor) -> {
+			event.addRepositorySource((Consumer<Pack> consumer) -> {
 				PackMetadataSection section = new PackMetadataSection(Component.literal("Fruit Trees Conditional Resources"), 9);
-				consumer.accept(constructor.create("mod:fruittrees:conditional", Component.literal(FruitsMod.NAME), true, FruitsConditionalPackResources::new, section, Position.TOP, PackSource.DEFAULT, true));
+				consumer.accept(Pack.create("mod:fruittrees:conditional", Component.literal(FruitsMod.NAME), true, FruitsConditionalPackResources::new, section, Position.TOP, PackSource.DEFAULT, true));
 			});
 		}
 	}

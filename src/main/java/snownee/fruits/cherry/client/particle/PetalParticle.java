@@ -2,6 +2,9 @@ package snownee.fruits.cherry.client.particle;
 
 import java.util.List;
 
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -9,8 +12,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -56,10 +58,10 @@ public class PetalParticle extends TextureSheetParticle {
 		Vector3f motion = new Vector3f(baseMotionX, baseMotionY, baseMotionZ);
 		motion.normalize();
 		vForce = new Vector3f(baseMotionZ, 0, -baseMotionX);
-		Quaternion rot = vForce.rotationDegrees(-90);
-		vForce = motion.copy();
-		vForce.transform(rot);
-		motion.mul(0.1f + random.nextFloat() * 0.05f);
+		//				Quaternionf rot = vForce.rotationTo(-90, baseMotionZ, baseMotionZ, rot);
+		//				vForce = new Vector3f(motion);
+		//				vForce.rotate(rot);
+		//				motion.mul(0.1f + random.nextFloat() * 0.05f);
 
 		xd = motion.x();
 		yd = motion.y();
@@ -226,25 +228,25 @@ public class PetalParticle extends TextureSheetParticle {
 		float f = (float) (Mth.lerp(partialTicks, xo, x) - vec3d.x());
 		float f1 = (float) (Mth.lerp(partialTicks, yo, y) - vec3d.y());
 		float f2 = (float) (Mth.lerp(partialTicks, zo, z) - vec3d.z());
-		Quaternion quaternion = new Quaternion(renderInfo.rotation());
+		Quaternionf quaternion = new Quaternionf(renderInfo.rotation());
 
 		float rx = Mth.lerp(partialTicks, oRollX, rollX);
 		float rz = Mth.lerp(partialTicks, oRoll, roll);
 		if (onGround || inWater) {
-			quaternion = Vector3f.XP.rotationDegrees(90);
+			quaternion = Axis.XP.rotationDegrees(90);
 			if (inWater) {
 				f1 += 0.16f + rz % 0.01;
 			} else {
 				f1 += 0.005f + rz % 0.01;
 			}
 		} else {
-			quaternion = new Quaternion(renderInfo.rotation());
-			quaternion.mul(Vector3f.XP.rotation(rx));
+			quaternion = new Quaternionf(renderInfo.rotation());
+			quaternion.mul(Axis.XP.rotation(rx));
 		}
-		quaternion.mul(Vector3f.ZP.rotation(rz));
+		quaternion.mul(Axis.ZP.rotation(rz));
 
 		Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-		vector3f1.transform(quaternion);
+		vector3f1.rotate(quaternion);
 		Vector3f[] avector3f = new Vector3f[] { new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F) };
 		float f4 = getQuadSize(partialTicks);
 		float alpha = f4 * this.alpha;
@@ -252,7 +254,7 @@ public class PetalParticle extends TextureSheetParticle {
 
 		for (int i = 0; i < 4; ++i) {
 			Vector3f vector3f = avector3f[i];
-			vector3f.transform(quaternion);
+			vector3f.rotate(quaternion);
 			vector3f.mul(f4);
 			vector3f.add(f, f1, f2);
 		}

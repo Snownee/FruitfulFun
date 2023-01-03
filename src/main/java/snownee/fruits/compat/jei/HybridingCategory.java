@@ -3,11 +3,12 @@ package snownee.fruits.compat.jei;
 import java.util.List;
 import java.util.Optional;
 
+import org.joml.Quaternionf;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -92,15 +93,15 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 		matrix.scale(20, 20, -20);
 
 		float f1 = (float) Math.atan(-10 / 40.0F);
-		Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-		Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
+		Quaternionf quaternion = Axis.ZP.rotationDegrees(180.0F);
+		Quaternionf quaternion1 = Axis.XP.rotationDegrees(f1 * 20.0F);
 		quaternion.mul(quaternion1);
 		matrix.mulPose(quaternion);
 
 		//		Lighting.setupForEntityInInventory();
 		Minecraft mc = Minecraft.getInstance();
 		EntityRenderDispatcher entityrenderermanager = mc.getEntityRenderDispatcher();
-		quaternion1.conj();
+		quaternion1.conjugate();
 		entityrenderermanager.overrideCameraOrientation(quaternion1);
 		entityrenderermanager.setRenderShadow(false);
 		BufferSource irendertypebuffer$impl = mc.renderBuffers().bufferSource();

@@ -14,10 +14,10 @@ public class CherryBlockLoot extends CoreBlockLoot {
 	}
 
 	@Override
-	protected void _addTables() {
-		super._addTables();
+	protected void addTables() {
+		super.addTables();
 		handle(SlidingDoorBlock.class, $ -> createDoorTable($));
-		handle(CherryLeavesBlock.class, CoreBlockLoot::createFruitLeaves);
+		handle(CherryLeavesBlock.class, $ -> createFruitLeaves($));
 		handle(CarpetBlock.class, $ -> createSilkTouchOrShearsDispatchTable($, applyExplosionCondition($, LootItem.lootTableItem($))));
 	}
 

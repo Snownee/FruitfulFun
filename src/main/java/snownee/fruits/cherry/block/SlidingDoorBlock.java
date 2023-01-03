@@ -4,10 +4,9 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -29,7 +27,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.CoreModule;
 
-@SuppressWarnings("hiding")
 public class SlidingDoorBlock extends DoorBlock {
 	protected static final VoxelShape[] SOUTH_AABB = { Block.box(0, 0, 3, 16, 16, 4), Block.box(13, 0, 3, 29, 16, 4), Block.box(-13, 0, 3, 3, 16, 4) };
 	protected static final VoxelShape[] NORTH_AABB = { Block.box(0, 0, 12, 16, 16, 13), Block.box(-13, 0, 12, 3, 16, 13), Block.box(13, 0, 12, 29, 16, 13) };
@@ -37,8 +34,8 @@ public class SlidingDoorBlock extends DoorBlock {
 	protected static final VoxelShape[] EAST_AABB = { Block.box(3, 0, 0, 4, 16, 16), Block.box(3, 0, -13, 4, 16, 3), Block.box(3, 0, 13, 4, 16, 29) };
 	protected static final VoxelShape[][] AABB = { SOUTH_AABB, WEST_AABB, NORTH_AABB, EAST_AABB };
 
-	public SlidingDoorBlock(Block.Properties builder) {
-		super(builder);
+	public SlidingDoorBlock(Block.Properties builder, SoundEvent closeSound, SoundEvent openSound) {
+		super(builder, closeSound, openSound);
 	}
 
 	@Override
@@ -122,32 +119,6 @@ public class SlidingDoorBlock extends DoorBlock {
 			return InteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 		return InteractionResult.PASS;
-	}
-
-	@Override
-	public void setOpen(@Nullable Entity p_153166_, Level p_153167_, BlockState p_153168_, BlockPos p_153169_, boolean p_153170_) {
-		if (p_153168_.is(this) && p_153168_.getValue(OPEN) != p_153170_) {
-			p_153167_.setBlock(p_153169_, p_153168_.setValue(OPEN, p_153170_), 10);
-			playSound(p_153167_, p_153169_, p_153170_);
-			p_153167_.gameEvent(p_153166_, p_153170_ ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, p_153169_);
-		}
-	}
-
-	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		boolean flag = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-		if (blockIn != this && flag != state.getValue(POWERED)) {
-			if (flag != state.getValue(OPEN)) {
-				playSound(worldIn, pos, flag);
-			}
-
-			worldIn.setBlock(pos, state.setValue(POWERED, flag).setValue(OPEN, flag), 2);
-		}
-
-	}
-
-	private void playSound(Level worldIn, BlockPos pos, boolean isOpening) {
-		worldIn.playSound(null, pos, isOpening ? CoreModule.OPEN_SOUND.get() : CoreModule.CLOSE_SOUND.get(), SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Override

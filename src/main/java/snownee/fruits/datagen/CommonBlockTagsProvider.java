@@ -4,7 +4,10 @@ import static net.minecraft.tags.BlockTags.*;
 import static snownee.fruits.CoreModule.*;
 import static snownee.fruits.cherry.CherryModule.*;
 
-import net.minecraft.data.DataGenerator;
+import java.util.concurrent.CompletableFuture;
+
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -19,8 +22,8 @@ public class CommonBlockTagsProvider extends KiwiBlockTagsProvider {
 
 	private final TagsProviderHelper<Block> helper;
 
-	public CommonBlockTagsProvider(DataGenerator pGenerator, ExistingFileHelper existingFileHelper) {
-		super(pGenerator, FruitsMod.ID, existingFileHelper);
+	public CommonBlockTagsProvider(PackOutput packOutput, CompletableFuture<Provider> provider, ExistingFileHelper existingFileHelper) {
+		super(packOutput, provider, FruitsMod.ID, existingFileHelper);
 		helper = new TagsProviderHelper<>(this);
 	}
 
@@ -28,7 +31,7 @@ public class CommonBlockTagsProvider extends KiwiBlockTagsProvider {
 	static final TagKey<Block> CHERRY_LOGS = BlockTags.create(new ResourceLocation(FruitsMod.ID, "cherry_logs"));
 
 	@Override
-	protected void addTags() {
+	protected void addTags(Provider provider) {
 		helper.getModEntries().forEach($ -> processTools($, false));
 
 		helper.add(CITRUS_LOGS, CITRUS_LOG, CITRUS_WOOD, STRIPPED_CITRUS_LOG, STRIPPED_CITRUS_WOOD);

@@ -159,10 +159,10 @@ repositories {
     flatDir {
         dir 'libs'
     }
-    //maven {
-    //    name = "jei"
-    //    url = "https://dvs1.progwml6.com/files/maven"
-    //}
+    maven {
+        name = "jei"
+        url = "https://dvs1.progwml6.com/files/maven"
+    }
     maven {
         url = "https://www.cursemaven.com"
         content {
@@ -187,14 +187,16 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
 
-    implementation fg.deobf("curse.maven:farmers-delight-398521:3999157")
+    //implementation fg.deobf("curse.maven:farmers-delight-398521:3999157")
     implementation fg.deobf("curse.maven:jei-238222:4175833")
-    implementation fg.deobf("curse.maven:jade-324717:4159759")
-    implementation fg.deobf("curse.maven:kiwi-303657:4036329")
-    annotationProcessor "curse.maven:kiwi-303657:4036329"
+    implementation fg.deobf("curse.maven:jade-324717:4199865")
+    implementation fg.deobf("curse.maven:kiwi-303657:4287363")
+    annotationProcessor "curse.maven:kiwi-303657:4287363"
 
     //implementation fg.deobf("libs:Kiwi-1.19.1-forge:8.1.1")
     //annotationProcessor "libs:Kiwi-1.19.1-forge:8.1.1"
+    compileOnly(fg.deobf("mezz.jei:jei-1.19.2-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-1.19.2-forge-api:${jei_version}"))
 }
 
 processResources {

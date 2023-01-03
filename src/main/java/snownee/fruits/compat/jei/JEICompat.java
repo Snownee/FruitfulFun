@@ -11,7 +11,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +36,7 @@ public class JEICompat implements IModPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
-		if (Registry.RECIPE_TYPE.containsKey(UID)) {
+		if (BuiltInRegistries.RECIPE_TYPE.containsKey(UID)) {
 			registration.addRecipeCategories(new HybridingCategory(registration.getJeiHelpers().getGuiHelper()));
 		}
 	}
@@ -44,7 +44,7 @@ public class JEICompat implements IModPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		if (Registry.RECIPE_TYPE.containsKey(UID)) {
+		if (BuiltInRegistries.RECIPE_TYPE.containsKey(UID)) {
 			ClientLevel world = Minecraft.getInstance().level;
 			RecipeManager recipeManager = world.getRecipeManager();
 			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.byType(Hybridization.RECIPE_TYPE).values()));

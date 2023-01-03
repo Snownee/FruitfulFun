@@ -4,8 +4,10 @@ import static net.minecraft.world.item.Items.*;
 import static snownee.fruits.CoreModule.*;
 import static snownee.fruits.cherry.CherryModule.*;
 
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
+import java.util.concurrent.CompletableFuture;
+
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -13,6 +15,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitsMod;
@@ -22,8 +25,8 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 
 	private final TagsProviderHelper<Item> helper;
 
-	public CommonItemTagsProvider(DataGenerator pGenerator, BlockTagsProvider pBlockTagsProvider, ExistingFileHelper existingFileHelper) {
-		super(pGenerator, pBlockTagsProvider, FruitsMod.ID, existingFileHelper);
+	public CommonItemTagsProvider(PackOutput packOutput, CompletableFuture<Provider> provider, BlockTagsProvider pBlockTagsProvider, ExistingFileHelper existingFileHelper) {
+		super(packOutput, provider, pBlockTagsProvider, FruitsMod.ID, existingFileHelper);
 		helper = new TagsProviderHelper<>(this);
 	}
 
@@ -32,7 +35,7 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 	static final TagKey<Item> FRUITS = ItemTags.create(new ResourceLocation("forge:fruits"));
 
 	@Override
-	protected void addTags() {
+	protected void addTags(Provider provider) {
 		copy(BlockTags.PLANKS, ItemTags.PLANKS);
 		copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
 		copy(BlockTags.WOODEN_BUTTONS, ItemTags.WOODEN_BUTTONS);

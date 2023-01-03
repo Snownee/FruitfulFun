@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SaplingBlock;
@@ -40,6 +41,7 @@ public class FruitType {
 		this.sapling = sapling;
 		this.fruit = fruit;
 		this.carpet = carpet;
+		this.featureKey = FeatureUtils.createKey();
 	}
 
 	void makeFeature() {

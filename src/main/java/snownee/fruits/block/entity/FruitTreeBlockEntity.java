@@ -10,9 +10,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
-import net.minecraft.world.level.gameevent.GameEvent.Message;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.PositionSource;
+import net.minecraft.world.phys.Vec3;
 import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
@@ -103,18 +105,18 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 	}
 
 	@Override
-	public boolean handleGameEvent(ServerLevel level, Message message) {
-		if (CoreModule.FRUIT_DROP.get().matches(message.gameEvent())) {
+	public boolean handleGameEvent(ServerLevel level, GameEvent gameEvent, Context context, Vec3 source) {
+		if (CoreModule.FRUIT_DROP.get().matches(gameEvent)) {
 			if (canDrop()) {
-				BlockState state = message.context().affectedState();
+				BlockState state = context.affectedState();
 				deathRate += 1;
-				BlockPos pos = new BlockPos(message.source());
+				BlockPos pos = new BlockPos(source);
 				// Do not remove block entity inside the loop of game event
 				CoreModule.FRUIT_DROP.get().runnable = FruitLeavesBlock.dropFruit(level, pos, state, getDeathRate());
 			}
 			CoreModule.FRUIT_DROP.get().swallow(this);
 			return true;
-		} else if (CoreModule.LEAVES_TRAMPLE.get().matches(message.gameEvent())) {
+		} else if (CoreModule.LEAVES_TRAMPLE.get().matches(gameEvent)) {
 			deathRate += 3;
 			CoreModule.LEAVES_TRAMPLE.get().swallow(this);
 			return true;

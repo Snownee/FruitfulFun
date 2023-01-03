@@ -2,6 +2,7 @@ package snownee.fruits;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
@@ -20,8 +21,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableProvider.SubProviderEntry;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
@@ -29,6 +33,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.SimpleWeightedRandomList;
@@ -47,6 +52,7 @@ import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -59,7 +65,6 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallSignBlock;
-import net.minecraft.world.level.block.WoodButtonBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -106,6 +111,7 @@ import snownee.fruits.levelgen.MultiFilteredAddFeaturesBiomeModifier;
 import snownee.fruits.levelgen.foliageplacers.FruitBlobFoliagePlacer;
 import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
@@ -114,7 +120,6 @@ import snownee.kiwi.KiwiModule.NoItem;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
-import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
@@ -134,19 +139,19 @@ public final class CoreModule extends AbstractModule {
 		public static final FoodProperties EMPOWERED_CITRON = new FoodProperties.Builder().nutrition(3).saturationMod(5f).build();
 	}
 
-	@Category("food")
+	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> MANDARIN = go(() -> new ModItem(itemProp().food(Foods.MANDARIN)));
-	@Category("food")
+	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> LIME = go(() -> new ModItem(itemProp().food(Foods.LIME)));
-	@Category("food")
+	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> CITRON = go(() -> new ModItem(itemProp().food(Foods.CITRON)));
-	@Category("food")
+	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> POMELO = go(() -> new ModItem(itemProp().food(Foods.POMELO)));
-	@Category("food")
+	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> ORANGE = go(() -> new ModItem(itemProp().food(Foods.ORANGE)));
-	@Category("food")
+	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> LEMON = go(() -> new ModItem(itemProp().food(Foods.LEMON)));
-	@Category("food")
+	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> GRAPEFRUIT = go(() -> new ModItem(itemProp().food(Foods.GRAPEFRUIT)));
 	public static final KiwiGO<Item> EMPOWERED_CITRON = go(() -> new ModItem(itemProp().rarity(Rarity.RARE).food(Foods.EMPOWERED_CITRON)) {
 		@Override
@@ -155,58 +160,58 @@ public final class CoreModule extends AbstractModule {
 		}
 	});
 
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> MANDARIN_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.MANDARIN, blockProp(Blocks.OAK_LEAVES)));
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> LIME_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.LIME, blockProp(Blocks.OAK_LEAVES)));
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> CITRON_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.CITRON, blockProp(Blocks.OAK_LEAVES)));
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> POMELO_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.POMELO, blockProp(Blocks.OAK_LEAVES)));
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> ORANGE_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.ORANGE, blockProp(Blocks.OAK_LEAVES)));
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> LEMON_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.LEMON, blockProp(Blocks.OAK_LEAVES)));
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> GRAPEFRUIT_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES)));
-	@Category("decorations")
+	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> APPLE_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.APPLE, blockProp(Blocks.OAK_LEAVES)));
 
-	@Category("building_blocks")
+	@Category(Categories.NATURAL_BLOCKS)
 	public static final KiwiGO<Block> CITRUS_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.JUNGLE_LOG)));
-	@Category("building_blocks")
+	@Category(Categories.NATURAL_BLOCKS)
 	public static final KiwiGO<Block> CITRUS_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.JUNGLE_WOOD)));
-	@Category("building_blocks")
+	@Category(Categories.NATURAL_BLOCKS)
 	public static final KiwiGO<Block> STRIPPED_CITRUS_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_LOG)));
-	@Category("building_blocks")
+	@Category(Categories.NATURAL_BLOCKS)
 	public static final KiwiGO<Block> STRIPPED_CITRUS_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_WOOD)));
-	@Category("building_blocks")
+	@Category(Categories.NATURAL_BLOCKS)
 	public static final KiwiGO<Block> CITRUS_PLANKS = go(() -> new ModBlock(blockProp(Blocks.JUNGLE_PLANKS)));
-	@Category("building_blocks")
+	@Category(Categories.NATURAL_BLOCKS)
 	public static final KiwiGO<Block> CITRUS_SLAB = go(() -> new SlabBlock(blockProp(Blocks.JUNGLE_SLAB)));
-	@Category("building_blocks")
+	@Category(Categories.NATURAL_BLOCKS)
 	public static final KiwiGO<Block> CITRUS_STAIRS = go(() -> new StairBlock(() -> CITRUS_PLANKS.defaultBlockState(), blockProp(Blocks.JUNGLE_STAIRS)));
 	@Category("decorations")
 	public static final KiwiGO<Block> CITRUS_FENCE = go(() -> new FenceBlock(blockProp(Blocks.JUNGLE_FENCE)));
 	@Category("redstone")
-	public static final KiwiGO<Block> CITRUS_FENCE_GATE = go(() -> new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE)));
+	public static final KiwiGO<Block> CITRUS_FENCE_GATE = go(() -> new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE), SoundEvents.FENCE_GATE_CLOSE, SoundEvents.FENCE_GATE_OPEN));
 	@Category("redstone")
-	public static final KiwiGO<Block> CITRUS_TRAPDOOR = go(() -> new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR)));
+	public static final KiwiGO<Block> CITRUS_TRAPDOOR = go(() -> new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR), SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN));
 	@Category("redstone")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<Block> CITRUS_DOOR = go(() -> new DoorBlock(blockProp(Blocks.JUNGLE_DOOR)));
+	public static final KiwiGO<Block> CITRUS_DOOR = go(() -> new DoorBlock(blockProp(Blocks.JUNGLE_DOOR), SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN));
 	@Category("redstone")
-	public static final KiwiGO<Block> CITRUS_BUTTON = go(() -> new WoodButtonBlock(blockProp(Blocks.JUNGLE_TRAPDOOR)));
+	public static final KiwiGO<Block> CITRUS_BUTTON = go(() -> new ButtonBlock(blockProp(Blocks.JUNGLE_BUTTON), 30, true, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundEvents.WOODEN_BUTTON_CLICK_ON));
 	@Category("redstone")
-	public static final KiwiGO<Block> CITRUS_PRESSURE_PLATE = go(() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.JUNGLE_DOOR)));
+	public static final KiwiGO<Block> CITRUS_PRESSURE_PLATE = go(() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.JUNGLE_DOOR), SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON));
 
 	@Category("decorations")
 	@RenderLayer(Layer.CUTOUT)
@@ -269,14 +274,14 @@ public final class CoreModule extends AbstractModule {
 
 	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> new BannerPattern("sno"));
 
-	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registry.BANNER_PATTERN_REGISTRY, FruitsMod.ID, "pattern_item/snowflake");
+	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registries.BANNER_PATTERN, FruitsMod.ID, "pattern_item/snowflake");
 
 	@SuppressWarnings("deprecation")
-	@Category("misc")
+	@Category(Categories.INGREDIENTS)
 	public static final KiwiGO<Item> SNOWFLAKE_BANNER_PATTERN = go(() -> new BannerPatternItem(SNOWFLAKE_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
 
-	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(() -> new SoundEvent(new ResourceLocation(FruitsMod.ID, "block.wooden_door.open")));
-	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(() -> new SoundEvent(new ResourceLocation(FruitsMod.ID, "block.wooden_door.close")));
+	public static final SoundEvent OPEN_SOUND = SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitsMod.ID, "block.wooden_door.open"));
+	public static final SoundEvent CLOSE_SOUND = SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitsMod.ID, "block.wooden_door.close"));
 
 	/* off */
 	public static final EntityType<SlidingDoorEntity> SLIDING_DOOR = EntityType.Builder
@@ -341,11 +346,11 @@ public final class CoreModule extends AbstractModule {
 		});
 	}
 
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	protected void clientInit(TextureStitchEvent.Pre event) {
-		Sheets.addWoodType(CITRUS_WOODTYPE);
-	}
+	//	@SubscribeEvent
+	//	@OnlyIn(Dist.CLIENT)
+	//	protected void clientInit(TextureStitchEvent.Pre event) {
+	//		Sheets.addWoodType(CITRUS_WOODTYPE);
+	//	}
 
 	private void registerConfiguredFeatures() {
 		for (FruitType type : FruitType.REGISTRY.getValues()) {
@@ -483,15 +488,15 @@ public final class CoreModule extends AbstractModule {
 		DataGenerator generator = event.getGenerator();
 		boolean includeServer = event.includeServer();
 		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-		generator.addProvider(includeServer, new KiwiLootTableProvider(generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
-		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, existingFileHelper);
+		generator.addProvider(includeServer, new LootTableProvider(generator.getPackOutput(), Set.of(), List.of(new SubProviderEntry(CoreBlockLoot::new, LootContextParamSets.BLOCK))));
+		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator.getPackOutput(), event.getLookupProvider(), existingFileHelper);
 		generator.addProvider(includeServer, blockTagsProvider);
-		generator.addProvider(includeServer, new CommonItemTagsProvider(generator, blockTagsProvider, existingFileHelper));
+		generator.addProvider(includeServer, new CommonItemTagsProvider(generator.getPackOutput(), event.getLookupProvider(), blockTagsProvider, existingFileHelper));
 
 		registerConfiguredFeatures();
 		RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());
-		var citrusCF = ops.registry(Registry.CONFIGURED_FEATURE_REGISTRY).get().getOrCreateHolderOrThrow(TREES_CF.unwrapKey().get().cast(Registry.CONFIGURED_FEATURE_REGISTRY).get());
-		var cherryCF = ops.registry(Registry.CONFIGURED_FEATURE_REGISTRY).get().getOrCreateHolderOrThrow(CherryFruitTypes.CHERRY.get().featureWG.unwrapKey().get().cast(Registry.CONFIGURED_FEATURE_REGISTRY).get());
+		var citrusCF = ops.getter(Registries.CONFIGURED_FEATURE).get().getOrThrow(TREES_CF.unwrapKey().get().cast(Registries.CONFIGURED_FEATURE).get());
+		var cherryCF = ops.getter(Registries.CONFIGURED_FEATURE).get().getOrThrow(CherryFruitTypes.CHERRY.get().featureWG.unwrapKey().get().cast(Registries.CONFIGURED_FEATURE).get());
 		Map<ResourceLocation, PlacedFeature> allPlaced = Maps.newHashMap();
 		makePlacedFeature("citrus_002", 500, citrusCF, allPlaced);
 		makePlacedFeature("citrus_005", 200, citrusCF, allPlaced);
@@ -500,15 +505,15 @@ public final class CoreModule extends AbstractModule {
 		makePlacedFeature("cherry_005", 200, cherryCF, allPlaced);
 		generator.addProvider(includeServer, forDataPackRegistry(generator, existingFileHelper, ops, Registry.PLACED_FEATURE_REGISTRY, allPlaced));
 
-		var biomes = ops.registry(Registry.BIOME_REGISTRY).get();
-		var plains = biomes.getOrCreateTag(Tags.Biomes.IS_PLAINS);
-		var forest = biomes.getOrCreateTag(BiomeTags.IS_FOREST);
-		var jungle = biomes.getOrCreateTag(BiomeTags.IS_JUNGLE);
-		var cold = biomes.getOrCreateTag(Tags.Biomes.IS_COLD);
-		var magical = biomes.getOrCreateTag(Tags.Biomes.IS_MAGICAL);
-		var mushroom = biomes.getOrCreateTag(Tags.Biomes.IS_MUSHROOM);
-		var dead = biomes.getOrCreateTag(Tags.Biomes.IS_DEAD);
-		var dry = biomes.getOrCreateTag(Tags.Biomes.IS_DRY);
+		var biomes = ops.getter(Registries.BIOME).get();
+		var plains = biomes.getOrThrow(Tags.Biomes.IS_PLAINS);
+		var forest = biomes.getOrThrow(BiomeTags.IS_FOREST);
+		var jungle = biomes.getOrThrow(BiomeTags.IS_JUNGLE);
+		var cold = biomes.getOrThrow(Tags.Biomes.IS_COLD);
+		var magical = biomes.getOrThrow(Tags.Biomes.IS_MAGICAL);
+		var mushroom = biomes.getOrThrow(Tags.Biomes.IS_MUSHROOM);
+		var dead = biomes.getOrThrow(Tags.Biomes.IS_DEAD);
+		var dry = biomes.getOrThrow(Tags.Biomes.IS_DRY);
 		List<HolderSet<Biome>> excludes = List.of(cold, magical, mushroom, dead, dry);
 
 		/* off */

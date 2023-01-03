@@ -1,6 +1,5 @@
 package snownee.fruits;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,12 +14,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.locating.IModFile;
 
@@ -36,7 +37,7 @@ public abstract class ConditionalPackResources extends AbstractPackResources {
 	}
 
 	public ConditionalPackResources(String modId, String extension) {
-		super(new File("Dummy"));
+		super(modId + "-" + extension, false);
 		modFile = ModList.get().getModFileById(modId).getFile();
 		this.modId = modId;
 		this.extension = extension;
@@ -51,11 +52,6 @@ public abstract class ConditionalPackResources extends AbstractPackResources {
 		return source;
 	}
 
-	@Override
-	public String getName() {
-		return modId + "-" + extension;
-	}
-
 	@Nonnull
 	protected Path resolve(@Nonnull String... paths) {
 		String path = String.join("/", paths);
@@ -65,12 +61,8 @@ public abstract class ConditionalPackResources extends AbstractPackResources {
 	protected abstract boolean test(String path);
 
 	@Override
-	protected boolean hasResource(String path) {
-		return test(path) && Files.exists(resolve(path));
-	}
-
-	@Override
-	protected InputStream getResource(String name) throws IOException {
+	@Nullable
+	protected IoSupplier<InputStream> getResource(PackType p_215339_, ResourceLocation p_249034_) {
 		final Path path = resolve(name);
 		if (!Files.exists(path))
 			throw new FileNotFoundException("Can't find resource " + name + " at " + getSource());

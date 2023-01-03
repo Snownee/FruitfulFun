@@ -23,6 +23,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.EntityBlock;
@@ -67,7 +68,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
+	public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
 		return canGrow(state) || state.getValue(AGE) == 1;
 	}
 
@@ -252,4 +253,5 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public <T extends BlockEntity> GameEventListener getListener(ServerLevel level, T blockEntity) {
 		return blockEntity instanceof FruitTreeBlockEntity ? (FruitTreeBlockEntity) blockEntity : null;
 	}
+
 }

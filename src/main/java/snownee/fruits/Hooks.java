@@ -11,7 +11,7 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -78,6 +78,7 @@ public final class Hooks {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void onPollinateComplete(Bee bee) {
 		final BlockState state = bee.level.getBlockState(bee.getSavedFlowerPos());
 		Block block = state.getBlock();
@@ -88,7 +89,7 @@ public final class Hooks {
 			list = new ListTag();
 			data.setTag("FruitsList", list);
 		}
-		String newPollen = type != null ? Util.trimRL(FruitType.REGISTRY.getKey(type), FruitsMod.ID) : "_" + Util.trimRL(Registry.BLOCK.getKey(block));
+		String newPollen = type != null ? Util.trimRL(FruitType.REGISTRY.getKey(type), FruitsMod.ID) : "_" + Util.trimRL(BuiltInRegistries.BLOCK.getKey(block));
 		if (list.stream().anyMatch(e -> e.getAsString().equals(newPollen))) {
 			return;
 		}

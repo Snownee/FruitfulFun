@@ -1,10 +1,16 @@
 package snownee.fruits.cherry;
 
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableProvider.SubProviderEntry;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -16,6 +22,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
@@ -29,7 +36,6 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallSignBlock;
-import net.minecraft.world.level.block.WoodButtonBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -42,6 +48,7 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FruitsMod;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.grower.FruitTreeGrower;
@@ -58,7 +65,6 @@ import snownee.kiwi.KiwiModule.NoItem;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.block.ModBlock;
-import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
@@ -89,18 +95,18 @@ public class CherryModule extends AbstractModule {
 	@Category("decorations")
 	public static final KiwiGO<Block> CHERRY_FENCE = go(() -> new FenceBlock(blockProp(Blocks.JUNGLE_FENCE)));
 	@Category("redstone")
-	public static final KiwiGO<Block> CHERRY_FENCE_GATE = go(() -> new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE)));
+	public static final KiwiGO<Block> CHERRY_FENCE_GATE = go(() -> new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE), SoundEvents.FENCE_GATE_CLOSE, SoundEvents.FENCE_GATE_OPEN));
 	@Category("redstone")
-	public static final KiwiGO<Block> CHERRY_TRAPDOOR = go(() -> new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR)));
+	public static final KiwiGO<Block> CHERRY_TRAPDOOR = go(() -> new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR), SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN));
 	@Category("redstone")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<Block> CHERRY_DOOR = go(() -> new DoorBlock(blockProp(Blocks.JUNGLE_DOOR)));
+	public static final KiwiGO<Block> CHERRY_DOOR = go(() -> new DoorBlock(blockProp(Blocks.JUNGLE_DOOR), SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN));
 	@Category("redstone")
-	public static final KiwiGO<Block> CHERRY_SLIDING_DOOR = go(() -> new SlidingDoorBlock(blockProp(Blocks.JUNGLE_DOOR)));
+	public static final KiwiGO<Block> CHERRY_SLIDING_DOOR = go(() -> new SlidingDoorBlock(blockProp(Blocks.JUNGLE_DOOR), CoreModule.CLOSE_SOUND, CoreModule.OPEN_SOUND));
 	@Category("redstone")
-	public static final KiwiGO<Block> CHERRY_BUTTON = go(() -> new WoodButtonBlock(blockProp(Blocks.JUNGLE_TRAPDOOR)));
+	public static final KiwiGO<Block> CHERRY_BUTTON = go(() -> new ButtonBlock(blockProp(Blocks.JUNGLE_TRAPDOOR), 30, true, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundEvents.WOODEN_BUTTON_CLICK_ON));
 	@Category("redstone")
-	public static final KiwiGO<Block> CHERRY_PRESSURE_PLATE = go(() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.JUNGLE_DOOR)));
+	public static final KiwiGO<Block> CHERRY_PRESSURE_PLATE = go(() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.JUNGLE_DOOR), SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON));
 
 	public static final KiwiGO<SimpleParticleType> PETAL_CHERRY = go(() -> new SimpleParticleType(false));
 	public static final KiwiGO<SimpleParticleType> PETAL_REDLOVE = go(() -> new SimpleParticleType(false));
@@ -140,7 +146,7 @@ public class CherryModule extends AbstractModule {
 
 	public static final KiwiGO<BannerPattern> HEART = go(() -> new BannerPattern("hrt"));
 
-	public static final TagKey<BannerPattern> HEART_TAG = tag(Registry.BANNER_PATTERN_REGISTRY, FruitsMod.ID, "pattern_item/heart");
+	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, FruitsMod.ID, "pattern_item/heart");
 
 	@SuppressWarnings("deprecation")
 	@Category("misc")
@@ -176,14 +182,14 @@ public class CherryModule extends AbstractModule {
 	@Override
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(generator).add(CherryBlockLoot::new, LootContextParamSets.BLOCK));
+		generator.addProvider(event.includeServer(), new LootTableProvider(generator.getPackOutput(), Set.of(), List.of(new SubProviderEntry(CherryBlockLoot::new, LootContextParamSets.BLOCK))));
 	}
 
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	protected void clientInit(TextureStitchEvent.Pre event) {
-		Sheets.addWoodType(CHERRY_WOODTYPE);
-	}
+	//	@SubscribeEvent
+	//	@OnlyIn(Dist.CLIENT)
+	//	protected void clientInit(TextureStitchEvent.Pre event) {
+	//		Sheets.addWoodType(CHERRY_WOODTYPE);
+	//	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
