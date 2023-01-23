@@ -125,23 +125,24 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	@Override
-	public void setOpen(@Nullable Entity p_153166_, Level p_153167_, BlockState p_153168_, BlockPos p_153169_, boolean p_153170_) {
-		if (p_153168_.is(this) && p_153168_.getValue(OPEN) != p_153170_) {
-			p_153167_.setBlock(p_153169_, p_153168_.setValue(OPEN, p_153170_), 10);
-			playSound(p_153167_, p_153169_, p_153170_);
-			p_153167_.gameEvent(p_153166_, p_153170_ ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, p_153169_);
+	public void setOpen(@Nullable Entity entity, Level level, BlockState state, BlockPos pos, boolean open) {
+		if (state.is(this) && state.getValue(OPEN) != open) {
+			level.setBlock(pos, state.setValue(OPEN, open), 10);
+			playSound(level, pos, open);
+			level.gameEvent(entity, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
 		}
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		boolean flag = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-		if (blockIn != this && flag != state.getValue(POWERED)) {
-			if (flag != state.getValue(OPEN)) {
-				playSound(worldIn, pos, flag);
+	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		boolean open = level.hasNeighborSignal(pos) || level.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+		if (blockIn != this && open != state.getValue(POWERED)) {
+			if (open != state.getValue(OPEN)) {
+				playSound(level, pos, open);
+				level.gameEvent(null, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
 			}
 
-			worldIn.setBlock(pos, state.setValue(POWERED, flag).setValue(OPEN, flag), 2);
+			level.setBlock(pos, state.setValue(POWERED, open).setValue(OPEN, open), 2);
 		}
 
 	}
@@ -156,7 +157,7 @@ public class SlidingDoorBlock extends DoorBlock {
 			return;
 		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER)
 			return;
-		if (oldState.getBlock() == this && oldState.getValue(OPEN))
+		if (oldState.is(this) && oldState.getValue(OPEN))
 			return;
 		SlidingDoorEntity door = new SlidingDoorEntity(worldIn, pos);
 		worldIn.addFreshEntity(door);

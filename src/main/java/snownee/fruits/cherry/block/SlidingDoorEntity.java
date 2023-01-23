@@ -28,14 +28,10 @@ public class SlidingDoorEntity extends Entity {
 		this(CoreModule.SLIDING_DOOR, level);
 		setPos(doorPos.getX() + 0.5, doorPos.getY(), doorPos.getZ() + 0.5);
 		this.doorPos = doorPos;
-		if (level.isLoaded(doorPos))
-			update(level.getBlockState(doorPos));
 	}
 
 	@Override
 	protected void defineSynchedData() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -50,7 +46,7 @@ public class SlidingDoorEntity extends Entity {
 
 	@Override
 	public void tick() {
-		if (firstTick && !level.isClientSide && getBoundingBox().getYsize() == 0) {
+		if (firstTick && getBoundingBox().getYsize() == 0) {
 			if (level.isLoaded(doorPos))
 				update(level.getBlockState(doorPos));
 		}
