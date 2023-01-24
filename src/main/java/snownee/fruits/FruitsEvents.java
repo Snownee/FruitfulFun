@@ -1,5 +1,7 @@
 package snownee.fruits;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import net.minecraft.core.BlockPos;
@@ -18,11 +20,15 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.NewRegistryEvent;
@@ -81,6 +87,22 @@ public final class FruitsEvents {
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void addWandererTrades(WandererTradesEvent event) {
+		event.getGenericTrades().add((entity, random) -> {
+			/* off */
+			List<Block> saplings = FruitType.REGISTRY.getValues().stream()
+					.filter($ -> $.tier == 0)
+					.map($ -> $.sapling.get())
+					.filter(Objects::nonNull)
+					.map(Block.class::cast)
+					.toList();
+			/* on */
+			ItemStack sapling = new ItemStack(saplings.get(random.nextInt(saplings.size())));
+			return new MerchantOffer(new ItemStack(Items.EMERALD, 10), sapling, 5, 1, 1);
+		});
 	}
 
 }

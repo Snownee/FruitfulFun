@@ -7,12 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraftforge.registries.IForgeRegistry;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.kiwi.KiwiGO;
 
 public class FruitType {
 
@@ -20,8 +18,8 @@ public class FruitType {
 
 	public final int tier;
 	public final Supplier<? extends Block> log;
-	public final KiwiGO<? extends FruitLeavesBlock> leaves;
-	public final Supplier<SaplingBlock> sapling;
+	public final Supplier<? extends FruitLeavesBlock> leaves;
+	public final Supplier<? extends Block> sapling;
 	public final Supplier<Item> fruit;
 	@Nullable
 	public final Supplier<Block> carpet;
@@ -29,11 +27,11 @@ public class FruitType {
 	@Nullable
 	public Holder<ConfiguredFeature<TreeConfiguration, ?>> featureWG;
 
-	public FruitType(int tier, Supplier<? extends Block> log, KiwiGO<? extends FruitLeavesBlock> leaves, Supplier<SaplingBlock> sapling, Supplier<Item> fruit) {
+	public FruitType(int tier, Supplier<Block> log, Supplier<? extends FruitLeavesBlock> leaves, Supplier<? extends Block> sapling, Supplier<Item> fruit) {
 		this(tier, log, leaves, sapling, fruit, null);
 	}
 
-	public FruitType(int tier, Supplier<? extends Block> log, KiwiGO<? extends FruitLeavesBlock> leaves, Supplier<SaplingBlock> sapling, Supplier<Item> fruit, @Nullable Supplier<Block> carpet) {
+	public FruitType(int tier, Supplier<Block> log, Supplier<? extends FruitLeavesBlock> leaves, Supplier<? extends Block> sapling, Supplier<Item> fruit, @Nullable Supplier<Block> carpet) {
 		this.tier = tier;
 		this.log = log;
 		this.leaves = leaves;

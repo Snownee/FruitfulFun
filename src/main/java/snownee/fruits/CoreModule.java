@@ -414,7 +414,7 @@ public final class CoreModule extends AbstractModule {
 			} else {
 				decorators = ImmutableList.of(new BeehiveDecorator(0.05F), new CarpetTreeDecorator(BlockStateProvider.simple(carpet.get())));
 			}
-			leavesProvider = new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(type.leaves.defaultBlockState(), 2).add(type.leaves.defaultBlockState().setValue(FruitLeavesBlock.AGE, 2), 1));
+			leavesProvider = new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(type.leaves.get().defaultBlockState(), 2).add(type.leaves.get().defaultBlockState().setValue(FruitLeavesBlock.AGE, 2), 1));
 		} else {
 			decorators = ImmutableList.of();
 			leavesProvider = BlockStateProvider.simple(type.leaves.get());

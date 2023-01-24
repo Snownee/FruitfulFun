@@ -118,7 +118,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	public static ItemStack asItem(Either<FruitType, Block> either) {
 		Optional<FruitType> left = either.left();
 		if (left.isPresent()) {
-			return left.get().leaves.itemStack();
+			return new ItemStack(left.get().leaves.get());
 		} else {
 			return either.right().get().asItem().getDefaultInstance();
 		}
