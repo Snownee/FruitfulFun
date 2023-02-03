@@ -1,9 +1,6 @@
 {
   "values": [
     "fruittrees:citrus_sign",
-    {
-      "id": "fruittrees:cherry_sign",
-      "required": false
-    }
+    "fruittrees:cherry_sign"
   ]
 }

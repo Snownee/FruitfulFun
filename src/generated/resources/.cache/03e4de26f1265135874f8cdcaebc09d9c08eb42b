@@ -1,4 +1,4 @@
-// 1.19.2	2022-12-19T18:32:24.7977499	Tags for minecraft:item
+// 1.19.2	2023-02-04T06:47:16.688209	Tags for minecraft:item
 8cdde066f5516d15cbdfa4f243915c27cf1f7c86 data/forge/tags/items/fence_gates/wooden.json
 eb872483ecb6b99d5800a2411b38d1dde7e4e103 data/forge/tags/items/fruits.json
 de5004c40e0126668e0f26d06a8499c950a1ffcb data/fruittrees/tags/items/cherry_logs.json
@@ -7,11 +7,11 @@ de5004c40e0126668e0f26d06a8499c950a1ffcb data/fruittrees/tags/items/cherry_logs.
 aef8b4aca1376c0920c85e615db761e4ad733e53 data/minecraft/tags/items/leaves.json
 b66a57406644dc9e43fba5dc53d579ef05c7d9cd data/minecraft/tags/items/logs_that_burn.json
 e92e3bb24bb2a33b051e9f925af214839839cbce data/minecraft/tags/items/planks.json
-a10b27b53f915e2e626c7bcd4b66773a5f44822c data/minecraft/tags/items/saplings.json
-b1c4b825ca6358675784636ba39e17d6c68ff063 data/minecraft/tags/items/signs.json
-af019b8eaa5f5500f4d82b9a78799daeda72bba3 data/minecraft/tags/items/wooden_buttons.json
-ae1064dc702d24b2fa1865fe021309e290f5cd5d data/minecraft/tags/items/wooden_doors.json
-33a29c0fbe395c8dec4afa181bcc93d9d8a66450 data/minecraft/tags/items/wooden_fences.json
-df4ede227cd1c7126bb5eed91fcedee02ff0be37 data/minecraft/tags/items/wooden_pressure_plates.json
-28186975d625b53ced61d2d508edb10bbb3d49e7 data/minecraft/tags/items/wooden_slabs.json
-06997654d413dfd17d3ecb352c5dc80fbdce8b15 data/minecraft/tags/items/wooden_stairs.json
+b8b143815c98a547cdfd41dcde2c12c521a92659 data/minecraft/tags/items/saplings.json
+b0334ea0bebaebeaab66c8eb2f41067981327c73 data/minecraft/tags/items/signs.json
+efc23d87e004300e98ef101aead0a7eb7371b6c0 data/minecraft/tags/items/wooden_buttons.json
+1cc3d66fede2ad9d872d77577c623466e815f103 data/minecraft/tags/items/wooden_doors.json
+68b7455244d652ec224493beb7bdd9207452a2fc data/minecraft/tags/items/wooden_fences.json
+e00aab1ed516d58c4fe127b4aabd3766cbdfb981 data/minecraft/tags/items/wooden_pressure_plates.json
+1189f3183f6c1a08d0c9331d58a30cdd8ec84f68 data/minecraft/tags/items/wooden_slabs.json
+45ec3ce7384a8b7f281b9bf741a4f60397b9abe9 data/minecraft/tags/items/wooden_stairs.json

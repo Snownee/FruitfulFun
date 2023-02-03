@@ -12,11 +12,12 @@
 "item.fruittrees.cherry": "Cherry",
 "item.fruittrees.redlove": "Redlove Fruit",
 
-"item.fruittrees.grapefruit_panna_cotta": "Grapefruit Panna Cotta",
-"item.fruittrees.donauwelle": "Donauwelle",
-"item.fruittrees.honey_pomelo_tea": "Honey Pomelo Tea",
-"item.fruittrees.rice_with_fruits": "Steamed Rice with Fruits in Bamboo",
-"item.fruittrees.lemon_roast_chicken": "Lemon Roast Chicken",
+"block.fruittrees.grapefruit_panna_cotta": "Grapefruit Panna Cotta",
+"block.fruittrees.donauwelle": "Donauwelle",
+"block.fruittrees.honey_pomelo_tea": "Honey Pomelo Tea",
+"block.fruittrees.rice_with_fruits": "Steamed Rice with Fruits in Bamboo",
+"block.fruittrees.lemon_roast_chicken_block": "Lemon Roast Chicken",
+"item.fruittrees.lemon_roast_chicken": "Plate of Lemon Roast Chicken",
 
 "item.fruittrees.heart_banner_pattern": "Banner Pattern",
 "item.fruittrees.heart_banner_pattern.desc": "Heart Charge",
@@ -130,6 +131,8 @@
 "gui.fruittrees.tip.flowering": "Flowered %s",
 "gui.fruittrees.tip.appleSaplingFromHeroOfTheVillage": "Gift from baby villager, when you become hero of the village.",
 "gui.fruittrees.tip.villageAppleTreeWorldGen": "Apple trees sometimes grow in villages in plains.",
+"tip.fruittrees.clearHarmfulEffects": "Clears Harmful Effects",
+"tip.fruittrees.useContainer": "You need a %s to eat this.",
 
 "advancements.fruittrees.grapefruit.title": "Fragrance of Citrus",
 "advancements.fruittrees.grapefruit.description": "Hybridize a grapefruit tree",

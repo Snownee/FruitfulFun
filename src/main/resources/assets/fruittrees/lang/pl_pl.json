@@ -12,11 +12,11 @@
   "item.fruittrees.cherry": "Wiśnia",
   "item.fruittrees.redlove": "Jabłko Redlove",
 
-  "item.fruittrees.grapefruit_panna_cotta": "Grejpfrutowa Panna Cotta",
-  "item.fruittrees.donauwelle": "Fale Dunaju",
-  "item.fruittrees.honey_pomelo_tea": "Herbata z pomelo z miodem",
-  "item.fruittrees.rice_with_fruits": "Ryż gotowany na parze z owocami w bambusie",
-  "item.fruittrees.lemon_roast_chicken": "Pieczony kurczak z cebulą",
+  "block.fruittrees.grapefruit_panna_cotta": "Grejpfrutowa Panna Cotta",
+  "block.fruittrees.donauwelle": "Fale Dunaju",
+  "block.fruittrees.honey_pomelo_tea": "Herbata z pomelo z miodem",
+  "block.fruittrees.rice_with_fruits": "Ryż gotowany na parze z owocami w bambusie",
+  "block.fruittrees.lemon_roast_chicken_block": "Pieczony kurczak z cebulą",
 
   "item.fruittrees.heart_banner_pattern": "Wzór sztandaru",
   "item.fruittrees.heart_banner_pattern.desc": "Figura serca",

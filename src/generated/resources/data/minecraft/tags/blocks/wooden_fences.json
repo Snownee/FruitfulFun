@@ -1,9 +1,6 @@
 {
   "values": [
     "fruittrees:citrus_fence",
-    {
-      "id": "fruittrees:cherry_fence",
-      "required": false
-    }
+    "fruittrees:cherry_fence"
   ]
 }
