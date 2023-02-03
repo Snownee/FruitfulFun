@@ -21,6 +21,8 @@ import com.google.common.base.Joiner;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.locating.IModFile;
 
@@ -30,16 +32,18 @@ public abstract class ConditionalPackResources extends AbstractPackResources {
 	private final String modId;
 	private final String extension;
 	final IModFile modFile;
+	private final PackMetadataSection packInfo;
 
-	public ConditionalPackResources(String modId) {
-		this(modId, "conditional");
+	public ConditionalPackResources(String modId, PackMetadataSection packInfo) {
+		this(modId, packInfo, "conditional");
 	}
 
-	public ConditionalPackResources(String modId, String extension) {
+	public ConditionalPackResources(String modId, PackMetadataSection packInfo, String extension) {
 		super(new File("Dummy"));
 		modFile = ModList.get().getModFileById(modId).getFile();
 		this.modId = modId;
 		this.extension = extension;
+		this.packInfo = packInfo;
 		source = createSource(modId);
 	}
 
@@ -119,8 +123,16 @@ public abstract class ConditionalPackResources extends AbstractPackResources {
 	}
 
 	@Override
+	public <T> T getMetadataSection(MetadataSectionSerializer<T> deserializer) throws IOException {
+		if (deserializer.getMetadataSectionName().equals("pack")) {
+			return (T) packInfo;
+		}
+		return null;
+	}
+
+	@Override
 	public String toString() {
-		return String.format(Locale.ROOT, "%s: %s", getClass().getName(), getSource());
+		return String.format(Locale.ENGLISH, "%s: %s", getClass().getName(), getSource());
 	}
 
 }

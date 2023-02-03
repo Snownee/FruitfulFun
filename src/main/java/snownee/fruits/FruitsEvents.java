@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -42,8 +43,8 @@ public final class FruitsEvents {
 	public static void addPackFinder(AddPackFindersEvent event) {
 		if (event.getPackType() == PackType.SERVER_DATA) {
 			event.addRepositorySource((Consumer<Pack> consumer, Pack.PackConstructor constructor) -> {
-				PackMetadataSection section = new PackMetadataSection(Component.literal("Fruit Trees Conditional Resources"), 9);
-				consumer.accept(constructor.create("mod:fruittrees:conditional", Component.literal(FruitsMod.NAME), true, FruitsConditionalPackResources::new, section, Position.TOP, PackSource.DEFAULT, true));
+				PackMetadataSection section = new PackMetadataSection(Component.literal("Fruit Trees Conditional Resources"), PackType.SERVER_DATA.getVersion(SharedConstants.getCurrentVersion()));
+				consumer.accept(constructor.create("mod:fruittrees:conditional", Component.literal(FruitsMod.NAME), true, () -> new FruitsConditionalPackResources(section), section, Position.TOP, PackSource.DEFAULT, true));
 			});
 		}
 	}
