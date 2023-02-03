@@ -335,6 +335,7 @@ public final class CoreModule extends AbstractModule {
 				VanillaActions.registerCompostable(0.3f, type.sapling.get());
 				VanillaActions.registerVillagerPickupable(type.fruit.get());
 				VanillaActions.registerVillagerCompostable(type.fruit.get());
+				VanillaActions.registerVillagerFood(type.fruit.get(), 1);
 			}
 			registerConfiguredFeatures();
 			WoodType.register(CITRUS_WOODTYPE);
