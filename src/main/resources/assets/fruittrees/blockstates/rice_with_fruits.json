@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "fruittrees:block/rice_with_fruits",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "fruittrees:block/rice_with_fruits"
+    },
+    "facing=south": {
+      "model": "fruittrees:block/rice_with_fruits",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "fruittrees:block/rice_with_fruits",
+      "y": 270
+    }
+  }
+}

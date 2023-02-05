@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "fruittrees:block/donauwelle",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "fruittrees:block/donauwelle"
+    },
+    "facing=south": {
+      "model": "fruittrees:block/donauwelle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "fruittrees:block/donauwelle",
+      "y": 270
+    }
+  }
+}
