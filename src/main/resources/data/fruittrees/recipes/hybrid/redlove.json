@@ -1,5 +1,5 @@
 {
-  "type": "fruittrees:hybriding",
+  "type": "fruittrees:hybridizing",
   "conditions": [
     {
       "type": "kiwi:is_loaded",
@@ -7,9 +7,9 @@
     }
   ],
   "ingredients": [
-    { "fruit": "apple" },
-    { "fruit": "cherry" },
-    { "block": "wither_rose" }
+    "fruittrees:apple_leaves",
+    "fruittrees:cherry_leaves",
+    "wither_rose"
   ],
-  "result": { "fruit": "redlove" }
+  "result": "fruittrees:redlove_leaves"
 }

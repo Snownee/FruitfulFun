@@ -1,7 +1,7 @@
 {
 "fruittrees": "Fruit Trees",
 
-"item.fruittrees.mandarin": "Mandarin",
+"item.fruittrees.mandarin": "Tangerine",
 "item.fruittrees.lime": "Lime",
 "item.fruittrees.citron": "Citron",
 "item.fruittrees.pomelo": "Pomelo",
@@ -56,7 +56,7 @@
 "block.minecraft.banner.fruittrees.snowflake.red": "Red Snowflake Charge",
 "block.minecraft.banner.fruittrees.snowflake.black": "Black Snowflake Charge",
 
-"block.fruittrees.mandarin_sapling": "Mandarin Sapling",
+"block.fruittrees.mandarin_sapling": "Tangerine Sapling",
 "block.fruittrees.lime_sapling": "Lime Sapling",
 "block.fruittrees.citron_sapling": "Citron Sapling",
 "block.fruittrees.pomelo_sapling": "Pomelo Sapling",
@@ -67,7 +67,7 @@
 "block.fruittrees.cherry_sapling": "Cherry Sapling",
 "block.fruittrees.redlove_sapling": "Redlove Sapling",
 
-"block.fruittrees.potted_mandarin": "Potted Mandarin Sapling",
+"block.fruittrees.potted_mandarin": "Potted Tangerine Sapling",
 "block.fruittrees.potted_lime": "Potted Lime Sapling",
 "block.fruittrees.potted_citron": "Potted Citron Sapling",
 "block.fruittrees.potted_pomelo": "Potted Pomelo Sapling",
@@ -78,7 +78,7 @@
 "block.fruittrees.potted_cherry": "Potted Cherry Sapling",
 "block.fruittrees.potted_redlove": "Potted Redlove Sapling",
 
-"block.fruittrees.mandarin_leaves": "Mandarin Leaves",
+"block.fruittrees.mandarin_leaves": "Tangerine Leaves",
 "block.fruittrees.lime_leaves": "Lime Leaves",
 "block.fruittrees.citron_leaves": "Citron Leaves",
 "block.fruittrees.pomelo_leaves": "Pomelo Leaves",
@@ -127,9 +127,9 @@
 
 "entity.fruittrees.sliding_door": "Sliding Door",
 
-"gui.fruittrees.hybriding": "Bee Pollinating",
+"gui.fruittrees.hybridizing": "Bee Pollinating",
 "gui.fruittrees.tip.flowering": "Flowered %s",
-"gui.fruittrees.tip.appleSaplingFromHeroOfTheVillage": "Gift from baby villager, when you become hero of the village.",
+"gui.fruittrees.tip.appleSaplingFromHeroOfTheVillage": "Gift from baby villager when you become hero of the village.",
 "gui.fruittrees.tip.villageAppleTreeWorldGen": "Apple trees sometimes grow in villages in plains.",
 "tip.fruittrees.clearHarmfulEffects": "Clears Harmful Effects",
 "tip.fruittrees.useContainer": "You need a %s to eat this.",

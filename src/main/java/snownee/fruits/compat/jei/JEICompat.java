@@ -19,14 +19,14 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitsConfig;
 import snownee.fruits.FruitsMod;
-import snownee.fruits.hybridization.HybridingRecipe;
-import snownee.fruits.hybridization.Hybridization;
+import snownee.fruits.hybridization.HybridizingRecipe;
+import snownee.fruits.hybridization.HybridizationModule;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
 
-	public static final ResourceLocation UID = new ResourceLocation(FruitsMod.ID, "hybriding");
-	public static final RecipeType<HybridingRecipe> RECIPE_TYPE = new RecipeType<>(UID, HybridingRecipe.class);
+	public static final ResourceLocation UID = new ResourceLocation(FruitsMod.ID, "hybridizing");
+	public static final RecipeType<HybridizingRecipe> RECIPE_TYPE = new RecipeType<>(UID, HybridizingRecipe.class);
 
 	@Override
 	public ResourceLocation getPluginUid() {
@@ -37,7 +37,7 @@ public class JEICompat implements IModPlugin {
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		if (Registry.RECIPE_TYPE.containsKey(UID)) {
-			registration.addRecipeCategories(new HybridingCategory(registration.getJeiHelpers().getGuiHelper()));
+			registration.addRecipeCategories(new HybridizingCategory(registration.getJeiHelpers().getGuiHelper()));
 		}
 	}
 
@@ -47,7 +47,7 @@ public class JEICompat implements IModPlugin {
 		if (Registry.RECIPE_TYPE.containsKey(UID)) {
 			ClientLevel world = Minecraft.getInstance().level;
 			RecipeManager recipeManager = world.getRecipeManager();
-			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.byType(Hybridization.RECIPE_TYPE).values()));
+			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.byType(HybridizationModule.RECIPE_TYPE).values()));
 		}
 
 		if (FruitsConfig.appleSaplingFromHeroOfTheVillage || FruitsConfig.villageAppleTreeWorldGen) {

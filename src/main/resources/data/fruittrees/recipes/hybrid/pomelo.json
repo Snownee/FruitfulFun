@@ -1,5 +1,5 @@
 {
-  "type": "fruittrees:hybriding",
+  "type": "fruittrees:hybridizing",
   "conditions": [
     {
       "type": "kiwi:is_loaded",
@@ -7,8 +7,8 @@
     }
   ],
   "ingredients": [
-    { "fruit": "mandarin" },
-    { "fruit": "citron" }
+    "fruittrees:mandarin_leaves",
+    "fruittrees:citron_leaves"
   ],
-  "result": { "fruit": "pomelo" }
+  "result": "fruittrees:pomelo_leaves"
 }

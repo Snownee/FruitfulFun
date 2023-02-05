@@ -3,7 +3,6 @@ package snownee.fruits.compat.jade;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Either;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -12,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.FruitType;
@@ -40,12 +38,10 @@ public class BeePollenProvider implements IEntityComponentProvider, IServerDataP
 			return;
 		}
 		ListTag list = data.getList("pollen", Tag.TAG_STRING);
-		List<Either<FruitType, Block>> pollen = Hooks.readPollen(list);
+		List<Block> pollen = Hooks.readPollen(list);
 		List<IElement> elements = Lists.newArrayList();
-		IElementHelper helper = tooltip.getElementHelper();
-		for (Either<FruitType, Block> e : pollen) {
-			ItemStack stack = e.map(type -> type.fruit.get(), block -> block.asItem()).getDefaultInstance();
-			elements.add(helper.item(stack));
+		for (Block block : pollen) {
+			elements.add(IElementHelper.get().item(FruitType.getFruitOrDefault(block).getDefaultInstance()));
 		}
 		tooltip.add(elements);
 	}

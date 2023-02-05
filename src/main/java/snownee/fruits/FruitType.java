@@ -46,4 +46,12 @@ public class FruitType {
 			featureWG = CoreModule.makeConfiguredFeature(this, true, carpet);
 	}
 
+	public static Item getFruitOrDefault(Block block) {
+		if (block instanceof FruitLeavesBlock leavesBlock) {
+			return leavesBlock.type.get().fruit.get();
+		} else {
+			return block.asItem();
+		}
+	}
+
 }

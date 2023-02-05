@@ -1,11 +1,9 @@
 package snownee.fruits.compat.jei;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Either;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
@@ -28,14 +26,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitsMod;
-import snownee.fruits.hybridization.HybridingRecipe;
+import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.hybridization.HybridizingRecipe;
 
-public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
+public class HybridizingCategory implements IRecipeCategory<HybridizingRecipe> {
 
 	private final Component localizedName;
 	private final IDrawable icon;
@@ -49,9 +49,9 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	public static final int height = 54;
 
 	//InventoryScreen.renderEntityInInventory
-	public HybridingCategory(IGuiHelper guiHelper) {
+	public HybridizingCategory(IGuiHelper guiHelper) {
 		this.guiHelper = guiHelper;
-		localizedName = Component.translatable("gui.fruittrees.hybriding");
+		localizedName = Component.translatable("gui.fruittrees.hybridizing");
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, CoreModule.GRAPEFRUIT.itemStack());
 		background = guiHelper.createBlankDrawable(width, height);
 		float f = (float) Math.atan(1000 / 40.0F);
@@ -82,7 +82,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	}
 
 	@Override
-	public void draw(HybridingRecipe recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY) {
+	public void draw(HybridizingRecipe recipe, IRecipeSlotsView view, PoseStack matrix, double mouseX, double mouseY) {
 		x.draw(matrix, 18, 22);
 		line.draw(matrix, 54, 26);
 
@@ -115,27 +115,19 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 		matrix.popPose();
 	}
 
-	public static ItemStack asItem(Either<FruitType, Block> either) {
-		Optional<FruitType> left = either.left();
-		if (left.isPresent()) {
-			return new ItemStack(left.get().leaves.get());
-		} else {
-			return either.right().get().asItem().getDefaultInstance();
-		}
-	}
-
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, HybridingRecipe recipe, IFocusGroup focuses) {
-		Either<FruitType, Block> result = recipe.getResult(recipe.ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, HybridizingRecipe recipe, IFocusGroup focuses) {
+		Block result = recipe.getResult(recipe.ingredients);
 		ImmutableList.Builder<ItemStack> outputs = ImmutableList.builder();
-		result.ifLeft(t -> {
-			outputs.add(t.sapling.get().asItem().getDefaultInstance(), t.fruit.get().getDefaultInstance());
-		}).ifRight(b -> {
-			outputs.add(b.asItem().getDefaultInstance());
-		});
+		if (result instanceof FruitLeavesBlock leavesBlock) {
+			FruitType type = leavesBlock.type.get();
+			outputs.add(type.sapling.get().asItem().getDefaultInstance(), type.fruit.get().getDefaultInstance());
+		} else {
+			outputs.add(result.asItem().getDefaultInstance());
+		}
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 19).addItemStacks(outputs.build()).setBackground(guiHelper.getSlotDrawable(), -1, -1);
 
-		List<ItemStack> inputs = recipe.ingredients.stream().map(HybridingCategory::asItem).toList();
+		List<ItemStack> inputs = recipe.ingredients.stream().map(FruitType::getFruitOrDefault).map(Item::getDefaultInstance).toList();
 		int size = recipe.ingredients.size();
 		int x = 1;
 		int y = size > 2 ? 6 : 19;
@@ -161,7 +153,7 @@ public class HybridingCategory implements IRecipeCategory<HybridingRecipe> {
 	}
 
 	@Override
-	public RecipeType<HybridingRecipe> getRecipeType() {
+	public RecipeType<HybridizingRecipe> getRecipeType() {
 		return JEICompat.RECIPE_TYPE;
 	}
 

@@ -9,21 +9,21 @@ import snownee.kiwi.KiwiModule.Name;
 
 @KiwiModule("hybridization")
 @KiwiModule.Optional
-public class Hybridization extends AbstractModule {
+public class HybridizationModule extends AbstractModule {
 
-	public Hybridization() {
+	public HybridizationModule() {
 		Hooks.hybridization = true;
 	}
 
-	@Name("hybriding")
-	public static final RecipeType<HybridingRecipe> RECIPE_TYPE = new RecipeType<>() {
+	@Name("hybridizing")
+	public static final RecipeType<HybridizingRecipe> RECIPE_TYPE = new RecipeType<>() {
 		@Override
 		public String toString() {
-			return "hybriding";
+			return "hybridizing";
 		}
 	};
 
-	@Name("hybriding")
-	public static final RecipeSerializer<HybridingRecipe> SERIALIZER = new HybridingRecipe.Serializer();
+	@Name("hybridizing")
+	public static final RecipeSerializer<HybridizingRecipe> SERIALIZER = new HybridizingRecipe.Serializer();
 
 }

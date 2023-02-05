@@ -1,5 +1,5 @@
 {
-  "type": "fruittrees:hybriding",
+  "type": "fruittrees:hybridizing",
   "conditions": [
     {
       "type": "kiwi:is_loaded",
@@ -7,8 +7,8 @@
     }
   ],
   "ingredients": [
-    { "block": "blue_orchid" },
-    { "block": "oxeye_daisy" }
+    "blue_orchid",
+    "oxeye_daisy"
   ],
-  "result": { "block": "mycelium" }
+  "result": "mycelium"
 }

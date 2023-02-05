@@ -1,5 +1,5 @@
 {
-  "type": "fruittrees:hybriding",
+  "type": "fruittrees:hybridizing",
   "conditions": [
     {
       "type": "kiwi:is_loaded",
@@ -7,8 +7,8 @@
     }
   ],
   "ingredients": [
-    { "fruit": "apple" },
-    { "block": "poppy" }
+    "fruittrees:apple_leaves",
+    "poppy"
   ],
-  "result": { "block": "rose_bush" }
+  "result": "rose_bush"
 }
