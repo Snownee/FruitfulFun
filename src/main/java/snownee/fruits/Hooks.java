@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -30,12 +30,10 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.fruits.cherry.block.SlidingDoorEntity;
 import snownee.fruits.hybridization.HybridingContext;
 import snownee.fruits.hybridization.HybridingRecipe;
 import snownee.fruits.hybridization.Hybridization;
@@ -166,21 +164,22 @@ public final class Hooks {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public static void modifyRayTraceResult(Minecraft mc) {
-		if (mc.hitResult instanceof EntityHitResult) {
-			Entity entity = ((EntityHitResult) mc.hitResult).getEntity();
-			if (entity instanceof SlidingDoorEntity) {
-				Vec3 vec = mc.hitResult.getLocation();
-				BlockPos pos = entity.blockPosition();
-				if (vec.y - pos.getY() >= 1)
-					pos = pos.above();
-				AABB intersection = entity.getBoundingBox().intersect(new AABB(pos));
-				vec = intersection.getCenter();
-				//mc.level.addParticle(ParticleTypes.ANGRY_VILLAGER, vec.x, vec.y, vec.z, 0, 0, 0);
-				mc.hitResult = new BlockHitResult(vec, Direction.UP, pos, false);
-			}
+	public static void modifyRayTraceResult(HitResult hitResult, Consumer<HitResult> consumer) {
+		if (hitResult == null || hitResult.getType() != HitResult.Type.ENTITY) {
+			return;
 		}
+		Entity entity = ((EntityHitResult) hitResult).getEntity();
+		if (entity.getType() != CoreModule.SLIDING_DOOR) {
+			return;
+		}
+		Vec3 vec = hitResult.getLocation();
+		BlockPos pos = entity.blockPosition();
+		if (vec.y - pos.getY() >= 1)
+			pos = pos.above();
+		AABB intersection = entity.getBoundingBox().intersect(new AABB(pos));
+		vec = intersection.getCenter();
+		//mc.level.addParticle(ParticleTypes.ANGRY_VILLAGER, vec.x, vec.y, vec.z, 0, 0, 0);
+		consumer.accept(new BlockHitResult(vec, Direction.UP, pos, false));
 	}
 
 }

@@ -1,6 +1,5 @@
 package snownee.fruits.mixin;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,11 +14,10 @@ import snownee.fruits.Hooks;
 public class GameRendererMixin {
 
 	@Shadow
-	@Final
 	private Minecraft minecraft;
 
 	@Inject(at = @At("RETURN"), method = "pick")
 	public void fruits_pick(float partialTicks, CallbackInfo cir) {
-		Hooks.modifyRayTraceResult(minecraft);
+		Hooks.modifyRayTraceResult(minecraft.hitResult, $ -> minecraft.hitResult = $);
 	}
 }
