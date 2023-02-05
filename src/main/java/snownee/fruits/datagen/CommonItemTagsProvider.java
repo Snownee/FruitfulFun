@@ -16,6 +16,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitsMod;
+import snownee.fruits.food.FoodModule;
 import snownee.kiwi.datagen.provider.TagsProviderHelper;
 
 public class CommonItemTagsProvider extends ItemTagsProvider {
@@ -53,6 +54,7 @@ public class CommonItemTagsProvider extends ItemTagsProvider {
 		helper.add(FRUITS, CITRON, GRAPEFRUIT, LEMON, LIME, MANDARIN, ORANGE, POMELO);
 		helper.optional(FRUITS, CHERRY, REDLOVE);
 		tag(ItemTags.FOX_FOOD).addTag(FRUITS);
+		tag(FoodModule.PANDA_FOOD).addOptional(FoodModule.RICE_WITH_FRUITS.key());
 	}
 
 }

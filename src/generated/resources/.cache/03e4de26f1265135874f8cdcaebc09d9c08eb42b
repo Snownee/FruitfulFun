@@ -1,8 +1,9 @@
-// 1.19.2	2023-02-04T06:47:16.688209	Tags for minecraft:item
+// 1.19.2	2023-02-05T21:35:12.2857264	Tags for minecraft:item
 8cdde066f5516d15cbdfa4f243915c27cf1f7c86 data/forge/tags/items/fence_gates/wooden.json
 eb872483ecb6b99d5800a2411b38d1dde7e4e103 data/forge/tags/items/fruits.json
 de5004c40e0126668e0f26d06a8499c950a1ffcb data/fruittrees/tags/items/cherry_logs.json
 10aa50822b731fb5ec0c09c7fe413bac20e56678 data/fruittrees/tags/items/citrus_logs.json
+7cf53975120f31e946a9178c940a9f1e10e80708 data/fruittrees/tags/items/panda_food.json
 8da3bf1486053efd5b44292800ad9c65d3553da6 data/minecraft/tags/items/fox_food.json
 aef8b4aca1376c0920c85e615db761e4ad733e53 data/minecraft/tags/items/leaves.json
 b66a57406644dc9e43fba5dc53d579ef05c7d9cd data/minecraft/tags/items/logs_that_burn.json

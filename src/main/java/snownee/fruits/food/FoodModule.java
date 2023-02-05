@@ -6,6 +6,7 @@ import com.google.common.base.Suppliers;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import snownee.fruits.FruitsMod;
 import snownee.fruits.Hooks;
 import snownee.fruits.food.datagen.FoodBlockLoot;
 import snownee.kiwi.AbstractModule;
@@ -44,6 +46,8 @@ public class FoodModule extends AbstractModule {
 		private static final Supplier<MobEffectInstance> REGENERATION_PROVIDER = makeSupplier("regeneration", 120, 0);
 		private static final Supplier<MobEffectInstance> SPEED_PROVIDER = makeSupplier("speed", 1200, 0);
 	}
+
+	public static final TagKey<Item> PANDA_FOOD = itemTag(FruitsMod.ID, "panda_food");
 
 	/* off */
 	public static Item.Properties GRAPEFRUIT_PANNA_COTTA_PROP = itemProp().food(new FoodProperties.Builder()
@@ -83,11 +87,16 @@ public class FoodModule extends AbstractModule {
 	).craftRemainder(Items.BOWL)));
 	public static Item.Properties LEMON_ROAST_CHICKEN_PROP = itemProp().craftRemainder(Items.BOWL);
 	public static final KiwiGO<Block> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Shapes.block(), LEMON_ROAST_CHICKEN));
+	/* on */
+
+	public FoodModule() {
+		Hooks.food = true;
+	}
 
 	@Override
 	protected void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(generator).add(FoodBlockLoot::new, LootContextParamSets.BLOCK));
 	}
-	
+
 }

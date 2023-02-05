@@ -9,7 +9,8 @@
     "BlockEntityTypeMixin",
     "BlockStateMixin",
     "GiveGiftToHeroMixin",
-    "LivingEntityAccess"
+    "LivingEntityAccess",
+    "PandaMixin"
   ],
   "client": [
     "ItemBlockRenderTypesMixin",

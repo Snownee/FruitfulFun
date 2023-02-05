@@ -46,6 +46,7 @@ import snownee.kiwi.util.Util;
 public final class Hooks {
 
 	public static boolean hybridization;
+	public static boolean food;
 	public static boolean farmersdelight = Platform.isModLoaded("farmersdelight");
 
 	private Hooks() {
