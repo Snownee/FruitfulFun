@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.FilteredFlyingPathNavigation;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -25,17 +26,18 @@ public abstract class BeeMixin extends Animal {
 	}
 
 	@Inject(at = @At("HEAD"), method = "isFlowerValid", cancellable = true)
-	public void fruits_isFlowerValid(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		if (!Hooks.hybridization) {
+	private void fruits_isFlowerValid(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+		if (!Hooks.hybridization || !level.isLoaded(pos)) {
 			return;
 		}
-		if (level.isLoaded(pos) && level.getBlockState(pos).getBlock() instanceof FruitLeavesBlock) {
+		BlockState state = level.getBlockState(pos);
+		if (!state.hasBlockEntity() && state.getBlock() instanceof FruitLeavesBlock) {
 			cir.setReturnValue(true);
 		}
 	}
 
 	@Inject(at = @At("HEAD"), method = "createNavigation", cancellable = true)
-	protected void fruits_createNavigation(Level levelIn, CallbackInfoReturnable<PathNavigation> cir) {
+	private void fruits_createNavigation(Level levelIn, CallbackInfoReturnable<PathNavigation> cir) {
 		FilteredFlyingPathNavigation flyingpathnavigator = new FilteredFlyingPathNavigation(this, levelIn);
 		flyingpathnavigator.setCanOpenDoors(false);
 		flyingpathnavigator.setCanFloat(false);

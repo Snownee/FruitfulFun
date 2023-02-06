@@ -8,13 +8,20 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.SectionPos;
+import net.minecraft.core.particles.VibrationParticleOption;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
@@ -26,6 +33,9 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -177,4 +187,38 @@ public final class Hooks {
 		consumer.accept(new BlockHitResult(vec, Direction.UP, pos, false));
 	}
 
+	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
+		Vec3 eye = player.getEyePosition();
+		BlockPos eyePos = new BlockPos(eye);
+		int sectionX = SectionPos.blockToSectionCoord(eyePos.getX());
+		int sectionZ = SectionPos.blockToSectionCoord(eyePos.getZ());
+		MutableBoolean success = new MutableBoolean();
+		for (int x = -1; x < 2; x++) {
+			for (int z = -1; z < 2; z++) {
+				LevelChunk chunk = level.getChunk(sectionX + x, sectionZ + z);
+				chunk.getBlockEntities().entrySet().forEach(e -> {
+					if (!CoreModule.FRUIT_TREE.is(e.getValue().getType())) {
+						return;
+					}
+					BlockPos pos = e.getKey().below(2);
+					double dist = pos.distSqr(eyePos);
+					if (dist > 18 * 18) {
+						return;
+					}
+					dist = Math.sqrt(dist);
+					PositionSource dest = new BlockPositionSource(pos);
+					level.sendParticles(new VibrationParticleOption(dest, Math.max((int) (dist / 2), 4)), eye.x, eye.y, eye.z, 1, 0, 0, 0, 0);
+					FruitLeavesBlock.rangeDrop(level, 0, BlockPos.betweenClosed(pos.offset(-2, -1, -2), pos.offset(2, 2, 2)), (p, s) -> {
+						success.setTrue();
+					});
+				});
+			}
+		}
+		if (success.booleanValue()) {
+			Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruittrees/horn"));
+			if (advancement != null) {
+				player.getAdvancements().award(advancement, "_");
+			}
+		}
+	}
 }

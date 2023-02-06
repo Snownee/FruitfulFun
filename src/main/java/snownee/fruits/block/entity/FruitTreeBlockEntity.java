@@ -1,7 +1,5 @@
 package snownee.fruits.block.entity;
 
-import java.util.Locale;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -58,7 +56,7 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 		NBTHelper helper = NBTHelper.of(compound);
 		String id = helper.getString("type");
 		if (id != null) {
-			type = FruitType.REGISTRY.getValue(Util.RL(id.toLowerCase(Locale.ENGLISH), FruitsMod.ID));
+			type = FruitType.REGISTRY.getValue(Util.RL(id, FruitsMod.ID));
 			if (type == null) {
 				type = CoreFruitTypes.CITRON.get();
 			}
@@ -100,6 +98,10 @@ public class FruitTreeBlockEntity extends BaseBlockEntity implements GameEventLi
 			return 1;
 		}
 		return deathRate / 50F;
+	}
+
+	public int getRawDeathRate() {
+		return deathRate;
 	}
 
 	@Override

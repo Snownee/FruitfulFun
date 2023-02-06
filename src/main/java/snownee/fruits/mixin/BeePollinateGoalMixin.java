@@ -22,7 +22,7 @@ public abstract class BeePollinateGoalMixin {
 	private final Predicate<BlockState> VALID_POLLINATION_BLOCKS = Hooks::canPollinate;
 
 	@Inject(method = "stop", at = @At("HEAD"))
-	public void onComplete(CallbackInfo cir) {
+	private void onComplete(CallbackInfo cir) {
 		if (!Hooks.hybridization || this$0.getSavedFlowerPos() == null) {
 			return;
 		}

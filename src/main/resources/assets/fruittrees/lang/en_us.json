@@ -132,6 +132,8 @@
   "advancements.fruittrees.redlove.description": "Hybridize a redlove tree",
   "advancements.fruittrees.forestbat.title": "Accelerationist",
   "advancements.fruittrees.forestbat.description": "Discover the secret of forest bat",
+  "advancements.fruittrees.horn.title": "Burst into Song",
+  "advancements.fruittrees.horn.description": "Harvesting fruits using a specific type of goat horn",
   "fruittrees.forestbat": "Forest Bat",
   "config.jade.plugin_fruittrees": "Fruit Trees",
   "config.jade.plugin_fruittrees.bee": "Bee"

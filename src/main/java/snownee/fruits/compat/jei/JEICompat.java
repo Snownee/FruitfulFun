@@ -19,8 +19,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitsConfig;
 import snownee.fruits.FruitsMod;
-import snownee.fruits.hybridization.HybridizingRecipe;
 import snownee.fruits.hybridization.HybridizationModule;
+import snownee.fruits.hybridization.HybridizingRecipe;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {

@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityTypeMixin {
 
 	@Inject(at = @At("HEAD"), method = "isValid", cancellable = true)
-	public void fruits_isValid(BlockState pState, CallbackInfoReturnable<Boolean> cir) {
+	private void fruits_isValid(BlockState pState, CallbackInfoReturnable<Boolean> cir) {
 		if ((Object) this == BlockEntityType.SIGN && pState.getBlock() instanceof SignBlock) {
 			cir.setReturnValue(true);
 		}

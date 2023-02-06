@@ -1,5 +1,6 @@
 package snownee.fruits.block;
 
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
@@ -33,6 +34,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEventListener;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -81,8 +84,8 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		world.setBlockAndUpdate(pos, state.cycle(AGE));
 	}
 
-	public static Supplier<ItemEntity> dropFruit(Level level, BlockPos pos, BlockState state, float deathRate) {
-		if (level.isClientSide || state.getValue(AGE) != 3)
+	public static Supplier<ItemEntity> dropFruit(ServerLevel level, BlockPos pos, BlockState state, float deathRate) {
+		if (state.getValue(AGE) != 3)
 			return () -> null;
 		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS))
 			return () -> null;
@@ -177,7 +180,8 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(PERSISTENT, true);
+		FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
+		return defaultBlockState().setValue(PERSISTENT, true).setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
 	}
 
 	@Override
@@ -200,14 +204,21 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			if (receiver instanceof FruitTreeBlockEntity) {
 				deathRate = ((FruitTreeBlockEntity) receiver).getDeathRate();
 			}
-			for (BlockPos pos2 : BlockPos.betweenClosed(pos.getX() - 1, pos.getY() - 2, pos.getZ() - 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1)) {
-				BlockState state = worldIn.getBlockState(pos2);
-				if (state.getBlock() instanceof FruitLeavesBlock) {
-					dropFruit(worldIn, pos2, state, deathRate).get();
-					if (type.get().carpet != null) {
-						CarpetTreeDecorator.placeCarpet(worldIn, pos2, type.get().carpet.get().defaultBlockState(), worldIn::setBlockAndUpdate);
-					}
+			rangeDrop((ServerLevel) worldIn, deathRate, BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1)), (p, s) -> {
+				FruitType type = ((FruitLeavesBlock) s.getBlock()).type.get();
+				if (type.carpet != null) {
+					CarpetTreeDecorator.placeCarpet(worldIn, pos, type.carpet.get().defaultBlockState(), worldIn::setBlockAndUpdate);
 				}
+			});
+		}
+	}
+
+	public static void rangeDrop(ServerLevel worldIn, float deathRate, Iterable<BlockPos> posList, BiConsumer<BlockPos, BlockState> consumer) {
+		for (BlockPos pos : posList) {
+			BlockState state = worldIn.getBlockState(pos);
+			if (state.getBlock() instanceof FruitLeavesBlock) {
+				dropFruit(worldIn, pos, state, deathRate).get();
+				consumer.accept(pos, state);
 			}
 		}
 	}
