@@ -484,7 +484,7 @@ public final class CoreModule extends AbstractModule {
 		DataGenerator generator = event.getGenerator();
 		boolean includeServer = event.includeServer();
 		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-		generator.addProvider(includeServer, new KiwiLootTableProvider(generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
+		generator.addProvider(includeServer, new KiwiLootTableProvider(uid, generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
 		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, existingFileHelper);
 		generator.addProvider(includeServer, blockTagsProvider);
 		generator.addProvider(includeServer, new CommonItemTagsProvider(generator, blockTagsProvider, existingFileHelper));

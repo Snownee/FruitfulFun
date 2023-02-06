@@ -96,7 +96,7 @@ public class FoodModule extends AbstractModule {
 	@Override
 	protected void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(generator).add(FoodBlockLoot::new, LootContextParamSets.BLOCK));
+		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(uid, generator).add(FoodBlockLoot::new, LootContextParamSets.BLOCK));
 	}
 
 }

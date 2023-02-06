@@ -198,8 +198,8 @@ dependencies {
     implementation fg.deobf("curse.maven:jade-324717:4159759")
     //implementation fg.deobf("curse.maven:kiwi-303657:4036329")
     //annotationProcessor "curse.maven:kiwi-303657:4036329"
-    implementation fg.deobf("maven.modrinth:kiwi:39zzWPTy")
-    annotationProcessor "maven.modrinth:kiwi:39zzWPTy"
+    implementation fg.deobf("maven.modrinth:kiwi:bJKJmDe9")
+    annotationProcessor "maven.modrinth:kiwi:bJKJmDe9"
 }
 
 processResources {

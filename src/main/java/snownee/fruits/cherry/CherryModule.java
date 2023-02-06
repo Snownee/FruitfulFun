@@ -176,7 +176,7 @@ public class CherryModule extends AbstractModule {
 	@Override
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(generator).add(CherryBlockLoot::new, LootContextParamSets.BLOCK));
+		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(uid, generator).add(CherryBlockLoot::new, LootContextParamSets.BLOCK));
 	}
 
 	@SubscribeEvent
