@@ -50,12 +50,14 @@ public final class FruitsEvents {
 	}
 
 	public static void newRegistry(NewRegistryEvent event) {
+		/* off */
 		event.create(new RegistryBuilder<FruitType>()
 				.setName(new ResourceLocation(FruitsMod.ID, "fruit_type"))
 				.setDefaultKey(new ResourceLocation(FruitsMod.ID, "citron")), v -> {
 			FruitType.REGISTRY = v;
 			Kiwi.registerRegistry(v, FruitType.class);
 		});
+		/* on */
 	}
 
 	@SubscribeEvent

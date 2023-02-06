@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:husbandry/fruittrees/start",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:villager",
+              "flags": {
+                "is_baby": true
+              }
+            }
+          }
+        ],
+        "item": {
+          "items": [
+            "fruittrees:apple_sapling"
+          ]
+        }
+      },
+      "trigger": "minecraft:thrown_item_picked_up_by_player"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruittrees.apple.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fruittrees:apple_sapling"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruittrees.apple.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ]
+}

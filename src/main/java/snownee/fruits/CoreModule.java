@@ -102,6 +102,7 @@ import snownee.fruits.cherry.client.SlidingDoorRenderer;
 import snownee.fruits.datagen.CommonBlockTagsProvider;
 import snownee.fruits.datagen.CommonItemTagsProvider;
 import snownee.fruits.datagen.CoreBlockLoot;
+import snownee.fruits.datagen.FruitsAdvancements;
 import snownee.fruits.levelgen.MultiFilteredAddFeaturesBiomeModifier;
 import snownee.fruits.levelgen.foliageplacers.FruitBlobFoliagePlacer;
 import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
@@ -373,39 +374,6 @@ public final class CoreModule extends AbstractModule {
 		registry.put(RL(id), new PlacedFeature(cf, VegetationPlacements.treePlacement(placement, CoreModule.LEMON_SAPLING.get())));
 	}
 
-	/*
-	public static void insertFeatures(BiomeLoadingEvent event) {
-		if (!FruitsConfig.fruitTreesWorldGen) {
-			return;
-		}
-		ClimateSettings climate = event.getClimate();
-		if (climate.precipitation() != Precipitation.RAIN) {
-			return;
-		}
-		if (climate.temperatureModifier() == TemperatureModifier.FROZEN) {
-			return;
-		}
-		BiomeCategory category = event.getCategory();
-		int i;
-		switch (category) {
-		case PLAINS:
-			i = 0;
-			break;
-		case FOREST:
-			i = 1;
-			break;
-		case JUNGLE:
-			i = 2;
-			break;
-		default:
-			return;
-		}
-		event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, allFeatures[i]);
-		if (category != BiomeCategory.JUNGLE && Hooks.cherry) {
-			event.getGeneration().addFeature(Decoration.VEGETAL_DECORATION, allFeatures[i + 3]);
-		}
-	}*/
-
 	public static Holder<ConfiguredFeature<TreeConfiguration, ?>> makeConfiguredFeature(FruitType type, boolean worldGen, Supplier<Block> carpet) {
 		BlockStateProvider leavesProvider;
 		List<TreeDecorator> decorators;
@@ -488,6 +456,7 @@ public final class CoreModule extends AbstractModule {
 		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, existingFileHelper);
 		generator.addProvider(includeServer, blockTagsProvider);
 		generator.addProvider(includeServer, new CommonItemTagsProvider(generator, blockTagsProvider, existingFileHelper));
+		generator.addProvider(includeServer, new KiwiAdvancementProvider(uid, generator, existingFileHelper).add(new FruitsAdvancements(existingFileHelper)));
 
 		registerConfiguredFeatures();
 		RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());

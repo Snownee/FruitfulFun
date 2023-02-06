@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:husbandry/fruittrees/apple",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fruittrees:redlove_sapling"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruittrees.redlove.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "fruittrees:redlove"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruittrees.redlove.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}
