@@ -1,0 +1,140 @@
+{
+	"credit": "Made with Blockbench",
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"0": "block/fruittrees/lemon_roast_chicken",
+		"1": "block/fruittrees/tray_top_veggies",
+		"2": "block/fruittrees/tray_bottom",
+		"3": "block/fruittrees/roast_chicken_gibs",
+		"particle": "block/fruittrees/lemon_roast_chicken"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 2, 15],
+			"faces": {
+				"north": {"uv": [1, 11, 15, 13], "texture": "#2"},
+				"east": {"uv": [1, 11, 15, 13], "texture": "#2"},
+				"south": {"uv": [1, 11, 15, 13], "texture": "#2"},
+				"west": {"uv": [1, 11, 15, 13], "texture": "#2"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#1"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#2", "cullface": "down"}
+			}
+		},
+		{
+			"from": [2, 5, 9],
+			"to": [4, 8, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [12, 13, 14, 16], "texture": "#3"},
+				"east": {"uv": [8, 13, 12, 16], "texture": "#3"},
+				"south": {"uv": [14, 13, 16, 16], "texture": "#3"},
+				"west": {"uv": [12, 13, 8, 16], "texture": "#3"},
+				"up": {"uv": [12, 9, 14, 13], "texture": "#3"},
+				"down": {"uv": [12, 13, 14, 9], "texture": "#3"}
+			}
+		},
+		{
+			"from": [2, 2, 3],
+			"to": [4, 5, 7],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [12, 13, 14, 16], "texture": "#3"},
+				"east": {"uv": [8, 13, 12, 16], "texture": "#3"},
+				"south": {"uv": [12, 13, 14, 16], "texture": "#3"},
+				"west": {"uv": [12, 13, 8, 16], "texture": "#3"},
+				"up": {"uv": [12, 9, 14, 13], "texture": "#3"},
+				"down": {"uv": [12, 13, 14, 9], "texture": "#3"}
+			}
+		},
+		{
+			"from": [12, 2, 3],
+			"to": [14, 5, 7],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [12, 13, 14, 16], "texture": "#3"},
+				"east": {"uv": [8, 13, 12, 16], "texture": "#3"},
+				"south": {"uv": [12, 13, 14, 16], "texture": "#3"},
+				"west": {"uv": [12, 13, 8, 16], "texture": "#3"},
+				"up": {"uv": [12, 9, 14, 13], "texture": "#3"},
+				"down": {"uv": [12, 13, 14, 9], "texture": "#3"}
+			}
+		},
+		{
+			"from": [12, 5, 9],
+			"to": [14, 8, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [12, 13, 14, 16], "texture": "#3"},
+				"east": {"uv": [8, 13, 12, 16], "texture": "#3"},
+				"south": {"uv": [14, 13, 16, 16], "texture": "#3"},
+				"west": {"uv": [12, 13, 8, 16], "texture": "#3"},
+				"up": {"uv": [12, 9, 14, 13], "texture": "#3"},
+				"down": {"uv": [12, 13, 14, 9], "texture": "#3"}
+			}
+		},
+		{
+			"from": [4, 2, 4],
+			"to": [12, 9, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [8, 1, 16, 8], "texture": "#0"},
+				"east": {"uv": [0, 9, 8, 16], "texture": "#0"},
+				"south": {"uv": [8, 9, 16, 16], "texture": "#0"},
+				"west": {"uv": [8, 9, 0, 16], "texture": "#0"},
+				"up": {"uv": [8, 8, 0, 0], "texture": "#0"}
+			}
+		},
+		{
+			"name": "ribcage_end",
+			"from": [5, 8, 5],
+			"to": [11, 8, 11],
+			"faces": {
+				"up": {"uv": [1, 9, 7, 15], "texture": "#missing"},
+				"down": {"uv": [1, 9, 7, 15], "rotation": 180, "texture": "#missing"}
+			}
+		},
+		{
+			"name": "spine",
+			"from": [5, 3, 5],
+			"to": [11, 3, 11],
+			"faces": {
+				"up": {"uv": [1, 1, 7, 7], "texture": "#missing"},
+				"down": {"uv": [1, 1, 7, 7], "rotation": 180, "texture": "#missing"}
+			}
+		},
+		{
+			"name": "ribcage_left",
+			"from": [5, 3, 5],
+			"to": [5, 8, 11],
+			"faces": {
+				"east": {"uv": [15, 2, 9, 7], "texture": "#missing"},
+				"west": {"uv": [9, 2, 15, 7], "texture": "#missing"}
+			}
+		},
+		{
+			"name": "ribcage_right",
+			"from": [11, 3, 5],
+			"to": [11, 8, 11],
+			"faces": {
+				"east": {"uv": [15, 2, 9, 7], "texture": "#missing"},
+				"west": {"uv": [9, 2, 15, 7], "texture": "#missing"}
+			}
+		}
+	],
+	"groups": [
+		0,
+		{
+			"name": "chicken",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [1, 2, 3, 4, 5]
+		},
+		{
+			"name": "bones",
+			"origin": [16, 28, 16],
+			"color": 0,
+			"children": [6, 7, 8, 9]
+		}
+	]
+}

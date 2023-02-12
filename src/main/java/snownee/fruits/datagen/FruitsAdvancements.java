@@ -40,17 +40,7 @@ public class FruitsAdvancements implements Consumer<Consumer<Advancement>> {
 				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(CommonItemTagsProvider.FRUITS).build()))
 				.save(consumer, new ResourceLocation("husbandry/fruittrees/start"), fileHelper);
 
-		Advancement.Builder.advancement()
-				.parent(start)
-				.display(
-						CoreModule.EMPOWERED_CITRON.get(),
-						Component.translatable("advancements.fruittrees.forestbat.title"),
-						Component.translatable("advancements.fruittrees.forestbat.description"),
-						null, FrameType.TASK, true, true, true)
-				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CoreModule.EMPOWERED_CITRON.get()))
-				.save(consumer, "husbandry/fruittrees/forestbat");
-
-		Advancement.Builder.advancement()
+		Advancement grapefruit = Advancement.Builder.advancement()
 				.parent(start)
 				.display(
 						CoreModule.GRAPEFRUIT.get(),
@@ -60,6 +50,16 @@ public class FruitsAdvancements implements Consumer<Consumer<Advancement>> {
 				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CoreModule.GRAPEFRUIT_SAPLING.get()))
 				.rewards(xp100)
 				.save(consumer, "husbandry/fruittrees/grapefruit");
+
+		Advancement.Builder.advancement()
+				.parent(grapefruit)
+				.display(
+						CoreModule.EMPOWERED_CITRON.get(),
+						Component.translatable("advancements.fruittrees.forestbat.title"),
+						Component.translatable("advancements.fruittrees.forestbat.description"),
+						null, FrameType.TASK, true, true, true)
+				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CoreModule.EMPOWERED_CITRON.get()))
+				.save(consumer, "husbandry/fruittrees/forestbat");
 
 		Advancement apple = Advancement.Builder.advancement()
 				.parent(start)

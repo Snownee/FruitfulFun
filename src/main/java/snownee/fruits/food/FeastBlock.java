@@ -19,15 +19,16 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FeastBlock extends FoodBlock {
 
 	public final Supplier<Item> servingItem;
-	private final VoxelShape leftoverShape = Block.box(2, 0, 2, 14, 1, 14);
+	public static final VoxelShape LEFTOVER_SHAPE = Block.box(2, 0, 2, 14, 1, 14);
 
 	public FeastBlock(VoxelShape northShape, Supplier<Item> servingItem) {
-		super(northShape);
+		super(Shapes.or(northShape, LEFTOVER_SHAPE));
 		this.servingItem = servingItem;
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(getServingsProperty(), getMaxServings()));
 	}
@@ -98,7 +99,7 @@ public class FeastBlock extends FoodBlock {
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		if (getServings(state) == 0) {
-			return leftoverShape;
+			return LEFTOVER_SHAPE;
 		}
 		return super.getShape(state, level, pos, context);
 	}

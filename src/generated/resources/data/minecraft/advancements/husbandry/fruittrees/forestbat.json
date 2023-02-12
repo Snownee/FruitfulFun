@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:husbandry/fruittrees/start",
+  "parent": "minecraft:husbandry/fruittrees/grapefruit",
   "criteria": {
     "_": {
       "conditions": {

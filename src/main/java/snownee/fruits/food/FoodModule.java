@@ -14,7 +14,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.FruitsMod;
@@ -23,6 +22,8 @@ import snownee.fruits.food.datagen.FoodBlockLoot;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
+import snownee.kiwi.KiwiModule.RenderLayer;
+import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
 
 @KiwiModule("food")
@@ -56,14 +57,14 @@ public class FoodModule extends AbstractModule {
 			.effect(Foods.SPEED_PROVIDER, 1)
 			.build()
 	);
-	public static final KiwiGO<Block> GRAPEFRUIT_PANNA_COTTA = go(() -> new FoodBlock(Shapes.block()));
+	public static final KiwiGO<Block> GRAPEFRUIT_PANNA_COTTA = go(() -> new FoodBlock(Block.box(4.5, 0, 4.5, 11.5, 4, 11.5)));
 	public static Item.Properties DONAUWELLE_PROP = itemProp().food(new FoodProperties.Builder()
 			.nutrition(14)
 			.saturationMod(1)
 			.effect(Foods.REGENERATION_PROVIDER, 1)
 			.build()
 	);
-	public static final KiwiGO<Block> DONAUWELLE = go(() -> new FoodBlock(Shapes.block()));
+	public static final KiwiGO<Block> DONAUWELLE = go(() -> new FoodBlock(Block.box(5, 0, 5, 11, 4, 11)));
 	public static Item.Properties HONEY_POMELO_TEA_PROP = itemProp().food(new FoodProperties.Builder()
 			.nutrition(1)
 			.saturationMod(Hooks.farmersdelight ? 0.3F : 4)
@@ -71,22 +72,28 @@ public class FoodModule extends AbstractModule {
 			.alwaysEat()
 			.build()
 	).craftRemainder(Items.GLASS_BOTTLE);
-	public static final KiwiGO<Block> HONEY_POMELO_TEA = go(() -> new FoodBlock(Shapes.block()));
+	@RenderLayer(Layer.TRANSLUCENT)
+	public static final KiwiGO<Block> HONEY_POMELO_TEA = go(() -> new FoodBlock(Block.box(5, 0, 5, 11, 7.75, 11)));
 	public static Item.Properties RICE_WITH_FRUITS_PROP = itemProp().food(new FoodProperties.Builder()
 			.nutrition(9)
 			.saturationMod(0.6F)
 			.effect(Foods.COMFORT_PROVIDER, 1)
 			.build()
 	);
-	public static final KiwiGO<Block> RICE_WITH_FRUITS = go(() -> new FoodBlock(Shapes.block()));
+	@RenderLayer(Layer.CUTOUT)
+	public static final KiwiGO<Block> RICE_WITH_FRUITS = go(() -> {
+		FoodBlock block = new FoodBlock(Block.box(4, 0, 2, 12, 5, 14));
+		block.lockShapeRotation = false;
+		return block;
+	});
 	public static final KiwiGO<Item> LEMON_ROAST_CHICKEN = go(() -> new FoodItem(itemProp().food(new FoodProperties.Builder()
-			.nutrition(12)
-			.saturationMod(0.9F)
+			.nutrition(16)
+			.saturationMod(0.8F)
 			.effect(Foods.NOURISHED_PROVIDER, 1)
 			.build()
 	).craftRemainder(Items.BOWL)));
 	public static Item.Properties LEMON_ROAST_CHICKEN_PROP = itemProp().craftRemainder(Items.BOWL);
-	public static final KiwiGO<Block> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Shapes.block(), LEMON_ROAST_CHICKEN));
+	public static final KiwiGO<Block> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Block.box(4, 2, 4, 12, 9, 12), LEMON_ROAST_CHICKEN));
 	/* on */
 
 	public FoodModule() {

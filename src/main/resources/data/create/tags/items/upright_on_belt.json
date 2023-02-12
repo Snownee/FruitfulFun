@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     { "id": "fruittrees:honey_pomelo_tea", "required": false },
-    { "id": "fruittrees:grapefruit_panna_cotta", "required": false }
+    { "id": "fruittrees:grapefruit_panna_cotta", "required": false },
+    { "id": "fruittrees:rice_with_fruits", "required": false },
+    { "id": "fruittrees:donauwelle", "required": false },
+    { "id": "fruittrees:donauwelle", "required": false }
   ]
 }
