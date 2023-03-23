@@ -11,6 +11,7 @@
     "GiveGiftToHeroMixin",
     "InstrumentItemMixin",
     "LivingEntityAccess",
+    "PandaAccess",
     "PandaMixin"
   ],
   "client": [

@@ -11,6 +11,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -19,12 +20,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.FruitsMod;
 import snownee.fruits.Hooks;
 import snownee.fruits.food.datagen.FoodBlockLoot;
+import snownee.fruits.mixin.PandaAccess;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.datagen.provider.KiwiLootTableProvider;
+import snownee.kiwi.loader.event.InitEvent;
 
 @KiwiModule("food")
 @KiwiModule.Optional
@@ -98,6 +101,16 @@ public class FoodModule extends AbstractModule {
 
 	public FoodModule() {
 		Hooks.food = true;
+	}
+
+	@Override
+	protected void init(InitEvent event) {
+		event.enqueueWork(() -> {
+			PandaAccess.setPANDA_ITEMS(PandaAccess.getPANDA_ITEMS().or(itemEntity -> {
+				ItemStack itemstack = itemEntity.getItem();
+				return itemEntity.isAlive() && !itemEntity.hasPickUpDelay() && itemstack.is(FoodModule.PANDA_FOOD);
+			}));
+		});
 	}
 
 	@Override
