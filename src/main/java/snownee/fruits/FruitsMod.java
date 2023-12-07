@@ -11,7 +11,7 @@ public final class FruitsMod {
 	public static final String ID = "fruittrees";
 	public static final String NAME = "Fruit Trees";
 
-	public static Logger logger = LogManager.getLogger(FruitsMod.NAME);
+	public static Logger LOGGER = LogManager.getLogger(FruitsMod.NAME);
 
 	public FruitsMod() {
 		var eventBus = FMLJavaModLoadingContext.get().getModEventBus();
