@@ -8,11 +8,11 @@
   "type": "mekanism:sawing",
   "input": {
     "ingredient": {
-      "item": "fruitfulfun:cherry_fence_gate"
+      "item": "fruitfulfun:redlove_fence_gate"
     }
   },
   "mainOutput": {
-    "item": "fruitfulfun:cherry_planks",
+    "item": "fruitfulfun:redlove_planks",
     "count": 2
   },
   "secondaryOutput": {

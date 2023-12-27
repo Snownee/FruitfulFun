@@ -7,11 +7,11 @@
   ],
   "key": {
     "#": {
-      "item": "fruitfulfun:stripped_cherry_log"
+      "item": "fruitfulfun:stripped_redlove_log"
     }
   },
   "result": {
-    "item": "fruitfulfun:stripped_cherry_wood",
+    "item": "fruitfulfun:stripped_redlove_wood",
     "count": 3
   }
 }

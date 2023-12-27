@@ -8,14 +8,14 @@
   ],
   "key": {
     "#": {
-      "item": "fruitfulfun:cherry_planks"
+      "item": "fruitfulfun:redlove_planks"
     },
     "P": {
       "item": "paper"
     }
   },
   "result": {
-    "item": "fruitfulfun:cherry_sliding_door",
+    "item": "fruitfulfun:redlove_sliding_door",
     "count": 2
   }
 }

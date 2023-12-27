@@ -8,16 +8,19 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.PinkPetalsBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SaplingBlock;
@@ -26,6 +29,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -63,6 +67,13 @@ public class CherryModule extends AbstractModule {
 	@Name("redlove_sign")
 	@Category(Categories.FUNCTIONAL_BLOCKS)
 	public static final KiwiGO<Item> REDLOVE_SIGN_ITEM = go(() -> new SignItem(itemProp().stacksTo(Items.CHERRY_SIGN.getMaxStackSize()), REDLOVE_SIGN.get(), REDLOVE_WALL_SIGN.get()));
+	@NoItem
+	public static final KiwiGO<Block> REDLOVE_HANGING_SIGN = go(() -> new CeilingHangingSignBlock(blockProp(Blocks.CHERRY_HANGING_SIGN), REDLOVE_WOOD_TYPE));
+	@NoItem
+	public static final KiwiGO<Block> REDLOVE_WALL_HANGING_SIGN = go(() -> new WallHangingSignBlock(blockProp(Blocks.CHERRY_WALL_HANGING_SIGN), REDLOVE_WOOD_TYPE));
+	@Name("redlove_hanging_sign")
+	@Category(Categories.FUNCTIONAL_BLOCKS)
+	public static final KiwiGO<Item> REDLOVE_HANGING_SIGN_ITEM = go(() -> new HangingSignItem(REDLOVE_HANGING_SIGN.get(), REDLOVE_WALL_HANGING_SIGN.get(), itemProp().stacksTo(Items.CHERRY_HANGING_SIGN.getMaxStackSize())));
 	@Category(value = {Categories.BUILDING_BLOCKS, Categories.NATURAL_BLOCKS}, after = {"cherry_button", "cherry_log"})
 	public static final KiwiGO<Block> REDLOVE_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.CHERRY_LOG)));
 	@Category(Categories.BUILDING_BLOCKS)
@@ -96,10 +107,13 @@ public class CherryModule extends AbstractModule {
 	public static final KiwiGO<SimpleParticleType> PETAL_REDLOVE = go(() -> new SimpleParticleType(false));
 	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<FruitLeavesBlock> CHERRY_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.CHERRY, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_PINK), PETAL_CHERRY.get()));
+	public static final KiwiGO<FruitLeavesBlock> CHERRY_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.CHERRY, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_PINK), PETAL_CHERRY.getOrCreate()));
 	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<FruitLeavesBlock> REDLOVE_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.REDLOVE, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.CRIMSON_NYLIUM), PETAL_REDLOVE.get()));
+	public static final KiwiGO<FruitLeavesBlock> REDLOVE_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.REDLOVE, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.CRIMSON_NYLIUM), PETAL_REDLOVE.getOrCreate()));
+	@Category(Categories.NATURAL_BLOCKS)
+	@RenderLayer(Layer.CUTOUT)
+	public static final KiwiGO<PinkPetalsBlock> PEACH_PINK_PETALS = go(() -> new PinkPetalsBlock(blockProp(Blocks.PINK_PETALS)));
 	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<SaplingBlock> CHERRY_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(CherryFruitTypes.CHERRY.getOrCreate()), blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.COLOR_PINK)));
@@ -120,6 +134,10 @@ public class CherryModule extends AbstractModule {
 	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/heart");
 	@Category(Categories.INGREDIENTS)
 	public static final KiwiGO<Item> HEART_BANNER_PATTERN = go(() -> new BannerPatternItem(HEART_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
+	@Category(Categories.TOOLS_AND_UTILITIES)
+	public static final KiwiGO<Item> CHERRY_WREATH = go(() -> new ModItem(itemProp().stacksTo(1)));
+	@Category(Categories.TOOLS_AND_UTILITIES)
+	public static final KiwiGO<Item> REDLOVE_WREATH = go(() -> new ModItem(itemProp().stacksTo(1)));
 
 	public CherryModule() {
 		Hooks.cherry = true;
@@ -133,8 +151,7 @@ public class CherryModule extends AbstractModule {
 			VanillaActions.registerAxeConversion(REDLOVE_LOG.get(), STRIPPED_REDLOVE_LOG.get());
 			VanillaActions.registerAxeConversion(REDLOVE_WOOD.get(), STRIPPED_REDLOVE_WOOD.get());
 
-//			VanillaActions.registerCompostable(0.1F, CHERRY_CARPET.get());
-//			VanillaActions.registerCompostable(0.1F, REDLOVE_CARPET.get());
+			VanillaActions.registerCompostable(0.3F, PEACH_PINK_PETALS.get());
 		});
 	}
 

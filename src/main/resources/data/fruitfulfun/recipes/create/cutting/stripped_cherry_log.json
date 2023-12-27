@@ -8,12 +8,12 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "item": "fruitfulfun:stripped_cherry_log"
+      "item": "fruitfulfun:stripped_redlove_log"
     }
   ],
   "results": [
     {
-      "item": "fruitfulfun:cherry_planks",
+      "item": "fruitfulfun:redlove_planks",
       "count": 6
     }
   ],

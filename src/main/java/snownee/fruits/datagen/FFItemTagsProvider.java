@@ -45,6 +45,7 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		copy(BlockTags.WOODEN_PRESSURE_PLATES, ItemTags.WOODEN_PRESSURE_PLATES);
 		copy(BlockTags.SAPLINGS, ItemTags.SAPLINGS);
 		copy(BlockTags.STANDING_SIGNS, ItemTags.SIGNS);
+		copy(BlockTags.CEILING_HANGING_SIGNS, ItemTags.HANGING_SIGNS);
 		copy(CoreModule.ALL_LEAVES, ItemTags.LEAVES);
 		copy(BlockTags.FENCE_GATES, ItemTags.FENCE_GATES);
 

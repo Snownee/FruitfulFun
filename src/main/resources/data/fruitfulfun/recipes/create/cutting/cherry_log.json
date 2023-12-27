@@ -8,12 +8,12 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "item": "fruitfulfun:cherry_log"
+      "item": "fruitfulfun:redlove_log"
     }
   ],
   "results": [
     {
-      "item": "fruitfulfun:stripped_cherry_log"
+      "item": "fruitfulfun:stripped_redlove_log"
     }
   ],
   "processingTime": 50

@@ -10,11 +10,11 @@
       "item": "minecraft:stick"
     },
     "W": {
-      "item": "fruitfulfun:cherry_planks"
+      "item": "fruitfulfun:redlove_planks"
     }
   },
   "result": {
-    "item": "fruitfulfun:cherry_fence",
+    "item": "fruitfulfun:redlove_fence",
     "count": 3
   }
 }

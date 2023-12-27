@@ -32,17 +32,20 @@ public class FFModelProvider extends FabricModelProvider {
 	}
 
 	@Override
-	public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.TANGERINE_LEAVES.get(), FruitScale.SMALL);
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.CITRON_LEAVES.get(), FruitScale.SMALL);
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.GRAPEFRUIT_LEAVES.get(), FruitScale.MIDDLE);
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.LEMON_LEAVES.get(), FruitScale.MIDDLE);
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.LIME_LEAVES.get(), FruitScale.MIDDLE);
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.ORANGE_LEAVES.get(), FruitScale.MIDDLE);
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.APPLE_LEAVES.get(), FruitScale.MIDDLE);
-		createCitrusLeaves(blockStateModelGenerator, CoreModule.POMELO_LEAVES.get(), FruitScale.LARGE);
-		createRedloveLeaves(blockStateModelGenerator, CherryModule.REDLOVE_LEAVES.get());
-		createRedloveLeaves(blockStateModelGenerator, CherryModule.CHERRY_LEAVES.get());
+	public void generateBlockStateModels(BlockModelGenerators generators) {
+		createCitrusLeaves(generators, CoreModule.TANGERINE_LEAVES.get(), FruitScale.SMALL);
+		createCitrusLeaves(generators, CoreModule.CITRON_LEAVES.get(), FruitScale.SMALL);
+		createCitrusLeaves(generators, CoreModule.GRAPEFRUIT_LEAVES.get(), FruitScale.MIDDLE);
+		createCitrusLeaves(generators, CoreModule.LEMON_LEAVES.get(), FruitScale.MIDDLE);
+		createCitrusLeaves(generators, CoreModule.LIME_LEAVES.get(), FruitScale.MIDDLE);
+		createCitrusLeaves(generators, CoreModule.ORANGE_LEAVES.get(), FruitScale.MIDDLE);
+		createCitrusLeaves(generators, CoreModule.APPLE_LEAVES.get(), FruitScale.MIDDLE);
+		createCitrusLeaves(generators, CoreModule.POMELO_LEAVES.get(), FruitScale.LARGE);
+		createRedloveLeaves(generators, CherryModule.REDLOVE_LEAVES.get());
+		createRedloveLeaves(generators, CherryModule.CHERRY_LEAVES.get());
+		generators.createFlowerBed(CherryModule.PEACH_PINK_PETALS.get());
+		generators.createSimpleFlatItemModel(CherryModule.CHERRY_WREATH.get());
+		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_WREATH.get());
 	}
 
 	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {

@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruitfulfun:redlove_leaves",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:peach_pink_petals",
+      "required": false
+    }
+  ]
+}

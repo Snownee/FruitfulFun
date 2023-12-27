@@ -5,11 +5,11 @@
   ],
   "key": {
     "#": {
-      "item": "fruitfulfun:cherry_leaves"
+      "item": "fruitfulfun:redlove_leaves"
     }
   },
   "result": {
-    "item": "fruitfulfun:cherry_carpet",
+    "item": "fruitfulfun:redlove_carpet",
     "count": 6
   }
 }

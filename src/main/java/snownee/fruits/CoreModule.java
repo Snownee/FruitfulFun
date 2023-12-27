@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -26,6 +28,7 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -66,6 +69,13 @@ public final class CoreModule extends AbstractModule {
 	@Name("citrus_sign")
 	@Category(Categories.FUNCTIONAL_BLOCKS)
 	public static final KiwiGO<Item> CITRUS_SIGN_ITEM = go(() -> new SignItem(itemProp().stacksTo(Items.OAK_SIGN.getMaxStackSize()), CITRUS_SIGN.get(), CITRUS_WALL_SIGN.get()));
+	@NoItem
+	public static final KiwiGO<Block> CITRUS_HANGING_SIGN = go(() -> new CeilingHangingSignBlock(blockProp(Blocks.OAK_HANGING_SIGN), CITRUS_WOOD_TYPE));
+	@NoItem
+	public static final KiwiGO<Block> CITRUS_WALL_HANGING_SIGN = go(() -> new WallHangingSignBlock(blockProp(Blocks.OAK_WALL_HANGING_SIGN), CITRUS_WOOD_TYPE));
+	@Name("citrus_hanging_sign")
+	@Category(Categories.FUNCTIONAL_BLOCKS)
+	public static final KiwiGO<Item> CITRUS_HANGING_SIGN_ITEM = go(() -> new HangingSignItem(CITRUS_HANGING_SIGN.get(), CITRUS_WALL_HANGING_SIGN.get(), itemProp().stacksTo(Items.OAK_HANGING_SIGN.getMaxStackSize())));
 	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> TANGERINE = go(() -> new ModItem(itemProp().food(Foods.TANGERINE)));
 	@Category(Categories.FOOD_AND_DRINKS)
@@ -111,30 +121,30 @@ public final class CoreModule extends AbstractModule {
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> APPLE_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.APPLE, blockProp(Blocks.OAK_LEAVES)));
 	@Category(value = {Categories.BUILDING_BLOCKS, Categories.NATURAL_BLOCKS}, after = {"cherry_button", "cherry_log"})
-	public static final KiwiGO<Block> CITRUS_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.JUNGLE_LOG)));
+	public static final KiwiGO<Block> CITRUS_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.OAK_LOG)));
 	@Category(value = Categories.BUILDING_BLOCKS, after = "fruitfulfun:citrus_log")
-	public static final KiwiGO<Block> CITRUS_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.JUNGLE_WOOD)));
+	public static final KiwiGO<Block> CITRUS_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.OAK_WOOD)));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> STRIPPED_CITRUS_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_LOG)));
+	public static final KiwiGO<Block> STRIPPED_CITRUS_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_OAK_LOG)));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> STRIPPED_CITRUS_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_JUNGLE_WOOD)));
+	public static final KiwiGO<Block> STRIPPED_CITRUS_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_OAK_WOOD)));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> CITRUS_PLANKS = go(() -> new ModBlock(blockProp(Blocks.JUNGLE_PLANKS)));
+	public static final KiwiGO<Block> CITRUS_PLANKS = go(() -> new ModBlock(blockProp(Blocks.OAK_PLANKS)));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> CITRUS_STAIRS = go(() -> new StairBlock(CITRUS_PLANKS.getOrCreate().defaultBlockState(), blockProp(Blocks.JUNGLE_STAIRS)));
+	public static final KiwiGO<Block> CITRUS_STAIRS = go(() -> new StairBlock(CITRUS_PLANKS.getOrCreate().defaultBlockState(), blockProp(Blocks.OAK_STAIRS)));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> CITRUS_SLAB = go(() -> new SlabBlock(blockProp(Blocks.JUNGLE_SLAB)));
+	public static final KiwiGO<Block> CITRUS_SLAB = go(() -> new SlabBlock(blockProp(Blocks.OAK_SLAB)));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> CITRUS_FENCE = go(() -> new FenceBlock(blockProp(Blocks.JUNGLE_FENCE)));
+	public static final KiwiGO<Block> CITRUS_FENCE = go(() -> new FenceBlock(blockProp(Blocks.OAK_FENCE)));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> CITRUS_FENCE_GATE = go(() -> new FenceGateBlock(blockProp(Blocks.JUNGLE_FENCE_GATE), CITRUS_WOOD_TYPE));
+	public static final KiwiGO<Block> CITRUS_FENCE_GATE = go(() -> new FenceGateBlock(blockProp(Blocks.OAK_FENCE_GATE), CITRUS_WOOD_TYPE));
 	@Category(Categories.BUILDING_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<Block> CITRUS_DOOR = go(() -> new DoorBlock(blockProp(Blocks.JUNGLE_DOOR), CITRUS_SET_TYPE));
+	public static final KiwiGO<Block> CITRUS_DOOR = go(() -> new DoorBlock(blockProp(Blocks.OAK_DOOR), CITRUS_SET_TYPE));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> CITRUS_TRAPDOOR = go(() -> new TrapDoorBlock(blockProp(Blocks.JUNGLE_TRAPDOOR), CITRUS_SET_TYPE));
+	public static final KiwiGO<Block> CITRUS_TRAPDOOR = go(() -> new TrapDoorBlock(blockProp(Blocks.OAK_TRAPDOOR), CITRUS_SET_TYPE));
 	@Category(Categories.BUILDING_BLOCKS)
-	public static final KiwiGO<Block> CITRUS_PRESSURE_PLATE = go(() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.JUNGLE_DOOR), CITRUS_SET_TYPE));
+	public static final KiwiGO<Block> CITRUS_PRESSURE_PLATE = go(() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.OAK_DOOR), CITRUS_SET_TYPE));
 	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> CITRUS_BUTTON = go(() -> Blocks.woodenButton(CITRUS_SET_TYPE));
 	@Category(Categories.NATURAL_BLOCKS)
@@ -163,28 +173,28 @@ public final class CoreModule extends AbstractModule {
 	public static final KiwiGO<SaplingBlock> APPLE_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.APPLE.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_TANGERINE = go(() -> new FlowerPotBlock(TANGERINE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_TANGERINE = go(() -> new FlowerPotBlock(TANGERINE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_LIME = go(() -> new FlowerPotBlock(LIME_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_LIME = go(() -> new FlowerPotBlock(LIME_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_CITRON = go(() -> new FlowerPotBlock(CITRON_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_CITRON = go(() -> new FlowerPotBlock(CITRON_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_POMELO = go(() -> new FlowerPotBlock(POMELO_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_POMELO = go(() -> new FlowerPotBlock(POMELO_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_ORANGE = go(() -> new FlowerPotBlock(ORANGE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_ORANGE = go(() -> new FlowerPotBlock(ORANGE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_LEMON = go(() -> new FlowerPotBlock(LEMON_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_LEMON = go(() -> new FlowerPotBlock(LEMON_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_GRAPEFRUIT = go(() -> new FlowerPotBlock(GRAPEFRUIT_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_GRAPEFRUIT = go(() -> new FlowerPotBlock(GRAPEFRUIT_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_APPLE = go(() -> new FlowerPotBlock(APPLE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_APPLE = go(() -> new FlowerPotBlock(APPLE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	public static final TagKey<Block> ALL_LEAVES = blockTag(FruitfulFun.ID, "leaves");
 	@Name("carpet")
 	public static final KiwiGO<TreeDecoratorType<CarpetTreeDecorator>> CARPET_DECORATOR = go(() -> new TreeDecoratorType<>(CarpetTreeDecorator.CODEC));
@@ -240,6 +250,7 @@ public final class CoreModule extends AbstractModule {
 		public static final FoodProperties EMPOWERED_CITRON = new FoodProperties.Builder().nutrition(3).saturationMod(5f).build();
 	}
 
+	//FIXME: flammability
 
 //	public static final KiwiGO<Codec<MultiFilteredAddFeaturesBiomeModifier>> ADD_FEATURES = go(() -> RecordCodecBuilder.create(builder -> builder.group(
 //	/* off */
@@ -336,7 +347,7 @@ public final class CoreModule extends AbstractModule {
 //		var biomes = ops.registry(Registry.BIOME_REGISTRY).get();
 //		var plains = biomes.getOrCreateTag(Tags.Biomes.IS_PLAINS);
 //		var forest = biomes.getOrCreateTag(BiomeTags.IS_FOREST);
-//		var jungle = biomes.getOrCreateTag(BiomeTags.IS_JUNGLE);
+//		var jungle = biomes.getOrCreateTag(BiomeTags.IS_OAK);
 //		var cold = biomes.getOrCreateTag(Tags.Biomes.IS_COLD);
 //		var magical = biomes.getOrCreateTag(Tags.Biomes.IS_MAGICAL);
 //		var mushroom = biomes.getOrCreateTag(Tags.Biomes.IS_MUSHROOM);

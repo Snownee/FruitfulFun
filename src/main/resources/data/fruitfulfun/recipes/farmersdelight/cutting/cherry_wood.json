@@ -8,7 +8,7 @@
   "type": "farmersdelight:cutting",
   "ingredients": [
     {
-      "item": "fruitfulfun:cherry_wood"
+      "item": "fruitfulfun:redlove_wood"
     }
   ],
   "tool": {
@@ -17,7 +17,7 @@
   },
   "result": [
     {
-      "item": "fruitfulfun:stripped_cherry_wood"
+      "item": "fruitfulfun:stripped_redlove_wood"
     },
     {
       "item": "farmersdelight:tree_bark"

@@ -3,11 +3,11 @@
   "group": "planks",
   "ingredients": [
     {
-      "tag": "fruitfulfun:cherry_logs"
+      "tag": "fruitfulfun:redlove_logs"
     }
   ],
   "result": {
-    "item": "fruitfulfun:cherry_planks",
+    "item": "fruitfulfun:redlove_planks",
     "count": 4
   }
 }

@@ -7,11 +7,11 @@
   ],
   "key": {
     "#": {
-      "item": "fruitfulfun:cherry_log"
+      "item": "fruitfulfun:redlove_log"
     }
   },
   "result": {
-    "item": "fruitfulfun:cherry_wood",
+    "item": "fruitfulfun:redlove_wood",
     "count": 3
   }
 }

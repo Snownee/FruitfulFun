@@ -11,8 +11,10 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import snownee.fruits.CoreModule;
@@ -90,6 +92,16 @@ public class ClientProxy implements ClientModInitializer {
 				}
 				return -1;
 			}, REDLOVE_LEAVES.getOrCreate());
+
+			ColorProviderRegistry.BLOCK.register((blockState, blockAndTintGetter, blockPos, i) -> {
+				if (i != 0) {
+					if (blockAndTintGetter == null || blockPos == null) {
+						return GrassColor.getDefaultColor();
+					}
+					return BiomeColors.getAverageGrassColor(blockAndTintGetter, blockPos);
+				}
+				return -1;
+			}, PEACH_PINK_PETALS.getOrCreate());
 		}
 	}
 }

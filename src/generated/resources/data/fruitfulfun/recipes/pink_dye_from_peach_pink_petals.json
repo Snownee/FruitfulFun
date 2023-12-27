@@ -1,0 +1,19 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:cherry"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pink_dye",
+  "ingredients": [
+    {
+      "item": "fruitfulfun:peach_pink_petals"
+    }
+  ],
+  "result": {
+    "item": "minecraft:pink_dye"
+  }
+}
