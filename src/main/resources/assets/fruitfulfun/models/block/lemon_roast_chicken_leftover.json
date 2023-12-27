@@ -3,10 +3,10 @@
   "render_type": "minecraft:cutout",
   "parent": "block/block",
   "textures": {
-    "gibs": "block/fruitfulfun/roast_chicken_gibs",
-    "particle": "block/fruitfulfun/tray_top_leftover",
-    "tray_top": "block/fruitfulfun/tray_top_leftover",
-    "tray_bottom": "block/fruitfulfun/tray_bottom"
+    "gibs": "fruitfulfun:block/roast_chicken_gibs",
+    "particle": "fruitfulfun:block/tray_top_leftover",
+    "tray_top": "fruitfulfun:block/tray_top_leftover",
+    "tray_bottom": "fruitfulfun:block/tray_bottom"
   },
   "elements": [
     {

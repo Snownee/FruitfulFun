@@ -49,8 +49,9 @@ public class CoreBlockLoot extends KiwiBlockLoot {
 		return loot;
 	}
 
+	@Deprecated //FIXME: move to kiwi
 	@Override
 	public String getName() {
-		return super.getName() + hashCode(); //FIXME: move to kiwi
+		return super.getName() + hashCode();
 	}
 }

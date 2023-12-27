@@ -1,18 +1,7 @@
 package snownee.fruits.util;
 
-import static snownee.fruits.CoreModule.APPLE_LEAVES;
-import static snownee.fruits.CoreModule.CITRON_LEAVES;
-import static snownee.fruits.CoreModule.GRAPEFRUIT_LEAVES;
-import static snownee.fruits.CoreModule.LEMON_LEAVES;
-import static snownee.fruits.CoreModule.LIME_LEAVES;
-import static snownee.fruits.CoreModule.ORANGE_LEAVES;
-import static snownee.fruits.CoreModule.POMELO_LEAVES;
-import static snownee.fruits.CoreModule.TANGERINE_LEAVES;
-import static snownee.fruits.cherry.CherryModule.CHERRY_LEAVES;
-import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
-import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
+import static snownee.fruits.CoreModule.*;
+import static snownee.fruits.cherry.CherryModule.*;
 
 import java.util.function.Supplier;
 
@@ -28,7 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.Hooks;
-import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.client.SlidingDoorRenderer;
 import snownee.fruits.cherry.client.particle.PetalParticle;
 
@@ -94,21 +82,14 @@ public class ClientProxy implements ClientModInitializer {
 
 			Supplier<BlockColor> birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
 			ColorProviderRegistry.BLOCK.register((state, world, pos, i) -> {
-				if (i == 0) {
+				if (i == 1) {
+					return 0xC22626;
+				}
+				if (i == 2) {
 					return birchBlockColor.get().getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
 				}
-				if (i == 1) {
-					int stage = state.getValue(FruitLeavesBlock.AGE);
-					if (stage < 3) {
-						return birchBlockColor.get().getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
-					}
-					if (REDLOVE_LEAVES.is(state))
-						return 0xC22626;
-					if (CHERRY_LEAVES.is(state))
-						return 0xE45B55;
-				}
 				return -1;
-			}, CHERRY_LEAVES.getOrCreate(), REDLOVE_LEAVES.getOrCreate());
+			}, REDLOVE_LEAVES.getOrCreate());
 		}
 	}
 }

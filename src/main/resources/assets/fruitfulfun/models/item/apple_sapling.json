@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "block/fruitfulfun/sapling_apple"
+    "layer0": "fruitfulfun:block/sapling_apple"
   }
 }

@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "block/fruitfulfun/redlove_door_bottom",
-		"bottom": "block/fruitfulfun/redlove_door_bottom"
+		"particle": "fruitfulfun:block/redlove_door_bottom",
+		"bottom": "fruitfulfun:block/redlove_door_bottom"
 	},
 	"elements": [
 		{

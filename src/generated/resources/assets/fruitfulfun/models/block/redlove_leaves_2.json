@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "fruitfulfun:block/redlove_leaves_2"
+  }
+}

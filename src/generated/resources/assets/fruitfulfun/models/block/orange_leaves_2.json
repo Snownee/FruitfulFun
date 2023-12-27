@@ -1,0 +1,7 @@
+{
+  "parent": "fruitfulfun:block/template_leaves_flowering",
+  "textures": {
+    "flowers": "fruitfulfun:block/orange_flowers",
+    "leaves": "fruitfulfun:block/orange_leaves"
+  }
+}

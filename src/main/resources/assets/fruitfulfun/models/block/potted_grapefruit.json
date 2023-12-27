@@ -1,6 +1,6 @@
 {
   "parent": "block/flower_pot_cross",
   "textures": {
-    "plant": "block/fruitfulfun/sapling_grapefruit"
+    "plant": "fruitfulfun:block/sapling_grapefruit"
   }
 }

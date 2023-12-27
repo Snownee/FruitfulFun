@@ -16,5 +16,6 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FFAdvancements::new);
 		FFBlockTagsProvider blockTagsProvider = pack.addProvider(FFBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new FFItemTagsProvider(output, registriesFuture, blockTagsProvider));
+		pack.addProvider(FFModelProvider::new);
 	}
 }

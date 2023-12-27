@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"0": "block/fruitfulfun/lemon_roast_chicken",
-		"1": "block/fruitfulfun/tray_top_veggies",
-		"2": "block/fruitfulfun/tray_bottom",
-		"3": "block/fruitfulfun/roast_chicken_gibs",
-		"particle": "block/fruitfulfun/lemon_roast_chicken"
+		"0": "fruitfulfun:block/lemon_roast_chicken",
+		"1": "fruitfulfun:block/tray_top_veggies",
+		"2": "fruitfulfun:block/tray_bottom",
+		"3": "fruitfulfun:block/roast_chicken_gibs",
+		"particle": "fruitfulfun:block/lemon_roast_chicken"
 	},
 	"elements": [
 		{

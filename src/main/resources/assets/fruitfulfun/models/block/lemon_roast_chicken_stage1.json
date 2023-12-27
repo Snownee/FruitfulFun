@@ -3,11 +3,11 @@
   "render_type": "minecraft:cutout",
   "parent": "block/block",
   "textures": {
-    "particle": "block/fruitfulfun/roast_chicken_eaten",
-    "body": "block/fruitfulfun/roast_chicken_eaten",
-    "gibs": "block/fruitfulfun/roast_chicken_gibs",
-    "tray_bottom": "block/fruitfulfun/tray_bottom",
-    "tray_top": "block/fruitfulfun/tray_top_veggies"
+    "particle": "fruitfulfun:block/roast_chicken_eaten",
+    "body": "fruitfulfun:block/roast_chicken_eaten",
+    "gibs": "fruitfulfun:block/roast_chicken_gibs",
+    "tray_bottom": "fruitfulfun:block/tray_bottom",
+    "tray_top": "fruitfulfun:block/tray_top_veggies"
   },
   "elements": [
     {

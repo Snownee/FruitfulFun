@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -13,7 +14,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -37,7 +37,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -48,7 +47,6 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFCommonConfig.DropMode;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
-import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
 import snownee.fruits.util.CommonProxy;
 
 public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, EntityBlock {
@@ -73,7 +71,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			die = level.random.nextFloat() < deathRate;
 		}
 		state = state.setValue(AGE, die ? 0 : 1);
-		if (deathRate == 1) {
+		if (deathRate == 1 && state.hasBlockEntity()) {
 			state = state.setValue(PERSISTENT, false);
 		}
 		BlockState newState = state;
@@ -228,11 +226,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (state.getValue(AGE) == 3 && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 1))) {
 			if (!worldIn.isClientSide) {
 				ItemStack fruit = new ItemStack(type.get().fruit.get());
-				if (CommonProxy.isFakePlayer(playerIn) || !playerIn.addItem(fruit)) {
+				if (!CommonProxy.isFakePlayer(playerIn) && playerIn.addItem(fruit)) {
+					worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.ITEM_PICKUP, playerIn.getSoundSource(), 0.2F, ((playerIn.getRandom().nextFloat() - playerIn.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+				} else {
 					popResourceFromFace(worldIn, pos, ray.getDirection(), fruit);
 				}
 			}
-			return InteractionResult.SUCCESS;
+			return InteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 		return InteractionResult.PASS;
 	}

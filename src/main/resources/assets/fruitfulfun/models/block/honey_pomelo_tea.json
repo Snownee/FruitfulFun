@@ -2,8 +2,8 @@
 	"ambientocclusion": false,
 	"texture_size": [32, 16],
 	"textures": {
-		"0": "block/fruitfulfun/honey_pomelo_tea",
-		"particle": "block/fruitfulfun/honey_pomelo_tea"
+		"0": "fruitfulfun:block/honey_pomelo_tea",
+		"particle": "fruitfulfun:block/honey_pomelo_tea"
 	},
 	"elements": [
 		{
