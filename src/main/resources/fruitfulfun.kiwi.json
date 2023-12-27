@@ -1,0 +1,61 @@
+{
+  "KiwiConfig": [
+    {
+      "target": "snownee.fruits.FFCommonConfig"
+    }
+  ],
+  "KiwiModule": [
+    {
+      "target": "snownee.fruits.cherry.CherryFruitTypes",
+      "data": {
+        "value": "cherry_fruits",
+        "dependencies": "@cherry"
+      }
+    },
+    {
+      "target": "snownee.fruits.cherry.CherryModule",
+      "data": {
+        "value": "cherry"
+      }
+    },
+    {
+      "target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule",
+      "data": {
+        "value": "farmersdelight",
+        "dependencies": "farmersdelight"
+      }
+    },
+    {
+      "target": "snownee.fruits.CoreFruitTypes",
+      "data": {
+        "value": "core_fruits"
+      }
+    },
+    {
+      "target": "snownee.fruits.CoreModule"
+    },
+    {
+      "target": "snownee.fruits.food.FoodModule",
+      "data": {
+        "value": "food"
+      }
+    },
+    {
+      "target": "snownee.fruits.hybridization.HybridizationModule",
+      "data": {
+        "value": "hybridization"
+      }
+    }
+  ],
+  "Optional": [
+    {
+      "target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule"
+    },
+    {
+      "target": "snownee.fruits.food.FoodModule"
+    },
+    {
+      "target": "snownee.fruits.hybridization.HybridizationModule"
+    }
+  ]
+}

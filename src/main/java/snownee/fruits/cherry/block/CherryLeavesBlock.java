@@ -11,8 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.FruitLeavesBlock;
 
@@ -36,7 +34,6 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
 		int i = rand.nextInt(15);
 		boolean raining = worldIn.isRainingAt(pos.above());

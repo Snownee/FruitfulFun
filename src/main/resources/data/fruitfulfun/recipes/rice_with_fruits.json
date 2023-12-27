@@ -1,0 +1,58 @@
+{
+  "type": "kiwi:shapeless",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "farmersdelight"
+      }
+    },
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    },
+    {
+      "type": "kiwi:try_parse",
+      "value": {
+        "type": "kiwi:alternatives",
+        "list": [
+          {
+            "tag": "forge:grain/rice"
+          },
+          {
+            "tag": "forge:seeds/rice"
+          }
+        ]
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:fruits/tangerine"
+    },
+    {
+      "tag": "forge:fruits/apple"
+    },
+    {
+      "tag": "forge:fruits"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "tag": "forge:grain/rice"
+        },
+        {
+          "tag": "forge:seeds/rice"
+        }
+      ]
+    },
+    {
+      "item": "bamboo"
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:rice_with_fruits"
+  }
+}

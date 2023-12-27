@@ -11,14 +11,14 @@ import net.minecraft.world.entity.ai.behavior.GiveGiftToHero;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.CoreModule;
-import snownee.fruits.FruitsConfig;
+import snownee.fruits.FFCommonConfig;
 
 @Mixin(GiveGiftToHero.class)
 public class GiveGiftToHeroMixin {
 
 	@Inject(at = @At("HEAD"), method = "getItemToThrow", cancellable = true)
 	private void fruits_getItemToThrow(Villager villager, CallbackInfoReturnable<List<ItemStack>> ci) {
-		if (FruitsConfig.appleSaplingFromHeroOfTheVillage && villager.isBaby()) {
+		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage && villager.isBaby()) {
 			ci.setReturnValue(List.of(CoreModule.APPLE_SAPLING.itemStack()));
 		}
 	}

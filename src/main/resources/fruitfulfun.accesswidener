@@ -1,0 +1,17 @@
+accessWidener   v2  named
+accessible method net/minecraft/world/level/block/LeavesBlock updateDistance (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;
+
+accessible class net/minecraft/world/entity/animal/Bee$BeePollinateGoal
+accessible method net/minecraft/world/entity/animal/Bee$BeePollinateGoal isPollinating ()Z
+accessible field net/minecraft/world/entity/animal/Bee beePollinateGoal Lnet/minecraft/world/entity/animal/Bee$BeePollinateGoal;
+
+accessible field net/minecraft/client/particle/Particle stoppedByCollision Z
+accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
+
+accessible field net/minecraft/world/entity/animal/Panda PANDA_ITEMS Ljava/util/function/Predicate;
+mutable field net/minecraft/world/entity/animal/Panda PANDA_ITEMS Ljava/util/function/Predicate;
+
+accessible method net/minecraft/world/entity/LivingEntity addEatEffect (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)V
+
+accessible method net/minecraft/world/level/block/state/properties/BlockSetType register (Lnet/minecraft/world/level/block/state/properties/BlockSetType;)Lnet/minecraft/world/level/block/state/properties/BlockSetType;
+accessible method net/minecraft/world/level/block/state/properties/WoodType register (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;

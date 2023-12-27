@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "forge:item_exists",
+      "item": "fruitfulfun:citrus_cabinet"
+    }
+  ],
+  "pattern": [
+    "___",
+    "D D",
+    "___"
+  ],
+  "key": {
+    "_": {
+      "item": "fruitfulfun:citrus_slab"
+    },
+    "D": {
+      "item": "fruitfulfun:citrus_trapdoor"
+    }
+  },
+  "result": {
+    "item": "fruitfulfun:citrus_cabinet"
+  }
+}

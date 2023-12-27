@@ -1,7 +1,14 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:citrus_door",
-    "fruittrees:cherry_door",
-    "fruittrees:cherry_sliding_door"
+    "fruitfulfun:citrus_door",
+    {
+      "id": "fruitfulfun:redlove_door",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:redlove_sliding_door",
+      "required": false
+    }
   ]
 }

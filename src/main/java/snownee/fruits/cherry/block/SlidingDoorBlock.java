@@ -18,10 +18,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -31,14 +31,14 @@ import snownee.fruits.CoreModule;
 
 @SuppressWarnings("hiding")
 public class SlidingDoorBlock extends DoorBlock {
-	protected static final VoxelShape[] SOUTH_AABB = { Block.box(0, 0, 3, 16, 16, 4), Block.box(13, 0, 3, 29, 16, 4), Block.box(-13, 0, 3, 3, 16, 4) };
-	protected static final VoxelShape[] NORTH_AABB = { Block.box(0, 0, 12, 16, 16, 13), Block.box(-13, 0, 12, 3, 16, 13), Block.box(13, 0, 12, 29, 16, 13) };
-	protected static final VoxelShape[] WEST_AABB = { Block.box(12, 0, 0, 13, 16, 16), Block.box(12, 0, 13, 13, 16, 29), Block.box(12, 0, -13, 13, 16, 3) };
-	protected static final VoxelShape[] EAST_AABB = { Block.box(3, 0, 0, 4, 16, 16), Block.box(3, 0, -13, 4, 16, 3), Block.box(3, 0, 13, 4, 16, 29) };
-	protected static final VoxelShape[][] AABB = { SOUTH_AABB, WEST_AABB, NORTH_AABB, EAST_AABB };
+	protected static final VoxelShape[] SOUTH_AABB = {Block.box(0, 0, 3, 16, 16, 4), Block.box(13, 0, 3, 29, 16, 4), Block.box(-13, 0, 3, 3, 16, 4)};
+	protected static final VoxelShape[] NORTH_AABB = {Block.box(0, 0, 12, 16, 16, 13), Block.box(-13, 0, 12, 3, 16, 13), Block.box(13, 0, 12, 29, 16, 13)};
+	protected static final VoxelShape[] WEST_AABB = {Block.box(12, 0, 0, 13, 16, 16), Block.box(12, 0, 13, 13, 16, 29), Block.box(12, 0, -13, 13, 16, 3)};
+	protected static final VoxelShape[] EAST_AABB = {Block.box(3, 0, 0, 4, 16, 16), Block.box(3, 0, -13, 4, 16, 3), Block.box(3, 0, 13, 4, 16, 29)};
+	protected static final VoxelShape[][] AABB = {SOUTH_AABB, WEST_AABB, NORTH_AABB, EAST_AABB};
 
-	public SlidingDoorBlock(Block.Properties builder) {
-		super(builder);
+	public SlidingDoorBlock(Block.Properties builder, BlockSetType blockSetType) {
+		super(builder, blockSetType);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class SlidingDoorBlock extends DoorBlock {
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-		if (material != Material.METAL) {
+		if (type().canOpenByHand()) {
 			setOpen(player, worldIn, state, pos, !state.getValue(OPEN));
 			return InteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
@@ -173,6 +173,6 @@ public class SlidingDoorBlock extends DoorBlock {
 			return;
 		if (newState.getBlock() == this && newState.getValue(OPEN))
 			return;
-		worldIn.getEntities(CoreModule.SLIDING_DOOR, new AABB(pos), e -> e.doorPos.equals(pos)).forEach(e -> e.remove(RemovalReason.KILLED));
+		worldIn.getEntities(CoreModule.SLIDING_DOOR.get(), new AABB(pos), e -> e.doorPos.equals(pos)).forEach(e -> e.remove(RemovalReason.KILLED));
 	}
 }

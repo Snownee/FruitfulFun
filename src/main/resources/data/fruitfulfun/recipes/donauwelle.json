@@ -1,0 +1,61 @@
+{
+  "type": "kiwi:shapeless",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "fruitfulfun:redlove"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        [
+          {
+            "tag": "forge:chocolatebar"
+          },
+          {
+            "tag": "forge:chocolates"
+          }
+        ],
+        {
+          "item": "cocoa_beans"
+        }
+      ]
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "tag": "forge:cream"
+        },
+        {
+          "tag": "forge:milk"
+        }
+      ]
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "tag": "forge:flour"
+        },
+        {
+          "tag": "forge:crops/wheat"
+        }
+      ]
+    },
+    {
+      "item": "sugar"
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:donauwelle"
+  }
+}

@@ -22,7 +22,7 @@ public class CancellableGameEvent extends GameEvent {
 		try {
 			level.gameEvent(this, pos, GameEvent.Context.of(entity, state));
 		} catch (Exception e) {
-			FruitsMod.LOGGER.catching(e);
+			FruitfulFun.LOGGER.trace("", e);
 		}
 		GameEventListener receiver = this.receiver;
 		this.receiver = null;

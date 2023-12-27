@@ -1,6 +1,10 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:citrus_wall_sign",
-    "fruittrees:cherry_wall_sign"
+    "fruitfulfun:citrus_wall_sign",
+    {
+      "id": "fruitfulfun:redlove_wall_sign",
+      "required": false
+    }
   ]
 }

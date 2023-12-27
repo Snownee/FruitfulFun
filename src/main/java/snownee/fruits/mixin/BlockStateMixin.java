@@ -23,6 +23,6 @@ public abstract class BlockStateMixin {
 	}
 
 	@Shadow
-	abstract Block getBlock();
+	public abstract Block getBlock();
 
 }

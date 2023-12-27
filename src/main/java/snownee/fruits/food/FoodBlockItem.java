@@ -3,6 +3,7 @@ package snownee.fruits.food;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -31,11 +32,12 @@ public class FoodBlockItem extends ModBlockItem {
 	@Override
 	public InteractionResult useOn(UseOnContext ctx) {
 		Player player = ctx.getPlayer();
-		if (!ctx.getItemInHand().isEdible() || player == null || ctx.isSecondaryUseActive() || !player.canEat(ctx.getItemInHand().getFoodProperties(player).canAlwaysEat())) {
+		FoodProperties foodProperties = ctx.getItemInHand().getItem().getFoodProperties();
+		if (player == null || foodProperties == null || ctx.isSecondaryUseActive() || !player.canEat(foodProperties.canAlwaysEat())) {
 			return place(new BlockPlaceContext(ctx));
 		} else {
-			InteractionResult interactionresult1 = this.use(ctx.getLevel(), player, ctx.getHand()).getResult();
-			return interactionresult1 == InteractionResult.CONSUME ? InteractionResult.CONSUME_PARTIAL : interactionresult1;
+			InteractionResult result = this.use(ctx.getLevel(), player, ctx.getHand()).getResult();
+			return result == InteractionResult.CONSUME ? InteractionResult.CONSUME_PARTIAL : result;
 		}
 	}
 

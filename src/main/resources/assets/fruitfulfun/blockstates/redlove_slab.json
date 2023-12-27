@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "fruitfulfun:block/redlove_slab" },
+    "type=top": { "model": "fruitfulfun:block/redlove_slab_top" },
+    "type=double": { "model": "fruitfulfun:block/redlove_planks" }
+  }
+}

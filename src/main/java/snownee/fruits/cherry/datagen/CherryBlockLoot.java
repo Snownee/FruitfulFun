@@ -1,7 +1,6 @@
 package snownee.fruits.cherry.datagen;
 
-import net.minecraft.world.level.block.CarpetBlock;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.block.SlidingDoorBlock;
 import snownee.fruits.datagen.CoreBlockLoot;
@@ -9,16 +8,16 @@ import snownee.kiwi.util.Util;
 
 public class CherryBlockLoot extends CoreBlockLoot {
 
-	public CherryBlockLoot() {
-		super(Util.RL("fruittrees:cherry"));
+	public CherryBlockLoot(FabricDataOutput dataOutput) {
+		super(Util.RL("fruitfulfun:cherry"), dataOutput);
 	}
 
 	@Override
-	protected void _addTables() {
-		super._addTables();
-		handle(SlidingDoorBlock.class, $ -> createDoorTable($));
-		handle(CherryLeavesBlock.class, CoreBlockLoot::createFruitLeaves);
-		handle(CarpetBlock.class, $ -> createSilkTouchOrShearsDispatchTable($, applyExplosionCondition($, LootItem.lootTableItem($))));
+	protected void addTables() {
+		super.addTables();
+		handle(SlidingDoorBlock.class, this::createDoorTable);
+		handle(CherryLeavesBlock.class, this::createFruitLeaves);
+//		handle(CarpetBlock.class, $ -> createSilkTouchOrShearsDispatchTable($, applyExplosionCondition($, LootItem.lootTableItem($))));
 	}
 
 }

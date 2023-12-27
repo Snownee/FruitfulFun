@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruitfulfun:redlove_log",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:redlove_wood",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:stripped_redlove_log",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:stripped_redlove_wood",
+      "required": false
+    }
+  ]
+}

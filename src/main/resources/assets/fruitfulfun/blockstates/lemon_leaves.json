@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "age=0": { "model": "fruitfulfun:block/leaves_lemon" },
+    "age=1": { "model": "fruitfulfun:block/leaves_lemon" },
+    "age=2": { "model": "fruitfulfun:block/leaves_lemon_2" },
+    "age=3": [
+      { "model": "fruitfulfun:block/leaves_lemon_3" },
+      { "model": "fruitfulfun:block/leaves_lemon_3", "y": 90 },
+      { "model": "fruitfulfun:block/leaves_lemon_3", "y": 180 }
+    ]
+  }
+}

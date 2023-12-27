@@ -1,6 +1,10 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:citrus_button",
-    "fruittrees:cherry_button"
+    "fruitfulfun:citrus_button",
+    {
+      "id": "fruitfulfun:redlove_button",
+      "required": false
+    }
   ]
 }

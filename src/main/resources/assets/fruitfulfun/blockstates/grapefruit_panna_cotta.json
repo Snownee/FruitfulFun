@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "fruitfulfun:block/grapefruit_panna_cotta",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "fruitfulfun:block/grapefruit_panna_cotta"
+    },
+    "facing=south": {
+      "model": "fruitfulfun:block/grapefruit_panna_cotta",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "fruitfulfun:block/grapefruit_panna_cotta",
+      "y": 270
+    }
+  }
+}

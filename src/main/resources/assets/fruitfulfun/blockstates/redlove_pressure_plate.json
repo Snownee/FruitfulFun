@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "powered=false": { "model": "fruitfulfun:block/redlove_pressure_plate" },
+    "powered=true": { "model": "fruitfulfun:block/redlove_pressure_plate_down" }
+  }
+}

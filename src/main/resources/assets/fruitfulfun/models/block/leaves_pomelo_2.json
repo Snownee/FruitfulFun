@@ -1,0 +1,17 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "block/fruitfulfun/leaves_pomelo"
+  },
+  "children": {
+    "0": {
+      "parent": "fruitfulfun:block/leaves_pomelo"
+    },
+    "1": {
+      "parent": "fruitfulfun:block/flowers",
+      "textures": {
+        "0": "block/fruitfulfun/flowers_pomelo"
+      }
+    }
+  }
+}

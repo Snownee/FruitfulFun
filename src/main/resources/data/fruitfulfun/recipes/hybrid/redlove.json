@@ -1,0 +1,15 @@
+{
+  "type": "fruitfulfun:hybridizing",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruitfulfun:hybridization"
+    }
+  ],
+  "ingredients": [
+    "fruitfulfun:apple_leaves",
+    "fruitfulfun:cherry_leaves",
+    "wither_rose"
+  ],
+  "result": "fruitfulfun:redlove_leaves"
+}

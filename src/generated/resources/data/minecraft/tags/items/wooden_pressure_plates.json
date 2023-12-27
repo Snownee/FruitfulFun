@@ -1,6 +1,10 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:citrus_pressure_plate",
-    "fruittrees:cherry_pressure_plate"
+    "fruitfulfun:citrus_pressure_plate",
+    {
+      "id": "fruitfulfun:redlove_pressure_plate",
+      "required": false
+    }
   ]
 }

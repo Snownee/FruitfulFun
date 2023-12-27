@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "kiwi:is_loaded",
+        "module": "fruitfulfun:hybridization"
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "fruitfulfun:apple_sapling"
+    },
+    {
+      "item": "fruitfulfun:cherry_sapling"
+    },
+    {
+      "item": "wither_rose"
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:redlove_sapling"
+  }
+}

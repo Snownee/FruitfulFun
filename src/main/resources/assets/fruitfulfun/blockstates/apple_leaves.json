@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "age=0": { "model": "block/oak_leaves" },
+    "age=1": { "model": "block/oak_leaves" },
+    "age=2": { "model": "fruitfulfun:block/leaves_apple_2" },
+    "age=3": [
+      { "model": "fruitfulfun:block/leaves_apple_3" },
+      { "model": "fruitfulfun:block/leaves_apple_3", "y": 90 },
+      { "model": "fruitfulfun:block/leaves_apple_3", "y": 180 }
+    ]
+  }
+}

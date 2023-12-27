@@ -1,0 +1,17 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "block/fruitfulfun/leaves_tangerine"
+  },
+  "children": {
+    "0": {
+      "parent": "fruitfulfun:block/leaves_tangerine"
+    },
+    "1": {
+      "parent": "fruitfulfun:block/flowers",
+      "textures": {
+        "0": "block/fruitfulfun/flowers_tangerine"
+      }
+    }
+  }
+}

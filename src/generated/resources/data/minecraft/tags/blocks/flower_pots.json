@@ -1,19 +1,15 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:potted_apple",
-    "fruittrees:potted_citron",
-    "fruittrees:potted_grapefruit",
-    "fruittrees:potted_lemon",
-    "fruittrees:potted_lime",
-    "fruittrees:potted_mandarin",
-    "fruittrees:potted_orange",
-    "fruittrees:potted_pomelo",
+    "fruitfulfun:potted_citron",
+    "fruitfulfun:potted_grapefruit",
+    "fruitfulfun:potted_lemon",
+    "fruitfulfun:potted_lime",
+    "fruitfulfun:potted_tangerine",
+    "fruitfulfun:potted_orange",
+    "fruitfulfun:potted_pomelo",
     {
-      "id": "fruittrees:potted_cherry",
-      "required": false
-    },
-    {
-      "id": "fruittrees:potted_redlove",
+      "id": "fruitfulfun:potted_redlove",
       "required": false
     }
   ]

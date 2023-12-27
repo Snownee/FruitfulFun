@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "powered=false": { "model": "fruittrees:block/citrus_pressure_plate" },
-    "powered=true": { "model": "fruittrees:block/citrus_pressure_plate_down" }
-  }
-}

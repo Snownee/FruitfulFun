@@ -1,14 +1,17 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:mandarin_sapling",
-    "fruittrees:lime_sapling",
-    "fruittrees:citron_sapling",
-    "fruittrees:pomelo_sapling",
-    "fruittrees:orange_sapling",
-    "fruittrees:lemon_sapling",
-    "fruittrees:grapefruit_sapling",
-    "fruittrees:apple_sapling",
-    "fruittrees:cherry_sapling",
-    "fruittrees:redlove_sapling"
+    "fruitfulfun:apple_sapling",
+    "fruitfulfun:citron_sapling",
+    "fruitfulfun:grapefruit_sapling",
+    "fruitfulfun:lemon_sapling",
+    "fruitfulfun:lime_sapling",
+    "fruitfulfun:tangerine_sapling",
+    "fruitfulfun:orange_sapling",
+    "fruitfulfun:pomelo_sapling",
+    {
+      "id": "fruitfulfun:redlove_sapling",
+      "required": false
+    }
   ]
 }

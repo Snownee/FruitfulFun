@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "axis=y": { "model": "fruittrees:block/citrus_log" },
-    "axis=z": { "model": "fruittrees:block/citrus_log", "x": 90 },
-    "axis=x": { "model": "fruittrees:block/citrus_log", "x": 90, "y": 90 }
-  }
-}

@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "package": "snownee.fruits.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "fruitfulfun.refmap.json",
+  "mixins": [
+    "BeeMixin",
+    "BeePollinateGoalMixin",
+    "BlockEntityTypeMixin",
+    "BlockStateMixin",
+    "GiveGiftToHeroMixin",
+    "InstrumentItemMixin",
+    "PandaMixin"
+  ],
+  "client": [
+    "GameRendererMixin",
+    "ItemBlockRenderTypesMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

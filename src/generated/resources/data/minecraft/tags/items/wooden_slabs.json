@@ -1,6 +1,10 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:citrus_slab",
-    "fruittrees:cherry_slab"
+    "fruitfulfun:citrus_stairs",
+    {
+      "id": "fruitfulfun:redlove_stairs",
+      "required": false
+    }
   ]
 }

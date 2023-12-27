@@ -1,0 +1,62 @@
+{
+  "type": "farmersdelight:cooking",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:fruits/grapefruit"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "tag": "forge:cream"
+        },
+        {
+          "tag": "forge:milk"
+        }
+      ]
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "item": "atmospheric:aloe_gel_bottle"
+        },
+        {
+          "tag": "forge:slimeballs"
+        }
+      ]
+    },
+    {
+      "item": "sugar"
+    },
+    {
+      "type": "kiwi:alternatives",
+      "list": [
+        {
+          "item": "neapolitan:dried_vanilla_pods"
+        },
+        {
+          "tag": "forge:crops/vanilla"
+        },
+        []
+      ]
+    }
+  ],
+  "experience": 0.35,
+  "result": {
+    "item": "fruitfulfun:grapefruit_panna_cotta"
+  }
+}

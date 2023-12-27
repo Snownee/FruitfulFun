@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=y": { "model": "fruitfulfun:block/redlove_log" },
+    "axis=z": { "model": "fruitfulfun:block/redlove_log", "x": 90 },
+    "axis=x": { "model": "fruitfulfun:block/redlove_log", "x": 90, "y": 90 }
+  }
+}

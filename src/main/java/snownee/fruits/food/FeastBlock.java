@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -34,25 +35,27 @@ public class FeastBlock extends FoodBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult p_60508_) {
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		int serves = getServings(state);
-		ItemStack stack = new ItemStack(servingItem.get());
-		ItemStack remainder = stack.getCraftingRemainingItem();
+		ItemStack servingItem = new ItemStack(this.servingItem.get());
+		ItemStack remainder = servingItem.getRecipeRemainder();
+		ItemStack held = player.getItemInHand(hand);
 		if (serves == 0) {
 			if (!level.isClientSide) {
 				level.destroyBlock(pos, true, player);
 			}
-		} else if (player.getItemInHand(hand).sameItem(remainder)) {
+		} else if (ItemStack.isSameItem(held, remainder)) {
+			// has container. give serving item
 			if (!level.isClientSide) {
 				level.setBlockAndUpdate(pos, state.setValue(getServingsProperty(), serves - 1));
 				if (!player.getAbilities().instabuild) {
-					player.getItemInHand(hand).shrink(1);
+					held.shrink(1);
 				}
-				if (!player.addItem(stack)) {
-					player.drop(stack, false);
+				if (!player.addItem(servingItem)) {
+					player.drop(servingItem, false);
 				}
 			}
-		} else if (serves == 4 && player.getItemInHand(hand).isEmpty()) {
+		} else if (serves == 4 && held.isEmpty()) {
 			if (!level.isClientSide) {
 				level.removeBlock(pos, false);
 				ItemStack blockItem = new ItemStack(this);
@@ -62,7 +65,7 @@ public class FeastBlock extends FoodBlock {
 			}
 		} else {
 			if (level.isClientSide) {
-				player.displayClientMessage(Component.translatable("tip.fruittrees.useContainer", remainder.getHoverName()), true);
+				player.displayClientMessage(Component.translatable("tip.fruitfulfun.useContainer", remainder.getHoverName()), true);
 			}
 			return InteractionResult.PASS;
 		}
@@ -102,6 +105,11 @@ public class FeastBlock extends FoodBlock {
 			return LEFTOVER_SHAPE;
 		}
 		return super.getShape(state, level, pos, context);
+	}
+
+	@Override
+	public BlockItem createItem(Item.Properties builder) {
+		return super.createItem(builder.craftRemainder(servingItem.get().getCraftingRemainingItem()));
 	}
 
 }

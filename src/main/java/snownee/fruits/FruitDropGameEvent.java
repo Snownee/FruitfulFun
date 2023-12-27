@@ -10,7 +10,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEventListener;
-import snownee.fruits.FruitsConfig.DropMode;
+import snownee.fruits.FFCommonConfig.DropMode;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 
 public class FruitDropGameEvent extends CancellableGameEvent {
@@ -28,7 +28,7 @@ public class FruitDropGameEvent extends CancellableGameEvent {
 			ItemEntity itemEntity = runnable.get();
 			runnable = null;
 			if (listener instanceof FruitTreeBlockEntity) {
-				DropMode mode = FruitsConfig.getDropMode(level);
+				DropMode mode = FFCommonConfig.getDropMode(level);
 				if (mode == DropMode.ONE_BY_ONE) {
 					((FruitTreeBlockEntity) listener).setOnlyItem(itemEntity);
 				}

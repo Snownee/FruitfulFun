@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "axis=y": { "model": "fruittrees:block/stripped_cherry_wood" },
-    "axis=z": { "model": "fruittrees:block/stripped_cherry_wood", "x": 90 },
-    "axis=x": { "model": "fruittrees:block/stripped_cherry_wood", "x": 90, "y": 90 }
-  }
-}

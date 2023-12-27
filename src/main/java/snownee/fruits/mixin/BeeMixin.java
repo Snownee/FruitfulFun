@@ -1,11 +1,14 @@
 package snownee.fruits.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -17,20 +20,30 @@ import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.FilteredFlyingPathNavigation;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.hybridization.FFBee;
+import snownee.fruits.hybridization.BeeAttributes;
 
 @Mixin(Bee.class)
-public abstract class BeeMixin extends Animal {
+public abstract class BeeMixin extends Animal implements FFBee {
+
+	@Unique
+	private final BeeAttributes beeAttributes = new BeeAttributes();
 
 	public BeeMixin(EntityType<? extends Animal> type, Level level) {
 		super(type, level);
 	}
 
+	@Override
+	public BeeAttributes fruits$getBeeAttributes() {
+		return beeAttributes;
+	}
+
 	@Inject(at = @At("HEAD"), method = "isFlowerValid", cancellable = true)
 	private void fruits_isFlowerValid(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		if (!Hooks.hybridization || !level.isLoaded(pos)) {
+		if (!Hooks.hybridization || !level().isLoaded(pos)) {
 			return;
 		}
-		BlockState state = level.getBlockState(pos);
+		BlockState state = level().getBlockState(pos);
 		if (!state.hasBlockEntity() && state.getBlock() instanceof FruitLeavesBlock) {
 			cir.setReturnValue(true);
 		}
@@ -45,9 +58,18 @@ public abstract class BeeMixin extends Animal {
 		cir.setReturnValue(flyingpathnavigator);
 	}
 
-	@Override
-	public boolean isInvulnerableTo(DamageSource source) {
-		return (level.getDifficulty() == Difficulty.EASY && source == DamageSource.WITHER) || super.isInvulnerableTo(source);
+	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
+	private void fruits_addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+		beeAttributes.write(compoundTag);
 	}
 
+	@Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
+	private void fruits_readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+		beeAttributes.read(compoundTag);
+	}
+
+	@Override
+	public boolean isInvulnerableTo(DamageSource source) {
+		return (level().getDifficulty() == Difficulty.EASY && source == damageSources().wither()) || super.isInvulnerableTo(source);
+	}
 }

@@ -2,15 +2,11 @@ package snownee.fruits.cherry.client.particle;
 
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,8 +15,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
@@ -29,10 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class PetalParticle extends TextureSheetParticle {
 
 	private float angleStepX;
@@ -55,11 +46,15 @@ public class PetalParticle extends TextureSheetParticle {
 
 		Vector3f motion = new Vector3f(baseMotionX, baseMotionY, baseMotionZ);
 		motion.normalize();
+
+		//		motion.mul(0.02f);
+		//		lifetime = 500;
+
 		vForce = new Vector3f(baseMotionZ, 0, -baseMotionX);
-		Quaternion rot = vForce.rotationDegrees(-90);
-		vForce = motion.copy();
-		vForce.transform(rot);
-		motion.mul(0.1f + random.nextFloat() * 0.05f);
+		//		Quaternionf rot = vForce.rotationDegrees(-90);
+		//		vForce = motion.copy();
+		//		vForce.transform(rot);
+		motion.mul(0.075f + random.nextFloat() * 0.05f);
 
 		xd = motion.x();
 		yd = motion.y();
@@ -69,35 +64,9 @@ public class PetalParticle extends TextureSheetParticle {
 		angleStepZ = 0.1f + random.nextFloat() * 0.1f;
 	}
 
-	public enum RenderType implements ParticleRenderType {
-		INSTANCE;
-
-		@SuppressWarnings("deprecation")
-		@Override
-		public void begin(BufferBuilder pBuilder, TextureManager pTextureManager) {
-			RenderSystem.disableCull();
-			RenderSystem.depthMask(true);
-			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-		}
-
-		@Override
-		public void end(Tesselator pTesselator) {
-			pTesselator.end();
-			RenderSystem.enableCull();
-		}
-
-		@Override
-		public String toString() {
-			return "PARTICLE_SHEET_TRANSLUCENT_NO_CULL";
-		}
-	}
-
 	@Override
 	public ParticleRenderType getRenderType() {
-		return RenderType.INSTANCE;
+		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
 	@Override
@@ -221,54 +190,85 @@ public class PetalParticle extends TextureSheetParticle {
 	}
 
 	@Override
-	public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
-		Vec3 vec3d = renderInfo.getPosition();
+	public void render(VertexConsumer buffer, Camera camera, float partialTicks) {
+		Vec3 vec3d = camera.getPosition();
 		float f = (float) (Mth.lerp(partialTicks, xo, x) - vec3d.x());
 		float f1 = (float) (Mth.lerp(partialTicks, yo, y) - vec3d.y());
 		float f2 = (float) (Mth.lerp(partialTicks, zo, z) - vec3d.z());
-		Quaternion quaternion = new Quaternion(renderInfo.rotation());
+		Vector3f sub = new Vector3f(f, f1, f2);
+		Quaternionf quaternion;
 
-		float rx = Mth.lerp(partialTicks, oRollX, rollX);
-		float rz = Mth.lerp(partialTicks, oRoll, roll);
+		float rollZ = Mth.lerp(partialTicks, oRoll, roll);
 		if (onGround || inWater) {
-			quaternion = Vector3f.XP.rotationDegrees(90);
+			quaternion = Axis.XP.rotationDegrees(90);
 			if (inWater) {
-				f1 += 0.16f + rz % 0.01;
+				f1 += 0.16f + rollZ % 0.01f;
 			} else {
-				f1 += 0.005f + rz % 0.01;
+				f1 += 0.005f + rollZ % 0.01f;
 			}
 		} else {
-			quaternion = new Quaternion(renderInfo.rotation());
-			quaternion.mul(Vector3f.XP.rotation(rx));
+			quaternion = new Quaternionf();
+			float rollX = Mth.lerp(partialTicks, oRollX, this.rollX);
+			quaternion.rotateX(rollX);
+			quaternion.rotateY(rollX * 0.2F);
 		}
-		quaternion.mul(Vector3f.ZP.rotation(rz));
+		quaternion.rotateZ(rollZ);
+		var quadNormal = new Vector3f(0.0F, 0.0F, 1.0F);
+		quadNormal.rotate(quaternion);
+		Vector3f[] vertex = new Vector3f[] { new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F) };
+		float uv[] = new float[] { getU0(), getV0(), getU1(), getV1() };
+		if (sub.dot(quadNormal) < 0) {
+			for (int i = 0; i < 4; ++i) {
+				vertex[i].mul(-1, 1, 1);
+			}
+			uv[0] = getU1();
+			uv[2] = getU0();
+		}
 
-		Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-		vector3f1.transform(quaternion);
-		Vector3f[] avector3f = new Vector3f[] { new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F) };
 		float f4 = getQuadSize(partialTicks);
 		float alpha = f4 * this.alpha;
 		f4 *= quadSize * 0.15f;
 
 		for (int i = 0; i < 4; ++i) {
-			Vector3f vector3f = avector3f[i];
-			vector3f.transform(quaternion);
+			Vector3f vector3f = vertex[i];
+			vector3f.rotate(quaternion);
 			vector3f.mul(f4);
 			vector3f.add(f, f1, f2);
 		}
 
-		float f7 = getU0();
-		float f8 = getU1();
-		float f5 = getV0();
-		float f6 = getV1();
 		int j = getLightColor(partialTicks);
-		buffer.vertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).uv(f8, f6).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).uv(f8, f5).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).uv(f7, f5).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).uv(f7, f6).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+		buffer.vertex(vertex[0].x(), vertex[0].y(), vertex[0].z()).uv(uv[2], uv[3]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+		buffer.vertex(vertex[1].x(), vertex[1].y(), vertex[1].z()).uv(uv[2], uv[1]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+		buffer.vertex(vertex[2].x(), vertex[2].y(), vertex[2].z()).uv(uv[0], uv[1]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+		buffer.vertex(vertex[3].x(), vertex[3].y(), vertex[3].z()).uv(uv[0], uv[3]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	//	public enum RenderType implements ParticleRenderType {
+	//		INSTANCE;
+	//
+	//		@SuppressWarnings("deprecation")
+	//		@Override
+	//		public void begin(BufferBuilder pBuilder, TextureManager pTextureManager) {
+	//			RenderSystem.disableCull();
+	//			RenderSystem.depthMask(true);
+	//			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+	//			RenderSystem.enableBlend();
+	//			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+	//			pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+	//		}
+	//
+	//		@Override
+	//		public void end(Tesselator pTesselator) {
+	//			pTesselator.end();
+	//			RenderSystem.enableCull();
+	//		}
+	//
+	//		@Override
+	//		public String toString() {
+	//			return "PARTICLE_SHEET_TRANSLUCENT_NO_CULL";
+	//		}
+	//	}
+
 	public static class Factory implements ParticleProvider<SimpleParticleType> {
 		private final SpriteSet spriteSet;
 

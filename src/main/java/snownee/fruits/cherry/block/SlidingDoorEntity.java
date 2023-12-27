@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,8 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 import snownee.fruits.CoreModule;
+import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.util.NBTHelper;
 
 public class SlidingDoorEntity extends Entity {
@@ -25,7 +26,7 @@ public class SlidingDoorEntity extends Entity {
 	}
 
 	public SlidingDoorEntity(Level level, BlockPos doorPos) {
-		this(CoreModule.SLIDING_DOOR, level);
+		this(CoreModule.SLIDING_DOOR.get(), level);
 		setPos(doorPos.getX() + 0.5, doorPos.getY(), doorPos.getZ() + 0.5);
 		this.doorPos = doorPos;
 	}
@@ -47,21 +48,21 @@ public class SlidingDoorEntity extends Entity {
 	@Override
 	public void tick() {
 		if (firstTick && getBoundingBox().getYsize() == 0) {
-			if (level.isLoaded(doorPos))
-				update(level.getBlockState(doorPos));
+			if (level().isLoaded(doorPos))
+				update(level().getBlockState(doorPos));
 		}
 		firstTick = false;
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
+		return CommonProxy.getAddEntityPacket(this);
 	}
 
 	public void update(BlockState state) {
 		if (!(state.getBlock() instanceof SlidingDoorBlock))
 			return;
-		setBoundingBox(extendBoundingBox(state.getShape(level, doorPos).move(doorPos.getX(), doorPos.getY(), doorPos.getZ())));
+		setBoundingBox(extendBoundingBox(state.getShape(level(), doorPos).move(doorPos.getX(), doorPos.getY(), doorPos.getZ())));
 		//resetPositionToBB();
 	}
 

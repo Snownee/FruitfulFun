@@ -60,14 +60,14 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 	@Override
 	public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (FoodModule.HONEY_POMELO_TEA.is(stack) && (!Hooks.farmersdelight || !Platform.isProduction())) {
-			tooltip.add(Component.translatable("tip.fruittrees.clearHarmfulEffects").withStyle(ChatFormatting.BLUE));
+			tooltip.add(Component.translatable("tip.fruitfulfun.clearHarmfulEffects").withStyle(ChatFormatting.BLUE));
 		}
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
-		if (!level.isClientSide) {
+		if (!level.isClientSide && !(this instanceof FeastBlock)) {
 			level.removeBlock(pos, false);
 			ItemStack stack = new ItemStack(this);
 			if (!player.addItem(stack)) {

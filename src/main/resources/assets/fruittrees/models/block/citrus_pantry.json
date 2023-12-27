@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "side": "block/fruittrees/citrus_pantry_side",
-    "front": "block/fruittrees/citrus_pantry_front",
-    "top": "block/fruittrees/citrus_pantry_top"
-  }
-}

@@ -1,5 +1,6 @@
 package snownee.fruits.datagen;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -12,31 +13,31 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.kiwi.datagen.provider.KiwiBlockLoot;
+import snownee.kiwi.datagen.KiwiBlockLoot;
 import snownee.kiwi.util.Util;
 
 public class CoreBlockLoot extends KiwiBlockLoot {
 
-	public CoreBlockLoot() {
-		this(Util.RL("fruittrees:core"));
+	public CoreBlockLoot(FabricDataOutput dataOutput) {
+		this(Util.RL("fruitfulfun:core"), dataOutput);
 	}
 
-	public CoreBlockLoot(ResourceLocation moduleId) {
-		super(moduleId);
+	public CoreBlockLoot(ResourceLocation moduleId, FabricDataOutput dataOutput) {
+		super(moduleId, dataOutput);
 	}
 
 	@Override
-	protected void _addTables() {
-		handleDefault($ -> createSingleItemTable($));
-		handle(DoorBlock.class, $ -> createDoorTable($));
-		handle(SlabBlock.class, $ -> createSlabItemTable($));
+	protected void addTables() {
+		handleDefault(this::createSingleItemTable);
+		handle(DoorBlock.class, this::createDoorTable);
+		handle(SlabBlock.class, this::createSlabItemTable);
 		handle(FlowerPotBlock.class, $ -> createPotFlowerItemTable(((FlowerPotBlock) $).getContent()));
-		handle(FruitLeavesBlock.class, CoreBlockLoot::createFruitLeaves);
+		handle(FruitLeavesBlock.class, this::createFruitLeaves);
 	}
 
-	private static final float[] NORMAL_LEAVES_SAPLING_CHANCES = new float[] { 0.05F, 0.0625F, 0.083333336F, 0.1F };
+	private static final float[] NORMAL_LEAVES_SAPLING_CHANCES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
 
-	public static LootTable.Builder createFruitLeaves(Block block) {
+	public LootTable.Builder createFruitLeaves(Block block) {
 		FruitLeavesBlock leavesBlock = (FruitLeavesBlock) block;
 		FruitType type = leavesBlock.type.get();
 		LootTable.Builder loot = createLeavesDrops(leavesBlock, type.sapling.get(), NORMAL_LEAVES_SAPLING_CHANCES);
@@ -48,4 +49,8 @@ public class CoreBlockLoot extends KiwiBlockLoot {
 		return loot;
 	}
 
+	@Override
+	public String getName() {
+		return super.getName() + hashCode(); //FIXME: move to kiwi
+	}
 }

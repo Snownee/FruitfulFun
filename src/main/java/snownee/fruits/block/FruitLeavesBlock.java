@@ -24,6 +24,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.EntityBlock;
@@ -42,15 +43,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.items.ItemHandlerHelper;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFCommonConfig;
+import snownee.fruits.FFCommonConfig.DropMode;
 import snownee.fruits.FruitType;
-import snownee.fruits.FruitsConfig;
-import snownee.fruits.FruitsConfig.DropMode;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
+import snownee.fruits.util.CommonProxy;
 
 public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, EntityBlock {
 
@@ -62,26 +61,6 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		super(properties);
 		this.type = type;
 		registerDefaultState(stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1).setValue(WATERLOGGED, false));
-	}
-
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(DISTANCE, PERSISTENT, AGE, WATERLOGGED);
-	}
-
-	@Override
-	public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
-		return canGrow(state) || state.getValue(AGE) == 1;
-	}
-
-	@Override
-	public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
-		return state.getValue(AGE) != 3;
-	}
-
-	@Override
-	public void performBonemeal(ServerLevel world, RandomSource rand, BlockPos pos, BlockState state) {
-		world.setBlockAndUpdate(pos, state.cycle(AGE));
 	}
 
 	public static Supplier<ItemEntity> dropFruit(ServerLevel level, BlockPos pos, BlockState state, float deathRate) {
@@ -101,21 +80,52 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 		FruitType type = ((FruitLeavesBlock) state.getBlock()).type.get();
 		ItemStack stack = new ItemStack(type.fruit.get());
-		if (!stack.isEmpty() && !level.restoringBlockSnapshots) { // do not drop items while restoring blockstates, prevents item dupe
-			float f = EntityType.ITEM.getHeight() / 2.0F;
-			double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
-			double d1 = pos.getY() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D) - f;
-			double d2 = pos.getZ() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
-			ItemEntity itementity = new ItemEntity(level, d0, d1, d2, stack);
-			itementity.setDefaultPickUpDelay();
-			if (level.addFreshEntity(itementity)) {
-				return () -> {
-					level.setBlockAndUpdate(pos, newState);
-					return itementity;
-				};
+		if (stack.isEmpty()) {
+			return () -> null;
+		}
+		float f = EntityType.ITEM.getHeight() / 2.0F;
+		double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
+		double d1 = pos.getY() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D) - f;
+		double d2 = pos.getZ() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
+		ItemEntity itementity = new ItemEntity(level, d0, d1, d2, stack);
+		itementity.setDefaultPickUpDelay();
+		if (!level.addFreshEntity(itementity)) {
+			return () -> null;
+		}
+		return () -> {
+			level.setBlockAndUpdate(pos, newState);
+			return itementity;
+		};
+	}
+
+	public static void rangeDrop(ServerLevel worldIn, float deathRate, Iterable<BlockPos> posList, BiConsumer<BlockPos, BlockState> consumer) {
+		for (BlockPos pos : posList) {
+			BlockState state = worldIn.getBlockState(pos);
+			if (state.getBlock() instanceof FruitLeavesBlock) {
+				dropFruit(worldIn, pos, state, deathRate).get();
+				consumer.accept(pos, state);
 			}
 		}
-		return () -> null;
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(DISTANCE, PERSISTENT, AGE, WATERLOGGED);
+	}
+
+	@Override
+	public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+		return canGrow(state) || state.getValue(AGE) == 1;
+	}
+
+	@Override
+	public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
+		return state.getValue(AGE) != 3;
+	}
+
+	@Override
+	public void performBonemeal(ServerLevel world, RandomSource rand, BlockPos pos, BlockState state) {
+		world.setBlockAndUpdate(pos, state.cycle(AGE));
 	}
 
 	@Override
@@ -126,14 +136,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		} else if (canGrow(state) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
 			int r = rand.nextInt(100);
 
-			if (r < 10 && type.get().carpet != null) {
-				CarpetTreeDecorator.placeCarpet(world, pos, type.get().carpet.get().defaultBlockState(), world::setBlockAndUpdate);
-			}
-
-			boolean def = r > (99 - FruitsConfig.growingSpeed);
+			//FIXME
+//			if (r < 10 && type.get().carpet != null) {
+//				CarpetTreeDecorator.placeCarpet(world, pos, type.get().carpet.get().defaultBlockState(), world::setBlockAndUpdate);
+//			}
 
 			if (state.getValue(AGE) == 3) {
-				DropMode mode = FruitsConfig.getDropMode(world);
+				DropMode mode = FFCommonConfig.getDropMode(world);
 				if (mode == DropMode.NO_DROP) {
 					return;
 				}
@@ -141,9 +150,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				if (receiver == null) {
 					dropFruit(world, pos, state, 0.6F).get();
 				}
-			} else if (ForgeHooks.onCropsGrowPre(world, pos, state, def)) {
-				performBonemeal(world, rand, pos, state);
-				ForgeHooks.onCropsGrowPost(world, pos, state);
+			} else {
+				boolean def = r > (99 - FFCommonConfig.growingSpeed);
+				CommonProxy.maybeGrowCrops(world, pos, state, def, () -> performBonemeal(world, rand, pos, state));
 			}
 		}
 	}
@@ -206,20 +215,11 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			}
 			rangeDrop((ServerLevel) worldIn, deathRate, BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1)), (p, s) -> {
 				FruitType type = ((FruitLeavesBlock) s.getBlock()).type.get();
-				if (type.carpet != null) {
-					CarpetTreeDecorator.placeCarpet(worldIn, pos, type.carpet.get().defaultBlockState(), worldIn::setBlockAndUpdate);
-				}
+				//FIXME
+//				if (type.carpet != null) {
+//					CarpetTreeDecorator.placeCarpet(worldIn, pos, type.carpet.get().defaultBlockState(), worldIn::setBlockAndUpdate);
+//				}
 			});
-		}
-	}
-
-	public static void rangeDrop(ServerLevel worldIn, float deathRate, Iterable<BlockPos> posList, BiConsumer<BlockPos, BlockState> consumer) {
-		for (BlockPos pos : posList) {
-			BlockState state = worldIn.getBlockState(pos);
-			if (state.getBlock() instanceof FruitLeavesBlock) {
-				dropFruit(worldIn, pos, state, deathRate).get();
-				consumer.accept(pos, state);
-			}
 		}
 	}
 
@@ -228,10 +228,8 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (state.getValue(AGE) == 3 && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 1))) {
 			if (!worldIn.isClientSide) {
 				ItemStack fruit = new ItemStack(type.get().fruit.get());
-				if (playerIn instanceof FakePlayer) {
+				if (CommonProxy.isFakePlayer(playerIn) || !playerIn.addItem(fruit)) {
 					popResourceFromFace(worldIn, pos, ray.getDirection(), fruit);
-				} else {
-					ItemHandlerHelper.giveItemToPlayer(playerIn, fruit);
 				}
 			}
 			return InteractionResult.SUCCESS;
@@ -239,13 +237,14 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		return InteractionResult.PASS;
 	}
 
-	@Override
-	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
-		if (entity instanceof FlyingAnimal) {
-			return BlockPathTypes.OPEN;
-		}
-		return null;
-	}
+	//FIXME
+//	@Override
+//	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+//		if (entity instanceof FlyingAnimal) {
+//			return BlockPathTypes.OPEN;
+//		}
+//		return null;
+//	}
 
 	public boolean hasBlockEntity(BlockState state) {
 		return state.getValue(PERSISTENT) && state.getValue(DISTANCE) == 1;

@@ -1,6 +1,10 @@
 {
+  "replace": false,
   "values": [
-    "fruittrees:citrus_fence",
-    "fruittrees:cherry_fence"
+    "fruitfulfun:citrus_fence",
+    {
+      "id": "fruitfulfun:redlove_fence",
+      "required": false
+    }
   ]
 }

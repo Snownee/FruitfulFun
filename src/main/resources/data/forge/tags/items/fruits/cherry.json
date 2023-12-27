@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    { "id": "fruittrees:cherry", "required": false }
+    { "id": "fruitfulfun:cherry", "required": false }
   ]
 }

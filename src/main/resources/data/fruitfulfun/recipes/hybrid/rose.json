@@ -1,0 +1,14 @@
+{
+  "type": "fruitfulfun:hybridizing",
+  "conditions": [
+    {
+      "type": "kiwi:is_loaded",
+      "module": "fruitfulfun:hybridization"
+    }
+  ],
+  "ingredients": [
+    "fruitfulfun:apple_leaves",
+    "poppy"
+  ],
+  "result": "rose_bush"
+}

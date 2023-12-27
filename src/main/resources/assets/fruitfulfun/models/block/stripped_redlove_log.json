@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "block/fruitfulfun/stripped_redlove_log_top",
+    "side": "block/fruitfulfun/stripped_redlove_log"
+  }
+}

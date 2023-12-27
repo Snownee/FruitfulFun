@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruitfulfun:rice_with_fruits",
+      "required": false
+    }
+  ]
+}

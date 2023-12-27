@@ -1,6 +1,7 @@
 package snownee.fruits.hybridization;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -9,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
 import snownee.kiwi.recipe.Simple;
 
 public class HybridizingRecipe extends Simple<HybridizingContext> {
@@ -66,28 +66,28 @@ public class HybridizingRecipe extends Simple<HybridizingContext> {
 		}
 
 		protected static Block readIngredient(JsonElement element) {
-			Block block = Registry.BLOCK.get(new ResourceLocation(element.getAsString()));
+			Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(element.getAsString()));
 			Preconditions.checkArgument(block != Blocks.AIR);
 			return block;
 		}
 
 		@Override
 		public HybridizingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-			Block result = buffer.readRegistryIdUnsafe(ForgeRegistries.BLOCKS);
+			Block result = Objects.requireNonNull(buffer.readById(BuiltInRegistries.BLOCK));
 			ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
 			int size = buffer.readByte();
 			for (int i = 0; i < size; i++) {
-				builder.add(buffer.readRegistryIdUnsafe(ForgeRegistries.BLOCKS));
+				builder.add(Objects.requireNonNull(buffer.readById(BuiltInRegistries.BLOCK)));
 			}
 			return new HybridizingRecipe(recipeId, result, builder.build());
 		}
 
 		@Override
 		public void toNetwork(FriendlyByteBuf buffer, HybridizingRecipe recipe) {
-			buffer.writeRegistryIdUnsafe(ForgeRegistries.BLOCKS, recipe.result);
+			buffer.writeId(BuiltInRegistries.BLOCK, recipe.result);
 			buffer.writeByte(recipe.ingredients.size());
 			for (Block block : recipe.ingredients) {
-				buffer.writeRegistryIdUnsafe(ForgeRegistries.BLOCKS, block);
+				buffer.writeId(BuiltInRegistries.BLOCK, block);
 			}
 		}
 

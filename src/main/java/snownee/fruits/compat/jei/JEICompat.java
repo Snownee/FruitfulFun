@@ -11,21 +11,21 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import snownee.fruits.CoreModule;
-import snownee.fruits.FruitsConfig;
-import snownee.fruits.FruitsMod;
+import snownee.fruits.FFCommonConfig;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.hybridization.HybridizationModule;
 import snownee.fruits.hybridization.HybridizingRecipe;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
 
-	public static final ResourceLocation UID = new ResourceLocation(FruitsMod.ID, "hybridizing");
+	public static final ResourceLocation UID = new ResourceLocation(FruitfulFun.ID, "hybridizing");
 	public static final RecipeType<HybridizingRecipe> RECIPE_TYPE = new RecipeType<>(UID, HybridizingRecipe.class);
 
 	@Override
@@ -33,33 +33,31 @@ public class JEICompat implements IModPlugin {
 		return UID;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
-		if (Registry.RECIPE_TYPE.containsKey(UID)) {
+		if (BuiltInRegistries.RECIPE_TYPE.containsKey(UID)) {
 			registration.addRecipeCategories(new HybridizingCategory(registration.getJeiHelpers().getGuiHelper()));
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		if (Registry.RECIPE_TYPE.containsKey(UID)) {
+		if (BuiltInRegistries.RECIPE_TYPE.containsKey(UID)) {
 			ClientLevel world = Minecraft.getInstance().level;
 			RecipeManager recipeManager = world.getRecipeManager();
-			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.byType(HybridizationModule.RECIPE_TYPE).values()));
+			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.getAllRecipesFor(HybridizationModule.RECIPE_TYPE)));
 		}
 
-		if (FruitsConfig.appleSaplingFromHeroOfTheVillage || FruitsConfig.villageAppleTreeWorldGen) {
+		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage || FFCommonConfig.villageAppleTreeWorldGen) {
 			String info = "";
-			if (FruitsConfig.appleSaplingFromHeroOfTheVillage) {
-				info = I18n.get("gui.fruittrees.tip.appleSaplingFromHeroOfTheVillage");
+			if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
+				info = I18n.get("gui.fruitfulfun.tip.appleSaplingFromHeroOfTheVillage");
 			}
-			if (FruitsConfig.villageAppleTreeWorldGen) {
-				if (FruitsConfig.appleSaplingFromHeroOfTheVillage) {
+			if (FFCommonConfig.villageAppleTreeWorldGen) {
+				if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
 					info += "\n";
 				}
-				info += I18n.get("gui.fruittrees.tip.villageAppleTreeWorldGen");
+				info += I18n.get("gui.fruitfulfun.tip.villageAppleTreeWorldGen");
 			}
 			ItemStack appleSapling = CoreModule.APPLE_SAPLING.itemStack();
 			registration.addIngredientInfo(appleSapling, VanillaTypes.ITEM_STACK, Component.literal(info));

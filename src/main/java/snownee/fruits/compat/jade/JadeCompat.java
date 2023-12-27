@@ -9,7 +9,7 @@ import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import snownee.fruits.FruitsMod;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
@@ -24,7 +24,7 @@ import snownee.kiwi.loader.Platform;
 @WailaPlugin
 public class JadeCompat implements IWailaPlugin {
 
-	public static final ResourceLocation BEE = new ResourceLocation(FruitsMod.ID, "bee");
+	public static final ResourceLocation BEE = new ResourceLocation(FruitfulFun.ID, "bee");
 	private static IWailaClientRegistration client;
 
 	@Override

@@ -1,0 +1,20 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "block/fruitfulfun/redlove_door_top",
+		"top": "block/fruitfulfun/redlove_door_top"
+	},
+	"elements": [
+		{
+			"from": [3, 0, -13],
+			"to": [4, 16, 3],
+			"faces": {
+				"north": {"uv": [1, 0, 0, 16], "texture": "#top"},
+				"east": {"uv": [16, 0, 0, 16], "texture": "#top"},
+				"south": {"uv": [0, 0, 1, 16], "texture": "#top"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#top"},
+				"up": {"uv": [15, 0, 16, 16], "texture": "#top", "cullface": "up"}
+			}
+		}
+	]
+}
