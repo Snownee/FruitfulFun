@@ -1,16 +1,24 @@
 package snownee.fruits;
 
+import java.util.stream.Collectors;
+
+import com.google.common.base.Preconditions;
+
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
@@ -32,16 +40,15 @@ import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
-import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
-import snownee.fruits.levelgen.foliageplacers.FruitBlobFoliagePlacer;
-import snownee.fruits.levelgen.treedecorators.CarpetTreeDecorator;
+import snownee.fruits.levelgen.foliageplacers.Fruitify;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
@@ -51,6 +58,8 @@ import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.KiwiModule.NoItem;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
+import snownee.kiwi.KiwiModules;
+import snownee.kiwi.ModuleInfo;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
@@ -90,12 +99,6 @@ public final class CoreModule extends AbstractModule {
 	public static final KiwiGO<Item> LEMON = go(() -> new ModItem(itemProp().food(Foods.LEMON)));
 	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> GRAPEFRUIT = go(() -> new ModItem(itemProp().food(Foods.GRAPEFRUIT)));
-	public static final KiwiGO<Item> EMPOWERED_CITRON = go(() -> new ModItem(itemProp().rarity(Rarity.RARE).food(Foods.EMPOWERED_CITRON)) {
-		@Override
-		public boolean isFoil(ItemStack stack) {
-			return true;
-		}
-	});
 	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> TANGERINE_LEAVES = go(() -> new FruitLeavesBlock(CoreFruitTypes.TANGERINE, blockProp(Blocks.OAK_LEAVES)));
@@ -196,13 +199,10 @@ public final class CoreModule extends AbstractModule {
 	@NoItem
 	public static final KiwiGO<Block> POTTED_APPLE = go(() -> new FlowerPotBlock(APPLE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
 	public static final TagKey<Block> ALL_LEAVES = blockTag(FruitfulFun.ID, "leaves");
-	@Name("carpet")
-	public static final KiwiGO<TreeDecoratorType<CarpetTreeDecorator>> CARPET_DECORATOR = go(() -> new TreeDecoratorType<>(CarpetTreeDecorator.CODEC));
-	@Name("blob")
-	public static final KiwiGO<FoliagePlacerType<FruitBlobFoliagePlacer>> BLOB_PLACER = go(() -> new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC));
+	public static final KiwiGO<FoliagePlacerType<Fruitify>> FRUITIFY = go(() -> new FoliagePlacerType<>(Fruitify.CODEC));
 	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> new BannerPattern("sno"));
 	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/snowflake");
-	public static final KiwiGO<BlockEntityType<FruitTreeBlockEntity>> FRUIT_TREE = blockEntity(FruitTreeBlockEntity::new, null, ALL_LEAVES);
+	public static final KiwiGO<BlockEntityType<FruitTreeBlockEntity>> FRUIT_TREE = blockEntity(FruitTreeBlockEntity::new, null, FruitLeavesBlock.class);
 	@Category(Categories.INGREDIENTS)
 	public static final KiwiGO<Item> SNOWFLAKE_BANNER_PATTERN = go(() -> new BannerPatternItem(SNOWFLAKE_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
 	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "block.wooden_door.open")));
@@ -216,9 +216,26 @@ public final class CoreModule extends AbstractModule {
 			.build()
 	);
 	/* on */
-	// sqrt(vec(3, 4, 3))
-	public static final KiwiGO<FruitDropGameEvent> FRUIT_DROP = go(() -> new FruitDropGameEvent("fruitfulfun:fruit_drop", 6));
-	public static final KiwiGO<CancellableGameEvent> LEAVES_TRAMPLE = go(() -> new CancellableGameEvent("fruitfulfun:leaves_trample", 6));
+
+	@Override
+	protected void preInit() {
+		createPoiTypes(this);
+	}
+
+	public static void createPoiTypes(AbstractModule module) {
+		ModuleInfo info = KiwiModules.get(module.uid);
+		info.getRegistryEntries(BuiltInRegistries.BLOCK)
+				.filter($ -> $.entry instanceof FruitLeavesBlock)
+				.forEach($ -> {
+					Preconditions.checkArgument($.name.getPath().endsWith("_leaves"));
+					ResourceLocation id = $.name.withPath($.name.getPath().substring(0, $.name.getPath().length() - 7));
+					FruitLeavesBlock block = (FruitLeavesBlock) $.entry;
+					info.register(new PoiType(block.getStateDefinition().getPossibleStates().stream()
+									.filter(BlockBehaviour.BlockStateBase::hasBlockEntity)
+									.collect(Collectors.toSet()), 40, 10),
+							id, BuiltInRegistries.POINT_OF_INTEREST_TYPE, null);
+				});
+	}
 
 	@Override
 	protected void init(InitEvent event) {
@@ -227,7 +244,12 @@ public final class CoreModule extends AbstractModule {
 
 			VanillaActions.registerAxeConversion(CITRUS_LOG.get(), STRIPPED_CITRUS_LOG.get());
 			VanillaActions.registerAxeConversion(CITRUS_WOOD.get(), STRIPPED_CITRUS_WOOD.get());
-			for (FruitType type : FFRegistries.FRUIT_TYPE) {
+			for (Holder<FruitType> holder : FFRegistries.FRUIT_TYPE.asHolderIdMap()) {
+				ResourceLocation id = holder.unwrapKey().orElseThrow().location();
+				FruitType type = holder.value();
+				type.receiveKey(id);
+				type.poiType = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getHolderOrThrow(ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id));
+				PoiTypes.registerBlockStates(type.poiType, type.poiType.value().matchingStates());
 				VanillaActions.registerCompostable(0.5f, type.fruit.get());
 				VanillaActions.registerCompostable(0.3f, type.leaves.get());
 				VanillaActions.registerCompostable(0.3f, type.sapling.get());
@@ -235,7 +257,7 @@ public final class CoreModule extends AbstractModule {
 				VanillaActions.registerVillagerCompostable(type.fruit.get());
 				VanillaActions.registerVillagerFood(type.fruit.get(), 1);
 			}
-//			registerConfiguredFeatures();
+//			TREES_CF = FeatureUtils.register("fruitfulfun:base_trees", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(list)));
 		});
 	}
 
@@ -247,7 +269,6 @@ public final class CoreModule extends AbstractModule {
 		public static final FoodProperties ORANGE = new FoodProperties.Builder().nutrition(3).saturationMod(0.5f).build();
 		public static final FoodProperties LEMON = new FoodProperties.Builder().nutrition(2).saturationMod(1f).fast().build();
 		public static final FoodProperties GRAPEFRUIT = new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).build();
-		public static final FoodProperties EMPOWERED_CITRON = new FoodProperties.Builder().nutrition(3).saturationMod(5f).build();
 	}
 
 	//FIXME: flammability
@@ -262,57 +283,8 @@ public final class CoreModule extends AbstractModule {
 //	/* on */
 //	private Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> TREES_CF;
 //
-//	public static Holder<ConfiguredFeature<TreeConfiguration, ?>> makeConfiguredFeature(FruitType type, boolean worldGen, Supplier<Block> carpet) {
-//		BlockStateProvider leavesProvider;
-//		List<TreeDecorator> decorators;
-//		if (worldGen) {
-//			if (carpet == null) {
-//				decorators = ImmutableList.of(new BeehiveDecorator(0.05F));
-//			} else {
-//				decorators = ImmutableList.of(new BeehiveDecorator(0.05F), new CarpetTreeDecorator(BlockStateProvider.simple(carpet.get())));
-//			}
-//			leavesProvider = new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(type.leaves.get().defaultBlockState(), 2).add(type.leaves.get().defaultBlockState().setValue(FruitLeavesBlock.AGE, 2), 1));
-//		} else {
-//			decorators = ImmutableList.of();
-//			leavesProvider = BlockStateProvider.simple(type.leaves.get());
-//		}
-//		StringBuffer buf = new StringBuffer(FFRegistries.FRUIT_TYPE.getKey(type).toString());
-//		if (worldGen) {
-//			buf.append("_wg");
-//		}
-//		/* off */
-//		return FeatureUtils.register(buf.toString(), Feature.TREE,
-//				new TreeConfigurationBuilder(
-//						BlockStateProvider.simple(type.log.get()),
-//						new StraightTrunkPlacer(4, 2, 0),
-//						leavesProvider,
-//						new FruitBlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3),
-//						new TwoLayersFeatureSize(1, 0, 1)
-//				)
-//				.ignoreVines()
-//				.decorators(decorators)
-//				.build()
-//		);
-//		/* on */
-//	}
-//
 //	private static <T> DataProvider forDataPackRegistry(DataGenerator dataGenerator, ExistingFileHelper existingFileHelper, RegistryOps<JsonElement> registryOps, ResourceKey<Registry<T>> registryKey, Map<ResourceLocation, T> idToObjectMap) {
 //		return JsonCodecProvider.forDatapackRegistry(dataGenerator, existingFileHelper, FruitfulFun.ID, registryOps, registryKey, idToObjectMap);
-//	}
-
-
-//	private void registerConfiguredFeatures() {
-//		for (FruitType type : FFRegistries.FRUIT_TYPE) {
-//			type.makeFeature();
-//		}
-//
-//		List<Holder<PlacedFeature>> list = Lists.newArrayList();
-//		for (KiwiGO<FruitType> type : List.of(CoreFruitTypes.CITRON, CoreFruitTypes.LIME, CoreFruitTypes.TANGERINE)) {
-//			if (type.get().featureWG != null) {
-//				list.add(PlacementUtils.inlinePlaced(type.get().featureWG));
-//			}
-//		}
-//		TREES_CF = FeatureUtils.register("fruitfulfun:base_trees", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(list)));
 //	}
 //
 //	private void makePlacedFeature(String id, int chunks, Holder<ConfiguredFeature<?, ?>> cf, Map<ResourceLocation, PlacedFeature> registry) {

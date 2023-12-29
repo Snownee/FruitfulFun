@@ -16,8 +16,7 @@ public class FruitTreeGrower extends AbstractTreeGrower {
 
 	@Override
 	protected ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource pRandom, boolean pLargeHive) {
-//		return fruitType.feature;
-		return null;
+		return fruitType.getConfiguredFeature(pRandom, pLargeHive);
 	}
 
 }

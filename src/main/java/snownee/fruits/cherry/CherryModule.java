@@ -35,6 +35,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -141,6 +142,11 @@ public class CherryModule extends AbstractModule {
 
 	public CherryModule() {
 		Hooks.cherry = true;
+	}
+
+	@Override
+	protected void preInit() {
+		CoreModule.createPoiTypes(this);
 	}
 
 	@Override

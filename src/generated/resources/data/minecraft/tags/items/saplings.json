@@ -12,6 +12,10 @@
     {
       "id": "fruitfulfun:redlove_sapling",
       "required": false
+    },
+    {
+      "id": "fruitfulfun:cherry_sapling",
+      "required": false
     }
   ]
 }

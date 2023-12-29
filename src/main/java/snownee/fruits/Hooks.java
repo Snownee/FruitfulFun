@@ -181,37 +181,38 @@ public final class Hooks {
 	}
 
 	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
-		Vec3 eye = player.getEyePosition();
-		BlockPos eyePos = BlockPos.containing(eye);
-		int sectionX = SectionPos.blockToSectionCoord(eyePos.getX());
-		int sectionZ = SectionPos.blockToSectionCoord(eyePos.getZ());
-		MutableBoolean success = new MutableBoolean();
-		for (int x = -1; x < 2; x++) {
-			for (int z = -1; z < 2; z++) {
-				LevelChunk chunk = level.getChunk(sectionX + x, sectionZ + z);
-				chunk.getBlockEntities().entrySet().forEach(e -> {
-					if (!CoreModule.FRUIT_TREE.is(e.getValue().getType())) {
-						return;
-					}
-					BlockPos pos = e.getKey().below(2);
-					double dist = pos.distSqr(eyePos);
-					if (dist > 18 * 18) {
-						return;
-					}
-					dist = Math.sqrt(dist);
-					PositionSource dest = new BlockPositionSource(pos);
-					level.sendParticles(new VibrationParticleOption(dest, Math.max((int) (dist / 2), 4)), eye.x, eye.y, eye.z, 1, 0, 0, 0, 0);
-					FruitLeavesBlock.rangeDrop(level, 0, BlockPos.betweenClosed(pos.offset(-2, -1, -2), pos.offset(2, 2, 2)), (p, s) -> {
-						success.setTrue();
-					});
-				});
-			}
-		}
-		if (success.booleanValue()) {
-			Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/horn"));
-			if (advancement != null) {
-				player.getAdvancements().award(advancement, "_");
-			}
-		}
+//		Vec3 eye = player.getEyePosition();
+//		BlockPos eyePos = BlockPos.containing(eye);
+//		int sectionX = SectionPos.blockToSectionCoord(eyePos.getX());
+//		int sectionZ = SectionPos.blockToSectionCoord(eyePos.getZ());
+//		MutableBoolean success = new MutableBoolean();
+//		for (int x = -1; x < 2; x++) {
+//			for (int z = -1; z < 2; z++) {
+//				LevelChunk chunk = level.getChunk(sectionX + x, sectionZ + z);
+//				chunk.getBlockEntities().entrySet().forEach(e -> {
+//					if (!CoreModule.FRUIT_TREE.is(e.getValue().getType())) {
+//						return;
+//					}
+//					BlockPos pos = e.getKey().below(2);
+//					double dist = pos.distSqr(eyePos);
+//					if (dist > 18 * 18) {
+//						return;
+//					}
+//					dist = Math.sqrt(dist);
+//					PositionSource dest = new BlockPositionSource(pos);
+//					level.sendParticles(new VibrationParticleOption(dest, Math.max((int) (dist / 2), 4)), eye.x, eye.y, eye.z, 1, 0, 0, 0, 0);
+//					Iterable<BlockPos> range = BlockPos.betweenClosed(pos.offset(-2, -1, -2), pos.offset(2, 2, 2));
+//					FruitLeavesBlock.rangeDrop(level, 0, range, (p, s) -> {
+//						success.setTrue();
+//					});
+//				});
+//			}
+//		}
+//		if (success.booleanValue()) {
+//			Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/horn"));
+//			if (advancement != null) {
+//				player.getAdvancements().award(advancement, "_");
+//			}
+//		}
 	}
 }

@@ -46,6 +46,8 @@ public class FFModelProvider extends FabricModelProvider {
 		generators.createFlowerBed(CherryModule.PEACH_PINK_PETALS.get());
 		generators.createSimpleFlatItemModel(CherryModule.CHERRY_WREATH.get());
 		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_WREATH.get());
+		generators.createHangingSign(CoreModule.STRIPPED_CITRUS_LOG.get(), CoreModule.CITRUS_HANGING_SIGN.get(), CoreModule.CITRUS_WALL_HANGING_SIGN.get());
+		generators.createHangingSign(CherryModule.STRIPPED_REDLOVE_LOG.get(), CherryModule.REDLOVE_HANGING_SIGN.get(), CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
 	}
 
 	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {
@@ -75,8 +77,14 @@ public class FFModelProvider extends FabricModelProvider {
 			if (age == 3) {
 				List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, model3));
 				if (scale.randomRotation) {
-					variants.add(Variant.variant().with(VariantProperties.MODEL, model3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90));
-					variants.add(Variant.variant().with(VariantProperties.MODEL, model3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180));
+					variants.add(Variant.variant()
+							.with(VariantProperties.MODEL, model3)
+							.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+							.with(VariantProperties.UV_LOCK, true));
+					variants.add(Variant.variant()
+							.with(VariantProperties.MODEL, model3)
+							.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+							.with(VariantProperties.UV_LOCK, true));
 				}
 				return variants;
 			}
@@ -87,7 +95,12 @@ public class FFModelProvider extends FabricModelProvider {
 	}
 
 	public static void createRedloveLeaves(BlockModelGenerators generators, FruitLeavesBlock block) {
-		ResourceLocation model012 = TexturedModel.LEAVES.create(block, generators.modelOutput);
+		ResourceLocation model012;
+		if (CherryModule.CHERRY_LEAVES.is(block)) {
+			model012 = ModelLocationUtils.getModelLocation(Blocks.CHERRY_LEAVES);
+		} else {
+			model012 = TexturedModel.LEAVES.create(block, generators.modelOutput);
+		}
 		ResourceLocation model3 = ModelTemplates.LEAVES.createWithSuffix(block, "_2", TextureMapping.cube(TextureMapping.getBlockTexture(block, "_2")), generators.modelOutput);
 		MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FruitLeavesBlock.AGE).generateList(age -> {
 			if (age < 3) {

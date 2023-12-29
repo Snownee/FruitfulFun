@@ -15,10 +15,12 @@
       },
       {
         "model": "fruitfulfun:block/apple_leaves_3",
+        "uvlock": true,
         "y": 90
       },
       {
         "model": "fruitfulfun:block/apple_leaves_3",
+        "uvlock": true,
         "y": 180
       }
     ]

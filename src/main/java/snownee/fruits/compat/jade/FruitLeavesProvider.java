@@ -23,15 +23,15 @@ public class FruitLeavesProvider implements IBlockComponentProvider, IServerData
 		if (!data.contains("Type")) {
 			return;
 		}
-		iTooltip.add(Component.literal("type: " + data.getString("Type")));
-		iTooltip.add(Component.literal("death: " + data.getInt("Death")));
+		iTooltip.add(Component.literal("Type: " + data.getString("Type")));
+		iTooltip.add(Component.literal("Lifespan: " + data.getInt("Lifespan")));
 	}
 
 	@Override
 	public void appendServerData(CompoundTag data, BlockAccessor accessor) {
 		if (accessor.getBlockEntity() instanceof FruitTreeBlockEntity tree) {
 			data.putString("Type", FFRegistries.FRUIT_TYPE.getKey(tree.type).toString());
-			data.putInt("Death", tree.getRawDeathRate());
+			data.putInt("Lifespan", tree.getLifespan());
 		}
 	}
 

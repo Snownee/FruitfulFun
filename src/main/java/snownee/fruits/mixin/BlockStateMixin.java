@@ -16,9 +16,8 @@ public abstract class BlockStateMixin {
 
 	@Inject(at = @At("HEAD"), method = "hasBlockEntity", cancellable = true)
 	private void fruits_hasBlockEntity(CallbackInfoReturnable<Boolean> ci) {
-		Block block = getBlock();
-		if (block instanceof FruitLeavesBlock) {
-			ci.setReturnValue(((FruitLeavesBlock) block).hasBlockEntity((BlockState) (Object) this));
+		if (getBlock() instanceof FruitLeavesBlock leavesBlock) {
+			ci.setReturnValue(leavesBlock.hasBlockEntity((BlockState) (Object) this));
 		}
 	}
 

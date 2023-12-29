@@ -12,6 +12,10 @@
     {
       "id": "fruitfulfun:potted_redlove",
       "required": false
+    },
+    {
+      "id": "fruitfulfun:potted_cherry",
+      "required": false
     }
   ]
 }

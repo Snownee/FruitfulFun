@@ -42,7 +42,9 @@ import static snownee.fruits.CoreModule.STRIPPED_CITRUS_LOG;
 import static snownee.fruits.CoreModule.STRIPPED_CITRUS_WOOD;
 import static snownee.fruits.CoreModule.TANGERINE_LEAVES;
 import static snownee.fruits.CoreModule.TANGERINE_SAPLING;
+import static snownee.fruits.cherry.CherryModule.CHERRY_SAPLING;
 import static snownee.fruits.cherry.CherryModule.PEACH_PINK_PETALS;
+import static snownee.fruits.cherry.CherryModule.POTTED_CHERRY;
 import static snownee.fruits.cherry.CherryModule.POTTED_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_BUTTON;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_DOOR;
@@ -115,13 +117,19 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				.addOptional(REDLOVE_DOOR.key())
 				.addOptional(REDLOVE_SLIDING_DOOR.key());
 		getOrCreateTagBuilder(BlockTags.FLOWER_POTS).add(POTTED_APPLE.get(), POTTED_CITRON.get(), POTTED_GRAPEFRUIT.get(), POTTED_LEMON.get(), POTTED_LIME.get(), POTTED_TANGERINE.get(), POTTED_ORANGE.get(), POTTED_POMELO.get())
-				.addOptional(POTTED_REDLOVE.key());
+				.addOptional(POTTED_REDLOVE.key())
+				.addOptional(POTTED_CHERRY.key());
 		getOrCreateTagBuilder(BlockTags.SAPLINGS).add(APPLE_SAPLING.get(), CITRON_SAPLING.get(), GRAPEFRUIT_SAPLING.get(), LEMON_SAPLING.get(), LIME_SAPLING.get(), TANGERINE_SAPLING.get(), ORANGE_SAPLING.get(), POMELO_SAPLING.get())
-				.addOptional(REDLOVE_SAPLING.key());
+				.addOptional(REDLOVE_SAPLING.key())
+				.addOptional(CHERRY_SAPLING.key());
 		getOrCreateTagBuilder(ALL_LEAVES).add(APPLE_LEAVES.get(), CITRON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), LEMON_LEAVES.get(), LIME_LEAVES.get(), TANGERINE_LEAVES.get(), ORANGE_LEAVES.get(), POMELO_LEAVES.get())
-				.addOptional(REDLOVE_LEAVES.key());
+				.addOptional(REDLOVE_LEAVES.key())
+				.addOptional(CHERRY_SAPLING.key());
 		tag(BlockTags.LEAVES).addTag(ALL_LEAVES);
-		getOrCreateTagBuilder(BlockTags.FLOWERS).addOptional(REDLOVE_LEAVES.key()).addOptional(PEACH_PINK_PETALS.key());
+		getOrCreateTagBuilder(BlockTags.FLOWERS)
+				.addOptional(REDLOVE_LEAVES.key())
+				.addOptional(CHERRY_SAPLING.key())
+				.addOptional(PEACH_PINK_PETALS.key());
 		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).addOptional(PEACH_PINK_PETALS.key());
 	}
 }

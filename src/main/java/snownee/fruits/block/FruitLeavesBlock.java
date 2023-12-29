@@ -1,7 +1,8 @@
 package snownee.fruits.block;
 
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -34,7 +36,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -61,26 +62,24 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		registerDefaultState(stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1).setValue(WATERLOGGED, false));
 	}
 
-	public static Supplier<ItemEntity> dropFruit(ServerLevel level, BlockPos pos, BlockState state, float deathRate) {
+	@Nullable
+	public static ItemEntity dropFruit(ServerLevel level, BlockPos pos, BlockState state, @Nullable FruitTreeBlockEntity core, int consumeLifespan) {
 		if (state.getValue(AGE) != 3)
-			return () -> null;
+			return null;
 		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS))
-			return () -> null;
-		boolean die = deathRate == 1;
-		if (deathRate > 0) {
-			die = level.random.nextFloat() < deathRate;
+			return null;
+		boolean die = true;
+		if (core != null) {
+			core.consumeLifespan(consumeLifespan);
+			die = core.isDead();
 		}
 		state = state.setValue(AGE, die ? 0 : 1);
-		if (deathRate == 1 && state.hasBlockEntity()) {
+		if (die && state.hasBlockEntity()) {
 			state = state.setValue(PERSISTENT, false);
 		}
-		BlockState newState = state;
-
+		level.setBlockAndUpdate(pos, state);
 		FruitType type = ((FruitLeavesBlock) state.getBlock()).type.get();
 		ItemStack stack = new ItemStack(type.fruit.get());
-		if (stack.isEmpty()) {
-			return () -> null;
-		}
 		float f = EntityType.ITEM.getHeight() / 2.0F;
 		double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
 		double d1 = pos.getY() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D) - f;
@@ -88,22 +87,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		ItemEntity itementity = new ItemEntity(level, d0, d1, d2, stack);
 		itementity.setDefaultPickUpDelay();
 		if (!level.addFreshEntity(itementity)) {
-			return () -> null;
+			return null;
 		}
-		return () -> {
-			level.setBlockAndUpdate(pos, newState);
-			return itementity;
-		};
-	}
-
-	public static void rangeDrop(ServerLevel worldIn, float deathRate, Iterable<BlockPos> posList, BiConsumer<BlockPos, BlockState> consumer) {
-		for (BlockPos pos : posList) {
-			BlockState state = worldIn.getBlockState(pos);
-			if (state.getBlock() instanceof FruitLeavesBlock) {
-				dropFruit(worldIn, pos, state, deathRate).get();
-				consumer.accept(pos, state);
-			}
-		}
+		return itementity;
 	}
 
 	@Override
@@ -126,30 +112,33 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		world.setBlockAndUpdate(pos, state.cycle(AGE));
 	}
 
+	@Nullable
+	public FruitTreeBlockEntity findCore(ServerLevel level, BlockPos pos) {
+		return level.getPoiManager().findClosest(type.get().poiType::equals, pos, 10, PoiManager.Occupancy.ANY)
+				.flatMap(core -> level.getBlockEntity(core, CoreModule.FRUIT_TREE.get())).orElse(null);
+	}
+
 	@Override
 	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
 		if (shouldDecay(state)) {
 			dropResources(state, world, pos);
 			world.removeBlock(pos, false);
 		} else if (canGrow(state) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
-			int r = rand.nextInt(100);
-
-			//FIXME
-//			if (r < 10 && type.get().carpet != null) {
-//				CarpetTreeDecorator.placeCarpet(world, pos, type.get().carpet.get().defaultBlockState(), world::setBlockAndUpdate);
-//			}
-
 			if (state.getValue(AGE) == 3) {
 				DropMode mode = FFCommonConfig.getDropMode(world);
 				if (mode == DropMode.NO_DROP) {
 					return;
 				}
-				GameEventListener receiver = CoreModule.FRUIT_DROP.get().post(world, pos, null, state);
-				if (receiver == null) {
-					dropFruit(world, pos, state, 0.6F).get();
+				FruitTreeBlockEntity core = findCore(world, pos);
+				if (mode == DropMode.ONE_BY_ONE && core != null && !core.canDrop()) {
+					return;
+				}
+				ItemEntity itemEntity = dropFruit(world, pos, state, core, 1);
+				if (mode == DropMode.ONE_BY_ONE && core != null && itemEntity != null) {
+					core.setOnlyItem(itemEntity);
 				}
 			} else {
-				boolean def = r > (99 - FFCommonConfig.growingSpeed);
+				boolean def = rand.nextInt(100) > (99 - FFCommonConfig.growingSpeed);
 				CommonProxy.maybeGrowCrops(world, pos, state, def, () -> performBonemeal(world, rand, pos, state));
 			}
 		}
@@ -205,19 +194,14 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	@Override
 	public void fallOn(Level worldIn, BlockState stateIn, BlockPos pos, Entity entityIn, float fallDistance) {
 		super.fallOn(worldIn, stateIn, pos, entityIn, fallDistance);
-		if (!worldIn.isClientSide && fallDistance >= 1 && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
-			GameEventListener receiver = CoreModule.LEAVES_TRAMPLE.get().post(worldIn, pos, entityIn, stateIn);
-			float deathRate = 1;
-			if (receiver instanceof FruitTreeBlockEntity) {
-				deathRate = ((FruitTreeBlockEntity) receiver).getDeathRate();
+		if (fallDistance >= 1 && worldIn instanceof ServerLevel serverLevel && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
+			Iterable<BlockPos> posList = BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1));
+			for (BlockPos blockpos : posList) {
+				BlockState state = worldIn.getBlockState(blockpos);
+				if (state.getBlock() instanceof FruitLeavesBlock && state.getValue(AGE) == 3) {
+					dropFruit(serverLevel, blockpos, state, findCore(serverLevel, blockpos), 2);
+				}
 			}
-			rangeDrop((ServerLevel) worldIn, deathRate, BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1)), (p, s) -> {
-				FruitType type = ((FruitLeavesBlock) s.getBlock()).type.get();
-				//FIXME
-//				if (type.carpet != null) {
-//					CarpetTreeDecorator.placeCarpet(worldIn, pos, type.carpet.get().defaultBlockState(), worldIn::setBlockAndUpdate);
-//				}
-			});
 		}
 	}
 
@@ -258,8 +242,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		return null;
 	}
 
+//	@Override
+//	public <T extends BlockEntity> GameEventListener getListener(ServerLevel level, T blockEntity) {
+//		return blockEntity instanceof FruitTreeBlockEntity ? (FruitTreeBlockEntity) blockEntity : null;
+//	}
+
 	@Override
-	public <T extends BlockEntity> GameEventListener getListener(ServerLevel level, T blockEntity) {
-		return blockEntity instanceof FruitTreeBlockEntity ? (FruitTreeBlockEntity) blockEntity : null;
+	public float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+		return 0.2F;
 	}
 }

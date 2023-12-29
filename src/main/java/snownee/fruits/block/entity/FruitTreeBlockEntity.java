@@ -1,37 +1,37 @@
 package snownee.fruits.block.entity;
 
+import java.util.Collection;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.BlockPositionSource;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.gameevent.GameEventListener;
-import net.minecraft.world.level.gameevent.PositionSource;
-import net.minecraft.world.phys.Vec3;
 import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
-import snownee.fruits.block.FruitLeavesBlock;
 import snownee.kiwi.block.entity.ModBlockEntity;
 import snownee.kiwi.util.NBTHelper;
 import snownee.kiwi.util.Util;
 
-public class FruitTreeBlockEntity extends ModBlockEntity implements GameEventListener {
+public class FruitTreeBlockEntity extends ModBlockEntity {
 
-	private final PositionSource source;
 	public FruitType type = CoreFruitTypes.CITRON.get();
-	private int deathRate = 0;
+	private int lifespan = 20;
 	private ItemEntity onlyItem;
+	private final Set<BlockPos> activeLeaves = Sets.newLinkedHashSet();
 
 	public FruitTreeBlockEntity(BlockPos pos, BlockState state) {
 		super(CoreModule.FRUIT_TREE.get(), pos, state);
-		source = new BlockPositionSource(pos);
 	}
 
 	public FruitTreeBlockEntity(BlockPos pos, BlockState state, FruitType type) {
@@ -56,18 +56,29 @@ public class FruitTreeBlockEntity extends ModBlockEntity implements GameEventLis
 	@Override
 	public void load(CompoundTag compound) {
 		NBTHelper helper = NBTHelper.of(compound);
-		String id = helper.getString("type");
+		String id = helper.getString("Type");
 		if (id != null) {
 			type = FFRegistries.FRUIT_TYPE.get(Util.RL(id, FruitfulFun.ID));
 		}
-		deathRate = helper.getInt("death");
+		lifespan = helper.getInt("Lifespan");
+		ListTag list = helper.getTagList("ActiveLeaves", Tag.TAG_COMPOUND);
+		for (Tag tag : list) {
+			activeLeaves.add(NbtUtils.readBlockPos((CompoundTag) tag));
+		}
 		super.load(compound);
 	}
 
 	@Override
 	protected void saveAdditional(CompoundTag compound) {
-		compound.putString("type", Util.trimRL(FFRegistries.FRUIT_TYPE.getKey(type), FruitfulFun.ID));
-		compound.putInt("death", deathRate);
+		compound.putString("Type", Util.trimRL(FFRegistries.FRUIT_TYPE.getKey(type), FruitfulFun.ID));
+		compound.putInt("Lifespan", lifespan);
+		if (!activeLeaves.isEmpty()) {
+			ListTag list = new ListTag();
+			for (BlockPos pos : activeLeaves) {
+				list.add(NbtUtils.writeBlockPos(pos));
+			}
+			compound.put("ActiveLeaves", list);
+		}
 		super.saveAdditional(compound);
 	}
 
@@ -79,48 +90,22 @@ public class FruitTreeBlockEntity extends ModBlockEntity implements GameEventLis
 		onlyItem = itementity;
 	}
 
-	@Override
-	public PositionSource getListenerSource() {
-		return source;
-	}
-
-	@Override
-	public int getListenerRadius() {
-		return 6;
-	}
-
-	public float getDeathRate() {
-		if (deathRate <= 10) {
-			return 0;
+	public void addActiveLeaves(Collection<BlockPos> leaves) {
+		for (BlockPos pos : leaves) {
+			pos = pos.subtract(worldPosition);
+			activeLeaves.add(pos);
 		}
-		if (deathRate >= 50) {
-			return 1;
-		}
-		return deathRate / 50F;
 	}
 
-	public int getRawDeathRate() {
-		return deathRate;
+	public void consumeLifespan(int i) {
+		lifespan -= i;
 	}
 
-	@Override
-	public boolean handleGameEvent(ServerLevel level, GameEvent gameEvent, GameEvent.Context context, Vec3 source) {
-		if (CoreModule.FRUIT_DROP.get().matches(gameEvent) && context.affectedState() != null) {
-			if (canDrop()) {
-				BlockState state = context.affectedState();
-				deathRate += 1;
-				BlockPos pos = BlockPos.containing(source);
-				// Do not remove block entity inside the loop of game event
-				CoreModule.FRUIT_DROP.get().runnable = FruitLeavesBlock.dropFruit(level, pos, state, getDeathRate());
-			}
-			CoreModule.FRUIT_DROP.get().swallow(this);
-			return true;
-		} else if (CoreModule.LEAVES_TRAMPLE.get().matches(gameEvent)) {
-			deathRate += 3;
-			CoreModule.LEAVES_TRAMPLE.get().swallow(this);
-			return true;
-		}
-		return false;
+	public int getLifespan() {
+		return lifespan;
 	}
 
+	public boolean isDead() {
+		return lifespan <= 0;
+	}
 }

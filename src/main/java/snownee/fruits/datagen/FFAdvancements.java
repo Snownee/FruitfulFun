@@ -43,7 +43,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(FFItemTagsProvider.FRUITS).build()))
 				.save(consumer, "husbandry/fruitfulfun/start");
 
-		Advancement grapefruit = Advancement.Builder.recipeAdvancement()
+		Advancement.Builder.recipeAdvancement()
 				.parent(start)
 				.display(
 						CoreModule.GRAPEFRUIT.get(),
@@ -53,16 +53,6 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CoreModule.GRAPEFRUIT_SAPLING.get()))
 				.rewards(xp100)
 				.save(consumer, "husbandry/fruitfulfun/grapefruit");
-
-		Advancement.Builder.recipeAdvancement()
-				.parent(grapefruit)
-				.display(
-						CoreModule.EMPOWERED_CITRON.get(),
-						Component.translatable("advancements.fruitfulfun.forestbat.title"),
-						Component.translatable("advancements.fruitfulfun.forestbat.description"),
-						null, FrameType.TASK, true, true, true)
-				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CoreModule.EMPOWERED_CITRON.get()))
-				.save(consumer, "husbandry/fruitfulfun/forestbat");
 
 		Advancement apple = Advancement.Builder.recipeAdvancement()
 				.parent(start)

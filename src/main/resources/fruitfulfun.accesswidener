@@ -15,3 +15,10 @@ accessible method net/minecraft/world/entity/LivingEntity addEatEffect (Lnet/min
 
 accessible method net/minecraft/world/level/block/state/properties/BlockSetType register (Lnet/minecraft/world/level/block/state/properties/BlockSetType;)Lnet/minecraft/world/level/block/state/properties/BlockSetType;
 accessible method net/minecraft/world/level/block/state/properties/WoodType register (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
+
+accessible field net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer radius Lnet/minecraft/util/valueproviders/IntProvider;
+accessible field net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer offset Lnet/minecraft/util/valueproviders/IntProvider;
+accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer shouldSkipLocation (Lnet/minecraft/util/RandomSource;IIIIZ)Z
+accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer createFoliage (Lnet/minecraft/world/level/LevelSimulatedReader;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageSetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;ILnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageAttachment;III)V
+
+accessible method net/minecraft/world/entity/ai/village/poi/PoiTypes registerBlockStates (Lnet/minecraft/core/Holder;Ljava/util/Set;)V
