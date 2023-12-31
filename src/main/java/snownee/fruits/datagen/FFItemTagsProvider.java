@@ -7,6 +7,8 @@ import static net.minecraft.world.item.Items.MELON_SLICE;
 import static net.minecraft.world.item.Items.SWEET_BERRIES;
 import static snownee.fruits.CoreModule.CITRON;
 import static snownee.fruits.cherry.CherryModule.CHERRY;
+import static snownee.fruits.cherry.CherryModule.CHERRY_WREATH;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_WREATH;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -14,7 +16,10 @@ import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -23,11 +28,13 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.food.FoodModule;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiModules;
 
 public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 	static final TagKey<Item> CITRUS_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "citrus_logs");
 	static final TagKey<Item> REDLOVE_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "redlove_logs");
 	static final TagKey<Item> FRUITS = AbstractModule.itemTag("c", "fruits");
+	static final TagKey<Item> HAT = AbstractModule.itemTag("trinkets", "head/hat");
 
 	public FFItemTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, @Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
 		super(output, registriesFuture, blockTagProvider);
@@ -57,5 +64,12 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 				.addOptional(CITRON.key());
 		tag(ItemTags.FOX_FOOD).addTag(FRUITS);
 		tag(FoodModule.PANDA_FOOD).addOptional(FoodModule.RICE_WITH_FRUITS.key());
+
+		TagAppender<Item> tagAppender = tag(ConventionalItemTags.FOODS);
+		tagAppender.addTag(FRUITS);
+		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.ITEM)
+				.map($ -> $.name)
+				.forEach(tagAppender::addOptional);
+		tag(HAT).addOptional(CHERRY_WREATH.key()).addOptional(REDLOVE_WREATH.key());
 	}
 }

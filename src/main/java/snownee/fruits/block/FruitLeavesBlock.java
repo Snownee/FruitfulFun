@@ -1,7 +1,9 @@
 package snownee.fruits.block;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -72,6 +74,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (core != null) {
 			core.consumeLifespan(consumeLifespan);
 			die = core.isDead();
+			if (die) {
+				core.removeActiveLeaves(pos);
+			}
 		}
 		state = state.setValue(AGE, die ? 0 : 1);
 		if (die && state.hasBlockEntity()) {
@@ -196,10 +201,21 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		super.fallOn(worldIn, stateIn, pos, entityIn, fallDistance);
 		if (fallDistance >= 1 && worldIn instanceof ServerLevel serverLevel && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
 			Iterable<BlockPos> posList = BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1));
-			for (BlockPos blockpos : posList) {
-				BlockState state = worldIn.getBlockState(blockpos);
-				if (state.getBlock() instanceof FruitLeavesBlock && state.getValue(AGE) == 3) {
-					dropFruit(serverLevel, blockpos, state, findCore(serverLevel, blockpos), 2);
+			MutableBoolean success = new MutableBoolean(false);
+			rangeDrop(serverLevel, posList, 2, null, itemEntity -> success.setTrue());
+			if (success.booleanValue()) {
+				//FIXME sound
+			}
+		}
+	}
+
+	public static void rangeDrop(ServerLevel level, Iterable<BlockPos> posList, int consumeLifespan, @Nullable FruitTreeBlockEntity core, @Nullable Consumer<ItemEntity> consumer) {
+		for (BlockPos blockpos : posList) {
+			BlockState state = level.getBlockState(blockpos);
+			if (state.getBlock() instanceof FruitLeavesBlock leavesBlock && state.getValue(AGE) == 3) {
+				ItemEntity itemEntity = dropFruit(level, blockpos, state, core == null ? leavesBlock.findCore(level, blockpos) : core, consumeLifespan);
+				if (consumer != null && itemEntity != null) {
+					consumer.accept(itemEntity);
 				}
 			}
 		}

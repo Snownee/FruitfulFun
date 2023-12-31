@@ -42,6 +42,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.block.SlidingDoorBlock;
+import snownee.fruits.cherry.item.WreathItem;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
@@ -136,9 +137,9 @@ public class CherryModule extends AbstractModule {
 	@Category(Categories.INGREDIENTS)
 	public static final KiwiGO<Item> HEART_BANNER_PATTERN = go(() -> new BannerPatternItem(HEART_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
 	@Category(Categories.TOOLS_AND_UTILITIES)
-	public static final KiwiGO<Item> CHERRY_WREATH = go(() -> new ModItem(itemProp().stacksTo(1)));
+	public static final KiwiGO<Item> CHERRY_WREATH = go(() -> new WreathItem(itemProp()));
 	@Category(Categories.TOOLS_AND_UTILITIES)
-	public static final KiwiGO<Item> REDLOVE_WREATH = go(() -> new ModItem(itemProp().stacksTo(1)));
+	public static final KiwiGO<Item> REDLOVE_WREATH = go(() -> new WreathItem(itemProp()));
 
 	public CherryModule() {
 		Hooks.cherry = true;

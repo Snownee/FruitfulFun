@@ -3,16 +3,16 @@ package snownee.fruits;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
+import com.google.common.base.Predicates;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.VibrationParticleOption;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
@@ -22,16 +22,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
-import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,6 +39,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.kiwi.loader.Platform;
 
 public final class Hooks {
@@ -181,8 +182,24 @@ public final class Hooks {
 	}
 
 	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
-//		Vec3 eye = player.getEyePosition();
-//		BlockPos eyePos = BlockPos.containing(eye);
+		Vec3 eye = player.getEyePosition();
+		BlockPos eyePos = BlockPos.containing(eye);
+		long count = level.getPoiManager().findAll(
+						$ -> $.is(CoreModule.POI_TYPE),
+						Predicates.alwaysTrue(),
+						eyePos,
+						24,
+						PoiManager.Occupancy.ANY)
+				.flatMap($ -> level.getBlockEntity($, CoreModule.FRUIT_TREE.get()).stream())
+				.peek($ -> hornHarvest(level, player, $, eyePos, null))
+				.count();
+		if (count > 0) {
+			Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/horn"));
+			if (advancement != null) {
+				player.getAdvancements().award(advancement, "_");
+			}
+		}
+
 //		int sectionX = SectionPos.blockToSectionCoord(eyePos.getX());
 //		int sectionZ = SectionPos.blockToSectionCoord(eyePos.getZ());
 //		MutableBoolean success = new MutableBoolean();
@@ -208,11 +225,34 @@ public final class Hooks {
 //				});
 //			}
 //		}
-//		if (success.booleanValue()) {
-//			Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/horn"));
-//			if (advancement != null) {
-//				player.getAdvancements().award(advancement, "_");
-//			}
-//		}
+	}
+
+	private static void hornHarvest(ServerLevel level, ServerPlayer player, FruitTreeBlockEntity core, BlockPos eyePos, Consumer<ItemEntity> consumer) {
+		Set<BlockPos> leaves = core.getActiveLeaves();
+		BlockPos corePos = core.getBlockPos();
+		if (leaves.isEmpty()) {
+			BlockState blockState = level.getBlockState(eyePos);
+			if (blockState.getBlock() instanceof FruitLeavesBlock) {
+				Iterable<BlockPos> posList = BlockPos.betweenClosed(corePos.offset(-3, -1, -3), corePos.offset(3, 2, 3));
+				FruitLeavesBlock.rangeDrop(level, posList, 0, core, consumer);
+			}
+		} else {
+			for (BlockPos pos : leaves) {
+				pos = corePos.offset(pos);
+				BlockState blockState = level.getBlockState(pos);
+				if (!(blockState.getBlock() instanceof FruitLeavesBlock)) {
+					continue;
+				}
+				ItemEntity itemEntity = FruitLeavesBlock.dropFruit(level, pos, blockState, core, 0);
+				if (itemEntity != null && consumer != null) {
+					consumer.accept(itemEntity);
+				}
+			}
+		}
+		corePos = corePos.below();
+		double dist = Math.sqrt(corePos.distSqr(eyePos));
+		BlockPositionSource dest = new BlockPositionSource(corePos);
+		Vec3 eye = player.getEyePosition();
+		level.sendParticles(new VibrationParticleOption(dest, Math.max((int) (dist / 2), 4)), eye.x, eye.y + 1, eye.z, 1, 0, 0, 0, 0);
 	}
 }

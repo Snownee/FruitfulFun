@@ -27,54 +27,48 @@ import snownee.kiwi.loader.event.InitEvent;
 public class FoodModule extends AbstractModule {
 
 	public static final TagKey<Item> PANDA_FOOD = itemTag(FruitfulFun.ID, "panda_food");
+	public static Item.Properties GRAPEFRUIT_PANNA_COTTA_PROP = itemProp().food(new FoodProperties.Builder()
+			.nutrition(14)
+			.saturationMod(1)
+			.effect(Foods.SPEED, 1)
+			.build());
 	public static final KiwiGO<Block> GRAPEFRUIT_PANNA_COTTA = go(() -> new FoodBlock(Block.box(4.5, 0, 4.5, 11.5, 4, 11.5)));
+	public static Item.Properties DONAUWELLE_PROP = itemProp().food(new FoodProperties.Builder()
+			.nutrition(14)
+			.saturationMod(1)
+			.effect(Foods.REGENERATION, 1)
+			.build());
 	public static final KiwiGO<Block> DONAUWELLE = go(() -> new FoodBlock(Block.box(5, 0, 5, 11, 4, 11)));
+	public static Item.Properties HONEY_POMELO_TEA_PROP = itemProp().food(new FoodProperties.Builder()
+			.nutrition(1)
+			.saturationMod(Hooks.farmersdelight ? 0.3F : 4)
+			.effect(Foods.COMFORT, 1)
+			.alwaysEat()
+			.build()).craftRemainder(Items.GLASS_BOTTLE);
 	@RenderLayer(Layer.TRANSLUCENT)
 	public static final KiwiGO<Block> HONEY_POMELO_TEA = go(() -> new FoodBlock(Block.box(5, 0, 5, 11, 7.75, 11)));
+	public static Item.Properties RICE_WITH_FRUITS_PROP = itemProp().food(new FoodProperties.Builder()
+			.nutrition(9)
+			.saturationMod(0.6F)
+			.effect(Foods.COMFORT, 1)
+			.build());
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<Block> RICE_WITH_FRUITS = go(() -> {
 		FoodBlock block = new FoodBlock(Block.box(4, 0, 2, 12, 5, 14));
 		block.lockShapeRotation = false;
 		return block;
 	});
+	public static Item.Properties LEMON_ROAST_CHICKEN_PROP = itemProp().craftRemainder(Items.BOWL);
 	public static final KiwiGO<Item> LEMON_ROAST_CHICKEN = go(() -> new FoodItem(itemProp().food(new FoodProperties.Builder()
 			.nutrition(16)
 			.saturationMod(0.8F)
 			.effect(Foods.NOURISHED, 1)
-			.build()
-	).craftRemainder(Items.BOWL)));
+			.build()).craftRemainder(Items.BOWL)));
 	public static final KiwiGO<Block> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Block.box(4, 2, 4, 12, 9, 12), LEMON_ROAST_CHICKEN));
-	/* off */
-	public static Item.Properties GRAPEFRUIT_PANNA_COTTA_PROP = itemProp().food(new FoodProperties.Builder()
-			.nutrition(14)
-			.saturationMod(1)
-			.effect(Foods.SPEED, 1)
-			.build()
-	);
-	public static Item.Properties DONAUWELLE_PROP = itemProp().food(new FoodProperties.Builder()
-			.nutrition(14)
-			.saturationMod(1)
-			.effect(Foods.REGENERATION, 1)
-			.build()
-	);
-	public static Item.Properties HONEY_POMELO_TEA_PROP = itemProp().food(new FoodProperties.Builder()
-			.nutrition(1)
-			.saturationMod(Hooks.farmersdelight ? 0.3F : 4)
-			.effect(Foods.COMFORT, 1)
-			.alwaysEat()
-			.build()
-	).craftRemainder(Items.GLASS_BOTTLE);
-	public static Item.Properties RICE_WITH_FRUITS_PROP = itemProp().food(new FoodProperties.Builder()
-			.nutrition(9)
-			.saturationMod(0.6F)
-			.effect(Foods.COMFORT, 1)
-			.build()
-	);
-	public static Item.Properties LEMON_ROAST_CHICKEN_PROP = itemProp().craftRemainder(Items.BOWL);
+
 	public FoodModule() {
 		Hooks.food = true;
 	}
-	/* on */
 
 	@Override
 	protected void init(InitEvent event) {

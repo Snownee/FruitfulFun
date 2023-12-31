@@ -39,7 +39,7 @@ public class ClientProxy implements ClientModInitializer {
 						if (CITRON_LEAVES.is(state))
 							return 0xDDCC58;
 						if (GRAPEFRUIT_LEAVES.is(state))
-							return 0xF4502B;
+							return 0xF7B144;
 						if (LEMON_LEAVES.is(state))
 							return 0xEBCA4B;
 						if (LIME_LEAVES.is(state))

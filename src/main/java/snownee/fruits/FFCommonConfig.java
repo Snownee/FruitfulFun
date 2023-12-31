@@ -16,9 +16,10 @@ public final class FFCommonConfig {
 	public static DropMode fruitDropModeSingleplayer = DropMode.INDEPENDENT;
 	public static DropMode fruitDropModeMultiplayer = DropMode.ONE_BY_ONE;
 	public static boolean appleSaplingFromHeroOfTheVillage = true;
-	@KiwiConfig.LevelRestart
+	@KiwiConfig.GameRestart
 	public static boolean villageAppleTreeWorldGen = true;
 	public static String hornHarvestingInstrument = "minecraft:sing_goat_horn";
+	public static boolean wanderingTraderSapling = true;
 
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();

@@ -1,4 +1,4 @@
-package snownee.fruits.mixin;
+package snownee.fruits.mixin.client;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

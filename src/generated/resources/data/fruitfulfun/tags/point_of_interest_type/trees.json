@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "fruitfulfun:citron",
+    {
+      "id": "fruitfulfun:cherry",
+      "required": false
+    },
+    "fruitfulfun:orange",
+    "fruitfulfun:pomelo",
+    "fruitfulfun:lemon",
+    "fruitfulfun:lime",
+    "fruitfulfun:grapefruit",
+    "fruitfulfun:apple",
+    {
+      "id": "fruitfulfun:redlove",
+      "required": false
+    },
+    "fruitfulfun:tangerine"
+  ]
+}

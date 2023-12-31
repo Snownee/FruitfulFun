@@ -49,6 +49,7 @@ import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.SlidingDoorEntity;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
+import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
@@ -216,10 +217,12 @@ public final class CoreModule extends AbstractModule {
 			.build()
 	);
 	/* on */
+	public static final TagKey<PoiType> POI_TYPE = AbstractModule.tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
 
 	@Override
 	protected void preInit() {
 		createPoiTypes(this);
+		CommonProxy.addBuiltinPacks();
 	}
 
 	public static void createPoiTypes(AbstractModule module) {
@@ -257,7 +260,6 @@ public final class CoreModule extends AbstractModule {
 				VanillaActions.registerVillagerCompostable(type.fruit.get());
 				VanillaActions.registerVillagerFood(type.fruit.get(), 1);
 			}
-//			TREES_CF = FeatureUtils.register("fruitfulfun:base_trees", Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(list)));
 		});
 	}
 
@@ -272,70 +274,4 @@ public final class CoreModule extends AbstractModule {
 	}
 
 	//FIXME: flammability
-
-//	public static final KiwiGO<Codec<MultiFilteredAddFeaturesBiomeModifier>> ADD_FEATURES = go(() -> RecordCodecBuilder.create(builder -> builder.group(
-//	/* off */
-//			Codec.list(Biome.LIST_CODEC).fieldOf("requires").forGetter(MultiFilteredAddFeaturesBiomeModifier::requires),
-//			Codec.list(Biome.LIST_CODEC).fieldOf("excludes").forGetter(MultiFilteredAddFeaturesBiomeModifier::excludes),
-//			PlacedFeature.LIST_CODEC.fieldOf("features").forGetter(MultiFilteredAddFeaturesBiomeModifier::features),
-//			GenerationStep.Decoration.CODEC.fieldOf("step").forGetter(MultiFilteredAddFeaturesBiomeModifier::step)
-//	).apply(builder, MultiFilteredAddFeaturesBiomeModifier::new)), () -> ForgeRegistries.BIOME_MODIFIER_SERIALIZERS.get());
-//	/* on */
-//	private Holder<ConfiguredFeature<SimpleRandomFeatureConfiguration, ?>> TREES_CF;
-//
-//	private static <T> DataProvider forDataPackRegistry(DataGenerator dataGenerator, ExistingFileHelper existingFileHelper, RegistryOps<JsonElement> registryOps, ResourceKey<Registry<T>> registryKey, Map<ResourceLocation, T> idToObjectMap) {
-//		return JsonCodecProvider.forDatapackRegistry(dataGenerator, existingFileHelper, FruitfulFun.ID, registryOps, registryKey, idToObjectMap);
-//	}
-//
-//	private void makePlacedFeature(String id, int chunks, Holder<ConfiguredFeature<?, ?>> cf, Map<ResourceLocation, PlacedFeature> registry) {
-//		SimpleWeightedRandomList<IntProvider> simpleweightedrandomlist = SimpleWeightedRandomList.<IntProvider>builder().add(ConstantInt.of(0), chunks - 1).add(ConstantInt.of(1), 1).build();
-//		CountPlacement placement = CountPlacement.of(new WeightedListInt(simpleweightedrandomlist));
-//		registry.put(RL(id), new PlacedFeature(cf, VegetationPlacements.treePlacement(placement, CoreModule.LEMON_SAPLING.get())));
-//	}
-//
-//	@Override
-//	public void gatherData(GatherDataEvent event) {
-//		DataGenerator generator = event.getGenerator();
-//		boolean includeServer = event.includeServer();
-//		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-//		generator.addProvider(includeServer, new KiwiLootTableProvider(uid, generator).add(CoreBlockLoot::new, LootContextParamSets.BLOCK));
-//		CommonBlockTagsProvider blockTagsProvider = new CommonBlockTagsProvider(generator, existingFileHelper);
-//		generator.addProvider(includeServer, blockTagsProvider);
-//		generator.addProvider(includeServer, new CommonItemTagsProvider(generator, blockTagsProvider, existingFileHelper));
-//		generator.addProvider(includeServer, new KiwiAdvancementProvider(uid, generator, existingFileHelper).add(new FFAdvancements(existingFileHelper)));
-//
-//		registerConfiguredFeatures();
-//		RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.builtinCopy());
-//		var citrusCF = ops.registry(Registry.CONFIGURED_FEATURE_REGISTRY).get().getOrCreateHolderOrThrow(TREES_CF.unwrapKey().get().cast(Registry.CONFIGURED_FEATURE_REGISTRY).get());
-//		var cherryCF = ops.registry(Registry.CONFIGURED_FEATURE_REGISTRY).get().getOrCreateHolderOrThrow(CherryFruitTypes.CHERRY.get().featureWG.unwrapKey().get().cast(Registry.CONFIGURED_FEATURE_REGISTRY).get());
-//		Map<ResourceLocation, PlacedFeature> allPlaced = Maps.newHashMap();
-//		makePlacedFeature("citrus_002", 500, citrusCF, allPlaced);
-//		makePlacedFeature("citrus_005", 200, citrusCF, allPlaced);
-//		makePlacedFeature("citrus_1", 10, citrusCF, allPlaced);
-//		makePlacedFeature("cherry_002", 500, cherryCF, allPlaced);
-//		makePlacedFeature("cherry_005", 200, cherryCF, allPlaced);
-//		generator.addProvider(includeServer, forDataPackRegistry(generator, existingFileHelper, ops, Registry.PLACED_FEATURE_REGISTRY, allPlaced));
-//
-//		var biomes = ops.registry(Registry.BIOME_REGISTRY).get();
-//		var plains = biomes.getOrCreateTag(Tags.Biomes.IS_PLAINS);
-//		var forest = biomes.getOrCreateTag(BiomeTags.IS_FOREST);
-//		var jungle = biomes.getOrCreateTag(BiomeTags.IS_OAK);
-//		var cold = biomes.getOrCreateTag(Tags.Biomes.IS_COLD);
-//		var magical = biomes.getOrCreateTag(Tags.Biomes.IS_MAGICAL);
-//		var mushroom = biomes.getOrCreateTag(Tags.Biomes.IS_MUSHROOM);
-//		var dead = biomes.getOrCreateTag(Tags.Biomes.IS_DEAD);
-//		var dry = biomes.getOrCreateTag(Tags.Biomes.IS_DRY);
-//		List<HolderSet<Biome>> excludes = List.of(cold, magical, mushroom, dead, dry);
-//
-//		/* off */
-//		Map<ResourceLocation, BiomeModifier> modifiers = Map.of(
-//						RL("citrus_plains"), new MultiFilteredAddFeaturesBiomeModifier(List.of(plains), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("citrus_002"))), GenerationStep.Decoration.VEGETAL_DECORATION),
-//						RL("citrus_forest"), new MultiFilteredAddFeaturesBiomeModifier(List.of(forest), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("citrus_005"))), GenerationStep.Decoration.VEGETAL_DECORATION),
-//						RL("citrus_jungle"), new MultiFilteredAddFeaturesBiomeModifier(List.of(jungle), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("citrus_1"))), GenerationStep.Decoration.VEGETAL_DECORATION),
-//						RL("cherry_plains"), new MultiFilteredAddFeaturesBiomeModifier(List.of(plains), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("cherry_002"))), GenerationStep.Decoration.VEGETAL_DECORATION),
-//						RL("cherry_forest"), new MultiFilteredAddFeaturesBiomeModifier(List.of(forest), excludes, HolderSet.direct(Holder::direct, allPlaced.get(RL("cherry_005"))), GenerationStep.Decoration.VEGETAL_DECORATION)
-//				);
-//		/* on */
-//		generator.addProvider(includeServer, forDataPackRegistry(generator, existingFileHelper, ops, ForgeRegistries.Keys.BIOME_MODIFIERS, modifiers));
-//	}
 }

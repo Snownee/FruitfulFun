@@ -1,4 +1,4 @@
-package snownee.fruits.mixin;
+package snownee.fruits.mixin.client;
 
 import java.util.Map;
 

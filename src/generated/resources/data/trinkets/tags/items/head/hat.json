@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruitfulfun:cherry_wreath",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:redlove_wreath",
+      "required": false
+    }
+  ]
+}

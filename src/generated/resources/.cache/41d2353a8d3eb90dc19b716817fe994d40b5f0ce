@@ -1,7 +1,9 @@
-// 1.20.1	2023-12-30T01:49:13.8970149	Fruitful Fun/Tags for minecraft:item
+// 1.20.1	2023-12-30T18:49:02.2433855	Fruitful Fun/Tags for minecraft:item
+2773b956f6995af6194e0dc95c3c7f20f4b1ef19 data\c\tags\items\foods.json
 2b93e982677ab3f82f33965ad744719cfd2c6b32 data\minecraft\tags\items\signs.json
 fd7cbe660af8c17d43fa899f5e07b2d4b27c0dc8 data\minecraft\tags\items\leaves.json
 f1965a0355ce24c33eb20f8c0efab3e06ab2db88 data\fruitfulfun\tags\items\panda_food.json
+2ac8c232f6a25a297bfe796461343ab35c9acdfb data\trinkets\tags\items\head\hat.json
 f9acd0524f181183a3210cee6eeef2375b20d21a data\minecraft\tags\items\saplings.json
 bf0d798886878c748198dc0f677c31c932045d2c data\minecraft\tags\items\fence_gates.json
 63fd6ab49ef91f94cd63974547477f29b056c3fa data\minecraft\tags\items\wooden_fences.json

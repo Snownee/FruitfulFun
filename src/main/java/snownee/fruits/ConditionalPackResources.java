@@ -1,3 +1,4 @@
+/*
 package snownee.fruits;
 
 import java.io.File;
@@ -14,38 +15,47 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Joiner;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.locating.IModFile;
 
 public abstract class ConditionalPackResources extends AbstractPackResources {
-
-	private final Path source;
-	private final String modId;
-	private final String extension;
-	final IModFile modFile;
-	private final PackMetadataSection packInfo;
-
-	public ConditionalPackResources(String modId, PackMetadataSection packInfo) {
-		this(modId, packInfo, "conditional");
+	public ConditionalPackResources(String modId, String name, boolean isBuiltin) {
+		super(name, isBuiltin);
+		ModContainer modContainer = FabricLoader.getInstance().getModContainer(modId).orElseThrow();
+		modContainer.getRootPaths()
 	}
 
-	public ConditionalPackResources(String modId, PackMetadataSection packInfo, String extension) {
-		super(new File("Dummy"));
-		modFile = ModList.get().getModFileById(modId).getFile();
-		this.modId = modId;
-		this.extension = extension;
-		this.packInfo = packInfo;
-		source = createSource(modId);
-	}
+//	private final Path source;
+//	private final String modId;
+//	private final String extension;
+//	final IModFile modFile;
+//	private final PackMetadataSection packInfo;
+
+//	public ConditionalPackResources(String modId, PackMetadataSection packInfo) {
+//		this(modId, packInfo, "conditional");
+//	}
+//	public ConditionalPackResources(String modId, PackMetadataSection packInfo, String extension) {
+//		super(new File("Dummy"));
+//		modFile = ModList.get().getModFileById(modId).getFile();
+//		this.modId = modId;
+//		this.extension = extension;
+//		this.packInfo = packInfo;
+//		source = createSource(modId);
+//	}
 
 	private static Path createSource(String modId) {
 		return ModList.get().getModFileById(modId).getFile().getFilePath().resolve("conditional");
@@ -55,50 +65,18 @@ public abstract class ConditionalPackResources extends AbstractPackResources {
 		return source;
 	}
 
-	@Override
-	public String getName() {
-		return modId + "-" + extension;
-	}
-
-	@Nonnull
-	protected Path resolve(@Nonnull String... paths) {
-		String path = String.join("/", paths);
-		return modFile.findResource(extension + "/" + path);
-	}
+//	@Override
+//	public String getName() {
+//		return modId + "-" + extension;
+//	}
+//
+//	@Nonnull
+//	protected Path resolve(@Nonnull String... paths) {
+//		String path = String.join("/", paths);
+//		return modFile.findResource(extension + "/" + path);
+//	}
 
 	protected abstract boolean test(String path);
-
-	@Override
-	protected boolean hasResource(String path) {
-		return test(path) && Files.exists(resolve(path));
-	}
-
-	@Override
-	protected InputStream getResource(String name) throws IOException {
-		final Path path = resolve(name);
-		if (!Files.exists(path))
-			throw new FileNotFoundException("Can't find resource " + name + " at " + getSource());
-		return Files.newInputStream(path, StandardOpenOption.READ);
-	}
-
-	@Override
-	public Collection<ResourceLocation> getResources(PackType type, String resourceNamespace, String pathIn, Predicate<ResourceLocation> filter) {
-		try {
-			Path root = resolve(type.getDirectory(), resourceNamespace).toAbsolutePath();
-			Path inputPath = root.getFileSystem().getPath(pathIn);
-
-			return Files.walk(root).map(root::relativize).filter(path -> {
-				return !path.toString().endsWith(".mcmeta") && path.startsWith(inputPath);
-			}).filter(path -> {
-				return true;
-			}).filter(path -> {
-				String s = Joiner.on('/').join(type.getDirectory(), resourceNamespace, path);
-				return test(s);
-			}).map(path -> new ResourceLocation(resourceNamespace, Joiner.on('/').join(path))).collect(Collectors.toList());
-		} catch (IOException e) {
-			return Collections.emptyList();
-		}
-	}
 
 	@Override
 	public void close() {
@@ -135,4 +113,54 @@ public abstract class ConditionalPackResources extends AbstractPackResources {
 		return String.format(Locale.ENGLISH, "%s: %s", getClass().getName(), getSource());
 	}
 
+//	@Override
+//	protected boolean hasResource(String path) {
+//		return test(path) && Files.exists(resolve(path));
+//	}
+//
+//	@Override
+//	protected InputStream getResource(String name) throws IOException {
+//		final Path path = resolve(name);
+//		if (!Files.exists(path))
+//			throw new FileNotFoundException("Can't find resource " + name + " at " + getSource());
+//		return Files.newInputStream(path, StandardOpenOption.READ);
+//	}
+//
+//	@Override
+//	public Collection<ResourceLocation> getResources(PackType type, String resourceNamespace, String pathIn, Predicate<ResourceLocation> filter) {
+//		try {
+//			Path root = resolve(type.getDirectory(), resourceNamespace).toAbsolutePath();
+//			Path inputPath = root.getFileSystem().getPath(pathIn);
+//
+//			return Files.walk(root).map(root::relativize).filter(path -> {
+//				return !path.toString().endsWith(".mcmeta") && path.startsWith(inputPath);
+//			}).filter(path -> {
+//				return true;
+//			}).filter(path -> {
+//				String s = Joiner.on('/').join(type.getDirectory(), resourceNamespace, path);
+//				return test(s);
+//			}).map(path -> new ResourceLocation(resourceNamespace, Joiner.on('/').join(path))).collect(Collectors.toList());
+//		} catch (IOException e) {
+//			return Collections.emptyList();
+//		}
+//	}
+
+	@Nullable
+	@Override
+	public IoSupplier<InputStream> getRootResource(String... strings) {
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public IoSupplier<InputStream> getResource(PackType packType, ResourceLocation resourceLocation) {
+		return null;
+	}
+
+	@Override
+	public void listResources(PackType packType, String resourceNamespace, String pathIn, ResourceOutput resourceOutput) {
+
+	}
+
 }
+*/

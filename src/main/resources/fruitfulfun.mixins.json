@@ -13,8 +13,8 @@
     "PandaMixin"
   ],
   "client": [
-    "GameRendererMixin",
-    "ItemBlockRenderTypesMixin"
+    "client.GameRendererMixin",
+    "client.ItemBlockRenderTypesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

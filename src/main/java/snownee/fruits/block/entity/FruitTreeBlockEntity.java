@@ -97,6 +97,15 @@ public class FruitTreeBlockEntity extends ModBlockEntity {
 		}
 	}
 
+	public void removeActiveLeaves(BlockPos pos) {
+		pos = pos.subtract(worldPosition);
+		activeLeaves.remove(pos);
+	}
+
+	public Set<BlockPos> getActiveLeaves() {
+		return activeLeaves;
+	}
+
 	public void consumeLifespan(int i) {
 		lifespan -= i;
 	}
