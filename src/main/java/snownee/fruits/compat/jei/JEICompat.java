@@ -19,8 +19,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
-import snownee.fruits.hybridization.HybridizationModule;
-import snownee.fruits.hybridization.HybridizingRecipe;
+import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.HybridizingRecipe;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
@@ -45,7 +45,7 @@ public class JEICompat implements IModPlugin {
 		if (BuiltInRegistries.RECIPE_TYPE.containsKey(UID)) {
 			ClientLevel world = Minecraft.getInstance().level;
 			RecipeManager recipeManager = world.getRecipeManager();
-			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.getAllRecipesFor(HybridizationModule.RECIPE_TYPE)));
+			registration.addRecipes(RECIPE_TYPE, List.copyOf(recipeManager.getAllRecipesFor(BeeModule.RECIPE_TYPE)));
 		}
 
 		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage || FFCommonConfig.villageAppleTreeWorldGen) {

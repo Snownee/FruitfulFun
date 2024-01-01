@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=y": { "model": "fruitfulfun:block/stripped_redlove_wood" },
+    "axis=z": { "model": "fruitfulfun:block/stripped_redlove_wood", "x": 90 },
+    "axis=x": { "model": "fruitfulfun:block/stripped_redlove_wood", "x": 90, "y": 90 }
+  }
+}

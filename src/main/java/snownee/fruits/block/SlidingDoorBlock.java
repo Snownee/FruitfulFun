@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.block;
+package snownee.fruits.block;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.CoreModule;
+import snownee.fruits.block.entity.SlidingDoorEntity;
 
 @SuppressWarnings("hiding")
 public class SlidingDoorBlock extends DoorBlock {
@@ -159,7 +160,8 @@ public class SlidingDoorBlock extends DoorBlock {
 			return;
 		if (oldState.is(this) && oldState.getValue(OPEN))
 			return;
-		SlidingDoorEntity door = new SlidingDoorEntity(worldIn, pos);
+		SlidingDoorEntity door = new SlidingDoorEntity(worldIn);
+		door.setPos(Vec3.atCenterOf(pos));
 		worldIn.addFreshEntity(door);
 	}
 
@@ -173,6 +175,6 @@ public class SlidingDoorBlock extends DoorBlock {
 			return;
 		if (newState.getBlock() == this && newState.getValue(OPEN))
 			return;
-		worldIn.getEntities(CoreModule.SLIDING_DOOR.get(), new AABB(pos), e -> e.doorPos.equals(pos)).forEach(e -> e.remove(RemovalReason.KILLED));
+		worldIn.getEntities(CoreModule.SLIDING_DOOR.get(), new AABB(pos), e -> e.blockPosition().equals(pos)).forEach(e -> e.remove(RemovalReason.KILLED));
 	}
 }

@@ -12,10 +12,9 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class FruitLeavesProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+public class FruitLeavesDebugProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
 
 	public static final ResourceLocation UID = new ResourceLocation(FruitfulFun.ID, "fruit_leaves");
-	public static final FruitLeavesProvider INSTANCE = new FruitLeavesProvider();
 
 	@Override
 	public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
@@ -29,10 +28,9 @@ public class FruitLeavesProvider implements IBlockComponentProvider, IServerData
 
 	@Override
 	public void appendServerData(CompoundTag data, BlockAccessor accessor) {
-		if (accessor.getBlockEntity() instanceof FruitTreeBlockEntity tree) {
-			data.putString("Type", FFRegistries.FRUIT_TYPE.getKey(tree.type).toString());
-			data.putInt("Lifespan", tree.getLifespan());
-		}
+		FruitTreeBlockEntity tree = (FruitTreeBlockEntity) accessor.getBlockEntity();
+		data.putString("Type", FFRegistries.FRUIT_TYPE.getKey(tree.type).toString());
+		data.putInt("Lifespan", tree.getLifespan());
 	}
 
 	@Override

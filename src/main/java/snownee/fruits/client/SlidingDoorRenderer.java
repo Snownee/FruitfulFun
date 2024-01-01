@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.client;
+package snownee.fruits.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import snownee.fruits.cherry.block.SlidingDoorEntity;
+import snownee.fruits.block.entity.SlidingDoorEntity;
 
 public class SlidingDoorRenderer extends EntityRenderer<SlidingDoorEntity> {
 

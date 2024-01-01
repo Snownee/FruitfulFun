@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.Hooks;
-import snownee.fruits.cherry.client.SlidingDoorRenderer;
-import snownee.fruits.cherry.client.particle.PetalParticle;
+import snownee.fruits.client.SlidingDoorRenderer;
+import snownee.fruits.client.particle.PetalParticle;
 
 public class ClientProxy implements ClientModInitializer {
 	@Override

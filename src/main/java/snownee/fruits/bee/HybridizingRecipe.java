@@ -1,6 +1,5 @@
-package snownee.fruits.hybridization;
+package snownee.fruits.bee;
 
-import java.util.Collection;
 import java.util.Objects;
 
 import com.google.common.base.Preconditions;
@@ -23,10 +22,10 @@ import snownee.kiwi.recipe.Simple;
 
 public class HybridizingRecipe extends Simple<HybridizingContext> {
 
-	protected final Block result;
-	public final ImmutableSet<Block> ingredients;
+	public final Block result;
+	public final ImmutableSet<String> ingredients;
 
-	public HybridizingRecipe(ResourceLocation id, Block result, ImmutableSet<Block> ingredients) {
+	public HybridizingRecipe(ResourceLocation id, Block result, ImmutableSet<String> ingredients) {
 		super(id);
 		this.result = result;
 		this.ingredients = ingredients;
@@ -34,21 +33,21 @@ public class HybridizingRecipe extends Simple<HybridizingContext> {
 
 	@Override
 	public boolean matches(HybridizingContext inv, Level worldIn) {
-		return inv.ingredients.size() >= ingredients.size() && ingredients.stream().allMatch(inv.ingredients::contains);
+		return inv.attributes.getPollens().size() >= ingredients.size() && inv.attributes.getPollens().containsAll(ingredients);
 	}
 
-	public Block getResult(Collection<Block> types) {
+	public Block getResult(BeeAttributes attributes) {
 		return result;
 	}
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return HybridizationModule.SERIALIZER;
+		return BeeModule.SERIALIZER;
 	}
 
 	@Override
 	public RecipeType<?> getType() {
-		return HybridizationModule.RECIPE_TYPE;
+		return BeeModule.RECIPE_TYPE;
 	}
 
 	public static class Serializer implements RecipeSerializer<HybridizingRecipe> {
@@ -56,12 +55,12 @@ public class HybridizingRecipe extends Simple<HybridizingContext> {
 		@Override
 		public HybridizingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			Block result = readIngredient(json.get("result"));
-			ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
+			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
 			if (ingredients.size() < 2 || ingredients.size() > 4) {
 				throw new JsonSyntaxException("Size of ingredients has to be in [2, 4]");
 			}
-			ingredients.forEach(e -> builder.add(readIngredient(e)));
+			ingredients.forEach(e -> builder.add(e.getAsString()));
 			return new HybridizingRecipe(recipeId, result, builder.build());
 		}
 
@@ -74,10 +73,10 @@ public class HybridizingRecipe extends Simple<HybridizingContext> {
 		@Override
 		public HybridizingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			Block result = Objects.requireNonNull(buffer.readById(BuiltInRegistries.BLOCK));
-			ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
+			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 			int size = buffer.readByte();
 			for (int i = 0; i < size; i++) {
-				builder.add(Objects.requireNonNull(buffer.readById(BuiltInRegistries.BLOCK)));
+				builder.add(buffer.readUtf());
 			}
 			return new HybridizingRecipe(recipeId, result, builder.build());
 		}
@@ -86,8 +85,8 @@ public class HybridizingRecipe extends Simple<HybridizingContext> {
 		public void toNetwork(FriendlyByteBuf buffer, HybridizingRecipe recipe) {
 			buffer.writeId(BuiltInRegistries.BLOCK, recipe.result);
 			buffer.writeByte(recipe.ingredients.size());
-			for (Block block : recipe.ingredients) {
-				buffer.writeId(BuiltInRegistries.BLOCK, block);
+			for (String ingredient : recipe.ingredients) {
+				buffer.writeUtf(ingredient);
 			}
 		}
 

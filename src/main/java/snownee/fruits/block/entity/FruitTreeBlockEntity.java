@@ -117,4 +117,8 @@ public class FruitTreeBlockEntity extends ModBlockEntity {
 	public boolean isDead() {
 		return lifespan <= 0;
 	}
+
+	public void setLifespan(int lifespan) {
+		this.lifespan = lifespan;
+	}
 }

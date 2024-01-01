@@ -4,6 +4,10 @@ accessible method net/minecraft/world/level/block/LeavesBlock updateDistance (Ln
 accessible class net/minecraft/world/entity/animal/Bee$BeePollinateGoal
 accessible method net/minecraft/world/entity/animal/Bee$BeePollinateGoal isPollinating ()Z
 accessible field net/minecraft/world/entity/animal/Bee beePollinateGoal Lnet/minecraft/world/entity/animal/Bee$BeePollinateGoal;
+accessible method net/minecraft/world/entity/animal/Bee isRolling ()Z
+
+accessible class net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData
+accessible field net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData entityData Lnet/minecraft/nbt/CompoundTag;
 
 accessible field net/minecraft/client/particle/Particle stoppedByCollision Z
 accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
@@ -22,3 +26,5 @@ accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/Foli
 accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer createFoliage (Lnet/minecraft/world/level/LevelSimulatedReader;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageSetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;ILnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageAttachment;III)V
 
 accessible method net/minecraft/world/entity/ai/village/poi/PoiTypes registerBlockStates (Lnet/minecraft/core/Holder;Ljava/util/Set;)V
+
+accessible method net/minecraft/stats/Stats makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/ResourceLocation;

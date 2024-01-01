@@ -46,8 +46,8 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
+import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.block.grower.FruitTreeGrower;
-import snownee.fruits.cherry.block.SlidingDoorEntity;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
@@ -211,7 +211,7 @@ public final class CoreModule extends AbstractModule {
 	/* off */
 	public static final KiwiGO<EntityType<SlidingDoorEntity>> SLIDING_DOOR = go(() -> KiwiEntityTypeBuilder.<SlidingDoorEntity>create()
 			.entityFactory(SlidingDoorEntity::new)
-			.dimensions(EntityDimensions.scalable(1, 2))
+			.dimensions(EntityDimensions.scalable(0.01f, 0.01f))
 			.fireImmune()
 			.disableSummon()
 			.build()

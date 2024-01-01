@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.client.particle;
+package snownee.fruits.client.particle;
 
 import java.util.List;
 

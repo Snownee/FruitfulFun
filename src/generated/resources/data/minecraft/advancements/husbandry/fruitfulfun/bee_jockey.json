@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/start",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "vehicle": {
+                "type": "minecraft:bee"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.bee_jockey.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:feather"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruitfulfun.bee_jockey.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": false
+}

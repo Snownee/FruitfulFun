@@ -1,5 +1,7 @@
-package snownee.fruits.hybridization;
+package snownee.fruits.bee;
 
 public interface FFBee {
 	BeeAttributes fruits$getBeeAttributes();
+
+	void fruits$roll();
 }

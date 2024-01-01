@@ -4,6 +4,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -31,7 +32,8 @@ public abstract class FruitType {
 		this.fruit = fruit;
 	}
 
-	public static Item getFruitOrDefault(Block block) {
+	public static Item getFruitOrDefault(String id) {
+		Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
 		if (block instanceof FruitLeavesBlock leavesBlock) {
 			return leavesBlock.type.get().fruit.get();
 		} else {

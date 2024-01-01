@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.block.FruitLeavesBlock;
 
 public class Fruitify extends FoliagePlacer {
@@ -64,6 +66,7 @@ public class Fruitify extends FoliagePlacer {
 		foliageSetter.set(pAttachment.pos(), core);
 		level.getBlockEntity(pAttachment.pos(), CoreModule.FRUIT_TREE.get()).ifPresent(be -> {
 			be.addActiveLeaves(activeLeaves);
+			be.setLifespan(Mth.randomBetweenInclusive(pRandom, FFCommonConfig.fruitTreeLifespanMin, FFCommonConfig.fruitTreeLifespanMax));
 		});
 	}
 

@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.block;
+package snownee.fruits.block;
 
 import net.minecraft.world.level.block.Block;
 

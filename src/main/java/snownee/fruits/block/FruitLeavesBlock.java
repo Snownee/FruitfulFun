@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -59,7 +60,11 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public final Supplier<FruitType> type;
 
 	public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
-		super(properties);
+		super(properties
+				.isValidSpawn(Blocks::ocelotOrParrot)
+				.isSuffocating(Blocks::never)
+				.isViewBlocking(Blocks::never)
+				.isRedstoneConductor(Blocks::never));
 		this.type = type;
 		registerDefaultState(stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1).setValue(WATERLOGGED, false));
 	}
@@ -189,11 +194,11 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		if (context instanceof EntityCollisionContext c && c.getEntity() != null) {
 			Entity entity = c.getEntity();
-			if ((!(entity instanceof ItemEntity) && !(entity instanceof FlyingAnimal))) {
-				return Shapes.block();
+			if (entity instanceof ItemEntity || entity instanceof FlyingAnimal) {
+				return Shapes.empty();
 			}
 		}
-		return Shapes.empty();
+		return Shapes.block();
 	}
 
 	@Override
@@ -256,15 +261,5 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			return new FruitTreeBlockEntity(pPos, state, type.get());
 		}
 		return null;
-	}
-
-//	@Override
-//	public <T extends BlockEntity> GameEventListener getListener(ServerLevel level, T blockEntity) {
-//		return blockEntity instanceof FruitTreeBlockEntity ? (FruitTreeBlockEntity) blockEntity : null;
-//	}
-
-	@Override
-	public float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
-		return 0.2F;
 	}
 }

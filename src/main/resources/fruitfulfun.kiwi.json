@@ -4,7 +4,33 @@
       "target": "snownee.fruits.FFCommonConfig"
     }
   ],
+  "Optional": [
+    {
+      "target": "snownee.fruits.bee.HybridizationModule"
+    },
+    {
+      "target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule"
+    },
+    {
+      "target": "snownee.fruits.food.FoodModule"
+    }
+  ],
+  "KiwiPacket": [
+    {
+      "target": "snownee.fruits.bee.network.SSyncBeePacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "sync_bee"
+      }
+    }
+  ],
   "KiwiModule": [
+    {
+      "target": "snownee.fruits.bee.HybridizationModule",
+      "data": {
+        "value": "hybridization"
+      }
+    },
     {
       "target": "snownee.fruits.cherry.CherryFruitTypes",
       "data": {
@@ -39,23 +65,6 @@
       "data": {
         "value": "food"
       }
-    },
-    {
-      "target": "snownee.fruits.hybridization.HybridizationModule",
-      "data": {
-        "value": "hybridization"
-      }
-    }
-  ],
-  "Optional": [
-    {
-      "target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule"
-    },
-    {
-      "target": "snownee.fruits.food.FoodModule"
-    },
-    {
-      "target": "snownee.fruits.hybridization.HybridizationModule"
     }
   ]
 }

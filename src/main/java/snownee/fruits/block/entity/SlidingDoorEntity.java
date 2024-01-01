@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.block;
+package snownee.fruits.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,25 +10,23 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.CoreModule;
+import snownee.fruits.block.SlidingDoorBlock;
 import snownee.fruits.util.CommonProxy;
-import snownee.kiwi.util.NBTHelper;
 
 public class SlidingDoorEntity extends Entity {
-
-	public BlockPos doorPos = BlockPos.ZERO;
+	private static final AABB INITIAL_AABB = new AABB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 	public SlidingDoorEntity(EntityType<?> entityTypeIn, Level level) {
 		super(entityTypeIn, level);
 		noPhysics = true;
 	}
 
-	public SlidingDoorEntity(Level level, BlockPos doorPos) {
+	public SlidingDoorEntity(Level level) {
 		this(CoreModule.SLIDING_DOOR.get(), level);
-		setPos(doorPos.getX() + 0.5, doorPos.getY(), doorPos.getZ() + 0.5);
-		this.doorPos = doorPos;
 	}
 
 	@Override
@@ -37,21 +35,20 @@ public class SlidingDoorEntity extends Entity {
 
 	@Override
 	protected void readAdditionalSaveData(CompoundTag compound) {
-		doorPos = NBTHelper.of(compound).getPos("DoorPos");
 	}
 
 	@Override
 	protected void addAdditionalSaveData(CompoundTag compound) {
-		NBTHelper.of(compound).setPos("DoorPos", doorPos);
 	}
 
 	@Override
 	public void tick() {
-		if (firstTick && getBoundingBox().getYsize() == 0) {
-			if (level().isLoaded(doorPos))
-				update(level().getBlockState(doorPos));
+		if (getBoundingBox().getYsize() < 2 || tickCount % 20 == 1) {
+			setPos(getX(), getY(), getZ());
+			if (getBoundingBox() == INITIAL_AABB) {
+				discard();
+			}
 		}
-		firstTick = false;
 	}
 
 	@Override
@@ -59,15 +56,15 @@ public class SlidingDoorEntity extends Entity {
 		return CommonProxy.getAddEntityPacket(this);
 	}
 
-	public void update(BlockState state) {
+	@Override
+	protected AABB makeBoundingBox() {
+		BlockPos pos = blockPosition();
+		BlockState state = level().getBlockState(pos);
 		if (!(state.getBlock() instanceof SlidingDoorBlock))
-			return;
-		setBoundingBox(extendBoundingBox(state.getShape(level(), doorPos).move(doorPos.getX(), doorPos.getY(), doorPos.getZ())));
-		//resetPositionToBB();
-	}
-
-	public AABB extendBoundingBox(VoxelShape shape) {
-		return new AABB(shape.min(Direction.Axis.X), shape.min(Direction.Axis.Y), shape.min(Direction.Axis.Z), shape.max(Direction.Axis.X), shape.max(Direction.Axis.Y) + 1, shape.max(Direction.Axis.Z));
+			return INITIAL_AABB;
+		VoxelShape shape = state.getShape(level(), pos).move(pos.getX(), pos.getY(), pos.getZ());
+		AABB aabb = new AABB(shape.min(Direction.Axis.X), shape.min(Direction.Axis.Y), shape.min(Direction.Axis.Z), shape.max(Direction.Axis.X), shape.max(Direction.Axis.Y) + 1, shape.max(Direction.Axis.Z));
+		return aabb;
 	}
 
 	@Override
@@ -78,15 +75,6 @@ public class SlidingDoorEntity extends Entity {
 	@Override
 	public void refreshDimensions() {
 		//NOOP
-	}
-
-	@Override
-	public void setPos(double x, double y, double z) {
-		setPosRaw(x, y, z);
-	}
-
-	public boolean hitByEntity(Entity entityIn) {
-		return true;
 	}
 
 	@Override
@@ -107,6 +95,16 @@ public class SlidingDoorEntity extends Entity {
 	@Override
 	public void kill() {
 		//NOOP
+	}
+
+	@Override
+	public PushReaction getPistonPushReaction() {
+		return PushReaction.IGNORE;
+	}
+
+	@Override
+	public boolean isIgnoringBlockTriggers() {
+		return true;
 	}
 
 }

@@ -34,7 +34,7 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.fruits.hybridization.HybridizingRecipe;
+import snownee.fruits.bee.HybridizingRecipe;
 
 public class HybridizingCategory implements IRecipeCategory<HybridizingRecipe> {
 
@@ -118,7 +118,7 @@ public class HybridizingCategory implements IRecipeCategory<HybridizingRecipe> {
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, HybridizingRecipe recipe, IFocusGroup focuses) {
-		Block result = recipe.getResult(recipe.ingredients);
+		Block result = recipe.result;
 		ImmutableList.Builder<ItemStack> outputs = ImmutableList.builder();
 		if (result instanceof FruitLeavesBlock leavesBlock) {
 			FruitType type = leavesBlock.type.get();

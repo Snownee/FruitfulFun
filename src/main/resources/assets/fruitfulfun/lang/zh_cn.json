@@ -129,6 +129,8 @@
   "advancements.fruitfulfun.redlove.description": "杂交出一棵红心果树",
   "advancements.fruitfulfun.horn.title": "欢歌四起",
   "advancements.fruitfulfun.horn.description": "使用特定类型的山羊角收获水果",
+  "advancements.fruitfulfun.bee_jockey.title": "御蜂而行",
+  "advancements.fruitfulfun.bee_jockey.description": "培育一只可骑乘的蜜蜂",
   "config.jade.plugin_fruitfulfun": "果树",
   "config.jade.plugin_fruitfulfun.bee": "蜜蜂",
   "fruitfulfun.config.appleSaplingFromHeroOfTheVillage": "Apple Sapling From Hero Of The Village",
@@ -146,8 +148,6 @@
   "fruitfulfun.config.modules.farmersdelight.desc": "",
   "fruitfulfun.config.modules.food": "Food",
   "fruitfulfun.config.modules.food.desc": "",
-  "fruitfulfun.config.modules.hybridization": "Hybridization",
-  "fruitfulfun.config.modules.hybridization.desc": "",
   "fruitfulfun.config.villageAppleTreeWorldGen": "Village Apple Tree World Gen",
   "fruitfulfun.config.villageAppleTreeWorldGen.desc": ""
 }

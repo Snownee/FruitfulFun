@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.BlockPos;
@@ -20,6 +21,8 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.StatFormatter;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +35,7 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeModule;
 import snownee.kiwi.Mod;
 import snownee.kiwi.util.Util;
 
@@ -75,6 +79,10 @@ public class CommonProxy implements ModInitializer {
 		ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
 	}
 
+	public static boolean isShears(ItemStack stack) {
+		return stack.is(ConventionalItemTags.SHEARS);
+	}
+
 	@Override
 	public void onInitialize() {
 		addFeature("citron");
@@ -93,6 +101,9 @@ public class CommonProxy implements ModInitializer {
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});
 		});
+		// map in StatType is an IdentityHashMap, update the reference
+		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
+		BeeModule.BEES_BRED = Stats.makeCustomStat(BeeModule.BEES_BRED.toString(), StatFormatter.DEFAULT);
 	}
 
 	public static void addFeature(String id) {

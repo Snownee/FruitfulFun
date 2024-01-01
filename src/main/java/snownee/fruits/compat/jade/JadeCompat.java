@@ -12,7 +12,7 @@ import net.minecraft.world.phys.HitResult;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
-import snownee.fruits.cherry.block.SlidingDoorEntity;
+import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IWailaClientRegistration;
@@ -30,7 +30,8 @@ public class JadeCompat implements IWailaPlugin {
 	@Override
 	public void register(IWailaCommonRegistration registration) {
 		if (!Platform.isProduction()) {
-			registration.registerBlockDataProvider(FruitLeavesProvider.INSTANCE, FruitTreeBlockEntity.class);
+			registration.registerBlockDataProvider(new FruitLeavesDebugProvider(), FruitTreeBlockEntity.class);
+			registration.registerEntityDataProvider(new BeeDebugProvider(), Bee.class);
 		}
 		registration.registerEntityDataProvider(BeePollenProvider.INSTANCE, Bee.class);
 	}
@@ -38,7 +39,8 @@ public class JadeCompat implements IWailaPlugin {
 	@Override
 	public void registerClient(IWailaClientRegistration registration) {
 		if (!Platform.isProduction()) {
-			registration.registerBlockComponent(FruitLeavesProvider.INSTANCE, FruitLeavesBlock.class);
+			registration.registerBlockComponent(new FruitLeavesDebugProvider(), FruitLeavesBlock.class);
+			registration.registerEntityComponent(new BeeDebugProvider(), Bee.class);
 		}
 		registration.registerEntityComponent(BeePollenProvider.INSTANCE, Bee.class);
 		registration.addRayTraceCallback(this::override);
@@ -49,7 +51,7 @@ public class JadeCompat implements IWailaPlugin {
 		if (accessor instanceof EntityAccessor) {
 			Entity entity = ((EntityAccessor) accessor).getEntity();
 			if (entity instanceof SlidingDoorEntity) {
-				BlockPos pos = ((SlidingDoorEntity) entity).doorPos;
+				BlockPos pos = entity.blockPosition();
 				Level level = accessor.getLevel();
 				BlockHitResult hitResult = new BlockHitResult(accessor.getHitResult().getLocation(), accessor.getPlayer().getDirection().getOpposite(), pos, false);
 				return client.blockAccessor().blockState(level.getBlockState(pos)).level(level).player(accessor.getPlayer()).hit(hitResult).build();

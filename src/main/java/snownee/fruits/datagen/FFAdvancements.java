@@ -14,6 +14,7 @@ import net.minecraft.advancements.critereon.ImpossibleTrigger;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.PickedUpItemTrigger;
+import net.minecraft.advancements.critereon.StartRidingTrigger;
 import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -79,6 +80,21 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CherryModule.REDLOVE_SAPLING.get()))
 				.rewards(xp100)
 				.save(consumer, "husbandry/fruitfulfun/redlove");
+
+		Advancement.Builder.recipeAdvancement()
+				.parent(start)
+				.display(
+						Items.FEATHER,
+						Component.translatable("advancements.fruitfulfun.bee_jockey.title"),
+						Component.translatable("advancements.fruitfulfun.bee_jockey.description"),
+						null, FrameType.GOAL, true, true, false)
+				.addCriterion("_", StartRidingTrigger.TriggerInstance.playerStartsRiding(
+						EntityPredicate.Builder.entity().vehicle(
+								EntityPredicate.Builder.entity().of(EntityType.BEE).build()
+						)
+				))
+				.rewards(xp100)
+				.save(consumer, "husbandry/fruitfulfun/bee_jockey");
 
 		Advancement.Builder.recipeAdvancement()
 				.parent(start)

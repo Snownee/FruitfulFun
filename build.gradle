@@ -88,8 +88,10 @@ dependencies {
 
     modImplementation "dev.emi:trinkets:${project.trinkets_version}"
     modImplementation "curse.maven:selene-499980:4981682"
-    
+
     modImplementation "maven.modrinth:debugutils:woRp83Qc"
+
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2"))
 }
 
 loom {

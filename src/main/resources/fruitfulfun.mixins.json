@@ -4,15 +4,25 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "fruitfulfun.refmap.json",
   "mixins": [
+    "AnimalMixin",
+    "BeeHiveBlockEntityMixin",
+    "BeeHiveBlockMixin",
     "BeeMixin",
     "BeePollinateGoalMixin",
     "BlockEntityTypeMixin",
     "BlockStateMixin",
+    "EntityMixin",
     "GiveGiftToHeroMixin",
     "InstrumentItemMixin",
-    "PandaMixin"
+    "MobMixin",
+    "PandaMixin",
+    "RideableBeeLivingEntityMixin",
+    "RideableBeeMixin",
+    "RideableBeeMobMixin",
+    "RideableBeePlayerMixin"
   ],
   "client": [
+    "client.BeeRendererMixin",
     "client.GameRendererMixin",
     "client.ItemBlockRenderTypesMixin"
   ],
