@@ -23,6 +23,8 @@
   ],
   "client": [
     "client.BeeRendererMixin",
+    "client.BlockMixin",
+    "client.CherryLeavesBlockMixin",
     "client.GameRendererMixin",
     "client.ItemBlockRenderTypesMixin"
   ],

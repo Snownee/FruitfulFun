@@ -18,6 +18,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -243,8 +244,12 @@ public final class Hooks {
 				}
 				ItemStack saddle = attributes.getSaddle();
 				attributes.setSaddle(ItemStack.EMPTY);
-				bee.spawnAtLocation(saddle);
-				held.hurtAndBreak(1, player, $ -> $.broadcastBreakEvent(hand));
+				if (!player.level().isClientSide) {
+					bee.spawnAtLocation(saddle);
+					held.hurtAndBreak(1, player, $ -> $.broadcastBreakEvent(hand));
+					bee.gameEvent(GameEvent.EQUIP, player);
+					bee.level().playSound(null, bee, SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0f, 1.0f);
+				}
 				return InteractionResult.sidedSuccess(player.level().isClientSide);
 			} else if (!bee.isVehicle() && !player.isSecondaryUseActive()) {
 				if (!trusted) {

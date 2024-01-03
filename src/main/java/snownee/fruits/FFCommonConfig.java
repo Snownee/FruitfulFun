@@ -8,15 +8,15 @@ import snownee.kiwi.config.KiwiConfig;
 public final class FFCommonConfig {
 
 	public enum DropMode {
-		NO_DROP, INDEPENDENT, ONE_BY_ONE
+		NoDrop, Independent, OneByOne
 	}
 
 	@KiwiConfig.Range(min = 0, max = 100)
 	public static int growingSpeed = 5;
 	@KiwiConfig.Path("fruitDropMode.singleplayer")
-	public static DropMode fruitDropModeSingleplayer = DropMode.INDEPENDENT;
+	public static DropMode fruitDropModeSingleplayer = DropMode.Independent;
 	@KiwiConfig.Path("fruitDropMode.multiplayer")
-	public static DropMode fruitDropModeMultiplayer = DropMode.ONE_BY_ONE;
+	public static DropMode fruitDropModeMultiplayer = DropMode.OneByOne;
 	@KiwiConfig.Path("fruitTreeLifespan.min")
 	public static int fruitTreeLifespanMin = 14;
 	@KiwiConfig.Path("fruitTreeLifespan.max")

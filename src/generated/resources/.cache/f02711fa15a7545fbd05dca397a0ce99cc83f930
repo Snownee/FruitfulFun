@@ -1,10 +1,10 @@
-// 1.20.1	2024-01-02T05:24:32.8362938	Fruitful Fun/Tags for minecraft:block
+// 1.20.1	2024-01-02T17:12:44.4014067	Fruitful Fun/Tags for minecraft:block
 bf0d798886878c748198dc0f677c31c932045d2c data\minecraft\tags\blocks\fence_gates.json
-ee70a6d8b0a83889452e4fafe02fb0663f98e671 data\minecraft\tags\blocks\logs_that_burn.json
 55233bc7c673f304d2d91fc9344c087c20833017 data\fruitfulfun\tags\blocks\redlove_logs.json
+ee70a6d8b0a83889452e4fafe02fb0663f98e671 data\minecraft\tags\blocks\logs_that_burn.json
 2de284f485fbe869bd3e31578a95ab2647c667a6 data\minecraft\tags\blocks\planks.json
-bdc3f87f31d9a81a51d48fc0e30487fc9d0f6a98 data\minecraft\tags\blocks\flower_pots.json
 ec3d18fbe4c84a3daf6b6137b960551c4a3b53e1 data\minecraft\tags\blocks\wall_hanging_signs.json
+bdc3f87f31d9a81a51d48fc0e30487fc9d0f6a98 data\minecraft\tags\blocks\flower_pots.json
 069c0081f527ce6ff022f2c6fee0f5b1140738f7 data\minecraft\tags\blocks\wooden_stairs.json
 2b890c12b48facadf8d64a178be7817aaee14bc1 data\minecraft\tags\blocks\wooden_buttons.json
 14df67d11eebe36eb6428e3674ad8d1e94db40e7 data\minecraft\tags\blocks\wooden_doors.json

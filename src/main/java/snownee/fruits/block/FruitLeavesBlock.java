@@ -136,15 +136,15 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		} else if (canGrow(state) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
 			if (state.getValue(AGE) == 3) {
 				DropMode mode = FFCommonConfig.getDropMode(world);
-				if (mode == DropMode.NO_DROP) {
+				if (mode == DropMode.NoDrop) {
 					return;
 				}
 				FruitTreeBlockEntity core = findCore(world, pos);
-				if (mode == DropMode.ONE_BY_ONE && core != null && !core.canDrop()) {
+				if (mode == DropMode.OneByOne && core != null && !core.canDrop()) {
 					return;
 				}
 				ItemEntity itemEntity = dropFruit(world, pos, state, core, 1);
-				if (mode == DropMode.ONE_BY_ONE && core != null && itemEntity != null) {
+				if (mode == DropMode.OneByOne && core != null && itemEntity != null) {
 					core.setOnlyItem(itemEntity);
 				}
 			} else {

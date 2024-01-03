@@ -6,13 +6,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.FFClientConfig;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.cherry.CherryModule;
 
 public class CherryLeavesBlock extends FruitLeavesBlock {
 
@@ -24,7 +28,7 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
-	public int getLightBlock(BlockState state, BlockGetter worldIn, BlockPos pos) {
+	public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
 		return 0;
 	}
 
@@ -34,39 +38,54 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
+	public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
+		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Disabled) {
+			return;
+		}
+		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Vanilla && CherryModule.CHERRY_LEAVES.is(this)) {
+			Blocks.CHERRY_LEAVES.animateTick(stateIn, level, pos, rand);
+			return;
+		}
 		int i = rand.nextInt(15);
-		boolean raining = worldIn.isRainingAt(pos.above());
-		if (raining && i == 1) {
-			BlockPos blockpos = pos.below();
-			BlockState blockstate = worldIn.getBlockState(blockpos);
-			if (!blockstate.canOcclude() || !blockstate.isFaceSturdy(worldIn, blockpos, Direction.UP)) {
-				double d0 = pos.getX() + rand.nextFloat();
-				double d1 = pos.getY() - 0.05D;
-				double d2 = pos.getZ() + rand.nextFloat();
-				worldIn.addParticle(ParticleTypes.DRIPPING_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-			}
-		} else if (i == 2 || i == 3 && raining) {
+		if (i > 2) {
+			return;
+		}
+		BlockPos blockpos = pos.below();
+		BlockState blockstate = level.getBlockState(blockpos);
+		if (blockstate.canOcclude() && blockstate.isFaceSturdy(level, blockpos, Direction.UP)) {
+			return;
+		}
+		boolean raining = level.isRainingAt(pos.above());
+		if (raining && i == 0) {
+			double d0 = pos.getX() + rand.nextFloat();
+			double d1 = pos.getY() - 0.05D;
+			double d2 = pos.getZ() + rand.nextFloat();
+			level.addParticle(ParticleTypes.DRIPPING_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+		} else if (i == 1 || i == 2 && raining) {
 			double d0 = pos.getX() + rand.nextFloat();
 			double d1 = pos.getY() + rand.nextFloat();
 			double d2 = pos.getZ() + rand.nextFloat();
-			worldIn.addParticle(particleType, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+			level.addParticle(particleType, d0, d1, d2, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
 	@Override
-	public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-		super.playerWillDestroy(worldIn, pos, state, player);
-		if (worldIn.isClientSide) {
-			int times = 5 + worldIn.random.nextInt(6);
+	protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState blockState) {
+		super.spawnDestroyParticles(level, player, pos, blockState);
+		spawnDestroyParticles(level, pos, particleType);
+	}
+
+	public static void spawnDestroyParticles(Level level, BlockPos pos, ParticleOptions particleType) {
+		if (level.isClientSide && FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded) {
+			int times = Mth.randomBetweenInclusive(level.random, 6, 12);
 			for (int i = 0; i < times; ++i) {
-				double x = worldIn.random.nextGaussian() * 0.3D;
-				double y = worldIn.random.nextGaussian() * 0.3D;
-				double z = worldIn.random.nextGaussian() * 0.3D;
+				double x = level.random.nextGaussian() * 0.3D;
+				double y = level.random.nextGaussian() * 0.3D;
+				double z = level.random.nextGaussian() * 0.3D;
 				x += pos.getX() + .5;
 				y += pos.getY() + .5;
 				z += pos.getZ() + .5;
-				worldIn.addParticle(particleType, x, y, z, 0, 0, 0);
+				level.addParticle(particleType, x, y, z, 0, 0, 0);
 			}
 		}
 	}

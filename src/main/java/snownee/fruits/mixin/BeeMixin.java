@@ -109,7 +109,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 
 	@Inject(method = "customServerAiStep", at = @At("HEAD"))
 	private void fruits_customServerAiStep(CallbackInfo ci) {
-		if (underWaterTicks == 20) {
+		if (underWaterTicks >= 20) {
 			ejectPassengers();
 		}
 		if (hasStung() && BeeAttributes.of(this).hasTrait(Trait.WARRIOR)) {
