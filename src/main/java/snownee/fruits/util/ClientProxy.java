@@ -1,7 +1,18 @@
 package snownee.fruits.util;
 
-import static snownee.fruits.CoreModule.*;
-import static snownee.fruits.cherry.CherryModule.*;
+import static snownee.fruits.CoreModule.APPLE_LEAVES;
+import static snownee.fruits.CoreModule.CITRON_LEAVES;
+import static snownee.fruits.CoreModule.GRAPEFRUIT_LEAVES;
+import static snownee.fruits.CoreModule.LEMON_LEAVES;
+import static snownee.fruits.CoreModule.LIME_LEAVES;
+import static snownee.fruits.CoreModule.ORANGE_LEAVES;
+import static snownee.fruits.CoreModule.POMELO_LEAVES;
+import static snownee.fruits.CoreModule.TANGERINE_LEAVES;
+import static snownee.fruits.cherry.CherryModule.PEACH_PINK_PETALS;
+import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
+import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
 
 import java.util.function.Supplier;
 
@@ -12,6 +23,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GrassColor;
@@ -19,6 +31,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.PetalParticle;
 
@@ -102,6 +115,16 @@ public class ClientProxy implements ClientModInitializer {
 				}
 				return -1;
 			}, PEACH_PINK_PETALS.getOrCreate());
+		}
+
+		if (Hooks.bee) {
+			ColorProviderRegistry.ITEM.register((stack, i) -> {
+				if (i == 0) {
+					CompoundTag tag = stack.getTag();
+					return tag != null && tag.contains("Color") ? tag.getInt("Color") : 0xF3DCEB;
+				}
+				return -1;
+			}, BeeModule.MUTAGEN.getOrCreate());
 		}
 	}
 }

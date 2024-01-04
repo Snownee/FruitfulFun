@@ -5,6 +5,7 @@ import java.util.Objects;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -36,6 +37,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.genetics.GeneticData;
 import snownee.kiwi.Mod;
 import snownee.kiwi.util.Util;
 
@@ -104,6 +106,14 @@ public class CommonProxy implements ModInitializer {
 		// map in StatType is an IdentityHashMap, update the reference
 		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
 		BeeModule.BEES_BRED = Stats.makeCustomStat(BeeModule.BEES_BRED.toString(), StatFormatter.DEFAULT);
+
+		ServerWorldEvents.LOAD.register((server, world) -> {
+			if (world == server.overworld()) {
+				long seed = world.getSeed();
+				GeneticData geneticData = world.getDataStorage().computeIfAbsent(GeneticData::load, GeneticData::new, "fruitfulfun_genetics");
+				geneticData.initAlleles(seed);
+			}
+		});
 	}
 
 	public static void addFeature(String id) {

@@ -1,0 +1,68 @@
+package snownee.fruits.bee.genetics;
+
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.saveddata.SavedData;
+
+public class GeneticData extends SavedData {
+	private final Map<String, AlleleRecord> alleles = Maps.newHashMap();
+
+	@Override
+	public CompoundTag save(CompoundTag compoundTag) {
+		CompoundTag alleleTag = new CompoundTag();
+		for (Map.Entry<String, AlleleRecord> entry : alleles.entrySet()) {
+			CompoundTag recordTag = new CompoundTag();
+			recordTag.putString("Code", entry.getValue().code);
+			recordTag.putInt("Index", entry.getValue().index);
+			alleleTag.put(entry.getKey(), recordTag);
+		}
+		compoundTag.put("Alleles", alleleTag);
+		return compoundTag;
+	}
+
+	public static GeneticData load(CompoundTag compoundTag) {
+		GeneticData data = new GeneticData();
+		CompoundTag alleleTag = compoundTag.getCompound("Alleles");
+		for (String key : alleleTag.getAllKeys()) {
+			CompoundTag recordTag = alleleTag.getCompound(key);
+			data.alleles.put(key, new AlleleRecord(recordTag.getString("Code"), recordTag.getInt("Index")));
+		}
+		data.setDirty();
+		return data;
+	}
+
+	public void initAlleles(long seed) {
+		RandomSource random = RandomSource.create(seed);
+		for (Allele allele : Allele.values()) {
+			AlleleRecord alleleRecord = alleles.get(allele.name);
+			if (alleleRecord != null) {
+				allele.codename = alleleRecord.code.charAt(0);
+				allele.index = alleleRecord.index;
+				random.nextInt(26);
+				random.nextInt(255);
+			} else {
+				int codename = random.nextInt(26);
+				while (Allele.byCode((char) ('A' + codename)) != null) {
+					codename = (codename + 1) % 26;
+				}
+				allele.codename = (char) ('A' + codename);
+				int index = random.nextInt(255);
+				while (Allele.byIndex(index) != null) {
+					index = (index + 31) % 255;
+				}
+				allele.index = index;
+				alleles.put(allele.name, new AlleleRecord(String.valueOf(allele.codename), allele.index));
+				setDirty();
+			}
+			allele.color = Mth.hsvToRgb(allele.index / 254f, 0.86f, 0.86f);
+		}
+	}
+
+	public record AlleleRecord(String code, int index) {
+	}
+}

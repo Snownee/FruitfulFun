@@ -34,6 +34,9 @@ public class Allele {
 	public final byte defaultData;
 	public final IntList allowedValues;
 	public final float mutationRate;
+	public char codename = '0';
+	public int index = -1;
+	public int color;
 
 	public Allele(String name, int allowedValues, float mutationRate) {
 		this.name = name;
@@ -43,7 +46,28 @@ public class Allele {
 		this.allowedValues = IntImmutableList.toList(IntStream.range(0, allowedValues));
 	}
 
-	public byte maybeMutate(byte data, RandomSource random) {
+	public static Allele byIndex(int i) {
+		for (Allele allele : values()) {
+			if (allele.index == i) {
+				return allele;
+			}
+		}
+		return null;
+	}
+
+	public static Allele byCode(char c) {
+		for (Allele allele : values()) {
+			if (allele.codename == c) {
+				return allele;
+			}
+		}
+		return null;
+	}
+
+	public byte maybeMutate(byte data, RandomSource random, boolean highMutation) {
+		if (highMutation && random.nextFloat() < FFCommonConfig.mutagenMutationRate) {
+			return (byte) allowedValues.getInt(random.nextInt(allowedValues.size()));
+		}
 		if (mutationRate > 0 && random.nextFloat() < mutationRate) {
 			return (byte) allowedValues.getInt(random.nextInt(allowedValues.size()));
 		}
@@ -51,7 +75,7 @@ public class Allele {
 	}
 
 	public byte randomize(RandomSource random) {
-		return maybeMutate((byte) defaultValue, random);
+		return maybeMutate((byte) defaultValue, random, false);
 	}
 
 	public Component getDisplayName(int data) {

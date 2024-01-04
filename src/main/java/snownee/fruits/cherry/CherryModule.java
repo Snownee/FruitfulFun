@@ -159,6 +159,7 @@ public class CherryModule extends AbstractModule {
 			VanillaActions.registerAxeConversion(REDLOVE_WOOD.get(), STRIPPED_REDLOVE_WOOD.get());
 
 			VanillaActions.registerCompostable(0.3F, PEACH_PINK_PETALS.get());
+			VanillaActions.setFireInfo(PEACH_PINK_PETALS.get(), 60, 100);
 		});
 	}
 

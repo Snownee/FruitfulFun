@@ -12,6 +12,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
@@ -22,6 +23,7 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FilteredFlyingPathNavigation;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.FFBee;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.network.SSyncBeePacket;
@@ -98,9 +100,17 @@ public abstract class BeeMixin extends Animal implements FFBee {
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Bee;updateRollAmount()V"))
 	private void fruits_tick(CallbackInfo ci) {
-		if (!level().isClientSide && beeAttributes.dirty) {
+		if (level().isClientSide) {
+			return;
+		}
+		Bee bee = (Bee) (Object) this;
+		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.get());
+		BeeAttributes attributes = BeeAttributes.of(bee);
+		long gameTime = level().getGameTime();
+		attributes.setMutagenEndsIn(effect == null ? 0 : gameTime + effect.getDuration(), gameTime);
+		if (beeAttributes.dirty) {
 			beeAttributes.dirty = false;
-			SSyncBeePacket.send((Bee) (Object) this);
+			SSyncBeePacket.send(bee);
 		}
 		if (rollTicks > 0) {
 			setRolling(--rollTicks != 0);
@@ -136,8 +146,18 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	@Shadow
 	public abstract boolean hasStung();
 
+	@Shadow
+	int ticksWithoutNectarSinceExitingHive;
+
 	@ModifyExpressionValue(method = "wantsToEnterHive", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
 	private boolean fruits_wantsToEnterHive(boolean original) {
 		return original && !BeeAttributes.of(this).hasTrait(Trait.RAIN_CAPABLE);
+	}
+
+	@Inject(method = "isTiredOfLookingForNectar", at = @At("HEAD"), cancellable = true)
+	private void fruits_isTiredOfLookingForNectar(CallbackInfoReturnable<Boolean> cir) {
+		if (ticksWithoutNectarSinceExitingHive > 1800 && BeeAttributes.of(this).hasTrait(Trait.LAZY)) {
+			cir.setReturnValue(true);
+		}
 	}
 }

@@ -33,6 +33,7 @@ public class SSyncBeePacket extends PacketHandler {
 		List<UUID> trusted = buf.readList(FriendlyByteBuf::readUUID);
 		String texture = buf.readUtf();
 		List<String> traits = buf.readList(FriendlyByteBuf::readUtf);
+		long mutagenEndsIn = buf.readLong();
 		return executor.apply(() -> {
 			Entity entity = Objects.requireNonNull(Minecraft.getInstance().level).getEntity(id);
 			if (entity instanceof Bee) {
@@ -48,6 +49,7 @@ public class SSyncBeePacket extends PacketHandler {
 						.map(Trait.REGISTRY::get)
 						.filter(Objects::nonNull)
 						.toList());
+				attributes.setMutagenEndsIn(mutagenEndsIn, entity.level().getGameTime());
 			}
 		});
 	}
@@ -69,6 +71,7 @@ public class SSyncBeePacket extends PacketHandler {
 			ResourceLocation texture = attributes.getTexture();
 			buf.writeUtf(texture == null ? "" : texture.toString());
 			buf.writeCollection(attributes.getTraits().stream().map($ -> $.name).toList(), FriendlyByteBuf::writeUtf);
+			buf.writeLong(attributes.getMutagenEndsIn());
 		};
 	}
 }

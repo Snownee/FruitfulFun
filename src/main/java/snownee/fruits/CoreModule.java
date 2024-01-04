@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SaplingBlock;
@@ -61,6 +62,7 @@ import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.KiwiModules;
 import snownee.kiwi.ModuleInfo;
+import snownee.kiwi.NamedEntry;
 import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
@@ -260,7 +262,24 @@ public final class CoreModule extends AbstractModule {
 				VanillaActions.registerVillagerCompostable(type.fruit.get());
 				VanillaActions.registerVillagerFood(type.fruit.get(), 1);
 			}
+
+			KiwiModules.get().stream()
+					.filter($ -> $.module.uid.getNamespace().equals(FruitfulFun.ID))
+					.flatMap($ -> $.getRegistryEntries(BuiltInRegistries.BLOCK))
+					.forEach(CoreModule::setFlammability);
 		});
+	}
+
+	private static void setFlammability(NamedEntry<Block> entry) {
+		Block block = entry.entry;
+		String path = entry.name.getPath();
+		if (block instanceof LeavesBlock) {
+			VanillaActions.setFireInfo(block, 30, 60);
+		} else if (block instanceof RotatedPillarBlock) { // logs
+			VanillaActions.setFireInfo(block, 5, 5);
+		} else if (block instanceof SlabBlock || block instanceof StairBlock || block instanceof FenceBlock || block instanceof FenceGateBlock || path.contains("planks")) {
+			VanillaActions.setFireInfo(block, 5, 20);
+		}
 	}
 
 	public static final class Foods {
@@ -272,6 +291,4 @@ public final class CoreModule extends AbstractModule {
 		public static final FoodProperties LEMON = new FoodProperties.Builder().nutrition(2).saturationMod(1f).fast().build();
 		public static final FoodProperties GRAPEFRUIT = new FoodProperties.Builder().nutrition(6).saturationMod(0.4f).build();
 	}
-
-	//FIXME: flammability
 }

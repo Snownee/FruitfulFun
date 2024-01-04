@@ -41,6 +41,7 @@ public class BeeAttributes {
 	private List<UUID> trusted = List.of();
 	@Nullable
 	private ResourceLocation texture;
+	private long mutagenEndsIn;
 
 	public static BeeAttributes of(Object bee) {
 		return ((FFBee) bee).fruits$getBeeAttributes();
@@ -140,11 +141,11 @@ public class BeeAttributes {
 		return trusted.contains(uuid);
 	}
 
-	public void breedFrom(BeeAttributes parent1, BeeAttributes parent2, Bee bee) {
+	public void breedFrom(BeeAttributes parent1, Allele allele1, BeeAttributes parent2, Allele allele2, Bee bee) {
 		RandomSource random = bee.getRandom();
 		for (Allele allele : Allele.values()) {
-			byte gene1 = parent1.pickAllele(allele, random);
-			byte gene2 = parent2.pickAllele(allele, random);
+			byte gene1 = parent1.pickAllele(allele, random, allele == allele1);
+			byte gene2 = parent2.pickAllele(allele, random, allele == allele2);
 			Locus locus = new Locus(allele);
 			locus.setData((byte) (gene1 << 4 | gene2));
 			loci.put(allele, locus);
@@ -167,9 +168,11 @@ public class BeeAttributes {
 			texture = null;
 		}
 
+		boolean lazy = false;
 		if (allGene(Allele.FEAT1, 1)) {
 			traits.add(Trait.LAZY);
 			traits.add(Trait.MILD);
+			lazy = true;
 		} else if (anyGene(Allele.FEAT1, 1)) {
 			traits.add(Trait.MILD);
 		}
@@ -205,12 +208,17 @@ public class BeeAttributes {
 		} else if (hasTrait(Trait.FAST)) {
 			speedInstance.addPermanentModifier(new AttributeModifier(SPEED_MODIFIER, "Genetic speed bonus", 0.15, AttributeModifier.Operation.ADDITION));
 		}
-		if (hasTrait(Trait.WARRIOR)) {
+		if (lazy || hasTrait(Trait.WARRIOR)) {
 			float healthRatio = bee.getHealth() / bee.getMaxHealth();
-			healthInstance.addPermanentModifier(new AttributeModifier(HEALTH_MODIFIER, "Genetic health bonus", 10, AttributeModifier.Operation.ADDITION));
-			damageInstance.addPermanentModifier(new AttributeModifier(DAMAGE_MODIFIER, "Genetic damage bonus", 2, AttributeModifier.Operation.ADDITION));
+			if (lazy) {
+				healthInstance.addPermanentModifier(new AttributeModifier(HEALTH_MODIFIER, "Genetic health bonus", 5, AttributeModifier.Operation.ADDITION));
+			} else {
+				healthInstance.addPermanentModifier(new AttributeModifier(HEALTH_MODIFIER, "Genetic health bonus", 10, AttributeModifier.Operation.ADDITION));
+				damageInstance.addPermanentModifier(new AttributeModifier(DAMAGE_MODIFIER, "Genetic damage bonus", 2, AttributeModifier.Operation.ADDITION));
+			}
 			bee.setHealth(healthRatio * bee.getMaxHealth());
 		}
+		dirty = true;
 	}
 
 	public boolean hasTrait(Trait trait) {
@@ -221,7 +229,7 @@ public class BeeAttributes {
 		return loci.computeIfAbsent(allele, Locus::new);
 	}
 
-	private byte pickAllele(Allele allele, RandomSource random) {
+	private byte pickAllele(Allele allele, RandomSource random, boolean highMutation) {
 		Locus locus = getLocus(allele);
 		int gene;
 		if (random.nextBoolean()) {
@@ -229,7 +237,7 @@ public class BeeAttributes {
 		} else {
 			gene = locus.getLow();
 		}
-		return allele.maybeMutate((byte) gene, random);
+		return allele.maybeMutate((byte) gene, random, highMutation);
 	}
 
 	public @Nullable ResourceLocation getTexture() {
@@ -238,6 +246,7 @@ public class BeeAttributes {
 
 	public void setTexture(@Nullable ResourceLocation texture) {
 		this.texture = texture;
+		dirty = true;
 	}
 
 	public boolean anyGene(Allele allele, int gene) {
@@ -270,5 +279,20 @@ public class BeeAttributes {
 	public void setTraits(List<Trait> list) {
 		traits.clear();
 		traits.addAll(list);
+	}
+
+	public void setMutagenEndsIn(long mutagenEndsIn, long gameTime) {
+		if (this.mutagenEndsIn == mutagenEndsIn) {
+			return;
+		}
+		if (mutagenEndsIn == 0 && this.mutagenEndsIn <= gameTime) {
+			return;
+		}
+		this.mutagenEndsIn = mutagenEndsIn;
+		dirty = true;
+	}
+
+	public long getMutagenEndsIn() {
+		return mutagenEndsIn;
 	}
 }

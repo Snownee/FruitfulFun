@@ -45,7 +45,7 @@ public class PetalParticle extends TextureSheetParticle {
 
 	private PetalParticle(ClientLevel world, double posX, double posY, double posZ, @Nullable LivingEntity source) {
 		super(world, posX, posY, posZ);
-		lifetime = 350;
+		lifetime = 300;
 		particleRandom = this.random.nextFloat();
 		age = random.nextInt(20);
 		quadSize = 0.75f + random.nextFloat() * 0.25f;

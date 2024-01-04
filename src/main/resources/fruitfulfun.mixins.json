@@ -16,6 +16,7 @@
     "InstrumentItemMixin",
     "MobMixin",
     "PandaMixin",
+    "PotionBrewingMixin",
     "RideableBeeLivingEntityMixin",
     "RideableBeeMixin",
     "RideableBeeMobMixin",

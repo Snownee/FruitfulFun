@@ -11,6 +11,9 @@
   "item.fruitfulfun.redlove": "Redlove Fruit",
   "item.fruitfulfun.cherry_wreath": "Cherry Wreath",
   "item.fruitfulfun.redlove_wreath": "Redlove Wreath",
+  "item.fruitfulfun.mutagen": "Random Bee Mutagen",
+  "item.fruitfulfun.mutagen.imperfect": "Imperfect Bee Mutagen",
+  "item.fruitfulfun.mutagen.stable": "Bee Mutagen %s",
   "block.fruitfulfun.grapefruit_panna_cotta": "Grapefruit Panna Cotta",
   "block.fruitfulfun.donauwelle": "Donauwelle",
   "block.fruitfulfun.honey_pomelo_tea": "Honey Pomelo Tea",
@@ -83,6 +86,7 @@
   "block.fruitfulfun.apple_leaves": "Apple Oak Leaves",
   "block.fruitfulfun.cherry_leaves": "Cherry Leaves",
   "block.fruitfulfun.redlove_leaves": "Redlove Leaves",
+  "block.fruitfulfun.peach_pink_petals": "Peach Pink Petals",
   "block.fruitfulfun.citrus_log": "Citrus Log",
   "block.fruitfulfun.citrus_wood": "Citrus Wood",
   "block.fruitfulfun.stripped_citrus_log": "Stripped Citrus Log",
@@ -121,6 +125,7 @@
   "gui.fruitfulfun.tip.villageAppleTreeWorldGen": "Apple trees sometimes grow in villages in plains.",
   "tip.fruitfulfun.clearHarmfulEffects": "Clears Harmful Effects",
   "tip.fruitfulfun.useContainer": "You need a %s to eat this.",
+  "tip.fruitfulfun.invalidMutagen": "This mutagen is not usable for some reason.",
   "advancements.fruitfulfun.start.title": "A Fresh Start",
   "advancements.fruitfulfun.start.description": "Shall we make it bloom, a fruit-filled romance",
   "advancements.fruitfulfun.grapefruit.title": "Fragrance of Citrus",
@@ -136,5 +141,6 @@
   "config.jade.plugin_fruitfulfun": "Fruitful Fun",
   "config.jade.plugin_fruitfulfun.bee": "Bee",
   "stat.fruitfulfun.bee_one_cm": "Distance by Bee",
-  "stat.fruitfulfun.bees_bred": "Bees Bred"
+  "stat.fruitfulfun.bees_bred": "Bees Bred",
+  "effect.fruitfulfun.mutagen_effect": "Mutagen-Induced"
 }

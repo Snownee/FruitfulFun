@@ -18,12 +18,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Saddleable;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
@@ -54,6 +54,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.FFBee;
 import snownee.fruits.bee.HybridizingContext;
 import snownee.fruits.bee.HybridizingRecipe;
+import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
@@ -245,10 +246,10 @@ public final class Hooks {
 				ItemStack saddle = attributes.getSaddle();
 				attributes.setSaddle(ItemStack.EMPTY);
 				if (!player.level().isClientSide) {
-					bee.spawnAtLocation(saddle);
 					held.hurtAndBreak(1, player, $ -> $.broadcastBreakEvent(hand));
-					bee.gameEvent(GameEvent.EQUIP, player);
-					bee.level().playSound(null, bee, SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0f, 1.0f);
+					bee.spawnAtLocation(saddle);
+					bee.gameEvent(GameEvent.SHEAR, player);
+					bee.level().playSound(null, bee, BeeModule.BEE_SHEAR.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 				}
 				return InteractionResult.sidedSuccess(player.level().isClientSide);
 			} else if (!bee.isVehicle() && !player.isSecondaryUseActive()) {
@@ -339,6 +340,19 @@ public final class Hooks {
 			}
 		}
 		babyAttributes.setTrusted(builder.build());
-		babyAttributes.breedFrom(BeeAttributes.of(parent1), BeeAttributes.of(parent2), baby);
+		babyAttributes.breedFrom(
+				BeeAttributes.of(parent1),
+				mutagenAffectedAllele(parent1),
+				BeeAttributes.of(parent2),
+				mutagenAffectedAllele(parent2),
+				baby);
+	}
+
+	private static Allele mutagenAffectedAllele(Bee bee) {
+		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.get());
+		if (effect == null) {
+			return null;
+		}
+		return Allele.byIndex(effect.getAmplifier());
 	}
 }

@@ -30,19 +30,23 @@ public final class FFCommonConfig {
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Range(min = 0, max = 1)
 	@KiwiConfig.Path("mutationRate.RC")
-	public static float mutationRateRC = 0.06f;
+	public static float mutationRateRC = 0.1f;
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Range(min = 0, max = 1)
 	@KiwiConfig.Path("mutationRate.FC")
-	public static float mutationRateFC = 0.06f;
+	public static float mutationRateFC = 0.14f;
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Range(min = 0, max = 1)
 	@KiwiConfig.Path("mutationRate.FT1")
-	public static float mutationRateFT1 = 0.06f;
+	public static float mutationRateFT1 = 0.07f;
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Range(min = 0, max = 1)
 	@KiwiConfig.Path("mutationRate.FT2")
 	public static float mutationRateFT2 = 0.06f;
+	@KiwiConfig.Range(min = 0, max = 1)
+	public static float imperfectMutagenChance = 0.15f;
+	@KiwiConfig.Range(min = 0, max = 1)
+	public static float mutagenMutationRate = 0.8f;
 
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();

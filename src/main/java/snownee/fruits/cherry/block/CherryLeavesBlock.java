@@ -46,8 +46,8 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 			Blocks.CHERRY_LEAVES.animateTick(stateIn, level, pos, rand);
 			return;
 		}
-		int i = rand.nextInt(15);
-		if (i > 2) {
+		int i = rand.nextInt(16);
+		if (i > 1) {
 			return;
 		}
 		BlockPos blockpos = pos.below();
@@ -61,7 +61,7 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 			double d1 = pos.getY() - 0.05D;
 			double d2 = pos.getZ() + rand.nextFloat();
 			level.addParticle(ParticleTypes.DRIPPING_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-		} else if (i == 1 || i == 2 && raining) {
+		} else if (i == 1) {
 			double d0 = pos.getX() + rand.nextFloat();
 			double d1 = pos.getY() + rand.nextFloat();
 			double d2 = pos.getZ() + rand.nextFloat();
