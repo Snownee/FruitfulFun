@@ -29,6 +29,9 @@ public class RideableBeeMobMixin {
 
 	@Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
 	private void fruits_mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> ci) {
+		if (!Hooks.bee) {
+			return;
+		}
 		Mob mob = (Mob) (Object) this;
 		if (mob instanceof Bee bee && !bee.isDeadOrDying()) {
 			InteractionResult result = Hooks.playerInteractBee(player, hand, bee);

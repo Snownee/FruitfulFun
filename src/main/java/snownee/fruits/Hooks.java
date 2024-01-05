@@ -54,6 +54,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.FFBee;
 import snownee.fruits.bee.HybridizingContext;
 import snownee.fruits.bee.HybridizingRecipe;
+import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -236,6 +237,12 @@ public final class Hooks {
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		Saddleable saddleable = (Saddleable) bee;
 		ItemStack held = player.getItemInHand(hand);
+		if (BeeModule.INSPECTOR.is(held)) {
+			if (player.level().isClientSide) {
+				InspectorClientHandler.startInspecting(bee);
+			}
+			return InteractionResult.CONSUME_PARTIAL;
+		}
 		if (saddleable.isSaddled()) {
 			boolean trusted = player.isCreative() || attributes.trusts(player.getUUID());
 			if (CommonProxy.isShears(held)) {

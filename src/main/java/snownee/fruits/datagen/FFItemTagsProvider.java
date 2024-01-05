@@ -7,8 +7,8 @@ import static net.minecraft.world.item.Items.MELON_SLICE;
 import static net.minecraft.world.item.Items.SWEET_BERRIES;
 import static snownee.fruits.CoreModule.CITRON;
 import static snownee.fruits.cherry.CherryModule.CHERRY;
-import static snownee.fruits.cherry.CherryModule.CHERRY_WREATH;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_WREATH;
+import static snownee.fruits.cherry.CherryModule.CHERRY_CROWN;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_CROWN;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -70,6 +70,6 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.ITEM)
 				.map($ -> $.name)
 				.forEach(tagAppender::addOptional);
-		tag(HAT).addOptional(CHERRY_WREATH.key()).addOptional(REDLOVE_WREATH.key());
+		tag(HAT).addOptional(CHERRY_CROWN.key()).addOptional(REDLOVE_CROWN.key());
 	}
 }

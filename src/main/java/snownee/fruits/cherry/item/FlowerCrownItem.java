@@ -12,8 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import snownee.kiwi.item.ModItem;
 
-public class WreathItem extends ModItem implements Equipable {
-	public WreathItem(Properties builder) {
+public class FlowerCrownItem extends ModItem implements Equipable {
+	public FlowerCrownItem(Properties builder) {
 		super(builder.stacksTo(1));
 	}
 

@@ -12,7 +12,7 @@
         "items": [
           {
             "items": [
-              "fruitfulfun:redlove_leaves"
+              "fruitfulfun:cherry_leaves"
             ]
           }
         ]
@@ -21,7 +21,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "fruitfulfun:redlove_wreath"
+        "recipe": "fruitfulfun:cherry_crown"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -34,7 +34,7 @@
   ],
   "rewards": {
     "recipes": [
-      "fruitfulfun:redlove_wreath"
+      "fruitfulfun:cherry_crown"
     ]
   },
   "sends_telemetry_event": false

@@ -1,4 +1,15 @@
 {
+  "KiwiConfig": [
+    {
+      "target": "snownee.fruits.FFClientConfig",
+      "data": {
+        "type": "CLIENT"
+      }
+    },
+    {
+      "target": "snownee.fruits.FFCommonConfig"
+    }
+  ],
   "KiwiModule": [
     {
       "target": "snownee.fruits.bee.BeeModule",
@@ -42,18 +53,21 @@
       }
     }
   ],
-  "KiwiConfig": [
+  "KiwiPacket": [
     {
-      "target": "snownee.fruits.FFClientConfig",
+      "target": "snownee.fruits.bee.network.CInspectBeePacket",
       "data": {
-        "type": "CLIENT"
+        "dir": "PLAY_TO_SERVER",
+        "value": "inspect_bee"
       }
     },
     {
-      "target": "snownee.fruits.FFCommonConfig"
-    }
-  ],
-  "KiwiPacket": [
+      "target": "snownee.fruits.bee.network.SInspectBeeReplyPacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "inspect_bee_reply"
+      }
+    },
     {
       "target": "snownee.fruits.bee.network.SSyncBeePacket",
       "data": {

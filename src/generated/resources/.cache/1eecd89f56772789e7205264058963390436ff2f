@@ -1,8 +1,7 @@
-// 1.20.1	2024-01-04T06:29:51.4348552	Fruitful Fun/Model Definitions
+// 1.20.1	2024-01-05T13:59:15.9257866	Fruitful Fun/Model Definitions
 8b40772fd9cb3436814e546b985af7345aa1659c assets\fruitfulfun\models\block\peach_pink_petals_1.json
 e2da4c9e0b46410b14f728ee2a5e6fa857405cd6 assets\fruitfulfun\models\block\apple_leaves_2.json
 35db9ef913efe9322ec36cda6c00e3addeb9bac0 assets\fruitfulfun\models\block\lime_leaves.json
-d53ab935fb88cbc3ef4f00e4cf57a8d906e7b347 assets\fruitfulfun\models\item\cherry_wreath.json
 628bc8858e07ad969b3eed58594dd5933fe909c9 assets\fruitfulfun\models\item\citron_leaves.json
 1fa0ba43b1610d962325a7b96abb33a2972e1368 assets\fruitfulfun\blockstates\peach_pink_petals.json
 31f53a58f45765ce30e8e25955e83d8bd1eda1ab assets\fruitfulfun\models\block\redlove_leaves.json
@@ -10,7 +9,7 @@ ea20cd327f8fc230f9b8a2d7a7b16f94285406a6 assets\fruitfulfun\models\block\citron_
 5be9503d41d0d6b7f447e10a88c2ebb6e04c6423 assets\fruitfulfun\blockstates\lime_leaves.json
 dbbf1fda902ddb530902bac5d08f40eb7948b81e assets\fruitfulfun\blockstates\citrus_hanging_sign.json
 bc5e1d982996158484e40175a7f70cbfb1570349 assets\fruitfulfun\models\block\citron_leaves_3.json
-26b821b0b85452d6f31146a0c263f8025f16cfa4 assets\fruitfulfun\models\item\redlove_wreath.json
+b5d811b810d482d8752651f818dceacf72db4cfa assets\fruitfulfun\models\item\redlove_crown.json
 e9822d0face62eb36db2bc95ba21ff106f405e95 assets\fruitfulfun\blockstates\citron_leaves.json
 04d98c556f6bccb3fe461c73b45e48578412363c assets\fruitfulfun\models\block\apple_leaves_3.json
 17e3c65106c1406c3e110be5f1cf94dd31ccf997 assets\fruitfulfun\models\block\grapefruit_leaves_3.json
@@ -34,6 +33,7 @@ a0cd899b2f72a2c428200570a572e52f48c17150 assets\fruitfulfun\models\block\lemon_l
 00b6135276a199131f2be674f719cdd792829506 assets\fruitfulfun\models\item\cherry_leaves.json
 6d99c8cbf8865581f2d435b3d8518e4ae61027e7 assets\fruitfulfun\models\item\redlove_hanging_sign.json
 5341ef0e7e33a140a2e973f6203f16709886f63e assets\fruitfulfun\models\block\grapefruit_leaves.json
+19b02200a86c359d5d3de887a7ef853c076df748 assets\fruitfulfun\models\item\cherry_crown.json
 823e4b86ea3701ee643de87483ef54668206b595 assets\fruitfulfun\models\item\apple_leaves.json
 7b5712d7713d271ad136ee42a0cac64465f21cf2 assets\fruitfulfun\models\block\orange_leaves_3.json
 270a95fea6590a09ef7ab8c4f5a09419ff831d7f assets\fruitfulfun\blockstates\grapefruit_leaves.json
@@ -47,6 +47,7 @@ c4fe4921c881d10be6da2f0089c11972eb839d76 assets\fruitfulfun\blockstates\orange_l
 5b6116bc3b09bcfb0102379207efd0a070eb8a14 assets\fruitfulfun\models\item\orange_leaves.json
 55dc04fb53a1ac07015d519e2f6bcac2d9d82e3d assets\fruitfulfun\models\block\pomelo_leaves_2.json
 7f87f9122a03e75f169f4079bf6aaf17aba084d7 assets\fruitfulfun\models\block\redlove_leaves_2.json
+2c0ac0a8c2041d996ccbba4d3fda01aa6f90964c assets\fruitfulfun\models\item\inspector.json
 4810d3722674875eeaa54a0553c1c2a0a43f21a6 assets\fruitfulfun\models\item\citrus_hanging_sign.json
 6dc22057166f757a4c2e39ecf90f6667b750d21c assets\fruitfulfun\models\block\redlove_hanging_sign.json
 5355f7807395dc4fbb636b342663df8eee4638fb assets\fruitfulfun\models\block\pomelo_leaves.json

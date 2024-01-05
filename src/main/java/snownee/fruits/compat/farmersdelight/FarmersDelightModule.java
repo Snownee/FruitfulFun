@@ -13,9 +13,8 @@ import snownee.kiwi.KiwiModule.Category;
 @KiwiModule.Optional
 public class FarmersDelightModule extends AbstractModule {
 
-	@Category(Categories.FUNCTIONAL_BLOCKS)
+	@Category(value = Categories.FUNCTIONAL_BLOCKS, after = "farmersdelight:cherry_cabinet")
 	public static final KiwiGO<Block> CITRUS_CABINET = go(FarmersDelightModule::createCabinet);
-	@Category(Categories.FUNCTIONAL_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_CABINET = go(FarmersDelightModule::createCabinet);
 
 	public static Block createCabinet() {

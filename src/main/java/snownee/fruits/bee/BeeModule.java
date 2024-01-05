@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -15,7 +16,9 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
+import snownee.kiwi.KiwiModule.Category;
 import snownee.kiwi.KiwiModule.Name;
+import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
 
 @KiwiModule("bee")
@@ -34,7 +37,8 @@ public class BeeModule extends AbstractModule {
 	public static ResourceLocation BEE_ONE_CM = new ResourceLocation(FruitfulFun.ID, "bee_one_cm");
 	public static ResourceLocation BEES_BRED = new ResourceLocation(FruitfulFun.ID, "bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "entity.bee.shear")));
-	@KiwiModule.Category(Categories.TOOLS_AND_UTILITIES)
+	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "shears")
+	public static final KiwiGO<Item> INSPECTOR = go(() -> new ModItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
 

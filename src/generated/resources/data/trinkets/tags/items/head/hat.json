@@ -2,11 +2,11 @@
   "replace": false,
   "values": [
     {
-      "id": "fruitfulfun:cherry_wreath",
+      "id": "fruitfulfun:cherry_crown",
       "required": false
     },
     {
-      "id": "fruitfulfun:redlove_wreath",
+      "id": "fruitfulfun:redlove_crown",
       "required": false
     }
   ]

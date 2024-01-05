@@ -1,6 +1,7 @@
 package snownee.fruits.bee.genetics;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -14,9 +15,14 @@ import snownee.fruits.FFCommonConfig;
 
 public class Allele {
 	public static final Map<String, Allele> REGISTRY = Maps.newLinkedHashMap();
+	public static List<Allele> BY_CODE = List.of();
 
 	public static Collection<Allele> values() {
 		return REGISTRY.values();
+	}
+
+	public static Collection<Allele> sortedByCode() {
+		return BY_CODE;
 	}
 
 	public static Allele register(Allele type) {

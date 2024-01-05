@@ -52,7 +52,9 @@ import snownee.fruits.FFCommonConfig.DropMode;
 import snownee.fruits.FruitType;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.util.CommonProxy;
+import snownee.kiwi.KiwiModule;
 
+@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, EntityBlock {
 
 	public static final IntegerProperty AGE = BlockStateProperties.AGE_3;

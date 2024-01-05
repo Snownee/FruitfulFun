@@ -23,6 +23,7 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
 
@@ -44,10 +45,11 @@ public class FFModelProvider extends FabricModelProvider {
 		createRedloveLeaves(generators, CherryModule.REDLOVE_LEAVES.get());
 		createRedloveLeaves(generators, CherryModule.CHERRY_LEAVES.get());
 		generators.createFlowerBed(CherryModule.PEACH_PINK_PETALS.get());
-		generators.createSimpleFlatItemModel(CherryModule.CHERRY_WREATH.get());
-		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_WREATH.get());
+		generators.createSimpleFlatItemModel(CherryModule.CHERRY_CROWN.get());
+		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_CROWN.get());
 		generators.createHangingSign(CoreModule.STRIPPED_CITRUS_LOG.get(), CoreModule.CITRUS_HANGING_SIGN.get(), CoreModule.CITRUS_WALL_HANGING_SIGN.get());
 		generators.createHangingSign(CherryModule.STRIPPED_REDLOVE_LOG.get(), CherryModule.REDLOVE_HANGING_SIGN.get(), CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
+		generators.createSimpleFlatItemModel(BeeModule.INSPECTOR.get());
 	}
 
 	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {

@@ -42,7 +42,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.SlidingDoorBlock;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
-import snownee.fruits.cherry.item.WreathItem;
+import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
@@ -67,59 +67,42 @@ public class CherryModule extends AbstractModule {
 	@NoItem
 	public static final KiwiGO<Block> REDLOVE_WALL_SIGN = go(() -> new WallSignBlock(blockProp(Blocks.CHERRY_WALL_SIGN), REDLOVE_WOOD_TYPE));
 	@Name("redlove_sign")
-	@Category(Categories.FUNCTIONAL_BLOCKS)
+	@Category(value = Categories.FUNCTIONAL_BLOCKS, after = "cherry_hanging_sign")
 	public static final KiwiGO<Item> REDLOVE_SIGN_ITEM = go(() -> new SignItem(itemProp().stacksTo(Items.CHERRY_SIGN.getMaxStackSize()), REDLOVE_SIGN.get(), REDLOVE_WALL_SIGN.get()));
 	@NoItem
 	public static final KiwiGO<Block> REDLOVE_HANGING_SIGN = go(() -> new CeilingHangingSignBlock(blockProp(Blocks.CHERRY_HANGING_SIGN), REDLOVE_WOOD_TYPE));
 	@NoItem
 	public static final KiwiGO<Block> REDLOVE_WALL_HANGING_SIGN = go(() -> new WallHangingSignBlock(blockProp(Blocks.CHERRY_WALL_HANGING_SIGN), REDLOVE_WOOD_TYPE));
 	@Name("redlove_hanging_sign")
-	@Category(Categories.FUNCTIONAL_BLOCKS)
 	public static final KiwiGO<Item> REDLOVE_HANGING_SIGN_ITEM = go(() -> new HangingSignItem(REDLOVE_HANGING_SIGN.get(), REDLOVE_WALL_HANGING_SIGN.get(), itemProp().stacksTo(Items.CHERRY_HANGING_SIGN.getMaxStackSize())));
 	@Category(value = {Categories.BUILDING_BLOCKS, Categories.NATURAL_BLOCKS}, after = {"cherry_button", "cherry_log"})
 	public static final KiwiGO<Block> REDLOVE_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.CHERRY_LOG)));
-	@Category(Categories.BUILDING_BLOCKS)
+	@Category(value = Categories.BUILDING_BLOCKS, after = "fruitfulfun:redlove_log")
 	public static final KiwiGO<Block> REDLOVE_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.CHERRY_WOOD)));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> STRIPPED_REDLOVE_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_CHERRY_LOG)));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> STRIPPED_REDLOVE_WOOD = go(() -> new RotatedPillarBlock(blockProp(Blocks.STRIPPED_CHERRY_WOOD)));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_PLANKS = go(() -> new ModBlock(blockProp(Blocks.CHERRY_PLANKS)));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_STAIRS = go(() -> new StairBlock(REDLOVE_PLANKS.getOrCreate().defaultBlockState(), blockProp(Blocks.CHERRY_STAIRS)));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_SLAB = go(() -> new SlabBlock(blockProp(Blocks.CHERRY_SLAB)));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_FENCE = go(() -> new FenceBlock(blockProp(Blocks.CHERRY_FENCE)));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_FENCE_GATE = go(() -> new FenceGateBlock(blockProp(Blocks.CHERRY_FENCE_GATE), REDLOVE_WOOD_TYPE));
-	@Category(Categories.BUILDING_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<Block> REDLOVE_DOOR = go(() -> new DoorBlock(blockProp(Blocks.CHERRY_DOOR), REDLOVE_SET_TYPE));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_SLIDING_DOOR = go(() -> new SlidingDoorBlock(blockProp(Blocks.CHERRY_DOOR), REDLOVE_SET_TYPE));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_TRAPDOOR = go(() -> new TrapDoorBlock(blockProp(Blocks.CHERRY_TRAPDOOR), REDLOVE_SET_TYPE));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_PRESSURE_PLATE = go(() -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, blockProp(Blocks.CHERRY_DOOR), REDLOVE_SET_TYPE));
-	@Category(Categories.BUILDING_BLOCKS)
 	public static final KiwiGO<Block> REDLOVE_BUTTON = go(() -> Blocks.woodenButton(REDLOVE_SET_TYPE));
 	public static final KiwiGO<SimpleParticleType> PETAL_CHERRY = go(() -> new SimpleParticleType(false));
 	public static final KiwiGO<SimpleParticleType> PETAL_REDLOVE = go(() -> new SimpleParticleType(false));
-	@Category(Categories.NATURAL_BLOCKS)
-	@RenderLayer(Layer.CUTOUT)
+	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final KiwiGO<FruitLeavesBlock> CHERRY_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.CHERRY, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_PINK), PETAL_CHERRY.getOrCreate()));
-	@Category(Categories.NATURAL_BLOCKS)
-	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<FruitLeavesBlock> REDLOVE_LEAVES = go(() -> new CherryLeavesBlock(CherryFruitTypes.REDLOVE, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.CRIMSON_NYLIUM), PETAL_REDLOVE.getOrCreate()));
-	@Category(Categories.NATURAL_BLOCKS)
+	@Category(value = Categories.NATURAL_BLOCKS, after = "pink_petals")
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<PinkPetalsBlock> PEACH_PINK_PETALS = go(() -> new PinkPetalsBlock(blockProp(Blocks.PINK_PETALS)));
-	@Category(Categories.NATURAL_BLOCKS)
+	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<SaplingBlock> CHERRY_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(CherryFruitTypes.CHERRY.getOrCreate()), blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.COLOR_PINK)));
-	@Category(Categories.NATURAL_BLOCKS)
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<SaplingBlock> REDLOVE_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(CherryFruitTypes.REDLOVE.getOrCreate()), blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.CRIMSON_NYLIUM)));
 	@RenderLayer(Layer.CUTOUT)
@@ -128,18 +111,16 @@ public class CherryModule extends AbstractModule {
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
 	public static final KiwiGO<Block> POTTED_REDLOVE = go(() -> new FlowerPotBlock(REDLOVE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_CHERRY_SAPLING)));
-	@Category(Categories.FOOD_AND_DRINKS)
+	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final KiwiGO<Item> CHERRY = go(() -> new ModItem(itemProp().food(Foods.CHERRY)));
-	@Category(Categories.FOOD_AND_DRINKS)
 	public static final KiwiGO<Item> REDLOVE = go(() -> new ModItem(itemProp().food(Foods.REDLOVE)));
 	public static final KiwiGO<BannerPattern> HEART = go(() -> new BannerPattern("hrt"));
 	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/heart");
-	@Category(Categories.INGREDIENTS)
+	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
 	public static final KiwiGO<Item> HEART_BANNER_PATTERN = go(() -> new BannerPatternItem(HEART_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
-	@Category(Categories.TOOLS_AND_UTILITIES)
-	public static final KiwiGO<Item> CHERRY_WREATH = go(() -> new WreathItem(itemProp()));
-	@Category(Categories.TOOLS_AND_UTILITIES)
-	public static final KiwiGO<Item> REDLOVE_WREATH = go(() -> new WreathItem(itemProp()));
+	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
+	public static final KiwiGO<Item> CHERRY_CROWN = go(() -> new FlowerCrownItem(itemProp()));
+	public static final KiwiGO<Item> REDLOVE_CROWN = go(() -> new FlowerCrownItem(itemProp()));
 
 	public CherryModule() {
 		Hooks.cherry = true;

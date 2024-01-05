@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -94,6 +95,16 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 			shapes[index] = VoxelUtil.rotateHorizontal(shapes[Direction.NORTH.get2DDataValue()], state.getValue(FACING));
 		}
 		return shapes[index];
+	}
+
+	@Override
+	public void animateTick(BlockState blockState, Level level, BlockPos pos, RandomSource random) {
+		if (FoodModule.HONEY_POMELO_TEA.is(this) && random.nextInt(5) == 0) {
+			double x = pos.getX() + 0.5 + random.nextDouble() * (random.nextBoolean() ? 0.2 : -0.2);
+			double y = pos.getY() + 0.5;
+			double z = pos.getZ() + 0.5 + random.nextDouble() * (random.nextBoolean() ? 0.2 : -0.2);
+			level.addParticle(FoodModule.SMOKE.get(), true, x, y, z, 0.0, 0.003, 0.0);
+		}
 	}
 
 }

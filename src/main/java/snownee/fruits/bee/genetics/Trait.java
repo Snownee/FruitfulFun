@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-public class Trait {
+public record Trait(String name) {
 	public static final Map<String, Trait> REGISTRY = Maps.newLinkedHashMap();
 
 	public static Collection<Trait> values() {
@@ -27,9 +27,4 @@ public class Trait {
 	public static final Trait WARRIOR = register(new Trait("warrior"));
 	public static final Trait ADVANCED_POLLINATION = register(new Trait("advanced_pollination"));
 
-	public final String name;
-
-	public Trait(String name) {
-		this.name = name;
-	}
 }

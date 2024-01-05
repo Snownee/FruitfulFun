@@ -1,5 +1,6 @@
 package snownee.fruits.bee.genetics;
 
+import java.util.Comparator;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
@@ -61,6 +62,7 @@ public class GeneticData extends SavedData {
 			}
 			allele.color = Mth.hsvToRgb(allele.index / 254f, 0.86f, 0.86f);
 		}
+		Allele.BY_CODE = Allele.values().stream().sorted(Comparator.comparingInt(a -> a.codename)).toList();
 	}
 
 	public record AlleleRecord(String code, int index) {

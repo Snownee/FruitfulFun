@@ -1,5 +1,6 @@
 package snownee.fruits.food;
 
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -23,7 +24,7 @@ import snownee.kiwi.loader.event.InitEvent;
 
 @KiwiModule("food")
 @KiwiModule.Optional
-@KiwiModule.Category(Categories.FOOD_AND_DRINKS)
+@KiwiModule.Category(value = Categories.FOOD_AND_DRINKS, after = "pumpkin_pie")
 public class FoodModule extends AbstractModule {
 
 	public static final TagKey<Item> PANDA_FOOD = itemTag(FruitfulFun.ID, "panda_food");
@@ -65,6 +66,7 @@ public class FoodModule extends AbstractModule {
 			.effect(Foods.NOURISHED, 1)
 			.build()).craftRemainder(Items.BOWL)));
 	public static final KiwiGO<Block> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Block.box(4, 2, 4, 12, 9, 12), LEMON_ROAST_CHICKEN));
+	public static final KiwiGO<SimpleParticleType> SMOKE = go(() -> new SimpleParticleType(true));
 
 	public FoodModule() {
 		Hooks.food = true;

@@ -17,6 +17,7 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
 import java.util.function.Supplier;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -32,8 +33,11 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.client.SlidingDoorRenderer;
+import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.PetalParticle;
+import snownee.fruits.food.FoodModule;
 
 public class ClientProxy implements ClientModInitializer {
 	@Override
@@ -125,6 +129,17 @@ public class ClientProxy implements ClientModInitializer {
 				}
 				return -1;
 			}, BeeModule.MUTAGEN.getOrCreate());
+
+			ClientTickEvents.START_CLIENT_TICK.register(client -> {
+				if (client.player != null && client.player.isSpectator()) {
+					return;
+				}
+				InspectorClientHandler.tick(client);
+			});
+		}
+
+		if (Hooks.food) {
+			ParticleFactoryRegistry.getInstance().register(FoodModule.SMOKE.getOrCreate(), FoodSmokeParticle.Factory::new);
 		}
 	}
 }
