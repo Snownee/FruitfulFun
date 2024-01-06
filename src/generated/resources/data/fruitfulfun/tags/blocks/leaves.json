@@ -9,13 +9,7 @@
     "fruitfulfun:tangerine_leaves",
     "fruitfulfun:orange_leaves",
     "fruitfulfun:pomelo_leaves",
-    {
-      "id": "fruitfulfun:redlove_leaves",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:cherry_sapling",
-      "required": false
-    }
+    "fruitfulfun:cherry_leaves",
+    "fruitfulfun:redlove_leaves"
   ]
 }

@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -80,6 +81,7 @@ public class MutagenItem extends ModItem {
 //				bee.level().playSound(null, bee, TODO, SoundSource.NEUTRAL, 1, 1);
 			bee.gameEvent(GameEvent.DRINK, player);
 			bee.addEffect(new MobEffectInstance(BeeModule.MUTAGEN_EFFECT.get(), 1200, allele.index, true, true, false));
+			player.awardStat(Stats.ITEM_USED.get(this));
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.sidedSuccess(player.level().isClientSide);

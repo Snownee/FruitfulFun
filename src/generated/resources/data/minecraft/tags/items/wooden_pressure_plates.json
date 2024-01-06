@@ -2,9 +2,6 @@
   "replace": false,
   "values": [
     "fruitfulfun:citrus_pressure_plate",
-    {
-      "id": "fruitfulfun:redlove_pressure_plate",
-      "required": false
-    }
+    "fruitfulfun:redlove_pressure_plate"
   ]
 }

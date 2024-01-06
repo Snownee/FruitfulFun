@@ -2,9 +2,6 @@
   "replace": false,
   "values": [
     "fruitfulfun:citrus_slab",
-    {
-      "id": "fruitfulfun:redlove_slab",
-      "required": false
-    }
+    "fruitfulfun:redlove_slab"
   ]
 }

@@ -2,9 +2,6 @@
   "replace": false,
   "values": [
     "fruitfulfun:citrus_wall_hanging_sign",
-    {
-      "id": "fruitfulfun:redlove_wall_hanging_sign",
-      "required": false
-    }
+    "fruitfulfun:redlove_wall_hanging_sign"
   ]
 }

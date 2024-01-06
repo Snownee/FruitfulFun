@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruitfulfun:citrus_cabinet",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:redlove_cabinet",
+      "required": false
+    }
+  ]
+}

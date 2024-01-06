@@ -70,7 +70,7 @@ public class SSyncBeePacket extends PacketHandler {
 			buf.writeCollection(attributes.getTrusted(), FriendlyByteBuf::writeUUID);
 			ResourceLocation texture = attributes.getTexture();
 			buf.writeUtf(texture == null ? "" : texture.toString());
-			buf.writeCollection(attributes.getTraits().stream().map($ -> $.name).toList(), FriendlyByteBuf::writeUtf);
+			buf.writeCollection(attributes.getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf.writeLong(attributes.getMutagenEndsIn());
 		};
 	}

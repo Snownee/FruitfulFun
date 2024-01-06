@@ -16,7 +16,7 @@
   ],
   "ingredients": [
     {
-      "tag": "forge:fruits/pomelo"
+      "tag": "c:fruits/pomelo"
     },
     {
       "item": "honey_bottle"

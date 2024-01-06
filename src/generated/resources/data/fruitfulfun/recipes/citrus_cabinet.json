@@ -1,0 +1,27 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:farmersdelight"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "fruitfulfun:citrus_slab"
+    },
+    "T": {
+      "item": "fruitfulfun:citrus_trapdoor"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "T T",
+    "SSS"
+  ],
+  "result": {
+    "item": "fruitfulfun:citrus_cabinet"
+  },
+  "show_notification": true
+}

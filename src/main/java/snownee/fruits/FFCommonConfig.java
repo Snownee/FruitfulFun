@@ -26,7 +26,10 @@ public final class FFCommonConfig {
 	public static boolean villageAppleTreeWorldGen = true;
 	public static String hornHarvestingInstrument = "minecraft:sing_goat_horn";
 	public static boolean wanderingTraderSapling = true;
+	@KiwiConfig.Range(min = 0)
 	public static int beeNaturalHealingInterval = 900;
+	public static boolean redloveFruitUse = true;
+
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Range(min = 0, max = 1)
 	@KiwiConfig.Path("mutationRate.RC")

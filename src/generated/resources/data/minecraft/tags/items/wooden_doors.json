@@ -2,13 +2,7 @@
   "replace": false,
   "values": [
     "fruitfulfun:citrus_door",
-    {
-      "id": "fruitfulfun:redlove_door",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:redlove_sliding_door",
-      "required": false
-    }
+    "fruitfulfun:redlove_door",
+    "fruitfulfun:redlove_sliding_door"
   ]
 }

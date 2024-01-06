@@ -12,13 +12,13 @@ import net.minecraft.world.item.crafting.RecipeType;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.MutagenItem;
+import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
 import snownee.kiwi.KiwiModule.Name;
-import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
 
 @KiwiModule("bee")
@@ -38,12 +38,17 @@ public class BeeModule extends AbstractModule {
 	public static ResourceLocation BEES_BRED = new ResourceLocation(FruitfulFun.ID, "bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "entity.bee.shear")));
 	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "shears")
-	public static final KiwiGO<Item> INSPECTOR = go(() -> new ModItem(itemProp()));
+	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
 
 	public BeeModule() {
 		Hooks.bee = true;
+	}
+
+	@Override
+	protected void preInit() {
+		CommonProxy.initBeeModule();
 	}
 
 	@Override

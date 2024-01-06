@@ -42,6 +42,7 @@ import static snownee.fruits.CoreModule.STRIPPED_CITRUS_LOG;
 import static snownee.fruits.CoreModule.STRIPPED_CITRUS_WOOD;
 import static snownee.fruits.CoreModule.TANGERINE_LEAVES;
 import static snownee.fruits.CoreModule.TANGERINE_SAPLING;
+import static snownee.fruits.cherry.CherryModule.CHERRY_LEAVES;
 import static snownee.fruits.cherry.CherryModule.CHERRY_SAPLING;
 import static snownee.fruits.cherry.CherryModule.PEACH_PINK_PETALS;
 import static snownee.fruits.cherry.CherryModule.POTTED_CHERRY;
@@ -66,6 +67,8 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_WALL_SIGN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_WOOD;
+import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
+import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.REDLOVE_CABINET;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -76,6 +79,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.Hooks;
 import snownee.kiwi.AbstractModule;
 
 public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
@@ -88,48 +92,75 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
-//		helper.getEntriesByModule("core", "cherry", "food").forEach(this::processTools);
-
 		getOrCreateTagBuilder(CITRUS_LOGS).add(
 				CITRUS_LOG.get(),
 				CITRUS_WOOD.get(),
 				STRIPPED_CITRUS_LOG.get(),
 				STRIPPED_CITRUS_WOOD.get());
-		getOrCreateTagBuilder(REDLOVE_LOGS)
-				.addOptional(REDLOVE_LOG.key())
-				.addOptional(REDLOVE_WOOD.key())
-				.addOptional(STRIPPED_REDLOVE_LOG.key())
-				.addOptional(STRIPPED_REDLOVE_WOOD.key());
+		getOrCreateTagBuilder(REDLOVE_LOGS).add(
+				REDLOVE_LOG.get(),
+				REDLOVE_WOOD.get(),
+				STRIPPED_REDLOVE_LOG.get(),
+				STRIPPED_REDLOVE_WOOD.get());
 		tag(BlockTags.LOGS_THAT_BURN).addTag(CITRUS_LOGS).addTag(REDLOVE_LOGS);
-		getOrCreateTagBuilder(BlockTags.WOODEN_FENCES).add(CITRUS_FENCE.get()).addOptional(REDLOVE_FENCE.key());
-		getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(CITRUS_FENCE_GATE.get()).addOptional(REDLOVE_FENCE_GATE.key());
-		getOrCreateTagBuilder(BlockTags.WOODEN_BUTTONS).add(CITRUS_BUTTON.get()).addOptional(REDLOVE_BUTTON.key());
-		getOrCreateTagBuilder(BlockTags.WOODEN_SLABS).add(CITRUS_SLAB.get()).addOptional(REDLOVE_SLAB.key());
-		getOrCreateTagBuilder(BlockTags.WOODEN_STAIRS).add(CITRUS_STAIRS.get()).addOptional(REDLOVE_STAIRS.key());
-		getOrCreateTagBuilder(BlockTags.WOODEN_PRESSURE_PLATES).add(CITRUS_PRESSURE_PLATE.get()).addOptional(REDLOVE_PRESSURE_PLATE.key());
-		getOrCreateTagBuilder(BlockTags.WOODEN_TRAPDOORS).add(CITRUS_TRAPDOOR.get()).addOptional(REDLOVE_TRAPDOOR.key());
-		getOrCreateTagBuilder(BlockTags.PLANKS).add(CITRUS_PLANKS.get()).addOptional(REDLOVE_PLANKS.key());
-		getOrCreateTagBuilder(BlockTags.WALL_SIGNS).add(CITRUS_WALL_SIGN.get()).addOptional(REDLOVE_WALL_SIGN.key());
-		getOrCreateTagBuilder(BlockTags.STANDING_SIGNS).add(CITRUS_SIGN.get()).addOptional(REDLOVE_SIGN.key());
-		getOrCreateTagBuilder(BlockTags.WALL_HANGING_SIGNS).add(CITRUS_WALL_HANGING_SIGN.get()).addOptional(REDLOVE_WALL_HANGING_SIGN.key());
-		getOrCreateTagBuilder(BlockTags.CEILING_HANGING_SIGNS).add(CITRUS_HANGING_SIGN.get()).addOptional(REDLOVE_HANGING_SIGN.key());
-		getOrCreateTagBuilder(BlockTags.WOODEN_DOORS).add(CITRUS_DOOR.get())
-				.addOptional(REDLOVE_DOOR.key())
-				.addOptional(REDLOVE_SLIDING_DOOR.key());
-		getOrCreateTagBuilder(BlockTags.FLOWER_POTS).add(POTTED_APPLE.get(), POTTED_CITRON.get(), POTTED_GRAPEFRUIT.get(), POTTED_LEMON.get(), POTTED_LIME.get(), POTTED_TANGERINE.get(), POTTED_ORANGE.get(), POTTED_POMELO.get())
-				.addOptional(POTTED_REDLOVE.key())
-				.addOptional(POTTED_CHERRY.key());
-		getOrCreateTagBuilder(BlockTags.SAPLINGS).add(APPLE_SAPLING.get(), CITRON_SAPLING.get(), GRAPEFRUIT_SAPLING.get(), LEMON_SAPLING.get(), LIME_SAPLING.get(), TANGERINE_SAPLING.get(), ORANGE_SAPLING.get(), POMELO_SAPLING.get())
-				.addOptional(REDLOVE_SAPLING.key())
-				.addOptional(CHERRY_SAPLING.key());
-		getOrCreateTagBuilder(ALL_LEAVES).add(APPLE_LEAVES.get(), CITRON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), LEMON_LEAVES.get(), LIME_LEAVES.get(), TANGERINE_LEAVES.get(), ORANGE_LEAVES.get(), POMELO_LEAVES.get())
-				.addOptional(REDLOVE_LEAVES.key())
-				.addOptional(CHERRY_SAPLING.key());
+		getOrCreateTagBuilder(BlockTags.WOODEN_FENCES).add(CITRUS_FENCE.get(), REDLOVE_FENCE.get());
+		getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(CITRUS_FENCE_GATE.get(), REDLOVE_FENCE_GATE.get());
+		getOrCreateTagBuilder(BlockTags.WOODEN_BUTTONS).add(CITRUS_BUTTON.get(), REDLOVE_BUTTON.get());
+		getOrCreateTagBuilder(BlockTags.WOODEN_SLABS).add(CITRUS_SLAB.get(), REDLOVE_SLAB.get());
+		getOrCreateTagBuilder(BlockTags.WOODEN_STAIRS).add(CITRUS_STAIRS.get(), REDLOVE_STAIRS.get());
+		getOrCreateTagBuilder(BlockTags.WOODEN_PRESSURE_PLATES).add(CITRUS_PRESSURE_PLATE.get(), REDLOVE_PRESSURE_PLATE.get());
+		getOrCreateTagBuilder(BlockTags.WOODEN_TRAPDOORS).add(CITRUS_TRAPDOOR.get(), REDLOVE_TRAPDOOR.get());
+		getOrCreateTagBuilder(BlockTags.PLANKS).add(CITRUS_PLANKS.get(), REDLOVE_PLANKS.get());
+		getOrCreateTagBuilder(BlockTags.WALL_SIGNS).add(CITRUS_WALL_SIGN.get(), REDLOVE_WALL_SIGN.get());
+		getOrCreateTagBuilder(BlockTags.STANDING_SIGNS).add(CITRUS_SIGN.get(), REDLOVE_SIGN.get());
+		getOrCreateTagBuilder(BlockTags.WALL_HANGING_SIGNS).add(CITRUS_WALL_HANGING_SIGN.get(), REDLOVE_WALL_HANGING_SIGN.get());
+		getOrCreateTagBuilder(BlockTags.CEILING_HANGING_SIGNS).add(CITRUS_HANGING_SIGN.get(), REDLOVE_HANGING_SIGN.get());
+		getOrCreateTagBuilder(BlockTags.WOODEN_DOORS).add(CITRUS_DOOR.get(), REDLOVE_DOOR.get(), REDLOVE_SLIDING_DOOR.get());
+		getOrCreateTagBuilder(BlockTags.FLOWER_POTS).add(
+				POTTED_APPLE.get(),
+				POTTED_CITRON.get(),
+				POTTED_GRAPEFRUIT.get(),
+				POTTED_LEMON.get(),
+				POTTED_LIME.get(),
+				POTTED_TANGERINE.get(),
+				POTTED_ORANGE.get(),
+				POTTED_POMELO.get(),
+				POTTED_REDLOVE.get(),
+				POTTED_CHERRY.get());
+		getOrCreateTagBuilder(BlockTags.SAPLINGS).add(
+				APPLE_SAPLING.get(),
+				CITRON_SAPLING.get(),
+				GRAPEFRUIT_SAPLING.get(),
+				LEMON_SAPLING.get(),
+				LIME_SAPLING.get(),
+				TANGERINE_SAPLING.get(),
+				ORANGE_SAPLING.get(),
+				POMELO_SAPLING.get(),
+				CHERRY_SAPLING.get(),
+				REDLOVE_SAPLING.get());
+		getOrCreateTagBuilder(ALL_LEAVES).add(
+				APPLE_LEAVES.get(),
+				CITRON_LEAVES.get(),
+				GRAPEFRUIT_LEAVES.get(),
+				LEMON_LEAVES.get(),
+				LIME_LEAVES.get(),
+				TANGERINE_LEAVES.get(),
+				ORANGE_LEAVES.get(),
+				POMELO_LEAVES.get(),
+				CHERRY_LEAVES.get(),
+				REDLOVE_LEAVES.get());
 		tag(BlockTags.LEAVES).addTag(ALL_LEAVES);
-		getOrCreateTagBuilder(BlockTags.FLOWERS)
-				.addOptional(REDLOVE_LEAVES.key())
-				.addOptional(CHERRY_SAPLING.key())
-				.addOptional(PEACH_PINK_PETALS.key());
-		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).addOptional(PEACH_PINK_PETALS.key());
+		getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_HOE).addTag(ALL_LEAVES);
+		getOrCreateTagBuilder(BlockTags.FLOWERS).add(
+				REDLOVE_LEAVES.get(),
+				CHERRY_SAPLING.get(),
+				PEACH_PINK_PETALS.get());
+		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).add(PEACH_PINK_PETALS.get());
+
+		if (Hooks.farmersdelight) {
+			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
+					.addOptional(CITRUS_CABINET.key())
+					.addOptional(REDLOVE_CABINET.key());
+		}
 	}
 }

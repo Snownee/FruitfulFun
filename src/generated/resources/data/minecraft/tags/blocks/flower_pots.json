@@ -9,13 +9,7 @@
     "fruitfulfun:potted_tangerine",
     "fruitfulfun:potted_orange",
     "fruitfulfun:potted_pomelo",
-    {
-      "id": "fruitfulfun:potted_redlove",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:potted_cherry",
-      "required": false
-    }
+    "fruitfulfun:potted_redlove",
+    "fruitfulfun:potted_cherry"
   ]
 }

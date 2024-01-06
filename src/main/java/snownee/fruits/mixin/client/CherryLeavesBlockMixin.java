@@ -11,16 +11,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CherryLeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.FFClientConfig;
-import snownee.fruits.Hooks;
 import snownee.fruits.cherry.CherryModule;
 
 @Mixin(CherryLeavesBlock.class)
 public class CherryLeavesBlockMixin {
 	@Inject(method = "animateTick", at = @At("HEAD"), cancellable = true)
 	private void fruits_animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
-		if (!Hooks.cherry) {
-			return;
-		}
 		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Disabled) {
 			ci.cancel();
 		}

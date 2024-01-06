@@ -17,10 +17,14 @@ import net.minecraft.advancements.critereon.PickedUpItemTrigger;
 import net.minecraft.advancements.critereon.StartRidingTrigger;
 import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FruitfulFun;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
+import snownee.kiwi.recipe.ModuleLoadedCondition;
 
 public class FFAdvancements extends FabricAdvancementProvider {
 
@@ -84,6 +88,28 @@ public class FFAdvancements extends FabricAdvancementProvider {
 		Advancement.Builder.recipeAdvancement()
 				.parent(start)
 				.display(
+						Items.GOAT_HORN,
+						Component.translatable("advancements.fruitfulfun.horn.title"),
+						Component.translatable("advancements.fruitfulfun.horn.description"),
+						null, FrameType.TASK, true, true, false)
+				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
+				.save(consumer, "husbandry/fruitfulfun/horn");
+
+		Consumer<Advancement> beeExporter = withConditions(consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "bee")));
+
+		Advancement inspector = Advancement.Builder.recipeAdvancement()
+				.parent(start)
+				.display(
+						BeeModule.INSPECTOR.get(),
+						Component.translatable("advancements.fruitfulfun.inspector.title"),
+						Component.translatable("advancements.fruitfulfun.inspector.description"),
+						null, FrameType.TASK, true, true, false)
+				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
+				.save(beeExporter, "husbandry/fruitfulfun/inspector");
+
+		Advancement.Builder.recipeAdvancement()
+				.parent(inspector)
+				.display(
 						Items.FEATHER,
 						Component.translatable("advancements.fruitfulfun.bee_jockey.title"),
 						Component.translatable("advancements.fruitfulfun.bee_jockey.description"),
@@ -94,17 +120,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						)
 				))
 				.rewards(xp100)
-				.save(consumer, "husbandry/fruitfulfun/bee_jockey");
-
-		Advancement.Builder.recipeAdvancement()
-				.parent(start)
-				.display(
-						Items.GOAT_HORN,
-						Component.translatable("advancements.fruitfulfun.horn.title"),
-						Component.translatable("advancements.fruitfulfun.horn.description"),
-						null, FrameType.TASK, true, true, false)
-				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
-				.save(consumer, "husbandry/fruitfulfun/horn");
+				.save(beeExporter, "husbandry/fruitfulfun/bee_jockey");
 		/* on */
 	}
 

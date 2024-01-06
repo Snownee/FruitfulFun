@@ -1,9 +1,10 @@
 package snownee.fruits.bee;
 
-import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -16,54 +17,44 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import snownee.fruits.FruitType;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.network.CInspectBeePacket;
+import snownee.fruits.bee.network.InspectTarget;
 import snownee.fruits.bee.network.SInspectBeeReplyPacket;
 
 public class InspectorClientHandler {
-	public static int inspectingBeeId = -1;
+	@Nullable
+	public static InspectTarget inspectingBee;
 	private static int hoverTicks;
 
 	public static void tick(Minecraft mc) {
-		if (inspectingBeeId == -1) {
+		if (inspectingBee == null || mc.level == null) {
 			return;
 		}
-		Entity entity = getTargetEntity(mc);
-		if (entity == null || inspectingBeeId != entity.getId() || !(entity instanceof Bee bee) || bee.isDeadOrDying()) {
+		InspectTarget target = InspectTarget.find(mc.level, mc.hitResult);
+		if (target == null || !Objects.equals(target, inspectingBee) || !(target.getEntity(mc.level) instanceof Bee bee) || bee.isDeadOrDying()) {
 			reset();
 			return;
 		}
 		if (++hoverTicks == 10) {
-			CInspectBeePacket.I.sendToServer(buf -> buf.writeVarInt(inspectingBeeId));
+			CInspectBeePacket.I.sendToServer(inspectingBee::toNetwork);
 			reset();
 		}
 	}
 
-	public static Entity getTargetEntity(Minecraft mc) {
-		if (mc.hitResult == null) {
-			return null;
-		}
-		if (mc.hitResult.getType() == HitResult.Type.ENTITY) {
-			return ((EntityHitResult) mc.hitResult).getEntity();
-		}
-		return null;
-	}
-
-	public static void startInspecting(Bee bee) {
+	public static void startInspecting(InspectTarget target) {
 		reset();
-		inspectingBeeId = bee.getId();
+		inspectingBee = target;
 	}
 
 	public static void reset() {
-		inspectingBeeId = -1;
+		inspectingBee = null;
 		hoverTicks = 0;
 	}
 
@@ -114,8 +105,8 @@ public class InspectorClientHandler {
 
 		lines.add(I18n.get("text.fruitfulfun.trait"));
 		for (Trait trait : traits) {
-			String name = I18n.get("text.fruitfulfun.trait." + trait.name);
-			String desc = I18n.get("text.fruitfulfun.trait." + trait.name + ".desc");
+			String name = I18n.get("text.fruitfulfun.trait." + trait.name());
+			String desc = I18n.get("text.fruitfulfun.trait." + trait.name() + ".desc");
 			lines.add(I18n.get("text.fruitfulfun.trait.pair", name, desc));
 		}
 		if (traits.isEmpty()) {
@@ -132,5 +123,15 @@ public class InspectorClientHandler {
 		}
 		pages.add(Joiner.on('\n').join(lines));
 		lines.clear();
+	}
+
+	public static boolean startUsing() {
+		Level level = Minecraft.getInstance().level;
+		InspectTarget target = InspectTarget.find(level, Minecraft.getInstance().hitResult);
+		if (target != null && target.getEntity(level) instanceof Bee) {
+			InspectorClientHandler.startInspecting(target);
+			return true;
+		}
+		return false;
 	}
 }

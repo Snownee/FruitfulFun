@@ -2,6 +2,8 @@ package snownee.fruits.cherry;
 
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -37,12 +39,12 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
-import snownee.fruits.Hooks;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.SlidingDoorBlock;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.item.FlowerCrownItem;
+import snownee.fruits.cherry.item.RedloveItem;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
@@ -113,18 +115,15 @@ public class CherryModule extends AbstractModule {
 	public static final KiwiGO<Block> POTTED_REDLOVE = go(() -> new FlowerPotBlock(REDLOVE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_CHERRY_SAPLING)));
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final KiwiGO<Item> CHERRY = go(() -> new ModItem(itemProp().food(Foods.CHERRY)));
-	public static final KiwiGO<Item> REDLOVE = go(() -> new ModItem(itemProp().food(Foods.REDLOVE)));
+	public static final KiwiGO<Item> REDLOVE = go(() -> new RedloveItem(itemProp().food(Foods.REDLOVE)));
 	public static final KiwiGO<BannerPattern> HEART = go(() -> new BannerPattern("hrt"));
 	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/heart");
 	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
 	public static final KiwiGO<Item> HEART_BANNER_PATTERN = go(() -> new BannerPatternItem(HEART_TAG, itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
 	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
-	public static final KiwiGO<Item> CHERRY_CROWN = go(() -> new FlowerCrownItem(itemProp()));
-	public static final KiwiGO<Item> REDLOVE_CROWN = go(() -> new FlowerCrownItem(itemProp()));
-
-	public CherryModule() {
-		Hooks.cherry = true;
-	}
+	public static final KiwiGO<Item> CHERRY_CROWN = go(() -> new FlowerCrownItem(itemProp(), PETAL_CHERRY.getOrCreate()));
+	public static final KiwiGO<Item> REDLOVE_CROWN = go(() -> new FlowerCrownItem(itemProp(), PETAL_REDLOVE.getOrCreate()));
+	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "item.armor.equip_crown")));
 
 	@Override
 	protected void preInit() {

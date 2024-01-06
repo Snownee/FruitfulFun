@@ -7,6 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.cherry.datagen.CherryBlockLoot;
+import snownee.fruits.compat.farmersdelight.FarmersDelightBlockLoot;
 import snownee.fruits.food.datagen.FoodBlockLoot;
 
 public class FFDataGen implements DataGeneratorEntrypoint {
@@ -22,9 +23,10 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FFRecipeProvider::new);
 		pack.addProvider(FFDynamicRegistryProvider::new);
 		pack.addProvider(FFLanguageProvider::new);
-		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "cherry"));
 		pack.addProvider(CherryBlockLoot::new);
 		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "food"));
 		pack.addProvider(FoodBlockLoot::new);
+		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "farmersdelight"));
+		pack.addProvider(FarmersDelightBlockLoot::new);
 	}
 }

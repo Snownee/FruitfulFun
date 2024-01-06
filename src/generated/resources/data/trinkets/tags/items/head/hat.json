@@ -1,13 +1,7 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "fruitfulfun:cherry_crown",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:redlove_crown",
-      "required": false
-    }
+    "fruitfulfun:cherry_crown",
+    "fruitfulfun:redlove_crown"
   ]
 }

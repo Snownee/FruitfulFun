@@ -2,9 +2,6 @@
   "replace": false,
   "values": [
     "fruitfulfun:citrus_fence_gate",
-    {
-      "id": "fruitfulfun:redlove_fence_gate",
-      "required": false
-    }
+    "fruitfulfun:redlove_fence_gate"
   ]
 }

@@ -168,9 +168,12 @@
   "advancements.fruitfulfun.horn.description": "Harvesting fruits using a specific type of Goat Horn",
   "advancements.fruitfulfun.bee_jockey.title": "Bee-approved for Takeoff",
   "advancements.fruitfulfun.bee_jockey.description": "Breed a rideable Bee",
+  "advancements.fruitfulfun.inspector.title": "Science Mania",
+  "advancements.fruitfulfun.inspector.description": "Use Bee Inspector on a Bee",
   "config.jade.plugin_fruitfulfun": "Fruitful Fun",
   "config.jade.plugin_fruitfulfun.bee": "Bee",
   "stat.fruitfulfun.bee_one_cm": "Distance by Bee",
   "stat.fruitfulfun.bees_bred": "Bees Bred",
-  "effect.fruitfulfun.mutagen_effect": "Mutagen-Induced"
+  "effect.fruitfulfun.mutagen_effect": "Mutagen-Induced",
+  "subtitles.fruitfulfun.crown.equip": "Flower crown equips"
 }

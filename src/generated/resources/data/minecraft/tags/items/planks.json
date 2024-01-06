@@ -2,9 +2,6 @@
   "replace": false,
   "values": [
     "fruitfulfun:citrus_planks",
-    {
-      "id": "fruitfulfun:redlove_planks",
-      "required": false
-    }
+    "fruitfulfun:redlove_planks"
   ]
 }

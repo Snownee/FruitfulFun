@@ -1,9 +1,9 @@
 {
   "type": "fruitfulfun:hybridizing",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "kiwi:is_loaded",
-      "module": "fruitfulfun:hybridization"
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:bee"
     }
   ],
   "ingredients": [

@@ -153,16 +153,16 @@ public class BeeAttributes {
 		updateTraits(bee);
 	}
 
-	private void updateTraits(Bee bee) {
+	public void updateTraits(Bee bee) {
 		traits.clear();
 		if (allGene(Allele.RAINC, 1)) {
 			traits.add(Trait.RAIN_CAPABLE);
 		}
 
 		if (allGene(Allele.FANCY, 1)) {
-			texture = new ResourceLocation(FruitfulFun.ID, "pink_bee");
+			setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
 		} else if (allGene(Allele.FANCY, 2)) {
-			texture = new ResourceLocation(FruitfulFun.ID, "black_bee");
+			setTexture(new ResourceLocation(FruitfulFun.ID, "wither_bee"));
 			traits.add(Trait.WITHER_TOLERANT);
 		} else {
 			texture = null;
@@ -225,7 +225,7 @@ public class BeeAttributes {
 		return traits.contains(trait);
 	}
 
-	private Locus getLocus(Allele allele) {
+	public Locus getLocus(Allele allele) {
 		return loci.computeIfAbsent(allele, Locus::new);
 	}
 

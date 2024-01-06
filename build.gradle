@@ -90,6 +90,8 @@ dependencies {
     modImplementation "curse.maven:selene-499980:4981682"
 
     modImplementation "maven.modrinth:debugutils:woRp83Qc"
+    modImplementation "maven.modrinth:farmers-delight-fabric:QXYNitXw"
+    modImplementation "maven.modrinth:supplementaries:8rvsAEun"
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2"))
 }
@@ -146,6 +148,7 @@ jar {
 
     exclude "/assets/${project.mod_id}/lang/en_us.existing.json"
     exclude '**/*.bat'
+    exclude '**/*.psd'
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }

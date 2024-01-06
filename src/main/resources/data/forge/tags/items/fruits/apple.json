@@ -1,7 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "apple",
-    { "id": "fruitfulfun:redlove", "required": false }
-  ]
-}

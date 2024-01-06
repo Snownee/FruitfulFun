@@ -1,21 +1,9 @@
 {
   "replace": false,
   "values": [
-    {
-      "id": "fruitfulfun:redlove_log",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:redlove_wood",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:stripped_redlove_log",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:stripped_redlove_wood",
-      "required": false
-    }
+    "fruitfulfun:redlove_log",
+    "fruitfulfun:redlove_wood",
+    "fruitfulfun:stripped_redlove_log",
+    "fruitfulfun:stripped_redlove_wood"
   ]
 }

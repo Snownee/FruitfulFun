@@ -23,9 +23,8 @@ import snownee.kiwi.network.PacketHandler;
 public class SInspectBeeReplyPacket extends PacketHandler {
 	public static SInspectBeeReplyPacket I;
 
-	public static void send(ServerPlayer player, int id, BeeAttributes attributes) {
+	public static void send(ServerPlayer player, BeeAttributes attributes) {
 		SInspectBeeReplyPacket.I.send(player, buf0 -> {
-			buf0.writeVarInt(id);
 			buf0.writeCollection(attributes.getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf0.writeCollection(attributes.getPollens(), FriendlyByteBuf::writeUtf);
 			Map<Allele, Locus> loci = attributes.getLoci();
@@ -41,7 +40,6 @@ public class SInspectBeeReplyPacket extends PacketHandler {
 
 	@Override
 	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer player) {
-		int id = buf.readVarInt();
 		List<String> traits = buf.readList(FriendlyByteBuf::readUtf);
 		List<String> pollens = buf.readList(FriendlyByteBuf::readUtf);
 		List<GeneRecord> genes = buf.readList($ -> new GeneRecord($.readChar(), $.readVarInt() + 1, $.readVarInt() + 1));

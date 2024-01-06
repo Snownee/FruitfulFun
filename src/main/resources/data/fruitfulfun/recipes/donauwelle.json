@@ -1,8 +1,8 @@
 {
   "type": "kiwi:shapeless",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "kiwi:is_loaded",
+      "condition": "kiwi:is_loaded",
       "module": "fruitfulfun:food"
     }
   ],
@@ -11,14 +11,14 @@
       "item": "fruitfulfun:redlove"
     },
     {
-      "type": "kiwi:alternatives",
-      "list": [
+      "fabric:type": "kiwi:alternatives",
+      "options": [
         [
           {
-            "tag": "forge:chocolatebar"
+            "tag": "c:chocolatebar"
           },
           {
-            "tag": "forge:chocolates"
+            "tag": "c:chocolates"
           }
         ],
         {
@@ -27,27 +27,30 @@
       ]
     },
     {
-      "type": "kiwi:alternatives",
-      "list": [
+      "fabric:type": "kiwi:alternatives",
+      "options": [
         {
-          "tag": "forge:cream"
+          "tag": "c:cream"
         },
         {
-          "tag": "forge:milk"
+          "tag": "c:milk"
         }
       ]
     },
     {
-      "tag": "forge:eggs"
+      "tag": "c:eggs"
     },
     {
-      "type": "kiwi:alternatives",
-      "list": [
+      "fabric:type": "kiwi:alternatives",
+      "options": [
         {
-          "tag": "forge:flour"
+          "tag": "c:flour"
         },
         {
-          "tag": "forge:crops/wheat"
+          "tag": "c:grain/wheat"
+        },
+        {
+          "item": "wheat"
         }
       ]
     },

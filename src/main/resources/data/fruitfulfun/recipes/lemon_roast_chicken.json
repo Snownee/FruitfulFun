@@ -1,43 +1,37 @@
 {
   "type": "kiwi:shapeless",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "kiwi:is_loaded",
+      "condition": "kiwi:is_loaded",
       "module": "fruitfulfun:food"
     }
   ],
   "ingredients": [
     {
-      "tag": "forge:fruits/lemon"
+      "tag": "c:fruits/lemon"
     },
     {
-      "type": "kiwi:alternatives",
-      "list": [
+      "fabric:type": "kiwi:alternatives",
+      "options": [
         {
-          "tag": "forge:vegetables/onion"
+          "tag": "c:vegetables/onion"
         },
         {
-          "tag": "forge:crops/potato"
+          "tag": "c:crops/potato"
+        },
+        {
+          "item": "potato"
         }
       ]
     },
     {
-      "type": "kiwi:alternatives",
-      "list": [
+      "fabric:type": "kiwi:alternatives",
+      "options": [
         {
-          "tag": "forge:cheese"
-        },
-        []
-      ]
-    },
-    {
-      "type": "kiwi:alternatives",
-      "list": [
-        {
-          "tag": "forge:flowers/lavender"
+          "tag": "c:flowers/lavender"
         },
         {
-          "tag": "forge:fruits/lemon"
+          "tag": "c:fruits/lemon"
         }
       ]
     },
@@ -46,6 +40,15 @@
     },
     {
       "item": "bowl"
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:cheese"
+        },
+        []
+      ]
     }
   ],
   "result": {

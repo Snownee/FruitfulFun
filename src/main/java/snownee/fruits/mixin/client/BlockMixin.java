@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import snownee.fruits.Hooks;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 
@@ -19,7 +18,7 @@ import snownee.fruits.cherry.block.CherryLeavesBlock;
 public class BlockMixin {
 	@Inject(method = "spawnDestroyParticles", at = @At("HEAD"))
 	private void fruits_spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
-		if (Hooks.cherry && blockState.is(Blocks.CHERRY_LEAVES)) {
+		if (blockState.is(Blocks.CHERRY_LEAVES)) {
 			CherryLeavesBlock.spawnDestroyParticles(level, blockPos, CherryModule.PETAL_CHERRY.get());
 		}
 	}

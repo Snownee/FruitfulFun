@@ -26,6 +26,8 @@ import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -38,6 +40,8 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneticData;
+import snownee.fruits.cherry.item.FlowerCrownItem;
+import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.kiwi.Mod;
 import snownee.kiwi.util.Util;
 
@@ -63,9 +67,6 @@ public class CommonProxy implements ModInitializer {
 
 	public static void addBuiltinPacks() {
 		ModContainer modContainer = FabricLoader.getInstance().getModContainer(FruitfulFun.ID).orElseThrow();
-		if (Hooks.cherry) {
-			addBuiltinPack(modContainer, "cherry");
-		}
 		if (Hooks.food) {
 			addBuiltinPack(modContainer, "food");
 		}
@@ -103,9 +104,6 @@ public class CommonProxy implements ModInitializer {
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});
 		});
-		// map in StatType is an IdentityHashMap, update the reference
-		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
-		BeeModule.BEES_BRED = Stats.makeCustomStat(BeeModule.BEES_BRED.toString(), StatFormatter.DEFAULT);
 
 		ServerWorldEvents.LOAD.register((server, world) -> {
 			if (world == server.overworld()) {
@@ -116,10 +114,27 @@ public class CommonProxy implements ModInitializer {
 		});
 	}
 
+	public static void initBeeModule() {
+		// map in StatType is an IdentityHashMap, update the reference
+		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
+		BeeModule.BEES_BRED = Stats.makeCustomStat(BeeModule.BEES_BRED.toString(), StatFormatter.DEFAULT);
+	}
+
 	public static void addFeature(String id) {
 		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(Util.RL(id, FruitfulFun.ID)).toString());
 		BiomeModifications.addFeature(context -> {
 			return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) || context.hasFeature(VegetationFeatures.TREES_PLAINS);
 		}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
+	}
+
+	public static FlowerCrownItem getFlowerCrown(LivingEntity entity) {
+		ItemStack stack = entity.getItemBySlot(EquipmentSlot.HEAD);
+		if (stack.getItem() instanceof FlowerCrownItem item) {
+			return item;
+		}
+		if (Hooks.trinkets) {
+			return TrinketsCompat.getFlowerCrown(entity);
+		}
+		return null;
 	}
 }

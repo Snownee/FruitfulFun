@@ -6,13 +6,7 @@
     "minecraft:sweet_berries",
     "minecraft:chorus_fruit",
     "minecraft:glow_berries",
-    {
-      "id": "fruitfulfun:cherry",
-      "required": false
-    },
-    {
-      "id": "fruitfulfun:citron",
-      "required": false
-    }
+    "fruitfulfun:cherry",
+    "fruitfulfun:citron"
   ]
 }

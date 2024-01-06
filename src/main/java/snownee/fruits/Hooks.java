@@ -54,7 +54,6 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.FFBee;
 import snownee.fruits.bee.HybridizingContext;
 import snownee.fruits.bee.HybridizingRecipe;
-import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
@@ -67,8 +66,9 @@ public final class Hooks {
 
 	public static boolean bee;
 	public static boolean food;
-	public static boolean cherry;
-	public static boolean farmersdelight = Platform.isModLoaded("farmersdelight");
+	public static boolean farmersdelight;
+	public static boolean trinkets = Platform.isModLoaded("trinkets");
+	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
 
 	private Hooks() {
 	}
@@ -238,10 +238,17 @@ public final class Hooks {
 		Saddleable saddleable = (Saddleable) bee;
 		ItemStack held = player.getItemInHand(hand);
 		if (BeeModule.INSPECTOR.is(held)) {
-			if (player.level().isClientSide) {
-				InspectorClientHandler.startInspecting(bee);
+			return InteractionResult.PASS;
+		}
+		if (held.is(Items.DEBUG_STICK)) {
+			if (!player.level().isClientSide) {
+				// add debug code here
+//				attributes.setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
+				attributes.getLocus(Allele.FANCY).setData((byte) 0x22);
+				attributes.getLocus(Allele.FEAT2).setData((byte) 0x22);
+				attributes.updateTraits(bee);
 			}
-			return InteractionResult.CONSUME_PARTIAL;
+			return InteractionResult.CONSUME;
 		}
 		if (saddleable.isSaddled()) {
 			boolean trusted = player.isCreative() || attributes.trusts(player.getUUID());

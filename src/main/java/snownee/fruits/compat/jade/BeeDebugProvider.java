@@ -40,7 +40,7 @@ public class BeeDebugProvider implements IEntityComponentProvider, IServerDataPr
 		tooltip.add(Component.literal(Joiner.on(' ').join(genes)));
 		List<String> traits = Lists.newArrayList();
 		attributes.getTraits().forEach(trait -> {
-			traits.add(trait.name);
+			traits.add(trait.name());
 		});
 		if (!traits.isEmpty()) {
 			traits.sort(String::compareTo);

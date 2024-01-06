@@ -1,0 +1,57 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:bee"
+      }
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_lime_sapling": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fruitfulfun:lime_sapling"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tangerine_sapling": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fruitfulfun:tangerine_sapling"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:no_hybrid/orange_sapling"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_tangerine_sapling",
+      "has_lime_sapling",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:no_hybrid/orange_sapling"
+    ]
+  },
+  "sends_telemetry_event": false
+}

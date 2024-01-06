@@ -3,7 +3,6 @@ package snownee.fruits.client.particle;
 import java.util.Iterator;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -24,7 +23,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockCollisions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -43,7 +41,7 @@ public class PetalParticle extends TextureSheetParticle {
 	private final float particleRandom;
 	private int sinceNotInWater;
 
-	private PetalParticle(ClientLevel world, double posX, double posY, double posZ, @Nullable LivingEntity source) {
+	private PetalParticle(ClientLevel world, double posX, double posY, double posZ) {
 		super(world, posX, posY, posZ);
 		lifetime = 300;
 		particleRandom = this.random.nextFloat();
@@ -143,9 +141,16 @@ public class PetalParticle extends TextureSheetParticle {
 			if (lastOnGround) {
 				age = lifetime - 60;
 			}
-			xd *= 1.001;
 			yd *= 0.998;
-			zd *= 1.001;
+			if (Math.abs(xd) > 0.3) {
+				xd *= 0.85;
+			}
+			if (Math.abs(yd) > 0.3) {
+				yd *= 0.85;
+			}
+			if (Math.abs(zd) > 0.3) {
+				zd *= 0.85;
+			}
 		}
 	}
 
@@ -298,8 +303,14 @@ public class PetalParticle extends TextureSheetParticle {
 
 		@Override
 		public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			PetalParticle particle = new PetalParticle(worldIn, x, y, z, null);
+			PetalParticle particle = new PetalParticle(worldIn, x, y, z);
 			particle.pickSprite(spriteSet);
+			particle.xd += xSpeed;
+			particle.yd += ySpeed;
+			particle.zd += zSpeed;
+			if (Math.abs(xSpeed) > 0.5 || Math.abs(ySpeed) > 0.5 || Math.abs(zSpeed) > 0.5) {
+				particle.lifetime = 60;
+			}
 			return particle;
 		}
 	}

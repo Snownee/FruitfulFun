@@ -2,9 +2,6 @@
   "replace": false,
   "values": [
     "fruitfulfun:citrus_button",
-    {
-      "id": "fruitfulfun:redlove_button",
-      "required": false
-    }
+    "fruitfulfun:redlove_button"
   ]
 }

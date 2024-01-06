@@ -21,11 +21,14 @@ public class CInspectBeePacket extends PacketHandler {
 	@Override
 	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer player) {
 		Objects.requireNonNull(player);
-		int id = buf.readVarInt();
+		InspectTarget target = InspectTarget.fromNetwork(buf);
+		if (target == null) {
+			return CompletableFuture.completedFuture(null);
+		}
 		return executor.apply(() -> {
-			Entity entity = player.level().getEntity(id);
+			Entity entity = target.getEntity(player.level());
 			if (entity instanceof Bee bee) {
-				SInspectBeeReplyPacket.send(player, id, BeeAttributes.of(bee));
+				SInspectBeeReplyPacket.send(player, BeeAttributes.of(bee));
 			}
 		});
 	}

@@ -27,7 +27,11 @@
     "client.BlockMixin",
     "client.CherryLeavesBlockMixin",
     "client.GameRendererMixin",
-    "client.ItemBlockRenderTypesMixin"
+    "client.HumanoidModelMixin",
+    "client.ItemBlockRenderTypesMixin",
+    "client.ItemInHandRendererMixin",
+    "client.ItemRendererMixin",
+    "client.LivingEntityFlowerCrownMixin"
   ],
   "injectors": {
     "defaultRequire": 1

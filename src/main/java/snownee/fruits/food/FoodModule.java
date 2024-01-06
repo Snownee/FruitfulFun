@@ -82,12 +82,6 @@ public class FoodModule extends AbstractModule {
 		});
 	}
 
-//	@Override
-//	protected void gatherData(GatherDataEvent event) {
-//		DataGenerator generator = event.getGenerator();
-//		generator.addProvider(event.includeServer(), new KiwiLootTableProvider(uid, generator).add(FoodBlockLoot::new, LootContextParamSets.BLOCK));
-//	}
-
 	public static final class Foods {
 		private static final MobEffectInstance NOURISHED = make("farmersdelight:nourished", 6000, 0);
 		private static final MobEffectInstance COMFORT = make("farmersdelight:comfort", 3600, 0);
