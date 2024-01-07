@@ -167,6 +167,10 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public boolean isRandomlyTicking(BlockState state) {
+		return notPlacedByPlayer(state);
+	}
+
+	public boolean notPlacedByPlayer(BlockState state) {
 		return shouldDecay(state) || canGrow(state) || state.getValue(AGE) == 0;
 	}
 

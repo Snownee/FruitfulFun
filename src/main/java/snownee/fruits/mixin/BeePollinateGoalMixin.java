@@ -16,6 +16,8 @@ import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.HybridizingRecipeType;
 import snownee.fruits.bee.genetics.Trait;
 
 @Mixin(Bee.BeePollinateGoal.class)
@@ -27,14 +29,22 @@ public abstract class BeePollinateGoalMixin {
 	@Final
 	@Mutable
 	@Shadow
-	private final Predicate<BlockState> VALID_POLLINATION_BLOCKS = Hooks::canPollinate;
+	private Predicate<BlockState> VALID_POLLINATION_BLOCKS;
+
+	@Inject(method = "<init>", at = @At("RETURN"))
+	private void fruits_init(Bee bee, CallbackInfo ci) {
+		if (Hooks.bee) {
+			VALID_POLLINATION_BLOCKS = Hooks.wrapPollinationPredicate(VALID_POLLINATION_BLOCKS);
+		}
+	}
 
 	@Inject(method = "stop", at = @At("HEAD"))
 	private void fruits_stop(CallbackInfo cir) {
 		if (!Hooks.bee || this$0.getSavedFlowerPos() == null) {
 			return;
 		}
-		Hooks.onPollinateComplete(this$0);
+		BeeModule.RECIPE_TYPE.get().onPollinateComplete(this$0);
+		HybridizingRecipeType.removeOverflownPollens(this$0);
 	}
 
 	@ModifyExpressionValue(method = "canBeeUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))

@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
 public record Trait(String name) {
 	public static final Map<String, Trait> REGISTRY = Maps.newLinkedHashMap();
 
@@ -26,5 +29,14 @@ public record Trait(String name) {
 	public static final Trait MILD = register(new Trait("mild"));
 	public static final Trait WARRIOR = register(new Trait("warrior"));
 	public static final Trait ADVANCED_POLLINATION = register(new Trait("advanced_pollination"));
+	public static final Trait PINK = register(new Trait("pink"));
+
+	public MutableComponent getDisplayName() {
+		return Component.translatable("text.fruitfulfun.trait." + name);
+	}
+
+	public MutableComponent getDescription() {
+		return Component.translatable("text.fruitfulfun.trait." + name + ".desc");
+	}
 
 }

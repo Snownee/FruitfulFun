@@ -3,7 +3,6 @@ package snownee.fruits.compat.trinkets;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import net.minecraft.world.entity.LivingEntity;
-import snownee.fruits.Hooks;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 

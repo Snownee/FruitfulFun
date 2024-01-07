@@ -160,12 +160,9 @@ public class BeeAttributes {
 		}
 
 		if (allGene(Allele.FANCY, 1)) {
-			setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
+			traits.add(Trait.PINK);
 		} else if (allGene(Allele.FANCY, 2)) {
-			setTexture(new ResourceLocation(FruitfulFun.ID, "wither_bee"));
 			traits.add(Trait.WITHER_TOLERANT);
-		} else {
-			texture = null;
 		}
 
 		boolean lazy = false;
@@ -193,6 +190,7 @@ public class BeeAttributes {
 			traits.add(Trait.MOUNTABLE);
 		}
 
+		updateTexture();
 		if (bee.level().isClientSide) {
 			return;
 		}
@@ -219,6 +217,16 @@ public class BeeAttributes {
 			bee.setHealth(healthRatio * bee.getMaxHealth());
 		}
 		dirty = true;
+	}
+
+	public void updateTexture() {
+		if (hasTrait(Trait.PINK)) {
+			setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
+		} else if (hasTrait(Trait.WITHER_TOLERANT)) {
+			setTexture(new ResourceLocation(FruitfulFun.ID, "wither_bee"));
+		} else {
+			setTexture(null);
+		}
 	}
 
 	public boolean hasTrait(Trait trait) {

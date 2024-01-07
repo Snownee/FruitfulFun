@@ -1,95 +1,164 @@
 package snownee.fruits.bee;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import snownee.kiwi.recipe.Simple;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import snownee.fruits.block.FruitLeavesBlock;
+import snownee.lychee.core.LycheeContext;
+import snownee.lychee.core.recipe.BlockKeyRecipe;
+import snownee.lychee.core.recipe.ILycheeRecipe;
+import snownee.lychee.core.recipe.LycheeRecipe;
+import snownee.lychee.core.recipe.type.LycheeRecipeType;
+import snownee.lychee.util.json.JsonPointer;
 
-public class HybridizingRecipe extends Simple<HybridizingContext> {
+public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements BlockKeyRecipe<HybridizingRecipe> {
 
-	public final Block result;
-	public final ImmutableSet<String> ingredients;
+	public final Set<String> pollens = Sets.newHashSetWithExpectedSize(4);
+	public final Set<String> endingStep = Sets.newHashSetWithExpectedSize(4);
+	public final NonNullList<Ingredient> ingredients = NonNullList.create();
 
-	public HybridizingRecipe(ResourceLocation id, Block result, ImmutableSet<String> ingredients) {
+	public HybridizingRecipe(ResourceLocation id) {
 		super(id);
-		this.result = result;
-		this.ingredients = ingredients;
 	}
 
 	@Override
-	public boolean matches(HybridizingContext inv, Level worldIn) {
-		return inv.attributes.getPollens().size() >= ingredients.size() && inv.attributes.getPollens().containsAll(ingredients);
-	}
-
-	public Block getResult(BeeAttributes attributes) {
-		return result;
+	public boolean matches(LycheeContext ctx, Level worldIn) {
+		BeeAttributes attributes = BeeAttributes.of(ctx.getParam(LootContextParams.THIS_ENTITY));
+		return attributes.getPollens().size() >= pollens.size() && attributes.getPollens().containsAll(pollens);
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return BeeModule.SERIALIZER;
+	public LycheeRecipe.Serializer<?> getSerializer() {
+		return BeeModule.SERIALIZER.get();
 	}
 
 	@Override
-	public RecipeType<?> getType() {
-		return BeeModule.RECIPE_TYPE;
+	public LycheeRecipeType<?, ?> getType() {
+		return BeeModule.RECIPE_TYPE.get();
 	}
 
-	public static class Serializer implements RecipeSerializer<HybridizingRecipe> {
+	@Override
+	public int compareTo(@NotNull HybridizingRecipe o) {
+		return 0;
+	}
 
-		@Override
-		public HybridizingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-			Block result = readIngredient(json.get("result"));
-			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-			if (ingredients.size() < 2 || ingredients.size() > 4) {
-				throw new JsonSyntaxException("Size of ingredients has to be in [2, 4]");
-			}
-			ingredients.forEach(e -> builder.add(e.getAsString()));
-			return new HybridizingRecipe(recipeId, result, builder.build());
+	@Override
+	public BlockPredicate getBlock() {
+		return BlockPredicate.ANY; // not applicable
+	}
+
+	public Set<String> endingStep() {
+		if (endingStep.isEmpty()) {
+			return pollens;
 		}
+		return endingStep;
+	}
 
-		protected static Block readIngredient(JsonElement element) {
-			Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(element.getAsString()));
-			Preconditions.checkArgument(block != Blocks.AIR);
-			return block;
-		}
+	@Override
+	public @NotNull NonNullList<Ingredient> getIngredients() {
+		return ingredients;
+	}
 
-		@Override
-		public HybridizingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-			Block result = Objects.requireNonNull(buffer.readById(BuiltInRegistries.BLOCK));
-			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-			int size = buffer.readByte();
-			for (int i = 0; i < size; i++) {
-				builder.add(buffer.readUtf());
-			}
-			return new HybridizingRecipe(recipeId, result, builder.build());
-		}
-
-		@Override
-		public void toNetwork(FriendlyByteBuf buffer, HybridizingRecipe recipe) {
-			buffer.writeId(BuiltInRegistries.BLOCK, recipe.result);
-			buffer.writeByte(recipe.ingredients.size());
-			for (String ingredient : recipe.ingredients) {
-				buffer.writeUtf(ingredient);
+	public void refreshIngredients() {
+		ingredients.clear();
+		for (String pollen : pollens) {
+			Item item = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen)).asItem();
+			if (item != Items.AIR) {
+				ingredients.add(Ingredient.of(item));
 			}
 		}
+	}
 
+	@Override
+	public IntList getItemIndexes(JsonPointer pointer) {
+		return IntList.of();
+	}
+
+	public void addInvisibleIngredients(Consumer<ItemStack> inputAcceptor, Consumer<ItemStack> outputAcceptor) {
+		for (String pollen : pollens) {
+			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen));
+			if (block instanceof FruitLeavesBlock leavesBlock) {
+				inputAcceptor.accept(new ItemStack(leavesBlock.type.get().sapling.get()));
+			}
+		}
+		ILycheeRecipe.filterHidden(getAllActions())
+				.flatMap($ -> $.getItemOutputs().stream())
+				.map(ItemStack::getItem)
+				.distinct()
+				.map($ -> {
+					if (Block.byItem($) instanceof FruitLeavesBlock block) {
+						return new ItemStack(block.type.get().sapling.get());
+					}
+					return null;
+				})
+				.filter(Objects::nonNull)
+				.forEach(outputAcceptor);
+	}
+
+	public static class Serializer extends LycheeRecipe.Serializer<HybridizingRecipe> {
+		public Serializer() {
+			super(HybridizingRecipe::new);
+		}
+
+		@Override
+		public void fromJson(HybridizingRecipe recipe, JsonObject jsonObject) {
+			JsonArray ingredients = GsonHelper.getAsJsonArray(jsonObject, "pollens");
+			Preconditions.checkArgument(!ingredients.isEmpty() && ingredients.size() <= 4, "Size of pollens has to be in [1, 4]");
+			for (JsonElement element : ingredients) {
+				String s = element.getAsString();
+				Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(s));
+				Preconditions.checkArgument(block != Blocks.AIR, "Unknown block: " + s);
+				recipe.pollens.add(s);
+			}
+			Preconditions.checkArgument(recipe.pollens.size() == Sets.newHashSet(recipe.pollens).size(), "Pollens must be unique");
+			JsonArray endingStep = GsonHelper.getAsJsonArray(jsonObject, "ending_step", null);
+			if (endingStep != null) {
+				Preconditions.checkArgument(!endingStep.isEmpty() && endingStep.size() <= 4, "Size of ending_step has to be in [1, 4]");
+				for (JsonElement element : endingStep) {
+					String s = element.getAsString();
+					Preconditions.checkArgument(recipe.pollens.contains(s), "Ending step must be in pollens");
+					recipe.endingStep.add(s);
+				}
+			}
+			recipe.refreshIngredients();
+		}
+
+		@Override
+		public void fromNetwork(HybridizingRecipe recipe, FriendlyByteBuf buf) {
+			recipe.pollens.addAll(buf.readList(FriendlyByteBuf::readUtf));
+			recipe.endingStep.addAll(buf.readList(FriendlyByteBuf::readUtf));
+			recipe.refreshIngredients();
+		}
+
+		@Override
+		public void toNetwork0(FriendlyByteBuf buf, HybridizingRecipe recipe) {
+			buf.writeCollection(recipe.pollens, FriendlyByteBuf::writeUtf);
+			buf.writeCollection(recipe.endingStep, FriendlyByteBuf::writeUtf);
+		}
 	}
 
 }

@@ -6,7 +6,10 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.advancements.Advancement;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
@@ -28,6 +31,11 @@ public class CInspectBeePacket extends PacketHandler {
 		return executor.apply(() -> {
 			Entity entity = target.getEntity(player.level());
 			if (entity instanceof Bee bee) {
+				ServerAdvancementManager advancements = Objects.requireNonNull(player.level().getServer()).getAdvancements();
+				Advancement advancement = advancements.getAdvancement(new ResourceLocation("husbandry/fruitfulfun/inspector"));
+				if (advancement != null) {
+					player.getAdvancements().award(advancement, "_");
+				}
 				SInspectBeeReplyPacket.send(player, BeeAttributes.of(bee));
 			}
 		});

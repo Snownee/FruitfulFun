@@ -96,10 +96,7 @@ public class CommonProxy implements ModInitializer {
 				return;
 			}
 			trades.add((entity, random) -> {
-				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream()
-						.filter($ -> $.tier == 0)
-						.map($ -> $.sapling.get())
-						.toList(), random).asItem().getDefaultInstance();
+				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(), random).asItem().getDefaultInstance();
 				ItemStack emeralds = new ItemStack(Items.EMERALD, 8);
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});

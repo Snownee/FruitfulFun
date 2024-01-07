@@ -2,7 +2,6 @@ package snownee.fruits.compat.jade;
 
 import java.util.List;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Bee;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.BeeModule;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -23,6 +23,9 @@ public class BeeDebugProvider implements IEntityComponentProvider, IServerDataPr
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
+		if (accessor.getPlayer().isHolding(BeeModule.INSPECTOR.get())) {
+			return;
+		}
 		CompoundTag data = accessor.getServerData();
 		if (data.getBoolean("Trusted")) {
 			tooltip.add(Component.literal("Trusted"));
@@ -37,14 +40,14 @@ public class BeeDebugProvider implements IEntityComponentProvider, IServerDataPr
 			genes.add(allele.getDisplayName(locus.getHigh()).getString());
 			genes.add(allele.getDisplayName(locus.getLow()).getString());
 		});
-		tooltip.add(Component.literal(Joiner.on(' ').join(genes)));
+		tooltip.add(Component.literal(String.join(" ", genes)));
 		List<String> traits = Lists.newArrayList();
 		attributes.getTraits().forEach(trait -> {
 			traits.add(trait.name());
 		});
 		if (!traits.isEmpty()) {
 			traits.sort(String::compareTo);
-			tooltip.add(Component.literal(Joiner.on(' ').join(traits)));
+			tooltip.add(Component.literal(String.join(" ", traits)));
 		}
 	}
 

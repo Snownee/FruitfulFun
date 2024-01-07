@@ -6,19 +6,16 @@
       "module": "fruitfulfun:bee"
     }
   ],
+  "hide_in_viewer": true,
   "pollens": [
-    "fruitfulfun:tangerine_leaves",
-    "fruitfulfun:citron_leaves"
+    "fruitfulfun:redlove_leaves",
+    "pink_petals"
+  ],
+  "ending_step": [
+    "pink_petals"
   ],
   "post": {
     "type": "place",
-    "block": {
-      "blocks": [
-        "fruitfulfun:pomelo_leaves"
-      ],
-      "state": {
-        "age": 2
-      }
-    }
+    "block": "fruitfulfun:peach_pink_petals"
   }
 }

@@ -82,7 +82,8 @@ dependencies {
     annotationProcessor "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
     //modImplementation "curse.maven:kiwi-549404:4968504"
     //annotationProcessor "curse.maven:kiwi-549404:4968504"
-    modImplementation "curse.maven:lychee-574650:4942262"
+    modImplementation "libs:Lychee-1.20.1-fabric:${project.lychee_version}"
+    //modImplementation "curse.maven:lychee-574650:4942262"
 
     modImplementation "curse.maven:jade-324717:4792447"
 

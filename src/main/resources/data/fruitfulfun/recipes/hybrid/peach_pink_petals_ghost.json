@@ -6,14 +6,16 @@
       "module": "fruitfulfun:bee"
     }
   ],
+  "ghost": true,
   "pollens": [
-    "blue_orchid",
-    "oxeye_daisy"
+    "fruitfulfun:redlove_leaves",
+    "pink_petals"
+  ],
+  "ending_step": [
+    "pink_petals"
   ],
   "post": {
-    "type": "place",
-    "block": "mycelium",
-    "offsetY": -1
-    }
-
+    "type": "drop_item",
+    "item": "fruitfulfun:peach_pink_petals"
+  }
 }

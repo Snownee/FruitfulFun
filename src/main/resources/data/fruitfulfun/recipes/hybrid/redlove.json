@@ -6,10 +6,27 @@
       "module": "fruitfulfun:bee"
     }
   ],
-  "ingredients": [
+  "pollens": [
     "fruitfulfun:apple_leaves",
     "fruitfulfun:cherry_leaves",
     "wither_rose"
   ],
-  "result": "fruitfulfun:redlove_leaves"
+  "ending_step": [
+    "fruitfulfun:cherry_leaves"
+  ],
+  "contextual": {
+    "type": "fruitfulfun:bee_has_trait",
+    "trait": "advanced_pollination"
+  },
+  "post": {
+    "type": "place",
+    "block": {
+      "blocks": [
+        "fruitfulfun:redlove_leaves"
+      ],
+      "state": {
+        "age": 2
+      }
+    }
+  }
 }

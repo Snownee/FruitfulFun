@@ -7,14 +7,17 @@
     }
   ],
   "pollens": [
-    "fruitfulfun:tangerine_leaves",
-    "fruitfulfun:citron_leaves"
+    "cherry_leaves",
+    "pink_petals"
+  ],
+  "ending_step": [
+    "cherry_leaves"
   ],
   "post": {
     "type": "place",
     "block": {
       "blocks": [
-        "fruitfulfun:pomelo_leaves"
+        "fruitfulfun:cherry_leaves"
       ],
       "state": {
         "age": 2

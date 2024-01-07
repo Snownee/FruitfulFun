@@ -1,10 +1,9 @@
 package snownee.fruits;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -14,12 +13,10 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.VibrationParticleOption;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,17 +30,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -52,15 +44,13 @@ import net.minecraft.world.phys.Vec3;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.FFBee;
-import snownee.fruits.bee.HybridizingContext;
-import snownee.fruits.bee.HybridizingRecipe;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
+import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
-import snownee.kiwi.util.Util;
 
 public final class Hooks {
 
@@ -69,101 +59,29 @@ public final class Hooks {
 	public static boolean farmersdelight;
 	public static boolean trinkets = Platform.isModLoaded("trinkets");
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
+	public static boolean jade = Platform.isModLoaded("jade");
 
 	private Hooks() {
 	}
 
-	public static boolean safeSetBlock(Level world, BlockPos pos, BlockState state) {
-		BlockState old = world.getBlockState(pos);
-		if (old == state || old.hasBlockEntity() || old.getPistonPushReaction() == PushReaction.BLOCK || old.getBlock() == Blocks.OBSIDIAN || old.is(BlockTags.WITHER_IMMUNE)) {
-			return false;
-		}
-		return world.setBlockAndUpdate(pos, state);
-	}
-
-	public static boolean canPollinate(BlockState state) {
-		if (state.is(BlockTags.TALL_FLOWERS)) {
-			if (state.getBlock() == Blocks.SUNFLOWER) {
-				return state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER;
-			} else {
-				return true;
-			}
-		} else if (state.is(BlockTags.SMALL_FLOWERS)) {
-			return true;
-		} else if (bee && state.getBlock() instanceof FruitLeavesBlock) {
-			if (!((FruitLeavesBlock) state.getBlock()).canGrow(state)) {
+	public static Predicate<BlockState> wrapPollinationPredicate(Predicate<BlockState> original) {
+		return state -> {
+			if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
 				return false;
 			}
-			return state.getValue(FruitLeavesBlock.AGE) == 2;
-		} else {
-			return false;
-		}
-	}
-
-	public static void onPollinateComplete(Bee bee) {
-		BlockPos savedFlowerPos = bee.getSavedFlowerPos();
-		if (savedFlowerPos == null) {
-			return;
-		}
-		Level level = bee.level();
-		final BlockState state = level.getBlockState(savedFlowerPos);
-		Block block = state.getBlock();
-		String newPollen = Util.trimRL(BuiltInRegistries.BLOCK.getKey(block));
-		BeeAttributes attributes = BeeAttributes.of(bee);
-		List<String> pollens = attributes.getPollens();
-		pollens.remove(newPollen);
-		if (pollens.isEmpty()) {
-			pollens.add(newPollen);
-			return;
-		}
-		pollens.add(newPollen);
-		Optional<HybridizingRecipe> recipe = level.getRecipeManager().getRecipeFor(BeeModule.RECIPE_TYPE, new HybridizingContext(attributes), level);
-		if (recipe.isPresent()) {
-			Block newBlock = recipe.get().getResult(attributes);
-			BlockState newState = newBlock.defaultBlockState();
-			boolean isLeaves = newBlock instanceof FruitLeavesBlock;
-			boolean isFlower = !isLeaves && newState.is(BlockTags.FLOWERS);
-			boolean isMisc = !isLeaves && !isFlower;
-			if (!isMisc && (isLeaves != (block instanceof FruitLeavesBlock))) {
-				return;
-			}
-			BlockPos root = savedFlowerPos;
-			if (state.is(BlockTags.TALL_FLOWERS) && state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
-				root = root.below();
-			} else if (isMisc && !newBlock.isPossibleToRespawnInThis(newState) && !(block instanceof FruitLeavesBlock)) {
-				root = root.below();
-			}
-			boolean isBigFlower = false;
-			if (isLeaves) {
-				newState = newState.setValue(FruitLeavesBlock.AGE, 2);
-				newState = newState.setValue(LeavesBlock.DISTANCE, state.getValue(LeavesBlock.DISTANCE));
-			} else if (isFlower) {
-				if (newState.is(BlockTags.TALL_FLOWERS) && newState.hasProperty(DoublePlantBlock.HALF)) {
-					newState = newState.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER);
-					isBigFlower = true;
+			if (state.getBlock() instanceof FruitLeavesBlock block) {
+				if (block instanceof CherryLeavesBlock) {
+					return block.notPlacedByPlayer(state); // not placed by player
 				}
+				if (!block.canGrow(state)) {
+					return false;
+				}
+				return state.getValue(FruitLeavesBlock.AGE) == 2;
+			} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) && state.getValue(LeavesBlock.PERSISTENT)) {
+				return false;
 			}
-			boolean placed = safeSetBlock(level, root, newState);
-			if (placed && isBigFlower) {
-				newState = newState.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER);
-				safeSetBlock(level, root.above(), newState);
-				level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, root.above(), 0); // bonemeal effects
-			}
-			if (placed) {
-				level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, root, 0);
-				pollens.clear();
-				return;
-			}
-		}
-		/* off */
-        if (pollens.size() > 3) {
-            int toRemove = pollens.size() - 3;
-            while (toRemove --> 0) {
-				pollens.remove(0);
-            }
-        }
-		pollens.add(newPollen);
-        /* on */
+			return original.test(state);
+		};
 	}
 
 	public static void modifyRayTraceResult(HitResult hitResult, Consumer<HitResult> consumer) {

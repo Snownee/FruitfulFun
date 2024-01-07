@@ -7,8 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.MutagenItem;
@@ -20,20 +19,21 @@ import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
 import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.loader.event.InitEvent;
+import snownee.lychee.LycheeLootContextParams;
+import snownee.lychee.RecipeTypes;
+import snownee.lychee.core.contextual.ContextualConditionType;
+import snownee.lychee.core.recipe.LycheeRecipe;
+import snownee.lychee.mixin.LootContextParamSetsAccess;
 
 @KiwiModule("bee")
 @KiwiModule.Optional
 public class BeeModule extends AbstractModule {
 
 	@Name("hybridizing")
-	public static final RecipeType<HybridizingRecipe> RECIPE_TYPE = new RecipeType<>() {
-		@Override
-		public String toString() {
-			return "hybridizing";
-		}
-	};
+	public static final KiwiGO<HybridizingRecipeType> RECIPE_TYPE = go(() -> new HybridizingRecipeType("fruitfulfun:hybridizing", HybridizingRecipe.class, null));
 	@Name("hybridizing")
-	public static final RecipeSerializer<HybridizingRecipe> SERIALIZER = new HybridizingRecipe.Serializer();
+	public static final KiwiGO<LycheeRecipe.Serializer<HybridizingRecipe>> SERIALIZER = go(HybridizingRecipe.Serializer::new);
+	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(BeeHasTrait.Type::new);
 	public static ResourceLocation BEE_ONE_CM = new ResourceLocation(FruitfulFun.ID, "bee_one_cm");
 	public static ResourceLocation BEES_BRED = new ResourceLocation(FruitfulFun.ID, "bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "entity.bee.shear")));
@@ -44,6 +44,9 @@ public class BeeModule extends AbstractModule {
 
 	public BeeModule() {
 		Hooks.bee = true;
+		LootContextParamSetsAccess.callRegister("fruitfulfun:hybridizing", $ -> {
+			$.required(LootContextParams.ORIGIN).required(LootContextParams.THIS_ENTITY).required(LootContextParams.BLOCK_STATE).required(LycheeLootContextParams.BLOCK_POS).optional(LootContextParams.BLOCK_ENTITY);
+		});
 	}
 
 	@Override
@@ -54,6 +57,7 @@ public class BeeModule extends AbstractModule {
 	@Override
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
+			RecipeTypes.ALL.add(RECIPE_TYPE.get());
 			PotionBrewing.ALLOWED_CONTAINERS.add(Ingredient.of(BeeModule.MUTAGEN.get()));
 		});
 	}

@@ -6,51 +6,88 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import snownee.fruits.FruitType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.network.CInspectBeePacket;
 import snownee.fruits.bee.network.InspectTarget;
 import snownee.fruits.bee.network.SInspectBeeReplyPacket;
+import snownee.fruits.compat.jade.JadeCompat;
 
 public class InspectorClientHandler {
 	@Nullable
 	public static InspectTarget inspectingBee;
 	private static int hoverTicks;
+	private static boolean jadeHint = true;
+	private static boolean holdAlt;
+	private static long holdAltStart;
+	private static int pageNow;
 
 	public static void tick(Minecraft mc) {
-		if (inspectingBee == null || mc.level == null) {
+		if (mc.level == null || mc.player == null) {
 			return;
 		}
-		InspectTarget target = InspectTarget.find(mc.level, mc.hitResult);
-		if (target == null || !Objects.equals(target, inspectingBee) || !(target.getEntity(mc.level) instanceof Bee bee) || bee.isDeadOrDying()) {
+		if (!mc.player.isUsingItem() || !BeeModule.INSPECTOR.is(mc.player.getUseItem())) {
 			reset();
 			return;
+		}
+		long millis = Util.getMillis();
+		boolean alt = Screen.hasAltDown();
+		if (!holdAlt && alt) {
+			holdAltStart = millis;
+		} else if (holdAlt && !alt) {
+			if (millis - holdAltStart < 500) {
+				pageNow += Screen.hasControlDown() ? -1 : 1;
+				pageNow = Math.floorMod(pageNow, 3);
+			}
+		}
+		holdAlt = alt;
+		InspectTarget target = InspectTarget.find(mc.level, mc.hitResult);
+		if (target != null) {
+			if (!(target.getEntity(mc.level) instanceof Bee bee) || bee.isDeadOrDying()) {
+				target = null;
+			}
+		}
+		if (target == null) {
+			reset();
+			return;
+		}
+		if (!Objects.equals(target, inspectingBee)) {
+			inspectingBee = target;
+			hoverTicks = 0;
+			if (!Hooks.jade) {
+				mc.player.displayClientMessage(Component.translatable("tip.fruitfulfun.analyzing"), true);
+				if (jadeHint && !mc.player.getOffhandItem().is(Items.WRITABLE_BOOK)) {
+					jadeHint = false;
+					mc.player.displayClientMessage(Component.translatable("tip.fruitfulfun.recommendJade"), false);
+				}
+			}
 		}
 		if (++hoverTicks == 10) {
 			CInspectBeePacket.I.sendToServer(inspectingBee::toNetwork);
-			reset();
+			if (Hooks.jade) {
+				JadeCompat.ensureVisibility(target.getClass() == InspectTarget.EntityTarget.class);
+			}
 		}
-	}
-
-	public static void startInspecting(InspectTarget target) {
-		reset();
-		inspectingBee = target;
 	}
 
 	public static void reset() {
@@ -90,29 +127,29 @@ public class InspectorClientHandler {
 
 		lines.add(I18n.get("text.fruitfulfun.pollen"));
 		for (String pollen : pollens) {
-			Item item = FruitType.getFruitOrDefault(pollen);
-			if (item == Items.AIR) {
+			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen));
+			if (block == Blocks.AIR) {
 				lines.add("- " + StringUtils.capitalize(pollen.replace('_', ' ')));
 			} else {
-				lines.add("- " + item.getDescription().getString());
+				lines.add("- " + block.getName().getString());
 			}
 		}
 		if (pollens.isEmpty()) {
 			lines.add(I18n.get("text.fruitfulfun.pollen.none"));
 		}
-		pages.add(Joiner.on('\n').join(lines));
+		pages.add(String.join("\n", lines));
 		lines.clear();
 
 		lines.add(I18n.get("text.fruitfulfun.trait"));
 		for (Trait trait : traits) {
-			String name = I18n.get("text.fruitfulfun.trait." + trait.name());
-			String desc = I18n.get("text.fruitfulfun.trait." + trait.name() + ".desc");
+			String name = trait.getDisplayName().getString();
+			String desc = trait.getDescription().getString();
 			lines.add(I18n.get("text.fruitfulfun.trait.pair", name, desc));
 		}
 		if (traits.isEmpty()) {
 			lines.add(I18n.get("text.fruitfulfun.trait.none"));
 		}
-		pages.add(Joiner.on('\n').join(lines));
+		pages.add(String.join("\n", lines));
 		lines.clear();
 
 		lines.add(I18n.get("text.fruitfulfun.gene"));
@@ -121,7 +158,7 @@ public class InspectorClientHandler {
 			String gene2 = "" + gene.code() + gene.low();
 			lines.add(I18n.get("text.fruitfulfun.gene.pair", gene1, gene2));
 		}
-		pages.add(Joiner.on('\n').join(lines));
+		pages.add(String.join("\n", lines));
 		lines.clear();
 	}
 
@@ -129,9 +166,20 @@ public class InspectorClientHandler {
 		Level level = Minecraft.getInstance().level;
 		InspectTarget target = InspectTarget.find(level, Minecraft.getInstance().hitResult);
 		if (target != null && target.getEntity(level) instanceof Bee) {
-			InspectorClientHandler.startInspecting(target);
 			return true;
 		}
 		return false;
+	}
+
+	public static int getPageNow() {
+		return pageNow;
+	}
+
+	public static void setPageNow(int pageNow) {
+		InspectorClientHandler.pageNow = Math.floorMod(pageNow, 3);
+	}
+
+	public static boolean isAnalyzing() {
+		return inspectingBee != null && hoverTicks < 10;
 	}
 }

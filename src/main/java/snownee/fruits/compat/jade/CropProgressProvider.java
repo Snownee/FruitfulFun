@@ -11,8 +11,6 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.theme.IThemeHelper;
 
 public class CropProgressProvider implements IBlockComponentProvider {
-	public static final IBlockComponentProvider INSTANCE = new CropProgressProvider();
-
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 		if (!config.get(Identifiers.MC_CROP_PROGRESS)) {

@@ -6,9 +6,19 @@
       "module": "fruitfulfun:bee"
     }
   ],
-  "ingredients": [
+  "pollens": [
     "fruitfulfun:lime_leaves",
     "fruitfulfun:citron_leaves"
   ],
-  "result": "fruitfulfun:lemon_leaves"
+  "post": {
+    "type": "place",
+    "block": {
+      "blocks": [
+        "fruitfulfun:lemon_leaves"
+      ],
+      "state": {
+        "age": 2
+      }
+    }
+  }
 }
