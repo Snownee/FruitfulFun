@@ -39,3 +39,44 @@ around the world. The Farmer's Delight integration will also be enabled if you h
 
 **NOTE: This description page is for Minecraft 1.20.1+. Older versions have many differences and are no
 longer receive updates.**
+
+## Commercial Use
+
+Redistribution of this mod or its assets is not allowed, especially for commercial purposes.
+
+<details>
+<summary>Game Mechanic Details ✨</summary>
+
+## Mutagen
+
+Mutagen can dramatically increase the mutation rate of a specific gene. To use it, right-click on the
+parent bee before mating. The mutagen is produced at the brewing stand, and if you get an unwanted mutagen,
+you can simply craft it into an empty bottle.
+
+## Bee Inspector
+
+Bees have 4 genes:
+
+- **RC**: Determines the rain capability.
+- **FC**: Determines the appearance and wither tolerance.
+- **FT1** and **FT2**: Determines features like speed, health, and the ability to be ridden or do advanced pollination.
+
+Use the Bee Inspector to view a bee's genes, traits, and pollens. If you have a writable book on your off-hand,
+you can record the information and trait description in the book.
+
+## Riding Bees
+
+To ride a bee, you need to put a saddle on it first. The bee must have the "rideable" trait, and is bred by
+you. You can't put saddle on a baby bee.
+
+While riding, you can't fly higher than 15 blocks. If your bee doesn't have the "rain-capable" trait, it will
+refuse to fly in the rain.
+
+Use shears to remove the saddle.
+
+## Redlove Fruit
+
+Redlove Fruit is a special fruit that can be obtained from the crossbreeding. Eating it will regenerate a small
+amount of your health. More importantly, it can be used to reduce the cooldown of animal breeding.
+
+</details>
