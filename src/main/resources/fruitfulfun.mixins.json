@@ -12,6 +12,7 @@
     "BlockEntityTypeMixin",
     "BlockStateMixin",
     "EntityMixin",
+    "FlyNodeEvaluatorMixin",
     "GiveGiftToHeroMixin",
     "InstrumentItemMixin",
     "MobMixin",

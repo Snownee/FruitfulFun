@@ -20,6 +20,7 @@ import snownee.kiwi.KiwiModule.Category;
 import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.lychee.LycheeLootContextParams;
+import snownee.lychee.LycheeRegistries;
 import snownee.lychee.RecipeTypes;
 import snownee.lychee.core.contextual.ContextualConditionType;
 import snownee.lychee.core.recipe.LycheeRecipe;
@@ -33,7 +34,7 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<HybridizingRecipeType> RECIPE_TYPE = go(() -> new HybridizingRecipeType("fruitfulfun:hybridizing", HybridizingRecipe.class, null));
 	@Name("hybridizing")
 	public static final KiwiGO<LycheeRecipe.Serializer<HybridizingRecipe>> SERIALIZER = go(HybridizingRecipe.Serializer::new);
-	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(BeeHasTrait.Type::new);
+	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(BeeHasTrait.Type::new, () -> LycheeRegistries.CONTEXTUAL);
 	public static ResourceLocation BEE_ONE_CM = new ResourceLocation(FruitfulFun.ID, "bee_one_cm");
 	public static ResourceLocation BEES_BRED = new ResourceLocation(FruitfulFun.ID, "bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "entity.bee.shear")));

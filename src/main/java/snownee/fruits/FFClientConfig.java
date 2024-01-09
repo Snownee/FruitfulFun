@@ -1,5 +1,6 @@
 package snownee.fruits;
 
+import snownee.kiwi.config.ConfigUI;
 import snownee.kiwi.config.KiwiConfig;
 
 @KiwiConfig(type = KiwiConfig.ConfigType.CLIENT)
@@ -10,5 +11,8 @@ public final class FFClientConfig {
 	}
 
 	public static CherryParticleOption cherryParticle = CherryParticleOption.Modded;
+	@KiwiConfig.Range(min = 0, max = 50)
+	@ConfigUI.Slider
+	public static int moddedCherryParticleFrequency = 32;
 
 }

@@ -204,6 +204,7 @@ unifiedPublishing {
                     depends "fabric-api"
                     depends "kiwi-fabric"
                     depends "lychee-fabric"
+                    optional "jade"
                 }
             }
         }
@@ -217,6 +218,7 @@ unifiedPublishing {
                     depends "fabric-api"
                     depends "kiwi"
                     depends "lychee"
+                    optional "jade"
                 }
             }
         }

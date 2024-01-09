@@ -98,13 +98,16 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 		return IntList.of();
 	}
 
-	public void addInvisibleIngredients(Consumer<ItemStack> inputAcceptor, Consumer<ItemStack> outputAcceptor) {
+	public void addInvisibleInputs(Consumer<ItemStack> acceptor) {
 		for (String pollen : pollens) {
 			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen));
 			if (block instanceof FruitLeavesBlock leavesBlock) {
-				inputAcceptor.accept(new ItemStack(leavesBlock.type.get().sapling.get()));
+				acceptor.accept(new ItemStack(leavesBlock.type.get().sapling.get()));
 			}
 		}
+	}
+
+	public void addInvisibleOutputs(Consumer<ItemStack> acceptor) {
 		ILycheeRecipe.filterHidden(getAllActions())
 				.flatMap($ -> $.getItemOutputs().stream())
 				.map(ItemStack::getItem)
@@ -116,7 +119,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 					return null;
 				})
 				.filter(Objects::nonNull)
-				.forEach(outputAcceptor);
+				.forEach(acceptor);
 	}
 
 	public static class Serializer extends LycheeRecipe.Serializer<HybridizingRecipe> {

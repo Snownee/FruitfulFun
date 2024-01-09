@@ -1,11 +1,12 @@
 {
-  "type": "kiwi:shapeless",
   "fabric:load_conditions": [
     {
       "condition": "kiwi:is_loaded",
       "module": "fruitfulfun:food"
     }
   ],
+  "type": "kiwi:shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "fruitfulfun:redlove"
@@ -13,16 +14,19 @@
     {
       "fabric:type": "kiwi:alternatives",
       "options": [
-        [
-          {
-            "tag": "c:chocolatebar"
-          },
-          {
-            "tag": "c:chocolates"
-          }
-        ],
         {
-          "item": "cocoa_beans"
+          "fabric:type": "fabric:any",
+          "ingredients": [
+            {
+              "tag": "c:chocolates"
+            },
+            {
+              "tag": "c:chocolatebar"
+            }
+          ]
+        },
+        {
+          "item": "minecraft:cocoa_beans"
         }
       ]
     },
@@ -34,11 +38,22 @@
         },
         {
           "tag": "c:milk"
+        },
+        {
+          "item": "minecraft:milk_bucket"
         }
       ]
     },
     {
-      "tag": "c:eggs"
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:eggs"
+        },
+        {
+          "item": "minecraft:egg"
+        }
+      ]
     },
     {
       "fabric:type": "kiwi:alternatives",
@@ -50,12 +65,12 @@
           "tag": "c:grain/wheat"
         },
         {
-          "item": "wheat"
+          "item": "minecraft:wheat"
         }
       ]
     },
     {
-      "item": "sugar"
+      "item": "minecraft:sugar"
     }
   ],
   "result": {

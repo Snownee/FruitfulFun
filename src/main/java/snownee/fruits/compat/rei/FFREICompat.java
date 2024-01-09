@@ -11,10 +11,25 @@ import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
+import snownee.lychee.compat.rei.REICompat;
 
-public class REICompat implements REIClientPlugin {
+public class FFREICompat implements REIClientPlugin {
+	public FFREICompat() {
+		REICompat.addCategoryFactoryProvider($ -> {
+			if (Hooks.bee) {
+				$.put(BeeModule.RECIPE_TYPE.get().categoryId, $$ -> new HybridizingCategory(BeeModule.RECIPE_TYPE.get()));
+			}
+		});
+		REICompat.addDisplayFactoryProvider($ -> {
+			if (Hooks.bee) {
+				REICompat.registerDisplayFactory($, BeeModule.RECIPE_TYPE.get().categoryId, HybridizingDisplay::new);
+			}
+		});
+	}
+
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		CategoryIdentifier<Display> categoryIdentifier = CategoryIdentifier.of("minecraft", "plugins/brewing");

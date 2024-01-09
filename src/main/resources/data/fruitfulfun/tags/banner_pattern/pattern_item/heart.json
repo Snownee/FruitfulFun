@@ -1,5 +1,5 @@
 {
   "values": [
-    { "id": "fruitfulfun:heart", "required": false }
+    "fruitfulfun:heart"
   ]
 }

@@ -8,13 +8,12 @@
   ],
   "ingredients": [
     {
-      "item": "fruitfulfun:stripped_redlove_log"
+      "item": "fruitfulfun:redlove_wood"
     }
   ],
   "results": [
     {
-      "item": "fruitfulfun:redlove_planks",
-      "count": 6
+      "item": "fruitfulfun:stripped_redlove_wood"
     }
   ],
   "processingTime": 50

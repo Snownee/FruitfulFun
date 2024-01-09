@@ -1,0 +1,82 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:farmersdelight"
+      }
+    }
+  ],
+  "type": "kiwi:shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:fruits/grapefruit"
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:cream"
+        },
+        {
+          "tag": "c:milk"
+        },
+        {
+          "item": "minecraft:milk_bucket"
+        }
+      ]
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:eggs"
+        },
+        {
+          "item": "minecraft:egg"
+        }
+      ]
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:gelatin"
+        },
+        {
+          "tag": "c:gelatine"
+        },
+        {
+          "tag": "c:slime_balls"
+        },
+        {
+          "item": "minecraft:slime_ball"
+        }
+      ]
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:vannila"
+        },
+        {
+          "tag": "c:crops/vanilla"
+        },
+        []
+      ]
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:grapefruit_panna_cotta"
+  }
+}

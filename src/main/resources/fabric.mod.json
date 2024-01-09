@@ -4,9 +4,9 @@
   "version": "${version}",
 
   "name": "Fruitful Fun",
-  "description": "Introduces insightful contents featuring fruits and beekeeping",
+  "description": "Introduces insightful content featuring fruits and beekeeping",
   "authors": ["Snownee"],
-  "contributors": ["WZD", "MalayP", "minzhi", "PixelCraft"],
+  "contributors": ["WZD", "MalayP", "minzhi", "PixelCraft", "VVVHY"],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/fruit-trees",
     "sources": "https://github.com/Snownee/FruitfulFun",
@@ -14,7 +14,7 @@
   },
 
   "license": "ARR",
-  "icon": "assets/fruitfulfun/logo.png",
+  "icon": "assets/fruitfulfun/icon.png",
 
   "entrypoints": {
     "main": [
@@ -27,10 +27,10 @@
       "snownee.fruits.datagen.FFDataGen"
     ],
     "rei_client": [
-      "snownee.fruits.compat.rei.REICompat"
+      "snownee.fruits.compat.rei.FFREICompat"
     ],
     "jei_mod_plugin": [
-      "snownee.fruits.compat.jei.JEICompat"
+      "snownee.fruits.compat.jei.FFJEICompat"
     ],
     "jade": [
       "snownee.fruits.compat.jade.JadeCompat"
@@ -45,6 +45,9 @@
     "minecraft": ">=1.20",
     "kiwi": ">=11.4",
     "lychee": ">=5.1.4"
+  },
+  "recommends": {
+    "jade": "*"
   },
 
   "custom": {

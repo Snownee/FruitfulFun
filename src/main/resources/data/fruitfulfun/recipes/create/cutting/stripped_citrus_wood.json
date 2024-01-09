@@ -8,12 +8,12 @@
   ],
   "ingredients": [
     {
-      "item": "fruitfulfun:stripped_redlove_log"
+      "item": "fruitfulfun:stripped_citrus_wood"
     }
   ],
   "results": [
     {
-      "item": "fruitfulfun:redlove_planks",
+      "item": "fruitfulfun:citrus_planks",
       "count": 6
     }
   ],

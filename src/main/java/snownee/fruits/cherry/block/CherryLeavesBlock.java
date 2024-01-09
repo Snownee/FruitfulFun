@@ -46,7 +46,7 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 			Blocks.CHERRY_LEAVES.animateTick(stateIn, level, pos, rand);
 			return;
 		}
-		int i = rand.nextInt(16);
+		int i = rand.nextInt(64 - FFClientConfig.moddedCherryParticleFrequency);
 		if (i > 1) {
 			return;
 		}
@@ -72,11 +72,11 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	@Override
 	protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState blockState) {
 		super.spawnDestroyParticles(level, player, pos, blockState);
-		spawnDestroyParticles(level, pos, particleType);
+		spawnDestroyParticles(level, player, pos, particleType);
 	}
 
-	public static void spawnDestroyParticles(Level level, BlockPos pos, ParticleOptions particleType) {
-		if (level.isClientSide && FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded) {
+	public static void spawnDestroyParticles(Level level, Player player, BlockPos pos, ParticleOptions particleType) {
+		if (level.isClientSide && FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded && pos.distToCenterSqr(player.position()) < 81) {
 			int times = Mth.randomBetweenInclusive(level.random, 6, 12);
 			for (int i = 0; i < times; ++i) {
 				double x = level.random.nextGaussian() * 0.3D;

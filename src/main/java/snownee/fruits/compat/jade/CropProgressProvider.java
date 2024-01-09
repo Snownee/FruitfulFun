@@ -2,6 +2,7 @@ package snownee.fruits.compat.jade;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -16,10 +17,12 @@ public class CropProgressProvider implements IBlockComponentProvider {
 		if (!config.get(Identifiers.MC_CROP_PROGRESS)) {
 			return;
 		}
-		int age = accessor.getBlockState().getValue(FruitLeavesBlock.AGE);
-		if (age > 0) {
-			addMaturityTooltip(tooltip, (age - 1) / 2.0F);
+		BlockState state = accessor.getBlockState();
+		if (!((FruitLeavesBlock) state.getBlock()).canGrow(state)) {
+			return;
 		}
+		int age = state.getValue(FruitLeavesBlock.AGE);
+		addMaturityTooltip(tooltip, (age - 1) / 2.0F);
 	}
 
 	private static void addMaturityTooltip(ITooltip tooltip, float growthValue) {

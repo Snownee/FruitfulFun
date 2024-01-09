@@ -1,28 +1,15 @@
 {
-  "type": "kiwi:shapeless",
   "fabric:load_conditions": [
     {
       "condition": "kiwi:is_loaded",
       "module": "fruitfulfun:food"
     }
   ],
+  "type": "kiwi:shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "tag": "c:fruits/lemon"
-    },
-    {
-      "fabric:type": "kiwi:alternatives",
-      "options": [
-        {
-          "tag": "c:vegetables/onion"
-        },
-        {
-          "tag": "c:crops/potato"
-        },
-        {
-          "item": "potato"
-        }
-      ]
     },
     {
       "fabric:type": "kiwi:alternatives",
@@ -36,19 +23,21 @@
       ]
     },
     {
-      "item": "cooked_chicken"
-    },
-    {
-      "item": "bowl"
-    },
-    {
       "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:cheese"
+          "tag": "c:vegetables/onion"
         },
-        []
+        {
+          "item": "minecraft:potato"
+        }
       ]
+    },
+    {
+      "item": "minecraft:cooked_chicken"
+    },
+    {
+      "item": "minecraft:bowl"
     }
   ],
   "result": {

@@ -14,13 +14,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.FFCommonConfig;
-import snownee.fruits.FilteredFlyingPathNavigation;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
@@ -68,15 +66,6 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		if (!state.hasBlockEntity() && state.getBlock() instanceof FruitLeavesBlock) {
 			cir.setReturnValue(true);
 		}
-	}
-
-	@Inject(at = @At("HEAD"), method = "createNavigation", cancellable = true)
-	private void fruits_createNavigation(Level levelIn, CallbackInfoReturnable<PathNavigation> cir) {
-		FilteredFlyingPathNavigation flyingpathnavigator = new FilteredFlyingPathNavigation(this, levelIn);
-		flyingpathnavigator.setCanOpenDoors(false);
-		flyingpathnavigator.setCanFloat(false);
-		flyingpathnavigator.setCanPassDoors(true);
-		cir.setReturnValue(flyingpathnavigator);
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))

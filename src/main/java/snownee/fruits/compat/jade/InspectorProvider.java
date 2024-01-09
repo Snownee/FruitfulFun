@@ -14,6 +14,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.Items;
 import snownee.fruits.FruitType;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
@@ -70,16 +71,23 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 		data.put("Loci", list);
 	}
 
-	public static void appendTooltip(ITooltip tooltip, CompoundTag data) {
+	public static void appendTooltip(ITooltip tooltip, Accessor<?> accessor) {
+		CompoundTag data = accessor.getServerData();
+		if (InspectorClientHandler.isAnalyzing()) {
+			tooltip.add(Component.translatable("tip.fruitfulfun.analyzing"));
+			IElementHelper elements = IElementHelper.get();
+			IElement icon = elements.smallItem(Items.HONEYCOMB.getDefaultInstance()).message(null);
+			int i = InspectorClientHandler.getHoverTicks() / 4 % 3;
+			tooltip.append(elements.spacer(2 + i * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
+			tooltip.append(icon);
+			tooltip.append(elements.spacer((2 - i) * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
+			return;
+		}
 		if (!data.contains("Loci")) {
 			return;
 		}
 		tooltip.remove(Identifiers.MC_ENTITY_HEALTH);
 		tooltip.remove(Identifiers.MC_ENTITY_ARMOR);
-		if (InspectorClientHandler.isAnalyzing()) {
-			tooltip.add(Component.translatable("tip.fruitfulfun.analyzing"));
-			return;
-		}
 		switch (InspectorClientHandler.getPageNow()) {
 			case 0:
 				showPollens(tooltip, data);
@@ -144,12 +152,12 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-		appendTooltip(tooltip, accessor.getServerData());
+		appendTooltip(tooltip, accessor);
 	}
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-		appendTooltip(tooltip, accessor.getServerData());
+		appendTooltip(tooltip, accessor);
 	}
 
 	@Override

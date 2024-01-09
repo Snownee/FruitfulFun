@@ -21,14 +21,15 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
+import snownee.lychee.compat.jei.JEICompat;
 
 @JeiPlugin
-public class JEICompat implements IModPlugin {
+public class FFJEICompat implements IModPlugin {
 
 	public static final ResourceLocation UID = new ResourceLocation(FruitfulFun.ID, "main");
 
-	public JEICompat() {
-		snownee.lychee.compat.jei.JEICompat.addCategoryFactoryProvider($ -> {
+	public FFJEICompat() {
+		JEICompat.addCategoryFactoryProvider($ -> {
 			if (Hooks.bee) {
 				$.put(BeeModule.RECIPE_TYPE.get().categoryId, $$ -> new HybridizingCategory(BeeModule.RECIPE_TYPE.get()));
 			}

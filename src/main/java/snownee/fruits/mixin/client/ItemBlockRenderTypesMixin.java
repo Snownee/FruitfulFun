@@ -32,7 +32,7 @@ public class ItemBlockRenderTypesMixin {
 		}
 	}
 
-	@Inject(at = @At(value = "RETURN", ordinal = 0), method = "getMovingBlockRenderType", cancellable = true, remap = false)
+	@Inject(at = @At(value = "RETURN", ordinal = 0), method = "getMovingBlockRenderType", cancellable = true)
 	private static void fruits_getMovingBlockRenderType(BlockState state, CallbackInfoReturnable<RenderType> ci) {
 		if (state.getBlock() instanceof FruitLeavesBlock) {
 			RenderType renderType = TYPE_BY_BLOCK.get(state.getBlock());

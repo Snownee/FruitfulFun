@@ -34,6 +34,7 @@ import snownee.fruits.bee.network.SInspectBeeReplyPacket;
 import snownee.fruits.compat.jade.JadeCompat;
 
 public class InspectorClientHandler {
+	public static final int ANALYZE_TICKS = 12;
 	@Nullable
 	public static InspectTarget inspectingBee;
 	private static int hoverTicks;
@@ -82,7 +83,7 @@ public class InspectorClientHandler {
 				}
 			}
 		}
-		if (++hoverTicks == 10) {
+		if (++hoverTicks == ANALYZE_TICKS) {
 			CInspectBeePacket.I.sendToServer(inspectingBee::toNetwork);
 			if (Hooks.jade) {
 				JadeCompat.ensureVisibility(target.getClass() == InspectTarget.EntityTarget.class);
@@ -180,6 +181,10 @@ public class InspectorClientHandler {
 	}
 
 	public static boolean isAnalyzing() {
-		return inspectingBee != null && hoverTicks < 10;
+		return inspectingBee != null && hoverTicks < ANALYZE_TICKS;
+	}
+
+	public static int getHoverTicks() {
+		return hoverTicks;
 	}
 }

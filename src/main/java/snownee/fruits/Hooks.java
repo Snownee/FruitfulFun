@@ -162,8 +162,10 @@ public final class Hooks {
 			if (!player.level().isClientSide) {
 				// add debug code here
 //				attributes.setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
-				attributes.getLocus(Allele.FANCY).setData((byte) 0x22);
-				attributes.getLocus(Allele.FEAT2).setData((byte) 0x22);
+//				attributes.getLocus(Allele.FANCY).setData((byte) 0x22);
+				attributes.getLocus(Allele.FEAT2).setData((byte) 0x11);
+				attributes.getPollens().add("fruitfulfun:apple_leaves");
+				attributes.getPollens().add("wither_rose");
 				attributes.updateTraits(bee);
 			}
 			return InteractionResult.CONSUME;
