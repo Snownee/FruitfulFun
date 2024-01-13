@@ -50,7 +50,7 @@ public class FoodItem extends ModItem {
 			entity.eat(level, stack);
 		}
 
-		ItemStack remainder = stack.getRecipeRemainder();
+		ItemStack remainder = CommonProxy.getRecipeRemainder(stack);
 		if (!remainder.isEmpty() && (player == null || !player.getAbilities().instabuild)) {
 			if (stack.isEmpty()) {
 				return remainder;

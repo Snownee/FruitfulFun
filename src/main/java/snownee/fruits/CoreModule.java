@@ -45,6 +45,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
+import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.entity.SlidingDoorEntity;
@@ -189,7 +190,7 @@ public final class CoreModule extends AbstractModule {
 
 	public static void createPoiTypes(AbstractModule module) {
 		ModuleInfo info = KiwiModules.get(module.uid);
-		info.getRegistryEntries(BuiltInRegistries.BLOCK)
+		info.getRegistryEntries(ForgeRegistries.BLOCKS)
 				.filter($ -> $.entry instanceof FruitLeavesBlock)
 				.forEach($ -> {
 					Preconditions.checkArgument($.name.getPath().endsWith("_leaves"));
@@ -198,7 +199,7 @@ public final class CoreModule extends AbstractModule {
 					info.register(new PoiType(block.getStateDefinition().getPossibleStates().stream()
 									.filter(BlockBehaviour.BlockStateBase::hasBlockEntity)
 									.collect(Collectors.toSet()), 40, 10),
-							id, BuiltInRegistries.POINT_OF_INTEREST_TYPE, null);
+							id, ForgeRegistries.POI_TYPES, null);
 				});
 	}
 
@@ -218,14 +219,14 @@ public final class CoreModule extends AbstractModule {
 				VanillaActions.registerCompostable(0.5f, type.fruit.get());
 				VanillaActions.registerCompostable(0.3f, type.leaves.get());
 				VanillaActions.registerCompostable(0.3f, type.sapling.get());
-				VanillaActions.registerVillagerCollectable(type.fruit.get());
+				VanillaActions.registerVillagerPickupable(type.fruit.get());
 				VanillaActions.registerVillagerCompostable(type.fruit.get());
 				VanillaActions.registerVillagerFood(type.fruit.get(), 1);
 			}
 
 			KiwiModules.get().stream()
 					.filter($ -> $.module.uid.getNamespace().equals(FruitfulFun.ID))
-					.flatMap($ -> $.getRegistryEntries(BuiltInRegistries.BLOCK))
+					.flatMap($ -> $.<Block>getRegistryEntries(ForgeRegistries.BLOCKS))
 					.forEach(CoreModule::setFlammability);
 		});
 	}

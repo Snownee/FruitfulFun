@@ -21,7 +21,8 @@
     "RideableBeeLivingEntityMixin",
     "RideableBeeMixin",
     "RideableBeeMobMixin",
-    "RideableBeePlayerMixin"
+    "RideableBeePlayerMixin",
+    "forge.FoliagePlacerAccess"
   ],
   "client": [
     "client.BeeRendererMixin",
@@ -32,7 +33,9 @@
     "client.ItemBlockRenderTypesMixin",
     "client.ItemInHandRendererMixin",
     "client.ItemRendererMixin",
-    "client.LivingEntityFlowerCrownMixin"
+    "client.LivingEntityFlowerCrownMixin",
+    "forge.BlockColorsAccess",
+    "forge.ItemColorsAccess"
   ],
   "injectors": {
     "defaultRequire": 1

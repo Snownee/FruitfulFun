@@ -18,6 +18,7 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerTy
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.mixin.forge.FoliagePlacerAccess;
 
 public class Fruitify extends FoliagePlacer {
 	public static final Codec<Fruitify> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -51,14 +52,14 @@ public class Fruitify extends FoliagePlacer {
 
 	@Override
 	public boolean shouldSkipLocation(RandomSource randomSource, int i, int j, int k, int l, boolean bl) {
-		return wrapped.shouldSkipLocation(randomSource, i, j, k, l, bl);
+		return ((FoliagePlacerAccess) wrapped).callShouldSkipLocation(randomSource, i, j, k, l, bl);
 	}
 
 	@Override
 	public void createFoliage(LevelSimulatedReader level, FoliageSetter foliageSetter, RandomSource pRandom, TreeConfiguration pConfig, int pMaxFreeTreeHeight, FoliageAttachment pAttachment, int pFoliageHeight, int pFoliageRadius, int pOffset) {
 		Set<BlockPos> activeLeaves = Sets.newLinkedHashSet();
 		FruitifiedFoliageSetter fruitifiedSetter = new FruitifiedFoliageSetter(foliageSetter, activeLeaves, pRandom, worldgen);
-		wrapped.createFoliage(level, fruitifiedSetter, pRandom, pConfig, pMaxFreeTreeHeight, pAttachment, pFoliageHeight, pFoliageRadius, pOffset);
+		((FoliagePlacerAccess) wrapped).callCreateFoliage(level, fruitifiedSetter, pRandom, pConfig, pMaxFreeTreeHeight, pAttachment, pFoliageHeight, pFoliageRadius, pOffset);
 		BlockState core = pConfig.foliageProvider.getState(pRandom, pAttachment.pos());
 		if (core.getBlock() instanceof FruitLeavesBlock) {
 			core = core.setValue(LeavesBlock.DISTANCE, 1).setValue(LeavesBlock.PERSISTENT, true);

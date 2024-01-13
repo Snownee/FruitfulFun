@@ -1,23 +1,34 @@
 package snownee.fruits;
 
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.minecraft.core.DefaultedMappedRegistry;
-import net.minecraft.resources.ResourceKey;
+import java.util.function.Consumer;
+
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegistryBuilder;
 import snownee.kiwi.Kiwi;
+import snownee.lychee.Lychee;
 
 public class FFRegistries {
-	public static final DefaultedMappedRegistry<FruitType> FRUIT_TYPE = register("fruit_type", FruitType.class, new ResourceLocation(FruitfulFun.ID, "citron"));
+	public static DefaultedRegistry<FruitType> FRUIT_TYPE;
 
 	public static void init() {
 	}
 
-	private static <T> DefaultedMappedRegistry<T> register(String name, Class<?> clazz, ResourceLocation defaultId) {
-		var registry = FabricRegistryBuilder.<T>createDefaulted(ResourceKey.createRegistryKey(new ResourceLocation(FruitfulFun.ID, name)), defaultId)
-				.attribute(RegistryAttribute.SYNCED)
-				.buildAndRegister();
-		Kiwi.registerRegistry(registry, clazz);
-		return registry;
+	public static void init(NewRegistryEvent event) {
+		FFRegistries.<FruitType>register("fruit_type", FruitType.class, "citron", event, v -> FRUIT_TYPE = v);
+	}
+
+	private static <T> void register(String name, Class<?> clazz, String defaultKey, NewRegistryEvent event, Consumer<DefaultedRegistry<T>> consumer) {
+		RegistryBuilder<T> builder = new RegistryBuilder<T>().setName(new ResourceLocation(Lychee.ID, name))
+				.setDefaultKey(new ResourceLocation(FruitfulFun.ID, defaultKey));
+		event.create(builder, v -> {
+			Registry<?> registry = BuiltInRegistries.REGISTRY.get(v.getRegistryKey().location());
+			//noinspection unchecked
+			consumer.accept((DefaultedRegistry<T>) registry);
+			Kiwi.registerRegistry(v, clazz);
+		});
 	}
 }

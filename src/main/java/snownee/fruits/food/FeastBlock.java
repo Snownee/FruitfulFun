@@ -22,6 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import snownee.fruits.util.CommonProxy;
 
 public class FeastBlock extends FoodBlock {
 
@@ -38,7 +39,7 @@ public class FeastBlock extends FoodBlock {
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		int serves = getServings(state);
 		ItemStack servingItem = new ItemStack(this.servingItem.get());
-		ItemStack remainder = servingItem.getRecipeRemainder();
+		ItemStack remainder = CommonProxy.getRecipeRemainder(servingItem);
 		ItemStack held = player.getItemInHand(hand);
 		if (serves == 0) {
 			if (!level.isClientSide) {

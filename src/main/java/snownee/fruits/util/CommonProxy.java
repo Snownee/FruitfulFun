@@ -1,16 +1,12 @@
 package snownee.fruits.util;
 
+import java.util.List;
 import java.util.Objects;
 
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.BlockPos;
@@ -18,9 +14,9 @@ import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
@@ -28,12 +24,24 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.AddPackFindersEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.village.WandererTradesEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkHooks;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
@@ -41,14 +49,53 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
-import snownee.fruits.compat.trinkets.TrinketsCompat;
-import snownee.kiwi.Mod;
+import snownee.fruits.compat.curios.CuriosCompat;
+import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
 @Mod(FruitfulFun.ID)
-public class CommonProxy implements ModInitializer {
+public class CommonProxy {
+	public static void init() {
+		addFeature("citron");
+		addFeature("tangerine");
+		addFeature("lime");
+
+		MinecraftForge.EVENT_BUS.addListener((WandererTradesEvent event) -> {
+			if (!FFCommonConfig.wanderingTraderSapling) {
+				return;
+			}
+			List<VillagerTrades.ItemListing> trades = event.getGenericTrades();
+			trades.add((entity, random) -> {
+				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(), random).asItem().getDefaultInstance();
+				ItemStack emeralds = new ItemStack(Items.EMERALD, 8);
+				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
+			});
+		});
+
+		MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent event) -> {
+			MinecraftServer server = event.getServer();
+			ServerLevel world = server.overworld();
+			long seed = world.getSeed();
+			GeneticData geneticData = world.getDataStorage().computeIfAbsent(GeneticData::load, GeneticData::new, "fruitfulfun_genetics");
+			geneticData.initAlleles(seed);
+		});
+
+//		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+//		eventBus.addListener((AddPackFindersEvent event) -> {
+//			event.addRepositorySource();
+//		});
+
+		if (Platform.isPhysicalClient()) {
+			ClientProxy.init();
+		}
+
+		if (Hooks.curios) {
+			CuriosCompat.init();
+		}
+	}
+
 	public static boolean isCurativeItem(MobEffectInstance effectInstance, ItemStack stack) {
-		return stack.is(Items.MILK_BUCKET);
+		return effectInstance.isCurativeItem(stack);
 	}
 
 	public static boolean isFakePlayer(Entity entity) {
@@ -56,16 +103,18 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	public static Packet<ClientGamePacketListener> getAddEntityPacket(Entity entity) {
-		return new ClientboundAddEntityPacket(entity);
+		return NetworkHooks.getEntitySpawningPacket(entity);
 	}
 
 	public static void maybeGrowCrops(ServerLevel world, BlockPos pos, BlockState state, boolean defaultResult, Runnable defaultAction) {
-		if (defaultResult) {
+		if (ForgeHooks.onCropsGrowPre(world, pos, state, defaultResult)) {
 			defaultAction.run();
+			ForgeHooks.onCropsGrowPost(world, pos, state);
 		}
 	}
 
 	public static void addBuiltinPacks() {
+		init();
 		ModContainer modContainer = FabricLoader.getInstance().getModContainer(FruitfulFun.ID).orElseThrow();
 		if (Hooks.food) {
 			addBuiltinPack(modContainer, "food");
@@ -83,32 +132,11 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	public static boolean isShears(ItemStack stack) {
-		return stack.is(ConventionalItemTags.SHEARS);
+		return stack.canPerformAction(ToolActions.SHEARS_DISARM);
 	}
 
-	@Override
-	public void onInitialize() {
-		addFeature("citron");
-		addFeature("tangerine");
-		addFeature("lime");
-		TradeOfferHelper.registerWanderingTraderOffers(1, trades -> {
-			if (!FFCommonConfig.wanderingTraderSapling) {
-				return;
-			}
-			trades.add((entity, random) -> {
-				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(), random).asItem().getDefaultInstance();
-				ItemStack emeralds = new ItemStack(Items.EMERALD, 8);
-				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
-			});
-		});
-
-		ServerWorldEvents.LOAD.register((server, world) -> {
-			if (world == server.overworld()) {
-				long seed = world.getSeed();
-				GeneticData geneticData = world.getDataStorage().computeIfAbsent(GeneticData::load, GeneticData::new, "fruitfulfun_genetics");
-				geneticData.initAlleles(seed);
-			}
-		});
+	public static ItemStack getRecipeRemainder(ItemStack itemStack) {
+		return itemStack.getCraftingRemainingItem();
 	}
 
 	public static void initBeeModule() {
@@ -129,8 +157,8 @@ public class CommonProxy implements ModInitializer {
 		if (stack.getItem() instanceof FlowerCrownItem item) {
 			return item;
 		}
-		if (Hooks.trinkets) {
-			return TrinketsCompat.getFlowerCrown(entity);
+		if (Hooks.curios) {
+			return CuriosCompat.getFlowerCrown(entity);
 		}
 		return null;
 	}

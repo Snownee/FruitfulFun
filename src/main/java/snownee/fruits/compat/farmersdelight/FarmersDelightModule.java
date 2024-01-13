@@ -1,6 +1,8 @@
 package snownee.fruits.compat.farmersdelight;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.kiwi.AbstractModule;
@@ -23,9 +25,9 @@ public class FarmersDelightModule extends AbstractModule {
 
 	public static Block createCabinet() {
 		try {
-			return (Block) Class.forName("com.nhoryzon.mc.farmersdelight.block.CabinetBlock")
-					.getConstructor()
-					.newInstance();
+			return (Block) Class.forName("vectorwing.farmersdelight.common.block.CabinetBlock")
+					.getConstructor(BlockBehaviour.Properties.class)
+					.newInstance(BlockBehaviour.Properties.copy(Blocks.BARREL));
 		} catch (Exception e) {
 			FruitfulFun.LOGGER.error("Failed to load FarmersDelight cabinet", e);
 			return null;

@@ -1,0 +1,25 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+license = "ARR"
+
+[[mods]]
+modId = "fruitfulfun"
+version = "${file.jarVersion}"
+displayName = "Fruitful Fun"
+authors = "Snownee, WZD, MalayP, minzhi, PixelCraft, VVVHY"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/fruit-trees"
+description = "Introduces insightful content featuring fruits and beekeeping"
+
+[[dependencies.fruitfulfun]]
+modId = "kiwi"
+mandatory = true
+versionRange = "[11.4, 12)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fruitfulfun]]
+modId = "lychee"
+mandatory = true
+versionRange = "[5.1.4, 6)"
+ordering = "NONE"
+side = "BOTH"

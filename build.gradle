@@ -1,15 +1,164 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'eclipse'
+    id 'idea'
     id 'maven-publish'
     id "me.shedaniel.unified-publishing" version "0.1.+"
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+apply plugin: 'net.minecraftforge.gradle'
+//apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'org.spongepowered.mixin'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
-archivesBaseName = project.archives_base_name
-version = project.minecraft_version + "-fabric-" + project.mod_version
-group = project.maven_group
+version = "${minecraft_version}-forge-${mod_version}"
+group = "${maven_group}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = archives_base_name
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+minecraft {
+    // The mappings can be changed at any time and must be in the following format.
+    // Channel:   Version:
+    // snapshot   YYYYMMDD          Snapshot are built nightly.
+    // stable     #                 Stables are built at the discretion of the MCP team.
+    // official   MCVersion         Official field/method names from Mojang mapping files
+    // parchment  YYYY.MM.DD-MCVer  Javadocs and parameters layered on top of Mojmaps from the ParchmentMC team.
+    //
+    // You must be aware of the Mojang license when using the 'official' / 'parchment' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Use non-default mappings at your own risk. They may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: "official", version: minecraft_version
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    // Currently, this location cannot be changed from the default.
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            //property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            // Export mixin-changed classes
+            property 'mixin.debug.export', 'true'
+
+            // These arguments allow for optional authentication with Mojang servers.
+            // If you want to authenticate, put these properties in GRADLE_HOME/gradle.properties.
+            // By default, this is C:\Users\<your username>\.gradle\gradle.properties on Windows or ~/.gradle/gradle.properties on Linux/MacOS.
+            if (project.hasProperty('mc_uuid')) {
+                // Your UUID, trimmed / without the dashes
+                args '--uuid', project.getProperty('mc_uuid')
+            }
+            if (project.hasProperty('mc_username')) {
+                // Your Minecraft in-game username, not email
+                args '--username', project.getProperty('mc_username')
+            }
+            if (project.hasProperty('mc_accessToken')) {
+                // Your current access token. When it expires, you need to retrieve a new one and regenerate your run configurations.
+                // You may be able to find it in your .minecraft folder in launcher_accounts.json or launcher_profiles.json.
+                args '--accessToken', project.getProperty('mc_accessToken')
+            }
+
+            // Add mixin config to runtime
+            args '-mixin.config=' + project.getProperty('mod_id') + '.mixins.json'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            //property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            // Export mixin-changed classes
+            property 'mixin.debug.export', 'true'
+
+            // Add mixin config to runtime
+            args '-mixin.config=' + project.getProperty('mod_id') + '.mixins.json'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            //property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            // Export mixin-changed classes
+            property 'mixin.debug.export', 'true'
+
+            // Add mixin config to runtime
+            args '-mixin.config=' + project.getProperty('mod_id') + '.mixins.json'
+
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+    }
+}
+
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
@@ -22,178 +171,118 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
-    maven { url = "https://maven.parchmentmc.org" }
+    flatDir {
+        dir 'libs'
+    }
     maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://maven.terraformersmc.com/releases/" }
-    // Trinkets
     maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
-    }
-    maven {
-        name = "Ladysnake Libs"
-        url = 'https://maven.ladysnake.org/releases'
-    }
-
-    maven {
-        url "https://cursemaven.com"
+        url = "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
     }
-    maven { url = "https://api.modrinth.com/maven" }
-    flatDir { dir 'libs' }
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
+        url "https://maven.su5ed.dev/releases"
+    }
 }
 
-// Include resources generated by data generators.
-sourceSets {
-    main.resources.srcDirs += "src/generated/resources"
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    // Sets up the mixin config; this gets added to run configurations and the manifest in the final jar
+    config "${mod_id}.mixins.json"
+
+    // Enables exporting mixin-changed classes to .mixin.out in the run folder
+    debug.export = true
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-    // You may need to force-disable transitiveness on them.
-    modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-
-    modCompileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
-    modImplementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
-
-    modImplementation "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
-    annotationProcessor "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
-    //modImplementation "curse.maven:kiwi-549404:4968504"
-    //annotationProcessor "curse.maven:kiwi-549404:4968504"
-    modImplementation "libs:Lychee-1.20.1-fabric:${project.lychee_version}"
-    //modImplementation "curse.maven:lychee-574650:4942262"
-
-    modImplementation "curse.maven:jade-324717:4792447"
-
-    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
-    modImplementation "curse.maven:selene-499980:4981682"
-
-    modImplementation "maven.modrinth:debugutils:woRp83Qc"
-    modImplementation "maven.modrinth:farmers-delight-fabric:QXYNitXw"
-    modImplementation "maven.modrinth:supplementaries:8rvsAEun"
-
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2"))
-}
-
-loom {
-    mixin {
-        defaultRefmapName = "${project.mod_id}.refmap.json"
+    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.2"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.2")) {
+        jarJar.ranged(it, "[0.3.2,)")
     }
 
-    accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
+    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
 
-    runs {
-        // This adds a new gradle task that runs the datagen API: "gradlew runDatagen"
-        datagen {
-            inherit server
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}"
-            vmArg "-Dfabric-api.datagen.modid=${project.mod_id}"
+    implementation fg.deobf("dev.architectury:architectury-forge:${project.architectury_version}")
+    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+    implementation fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:${project.rei_version}")
+    compileOnly "me.shedaniel:REIPluginCompatibilities-forge-annotations:12.+"
 
-            runDir "build/datagen"
-        }
-    }
+    implementation fg.deobf("curse.maven:farmers-delight-398521:4679319")
+    //implementation fg.deobf("curse.maven:jei-238222:4175833")
+    implementation fg.deobf("curse.maven:jade-324717:4986594")
+    //implementation fg.deobf("curse.maven:kiwi-303657:4036329")
+    //annotationProcessor "curse.maven:kiwi-303657:4036329"
+    implementation fg.deobf("maven.modrinth:kiwi:wsR0QCZZ")
+    annotationProcessor "maven.modrinth:kiwi:wsR0QCZZ"
+    implementation fg.deobf("maven.modrinth:lychee:U6AsjbMp")
+    implementation fg.deobf("maven.modrinth:supplementaries:16GEKSIv")
+    implementation fg.deobf("maven.modrinth:moonlight:Jv6lR8aV")
+    implementation fg.deobf("maven.modrinth:curios:3VUlU5Ga")
+
+    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}"
+    runtimeOnly fg.deobf("dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}")
 }
 
 processResources {
-    inputs.property "version", project.mod_version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.mod_version
+    from('src/main/java') {
+        include '**/*.json'
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-
-    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-    it.options.release = 17
-}
-
-java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    // withSourcesJar()
 }
 
 jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
+    manifest {
+        attributes([
+                "Specification-Title"     : mod_id,
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : mod_version,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
     exclude "/assets/${project.mod_id}/lang/en_us.existing.json"
     exclude '**/*.bat'
     exclude '**/*.psd'
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force "dev.architectury:architectury-fabric:${project.architectury_version}"
-    }
-}
+// Example configuration to allow publishing using the maven-publish plugin
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+// publish.dependsOn('reobfJar')
 
-// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            //artifact(sourcesJar) {
-            //  builtBy remapSourcesJar
-            //}
+            artifact jar
         }
     }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
     }
 }
 
 unifiedPublishing {
     project {
-        displayName = "[Fabric $project.supported_version] $project.mod_version"
+        displayName = "[Forge $project.supported_version] $project.mod_version"
         version = project.mod_version // Optional, Inferred from project by default
         changelog = file("CHANGELOG.md").exists() ? file("CHANGELOG.md").text : "" // Optional, in markdown format
         releaseType = project.release_type // Optional, use "release", "beta" or "alpha"
         gameVersions = ["1.20", "1.20.1"]
-        gameLoaders = ["fabric", "quilt"]
+        gameLoaders = ["forge", "neoforge"]
 
-        mainPublication tasks.remapJar // Declares the publicated jar
+        mainPublication tasks.jar // Declares the publicated jar
 
         if (System.getenv("CURSE_TOKEN") != null) {
             curseforge {
@@ -201,9 +290,8 @@ unifiedPublishing {
                 id = "355467" // Required, must be a string, ID of CurseForge project
 
                 relations { // Optional, Inferred from the relations above by default
-                    depends "fabric-api"
-                    depends "kiwi-fabric"
-                    depends "lychee-fabric"
+                    depends "kiwi"
+                    depends "lychee"
                     optional "jade"
                 }
             }
@@ -215,7 +303,6 @@ unifiedPublishing {
                 id = "4bZDWNlG" // Required, must be a string, ID of Modrinth project
 
                 relations { // Optional, Inferred from the relations above by default
-                    depends "fabric-api"
                     depends "kiwi"
                     depends "lychee"
                     optional "jade"
