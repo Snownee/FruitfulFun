@@ -2,6 +2,7 @@ package snownee.fruits.compat.jei;
 
 import java.util.List;
 
+import me.shedaniel.rei.plugincompatibilities.api.REIPluginCompatIgnore;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -24,6 +25,7 @@ import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.lychee.compat.jei.JEICompat;
 
 @JeiPlugin
+@REIPluginCompatIgnore
 public class FFJEICompat implements IModPlugin {
 
 	public static final ResourceLocation UID = new ResourceLocation(FruitfulFun.ID, "main");

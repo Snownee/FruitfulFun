@@ -7,6 +7,7 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.forge.REIPluginClient;
 import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -16,6 +17,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.lychee.compat.rei.REICompat;
 
+@REIPluginClient
 public class FFREICompat implements REIClientPlugin {
 	public FFREICompat() {
 		REICompat.addCategoryFactoryProvider($ -> {

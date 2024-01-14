@@ -35,13 +35,11 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkHooks;
+import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
@@ -55,6 +53,10 @@ import snownee.kiwi.util.Util;
 
 @Mod(FruitfulFun.ID)
 public class CommonProxy {
+	public CommonProxy() {
+		CoreFruitTypes.APPLE.getOrCreate();
+	}
+
 	public static void init() {
 		addFeature("citron");
 		addFeature("tangerine");
@@ -132,7 +134,7 @@ public class CommonProxy {
 	}
 
 	public static boolean isShears(ItemStack stack) {
-		return stack.canPerformAction(ToolActions.SHEARS_DISARM);
+		return stack.canPerformAction(ToolActions.SHEARS_HARVEST);
 	}
 
 	public static ItemStack getRecipeRemainder(ItemStack itemStack) {

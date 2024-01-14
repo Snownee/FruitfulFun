@@ -14,10 +14,6 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 public class CuriosCompat {
 	public static void init() {
 		ICurioItem curioItem = new ICurioItem() {
-			@Override
-			public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-				return "head".equals(slotContext.identifier());
-			}
 		};
 		CuriosApi.registerCurio(CherryModule.CHERRY_CROWN.getOrCreate(), curioItem);
 		CuriosApi.registerCurio(CherryModule.REDLOVE_CROWN.getOrCreate(), curioItem);
