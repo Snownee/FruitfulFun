@@ -1,0 +1,29 @@
+{
+  "type": "fruitfulfun:hybridizing",
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:bee"
+    }
+  ],
+  "pollens": [
+    "fruitfulfun:pomelo_leaves",
+    "fruitfulfun:lemon_leaves",
+    "fruitfulfun:orange_leaves"
+  ],
+  "contextual": {
+    "type": "fruitfulfun:bee_has_trait",
+    "trait": "advanced_pollination"
+  },
+  "post": {
+    "type": "place",
+    "block": {
+      "blocks": [
+        "fruitfulfun:grapefruit_leaves"
+      ],
+      "state": {
+        "age": 2
+      }
+    }
+  }
+}

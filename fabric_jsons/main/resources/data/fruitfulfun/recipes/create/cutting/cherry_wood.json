@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": ["create"]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "fruitfulfun:redlove_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "fruitfulfun:stripped_redlove_wood"
+    }
+  ],
+  "processingTime": 50
+}

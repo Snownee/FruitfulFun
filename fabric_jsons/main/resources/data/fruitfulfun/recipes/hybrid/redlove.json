@@ -1,0 +1,32 @@
+{
+  "type": "fruitfulfun:hybridizing",
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:bee"
+    }
+  ],
+  "pollens": [
+    "fruitfulfun:apple_leaves",
+    "fruitfulfun:cherry_leaves",
+    "wither_rose"
+  ],
+  "ending_step": [
+    "fruitfulfun:cherry_leaves"
+  ],
+  "contextual": {
+    "type": "fruitfulfun:bee_has_trait",
+    "trait": "advanced_pollination"
+  },
+  "post": {
+    "type": "place",
+    "block": {
+      "blocks": [
+        "fruitfulfun:redlove_leaves"
+      ],
+      "state": {
+        "age": 2
+      }
+    }
+  }
+}

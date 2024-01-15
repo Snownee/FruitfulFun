@@ -1,0 +1,22 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "mekanism"
+		}
+	],
+  "type": "mekanism:sawing",
+  "input": {
+    "ingredient": {
+      "tag": "fruitfulfun:citrus_logs"
+    }
+  },
+  "mainOutput": {
+    "item": "fruitfulfun:citrus_planks",
+    "count": 6
+  },
+  "secondaryOutput": {
+    "item": "mekanism:sawdust"
+  },
+  "secondaryChance": 0.25
+}

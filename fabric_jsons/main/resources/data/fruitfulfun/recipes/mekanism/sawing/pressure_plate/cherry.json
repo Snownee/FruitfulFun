@@ -1,0 +1,18 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "mekanism"
+		}
+	],
+  "type": "mekanism:sawing",
+  "input": {
+    "ingredient": {
+      "item": "fruitfulfun:redlove_pressure_plate"
+    }
+  },
+  "mainOutput": {
+    "item": "fruitfulfun:redlove_planks",
+    "count": 2
+  }
+}

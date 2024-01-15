@@ -1,0 +1,79 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
+  "type": "kiwi:shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "fruitfulfun:redlove"
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "fabric:type": "fabric:any",
+          "ingredients": [
+            {
+              "tag": "c:chocolates"
+            },
+            {
+              "tag": "c:chocolatebar"
+            }
+          ]
+        },
+        {
+          "item": "minecraft:cocoa_beans"
+        }
+      ]
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:cream"
+        },
+        {
+          "tag": "c:milk"
+        },
+        {
+          "item": "minecraft:milk_bucket"
+        }
+      ]
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:eggs"
+        },
+        {
+          "item": "minecraft:egg"
+        }
+      ]
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "tag": "c:flour"
+        },
+        {
+          "tag": "c:grain/wheat"
+        },
+        {
+          "item": "minecraft:wheat"
+        }
+      ]
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:donauwelle"
+  }
+}

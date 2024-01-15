@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_slab",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "fruitfulfun:citrus_planks"
+    }
+  },
+  "result": {
+    "item": "fruitfulfun:citrus_slab",
+    "count": 6
+  }
+}

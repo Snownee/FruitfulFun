@@ -1,0 +1,18 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "mekanism"
+		}
+	],
+  "type": "mekanism:crushing",
+  "input": {
+    "ingredient": {
+      "item": "fruitfulfun:cherry"
+    }
+  },
+  "output": {
+    "item": "mekanism:bio_fuel",
+    "count": 5
+  }
+}
