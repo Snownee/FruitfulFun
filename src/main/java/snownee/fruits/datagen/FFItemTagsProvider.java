@@ -29,6 +29,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.food.FoodModule;
@@ -68,9 +69,9 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		copy(FFBlockTagsProvider.REDLOVE_LOGS, REDLOVE_LOGS);
 		copy(BlockTags.FLOWERS, ItemTags.FLOWERS);
 
-		getOrCreateTagBuilder(FRUITS)
-				.add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES)
-				.add(CHERRY.get(), CITRON.get());
+		FabricTagProvider<Item>.FabricTagBuilder builder = getOrCreateTagBuilder(FRUITS)
+				.add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES);
+		FFRegistries.FRUIT_TYPE.forEach($ -> builder.add($.fruit.get()));
 		tag(ItemTags.FOX_FOOD).addTag(FRUITS);
 		tag(FoodModule.PANDA_FOOD).addOptional(RICE_WITH_FRUITS.key());
 
