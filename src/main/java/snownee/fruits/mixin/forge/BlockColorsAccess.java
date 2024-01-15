@@ -12,6 +12,6 @@ import net.minecraft.world.level.block.Block;
 
 @Mixin(BlockColors.class)
 public interface BlockColorsAccess {
-	@Accessor(remap = false)
+	@Accessor
 	Map<Holder.Reference<Block>, BlockColor> getBlockColors();
 }

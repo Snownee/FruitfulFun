@@ -292,6 +292,7 @@ unifiedPublishing {
                 relations { // Optional, Inferred from the relations above by default
                     depends "kiwi"
                     depends "lychee"
+                    depends "forgified-fabric-api"
                     optional "jade"
                 }
             }
@@ -305,6 +306,7 @@ unifiedPublishing {
                 relations { // Optional, Inferred from the relations above by default
                     depends "kiwi"
                     depends "lychee"
+                    depends "forgified-fabric-api"
                     optional "jade"
                 }
             }

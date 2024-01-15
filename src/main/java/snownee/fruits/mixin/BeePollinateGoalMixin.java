@@ -23,7 +23,7 @@ import snownee.fruits.bee.genetics.Trait;
 @Mixin(Bee.BeePollinateGoal.class)
 public abstract class BeePollinateGoalMixin {
 
-	@Shadow(aliases = {"field_20377", "b"}, remap = false)
+	@Shadow(aliases = {"field_20377", "f_28062_"}, remap = false)
 	private Bee this$0;
 
 	@Final

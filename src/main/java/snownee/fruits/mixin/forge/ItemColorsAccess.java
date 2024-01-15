@@ -12,6 +12,6 @@ import net.minecraft.world.item.Item;
 
 @Mixin(ItemColors.class)
 public interface ItemColorsAccess {
-	@Accessor(remap = false)
+	@Accessor
 	Map<Holder.Reference<Item>, ItemColor> getItemColors();
 }
