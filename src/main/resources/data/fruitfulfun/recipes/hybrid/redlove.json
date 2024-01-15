@@ -1,11 +1,5 @@
 {
   "type": "fruitfulfun:hybridizing",
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:bee"
-    }
-  ],
   "pollens": [
     "fruitfulfun:apple_leaves",
     "fruitfulfun:cherry_leaves",
@@ -28,5 +22,11 @@
         "age": 2
       }
     }
-  }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

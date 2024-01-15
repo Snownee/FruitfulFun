@@ -1,26 +1,20 @@
 {
   "type": "farmersdelight:cooking",
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:food"
-    }
-  ],
   "ingredients": [
     {
-      "tag": "c:fruits/pomelo"
+      "tag": "forge:fruits/pomelo"
     },
     {
       "item": "sugar"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
           "item": "neapolitan:mint_leaves"
         },
         []
-      ]
+      ],
+      "type": "kiwi:alternatives"
     }
   ],
   "container": {
@@ -29,5 +23,11 @@
   "experience": 0.35,
   "result": {
     "item": "fruitfulfun:honey_pomelo_tea"
-  }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

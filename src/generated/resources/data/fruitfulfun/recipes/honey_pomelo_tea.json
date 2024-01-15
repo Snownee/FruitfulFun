@@ -1,34 +1,21 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:food"
-    },
-    {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "kiwi:is_loaded",
-        "module": "fruitfulfun:farmersdelight"
-      }
-    }
-  ],
   "type": "kiwi:shapeless",
   "category": "misc",
   "ingredients": [
     {
-      "tag": "c:fruits/pomelo"
+      "tag": "forge:fruits/pomelo"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:crops/mint"
+          "tag": "forge:crops/mint"
         },
         {
-          "tag": "c:leaves/mint"
+          "tag": "forge:leaves/mint"
         },
         []
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
       "item": "minecraft:honey_bottle"
@@ -40,5 +27,18 @@
   "no_containers": true,
   "result": {
     "item": "fruitfulfun:honey_pomelo_tea"
-  }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    },
+    {
+      "value": {
+        "module": "fruitfulfun:farmersdelight",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

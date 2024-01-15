@@ -1,11 +1,5 @@
 {
   "type": "create:cutting",
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": ["create"]
-    }
-  ],
   "ingredients": [
     {
       "item": "fruitfulfun:stripped_citrus_log"
@@ -17,5 +11,16 @@
       "count": 6
     }
   ],
-  "processingTime": 50
+  "processingTime": 50,
+  "conditions": [
+    {
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "create"
+        }
+      ],
+      "type": "forge:and"
+    }
+  ]
 }

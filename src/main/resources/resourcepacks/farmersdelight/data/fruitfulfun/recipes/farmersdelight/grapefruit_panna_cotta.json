@@ -1,61 +1,61 @@
 {
   "type": "farmersdelight:cooking",
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:food"
-    }
-  ],
   "ingredients": [
     {
-      "tag": "c:fruits/grapefruit"
+      "tag": "forge:fruits/grapefruit"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:cream"
+          "tag": "forge:cream"
         },
         {
-          "tag": "c:milk"
+          "tag": "forge:milk"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
-      "tag": "c:eggs"
+      "tag": "forge:eggs"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
           "item": "atmospheric:aloe_gel_bottle"
         },
         {
-          "tag": "c:slime_balls"
+          "tag": "forge:slime_balls"
         },
         {
           "item": "slime_ball"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
       "item": "sugar"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
           "item": "neapolitan:dried_vanilla_pods"
         },
         {
-          "tag": "c:crops/vanilla"
+          "tag": "forge:crops/vanilla"
         },
         []
-      ]
+      ],
+      "type": "kiwi:alternatives"
     }
   ],
   "experience": 0.35,
   "result": {
     "item": "fruitfulfun:grapefruit_panna_cotta"
-  }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

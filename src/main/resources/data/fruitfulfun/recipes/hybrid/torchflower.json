@@ -1,11 +1,5 @@
 {
   "type": "fruitfulfun:hybridizing",
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:bee"
-    }
-  ],
   "pollens": [
     "torchflower"
   ],
@@ -51,6 +45,12 @@
           "item": "minecraft:quartz"
         }
       ]
+    }
+  ],
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
     }
   ]
 }

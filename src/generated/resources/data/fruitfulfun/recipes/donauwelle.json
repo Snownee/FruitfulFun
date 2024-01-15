@@ -1,10 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:food"
-    }
-  ],
   "type": "kiwi:shapeless",
   "category": "misc",
   "ingredients": [
@@ -12,62 +6,59 @@
       "item": "fruitfulfun:redlove"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
-        {
-          "fabric:type": "fabric:any",
-          "ingredients": [
-            {
-              "tag": "c:chocolates"
-            },
-            {
-              "tag": "c:chocolatebar"
-            }
-          ]
-        },
+        [
+          {
+            "tag": "forge:chocolates"
+          },
+          {
+            "tag": "forge:chocolatebar"
+          }
+        ],
         {
           "item": "minecraft:cocoa_beans"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:cream"
+          "tag": "forge:cream"
         },
         {
-          "tag": "c:milk"
+          "tag": "forge:milk"
         },
         {
           "item": "minecraft:milk_bucket"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:eggs"
+          "tag": "forge:eggs"
         },
         {
           "item": "minecraft:egg"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:flour"
+          "tag": "forge:flour"
         },
         {
-          "tag": "c:grain/wheat"
+          "tag": "forge:grain/wheat"
         },
         {
           "item": "minecraft:wheat"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
       "item": "minecraft:sugar"
@@ -75,5 +66,11 @@
   ],
   "result": {
     "item": "fruitfulfun:donauwelle"
-  }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

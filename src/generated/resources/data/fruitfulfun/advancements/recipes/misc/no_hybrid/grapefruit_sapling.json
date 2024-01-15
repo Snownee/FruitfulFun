@@ -1,13 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "kiwi:is_loaded",
-        "module": "fruitfulfun:bee"
-      }
-    }
-  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_lemon_sapling": {
@@ -66,5 +57,14 @@
       "minecraft:no_hybrid/grapefruit_sapling"
     ]
   },
-  "sends_telemetry_event": false
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "value": {
+        "module": "fruitfulfun:bee",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

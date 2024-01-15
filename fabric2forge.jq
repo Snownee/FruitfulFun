@@ -35,13 +35,14 @@ if has("fabric:load_conditions") then
             end
             | if ."condition" == "fabric:tags_populated" then
                 ."condition" = "forge:not"
-                | ."values" |= {
+                | ."value" = {
                     "type": "forge:or",
-                    "values": [.[] | {
+                    "values": [."values".[] | {
                         "type": "forge:tag_empty",
                         "tag": .
                     }]
                 }
+                | del(."values")
             end
             | ."type" = ."condition" | del(."condition")
         end

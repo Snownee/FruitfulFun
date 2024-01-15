@@ -1,11 +1,5 @@
 {
   "type": "fruitfulfun:hybridizing",
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:bee"
-    }
-  ],
   "ghost": true,
   "pollens": [
     "fruitfulfun:redlove_leaves",
@@ -17,5 +11,11 @@
   "post": {
     "type": "drop_item",
     "item": "fruitfulfun:peach_pink_petals"
-  }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

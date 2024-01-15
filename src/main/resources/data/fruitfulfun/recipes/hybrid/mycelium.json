@@ -1,11 +1,5 @@
 {
   "type": "fruitfulfun:hybridizing",
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:bee"
-    }
-  ],
   "pollens": [
     "blue_orchid",
     "oxeye_daisy"
@@ -14,6 +8,11 @@
     "type": "place",
     "block": "mycelium",
     "offsetY": -1
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
     }
-
+  ]
 }

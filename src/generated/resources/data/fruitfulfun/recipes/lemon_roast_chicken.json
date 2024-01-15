@@ -1,37 +1,31 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:food"
-    }
-  ],
   "type": "kiwi:shapeless",
   "category": "misc",
   "ingredients": [
     {
-      "tag": "c:fruits/lemon"
+      "tag": "forge:fruits/lemon"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:flowers/lavender"
+          "tag": "forge:flowers/lavender"
         },
         {
-          "tag": "c:fruits/lemon"
+          "tag": "forge:fruits/lemon"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
-      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "c:vegetables/onion"
+          "tag": "forge:vegetables/onion"
         },
         {
           "item": "minecraft:potato"
         }
-      ]
+      ],
+      "type": "kiwi:alternatives"
     },
     {
       "item": "minecraft:cooked_chicken"
@@ -42,5 +36,11 @@
   ],
   "result": {
     "item": "fruitfulfun:lemon_roast_chicken_block"
-  }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }
