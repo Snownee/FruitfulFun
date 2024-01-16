@@ -9,11 +9,12 @@ displayName = "Fruitful Fun"
 authors = "Snownee, WZD, MalayP, minzhi, PixelCraft, VVVHY"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/fruit-trees"
 description = "Introduces insightful content featuring fruits and beekeeping"
+logoFile = "assets/fruitfulfun/icon.png"
 
 [[dependencies.fruitfulfun]]
 modId = "kiwi"
 mandatory = true
-versionRange = "[11.4, 12)"
+versionRange = "[11.5.2, 12)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -21,5 +22,12 @@ side = "BOTH"
 modId = "lychee"
 mandatory = true
 versionRange = "[5.1.4, 6)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fruitfulfun]]
+modId = "fabric_api"
+mandatory = true
+versionRange = "*"
 ordering = "NONE"
 side = "BOTH"

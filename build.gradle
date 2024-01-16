@@ -220,10 +220,10 @@ dependencies {
     implementation fg.deobf("curse.maven:farmers-delight-398521:4679319")
     //implementation fg.deobf("curse.maven:jei-238222:4175833")
     implementation fg.deobf("curse.maven:jade-324717:4986594")
-//    implementation fg.deobf("maven.modrinth:kiwi:wsR0QCZZ")
-//    annotationProcessor "maven.modrinth:kiwi:wsR0QCZZ"
-    implementation fg.deobf("libs:Kiwi-1.20.1-forge:11.5.0")
-    annotationProcessor "libs:Kiwi-1.20.1-forge:11.5.0"
+    implementation fg.deobf("maven.modrinth:kiwi:tB6mRzYK")
+    annotationProcessor "maven.modrinth:kiwi:tB6mRzYK"
+//    implementation fg.deobf("libs:Kiwi-1.20.1-forge:11.5.0")
+//    annotationProcessor "libs:Kiwi-1.20.1-forge:11.5.0"
     implementation fg.deobf("maven.modrinth:lychee:U6AsjbMp")
     implementation fg.deobf("maven.modrinth:supplementaries:16GEKSIv")
     implementation fg.deobf("maven.modrinth:moonlight:Jv6lR8aV")
@@ -234,12 +234,20 @@ dependencies {
 }
 
 processResources {
-    from('src/main/java') {
-        include '**/*.json'
-    }
+    exclude "/assets/${project.mod_id}/lang/en_us.existing.json"
+    exclude '**/*.bat'
+    exclude '**/*.psd'
+}
+
+tasks.jarJar.configure {
+    archiveClassifier = ''
+
+    finalizedBy('reobfJarJar')
 }
 
 jar {
+    archiveClassifier = 'slim'
+
     manifest {
         attributes([
                 "Specification-Title"     : mod_id,
@@ -249,16 +257,12 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    exclude "/assets/${project.mod_id}/lang/en_us.existing.json"
-    exclude '**/*.bat'
-    exclude '**/*.psd'
-}
 
-// Example configuration to allow publishing using the maven-publish plugin
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-// publish.dependsOn('reobfJar')
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+
+    finalizedBy('reobfJar')
+}
 
 publishing {
     publications {
@@ -282,7 +286,7 @@ unifiedPublishing {
         gameVersions = ["1.20", "1.20.1"]
         gameLoaders = ["forge", "neoforge"]
 
-        mainPublication tasks.jar // Declares the publicated jar
+        mainPublication tasks.jarJar // Declares the publicated jar
 
         if (System.getenv("CURSE_TOKEN") != null) {
             curseforge {

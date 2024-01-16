@@ -142,6 +142,8 @@
   "fruitfulfun.config.hornHarvestingInstrument.desc": "",
   "fruitfulfun.config.imperfectMutagenChance": "Imperfect Mutagen Chance",
   "fruitfulfun.config.imperfectMutagenChance.desc": "",
+  "fruitfulfun.config.moddedCherryParticleFrequency": "Modded Cherry Particle Frequency",
+  "fruitfulfun.config.moddedCherryParticleFrequency.desc": "",
   "fruitfulfun.config.modules": "Modules",
   "fruitfulfun.config.modules.bee": "Bee",
   "fruitfulfun.config.modules.bee.desc": "",
