@@ -220,8 +220,8 @@ dependencies {
     implementation fg.deobf("curse.maven:farmers-delight-398521:4679319")
     //implementation fg.deobf("curse.maven:jei-238222:4175833")
     implementation fg.deobf("curse.maven:jade-324717:4986594")
-    implementation fg.deobf("maven.modrinth:kiwi:tB6mRzYK")
-    annotationProcessor "maven.modrinth:kiwi:tB6mRzYK"
+    implementation fg.deobf("maven.modrinth:kiwi:dHXtj93x")
+    annotationProcessor "maven.modrinth:kiwi:dHXtj93x"
 //    implementation fg.deobf("libs:Kiwi-1.20.1-forge:11.5.0")
 //    annotationProcessor "libs:Kiwi-1.20.1-forge:11.5.0"
     implementation fg.deobf("maven.modrinth:lychee:U6AsjbMp")
