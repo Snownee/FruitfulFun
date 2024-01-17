@@ -5,8 +5,6 @@ import static net.minecraft.world.item.Items.CHORUS_FRUIT;
 import static net.minecraft.world.item.Items.GLOW_BERRIES;
 import static net.minecraft.world.item.Items.MELON_SLICE;
 import static net.minecraft.world.item.Items.SWEET_BERRIES;
-import static snownee.fruits.CoreModule.CITRON;
-import static snownee.fruits.cherry.CherryModule.CHERRY;
 import static snownee.fruits.cherry.CherryModule.CHERRY_CROWN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_CROWN;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
