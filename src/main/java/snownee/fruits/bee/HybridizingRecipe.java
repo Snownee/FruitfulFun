@@ -1,7 +1,8 @@
 package snownee.fruits.bee;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +38,8 @@ import snownee.lychee.util.json.JsonPointer;
 
 public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements BlockKeyRecipe<HybridizingRecipe> {
 
-	public final Set<String> pollens = Sets.newHashSetWithExpectedSize(4);
-	public final Set<String> endingStep = Sets.newHashSetWithExpectedSize(4);
+	public Collection<String> pollens = List.of();
+	public Collection<String> endingStep = List.of();
 	public final NonNullList<Ingredient> ingredients = NonNullList.create();
 
 	public HybridizingRecipe(ResourceLocation id) {
@@ -71,7 +72,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 		return BlockPredicate.ANY; // not applicable
 	}
 
-	public Set<String> endingStep() {
+	public Collection<String> endingStep() {
 		if (endingStep.isEmpty()) {
 			return pollens;
 		}
@@ -131,6 +132,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 		public void fromJson(HybridizingRecipe recipe, JsonObject jsonObject) {
 			JsonArray ingredients = GsonHelper.getAsJsonArray(jsonObject, "pollens");
 			Preconditions.checkArgument(!ingredients.isEmpty() && ingredients.size() <= 4, "Size of pollens has to be in [1, 4]");
+			recipe.pollens = Sets.newLinkedHashSetWithExpectedSize(ingredients.size());
 			for (JsonElement element : ingredients) {
 				String s = element.getAsString();
 				Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(s));
@@ -141,6 +143,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 			JsonArray endingStep = GsonHelper.getAsJsonArray(jsonObject, "ending_step", null);
 			if (endingStep != null) {
 				Preconditions.checkArgument(!endingStep.isEmpty() && endingStep.size() <= 4, "Size of ending_step has to be in [1, 4]");
+				recipe.endingStep = Sets.newLinkedHashSetWithExpectedSize(endingStep.size());
 				for (JsonElement element : endingStep) {
 					String s = element.getAsString();
 					Preconditions.checkArgument(recipe.pollens.contains(s), "Ending step must be in pollens");
@@ -152,8 +155,8 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 
 		@Override
 		public void fromNetwork(HybridizingRecipe recipe, FriendlyByteBuf buf) {
-			recipe.pollens.addAll(buf.readList(FriendlyByteBuf::readUtf));
-			recipe.endingStep.addAll(buf.readList(FriendlyByteBuf::readUtf));
+			recipe.pollens = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
+			recipe.endingStep = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
 			recipe.refreshIngredients();
 		}
 
