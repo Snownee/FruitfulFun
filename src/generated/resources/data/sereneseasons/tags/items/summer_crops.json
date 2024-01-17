@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "fruitfulfun:cherry_sapling",
+    "fruitfulfun:redlove_sapling",
+    "fruitfulfun:tangerine_sapling",
+    "fruitfulfun:lime_sapling",
+    "fruitfulfun:citron_sapling",
+    "fruitfulfun:pomelo_sapling",
+    "fruitfulfun:orange_sapling",
+    "fruitfulfun:lemon_sapling",
+    "fruitfulfun:grapefruit_sapling",
+    "fruitfulfun:apple_sapling",
+    "fruitfulfun:apple_leaves",
+    "fruitfulfun:redlove_leaves",
+    "minecraft:apple",
+    "fruitfulfun:redlove"
+  ]
+}

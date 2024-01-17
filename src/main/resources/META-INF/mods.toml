@@ -14,7 +14,7 @@ logoFile = "assets/fruitfulfun/icon.png"
 [[dependencies.fruitfulfun]]
 modId = "kiwi"
 mandatory = true
-versionRange = "[11.5.2, 12)"
+versionRange = "[11.5.3, 12)"
 ordering = "NONE"
 side = "BOTH"
 
