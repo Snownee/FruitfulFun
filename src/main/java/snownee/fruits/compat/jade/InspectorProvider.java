@@ -18,6 +18,7 @@ import net.minecraft.world.item.Items;
 import snownee.fruits.FruitType;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.FFPlayer;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Locus;
@@ -63,10 +64,12 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 		Map<Allele, Locus> loci = attributes.getLoci();
 		ListTag list = new ListTag();
 		for (Allele allele : Allele.sortedByCode()) {
+			CompoundTag tag = new CompoundTag();
 			Locus locus = loci.get(allele);
-			String first = String.valueOf(allele.codename) + (locus.getHigh() + 1);
-			String second = String.valueOf(allele.codename) + (locus.getLow() + 1);
-			list.add(StringTag.valueOf(" -" + first + " / " + second));
+			tag.putString("Code", String.valueOf(allele.codename));
+			tag.putInt("High", locus.getHigh());
+			tag.putInt("Low", locus.getLow());
+			list.add(tag);
 		}
 		data.put("Loci", list);
 	}
@@ -96,10 +99,10 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 				showTraits(tooltip, data);
 				break;
 			case 2:
-				showGenes(tooltip, data);
+				showGenes(tooltip, data, FFPlayer.of(accessor.getPlayer()));
 				break;
 		}
-		tooltip.add(new ScaledTextElement(Component.translatable("tip.fruitfulfun.press_alt")
+		tooltip.add(new ScaledTextElement(Component.translatable("tip.fruitfulfun.pressAlt")
 				.withStyle(IThemeHelper.get().isLightColorScheme() ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), 0.75f));
 	}
 
@@ -134,14 +137,24 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 		}
 	}
 
-	public static void showGenes(ITooltip tooltip, CompoundTag data) {
-		ListTag loci = data.getList("Loci", Tag.TAG_STRING);
+	public static void showGenes(ITooltip tooltip, CompoundTag data, FFPlayer player) {
 		title(tooltip, "text.fruitfulfun.gene");
+		ListTag loci = data.getList("Loci", Tag.TAG_COMPOUND);
 		if (loci.isEmpty()) {
 			return;
 		}
-		for (Tag tag : loci) {
-			tooltip.add(Component.literal(tag.getAsString()));
+		for (Tag e : loci) {
+			CompoundTag tag = (CompoundTag) e;
+			String code = tag.getString("Code");
+			String name = player.fruits$getGeneName(code);
+			String desc = player.fruits$getGeneDesc(code);
+			String high = name + (tag.getInt("High") + 1);
+			String low = name + (tag.getInt("Low") + 1);
+			if (desc.isEmpty()) {
+				tooltip.add(Component.translatable("text.fruitfulfun.gene.pair", high, low));
+			} else {
+				tooltip.add(Component.translatable("text.fruitfulfun.gene.pairWithDesc", desc, high, low));
+			}
 		}
 	}
 

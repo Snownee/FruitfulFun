@@ -18,11 +18,13 @@
     "InstrumentItemMixin",
     "MobMixin",
     "PandaMixin",
+    "PlayerMixin",
     "PotionBrewingMixin",
     "RideableBeeLivingEntityMixin",
     "RideableBeeMixin",
     "RideableBeeMobMixin",
-    "RideableBeePlayerMixin"
+    "RideableBeePlayerMixin",
+    "ServerLevelMixin"
   ],
   "client": [
     "client.BeeRendererMixin",

@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.FFPlayer;
 import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PacketHandler;
 
@@ -26,10 +27,11 @@ public class CInspectBeePacket extends PacketHandler {
 		Objects.requireNonNull(player);
 		InspectTarget target = InspectTarget.fromNetwork(buf);
 		if (target == null) {
-			return CompletableFuture.completedFuture(null);
+			return null;
 		}
 		return executor.apply(() -> {
 			Entity entity = target.getEntity(player.level());
+			FFPlayer.of(player).fruits$maybeInitGenes();
 			if (entity instanceof Bee bee) {
 				ServerAdvancementManager advancements = Objects.requireNonNull(player.level().getServer()).getAdvancements();
 				Advancement advancement = advancements.getAdvancement(new ResourceLocation("husbandry/fruitfulfun/inspector"));

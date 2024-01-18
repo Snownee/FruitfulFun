@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,9 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.FFPlayer;
 import snownee.kiwi.item.ModItem;
+import snownee.kiwi.loader.Platform;
 
 public class MutagenItem extends ModItem {
 	public static final Item BREWING_ITEM = Items.PITCHER_PLANT;
@@ -41,6 +44,7 @@ public class MutagenItem extends ModItem {
 	@Override
 	public @NotNull Component getName(ItemStack stack) {
 		return getCodename(stack)
+				.map(MutagenItem::getClientName)
 				.map(s -> (Component) Component.translatable("item.fruitfulfun.mutagen.stable", s))
 				.orElseGet(() -> {
 					if (isImperfect(stack)) {
@@ -91,6 +95,13 @@ public class MutagenItem extends ModItem {
 		return Optional.ofNullable(stack.getTag())
 				.filter(nbt -> nbt.contains("Type", Tag.TAG_STRING))
 				.map(nbt -> nbt.getString("Type"));
+	}
+
+	public static String getClientName(String codename) {
+		if (Platform.isPhysicalClient() && Minecraft.getInstance().player != null) {
+			return FFPlayer.of(Minecraft.getInstance().player).fruits$getGeneName(codename);
+		}
+		return codename;
 	}
 
 	public ItemStack randomMutagen(boolean containsImperfect, @Nullable RandomSource random) {

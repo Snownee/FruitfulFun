@@ -1,15 +1,18 @@
 package snownee.fruits.util;
 
+import java.util.Map;
 import java.util.Objects;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -40,6 +43,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.FFPlayer;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
@@ -88,6 +92,10 @@ public class CommonProxy implements ModInitializer {
 		return stack.is(ConventionalItemTags.SHEARS);
 	}
 
+	public static boolean isBookshelf(BlockState blockState) {
+		return blockState.is(ConventionalBlockTags.BOOKSHELVES);
+	}
+
 	@Override
 	public void onInitialize() {
 		addFeature("citron");
@@ -121,6 +129,13 @@ public class CommonProxy implements ModInitializer {
 		// map in StatType is an IdentityHashMap, update the reference
 		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
 		BeeModule.BEES_BRED = Stats.makeCustomStat(BeeModule.BEES_BRED.toString(), StatFormatter.DEFAULT);
+
+		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
+			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
+			if (map != null) {
+				FFPlayer.of(newPlayer).fruits$setGeneNames(map);
+			}
+		});
 	}
 
 	public static void addFeature(String id) {
