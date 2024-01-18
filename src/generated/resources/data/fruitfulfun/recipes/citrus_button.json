@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "wooden_button",
+  "ingredients": [
+    {
+      "item": "fruitfulfun:citrus_planks"
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:citrus_button"
+  }
+}
