@@ -11,6 +11,7 @@
     "BeePollinateGoalMixin",
     "BlockEntityTypeMixin",
     "BlockStateMixin",
+    "BottleItemMixin",
     "EntityMixin",
     "FlyNodeEvaluatorMixin",
     "GiveGiftToHeroMixin",

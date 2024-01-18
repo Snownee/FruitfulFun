@@ -25,6 +25,7 @@ import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
+import snownee.fruits.food.FoodModule;
 
 public class FFModelProvider extends FabricModelProvider {
 	public FFModelProvider(FabricDataOutput output) {
@@ -48,6 +49,7 @@ public class FFModelProvider extends FabricModelProvider {
 		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_CROWN.get());
 		generators.createHangingSign(CoreModule.STRIPPED_CITRUS_LOG.get(), CoreModule.CITRUS_HANGING_SIGN.get(), CoreModule.CITRUS_WALL_HANGING_SIGN.get());
 		generators.createHangingSign(CherryModule.STRIPPED_REDLOVE_LOG.get(), CherryModule.REDLOVE_HANGING_SIGN.get(), CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
+		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE.get());
 	}
 
 	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {

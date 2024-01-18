@@ -1,4 +1,4 @@
-// 1.20.1	2024-01-18T01:53:17.8380337	Fruitful Fun/Tags for minecraft:block
+// 1.20.1	2024-01-18T20:10:27.2595596	Fruitful Fun/Tags for minecraft:block
 c82204d4cd415c30685cfee6ad68f7d9bd52238f data\fruitfulfun\tags\blocks\redlove_logs.json
 453632af22716f27e9ed868057d9f94fa724b1b6 data\minecraft\tags\blocks\planks.json
 1ba405c2786d55329238dc19f4e3ac0cedf80e15 data\minecraft\tags\blocks\wall_hanging_signs.json
@@ -10,6 +10,7 @@ c82204d4cd415c30685cfee6ad68f7d9bd52238f data\fruitfulfun\tags\blocks\redlove_lo
 b08afdfafc5dcb294f9da2e0594f2d617d63a6b6 data\minecraft\tags\blocks\inside_step_sound_blocks.json
 034c9e3cd79ee2ddafea0540f053774d9c7f5fe9 data\minecraft\tags\blocks\wooden_fences.json
 398d43247d0b34523e937411f67383ef41de2c99 data\minecraft\tags\blocks\wooden_slabs.json
+99ab460e7e84c7cee8816d5e854cfadfe1a9aee4 data\fruitfulfun\tags\blocks\ritual_candles.json
 589e66aba7f7879b43dede77a7f910a66df9c7ee data\minecraft\tags\blocks\wooden_trapdoors.json
 154a0152eeae1cec3e72ee0022a65ba55068daa4 data\minecraft\tags\blocks\standing_signs.json
 8950030816342d6e630ef869cff6909563de4faf data\minecraft\tags\blocks\fence_gates.json

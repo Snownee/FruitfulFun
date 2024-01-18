@@ -75,11 +75,13 @@ import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.food.FoodModule;
 import snownee.kiwi.AbstractModule;
 
 public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
@@ -156,6 +158,9 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				CHERRY_SAPLING.get(),
 				PEACH_PINK_PETALS.get());
 		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).add(PEACH_PINK_PETALS.get());
+		getOrCreateTagBuilder(FoodModule.RITUAL_CANDLES)
+				.addOptionalTag(new ResourceLocation("candles"))
+				.addOptionalTag(new ResourceLocation("supplementaries:candle_holders"));
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)

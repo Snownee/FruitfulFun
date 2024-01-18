@@ -2,6 +2,8 @@ package snownee.fruits.food;
 
 import java.util.function.Predicate;
 
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.kiwi.AbstractModule;
@@ -70,7 +73,14 @@ public class FoodModule extends AbstractModule {
 			.effect(Foods.NOURISHED, 1)
 			.build()).craftRemainder(Items.BOWL)));
 	public static final KiwiGO<Block> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Block.box(4, 2, 4, 12, 9, 12), LEMON_ROAST_CHICKEN));
+	public static Item.Properties CHORUS_FRUIT_PIE_PROP = itemProp().food(new FoodProperties.Builder()
+			.nutrition(8)
+			.saturationMod(0.6F)
+			.build());
+	@KiwiModule.NoCategory
+	public static final KiwiGO<Block> CHORUS_FRUIT_PIE = go(() -> new FoodBlock(Block.box(4, 0, 4, 12, 4, 12)));
 	public static final KiwiGO<SimpleParticleType> SMOKE = go(() -> new SimpleParticleType(true));
+	public static final TagKey<Block> RITUAL_CANDLES = blockTag(FruitfulFun.ID, "ritual_candles");
 
 	public FoodModule() {
 		Hooks.food = true;
@@ -89,6 +99,12 @@ public class FoodModule extends AbstractModule {
 					.map(Block::asItem)
 					.filter(Predicate.not(Items.AIR::equals))
 					.forEach($ -> DispenserBlock.registerBehavior($, new FoodDispenseBehavior()));
+			if (FFCommonConfig.dispenserCollectDragonBreath) {
+				DispenseItemBehavior original = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
+				if (original != null) {
+					DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, new CollectDragonBreathDispenseBehavior(original));
+				}
+			}
 		});
 	}
 

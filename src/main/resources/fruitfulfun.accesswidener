@@ -40,3 +40,6 @@ accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen isMod
 accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen currentPage I
 
 accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
+
+accessible field net/minecraft/world/entity/AreaEffectCloud ownerUUID Ljava/util/UUID;
+accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;

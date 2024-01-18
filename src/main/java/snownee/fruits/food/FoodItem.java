@@ -40,7 +40,10 @@ public class FoodItem extends ModItem {
 			entity.addEatEffect(stack, level, entity);
 			if (!Hooks.farmersdelight && !level.isClientSide) {
 				ItemStack milk = Items.MILK_BUCKET.getDefaultInstance();
-				entity.getActiveEffectsMap().values().stream().filter($ -> !$.getEffect().isBeneficial() && CommonProxy.isCurativeItem($, milk)).map(MobEffectInstance::getEffect).toList().forEach(entity::removeEffect);
+				entity.getActiveEffectsMap().values().stream()
+						.filter($ -> !$.getEffect().isBeneficial() && CommonProxy.isCurativeItem($, milk))
+						.map(MobEffectInstance::getEffect)
+						.forEach(entity::removeEffect);
 			}
 			entity.gameEvent(GameEvent.DRINK);
 			if (player == null || !player.getAbilities().instabuild) {
@@ -48,9 +51,35 @@ public class FoodItem extends ModItem {
 			}
 		} else {
 			entity.eat(level, stack);
+//			if (FFCommonConfig.chorusFruitPieMaxTeleportDistance > 0 && !level.isClientSide && FoodModule.CHORUS_FRUIT_PIE.is(stack)) {
+//				HitResult pick = entity.pick(FFCommonConfig.chorusFruitPieMaxTeleportDistance, 1.0F, false);
+//				if (pick instanceof BlockHitResult hit) {
+//					Direction direction = hit.getDirection();
+//					Vec3 vec3 = Vec3.atBottomCenterOf(hit.getBlockPos().relative(direction));
+//					AABB bb = entity.getBoundingBox();
+//					double x = vec3.x() + direction.getStepX() * 1.01 * bb.getXsize() / 2;
+//					double y = vec3.y();
+//					double z = vec3.z() + direction.getStepZ() * 1.01 * bb.getZsize() / 2;
+//					if (direction == Direction.DOWN) {
+//						y -= bb.getYsize();
+//					}
+//					bb = bb.move(x - entity.getX(), y - entity.getY(), z - entity.getZ());
+//					if (level.noCollision(entity, bb)) {
+//						if (entity.isPassenger()) {
+//							entity.dismountTo(x, y, z);
+//						} else {
+//							entity.teleportTo(x, y, z);
+//						}
+//						entity.resetFallDistance();
+//						if (player != null) {
+//							player.getCooldowns().addCooldown(stack.getItem(), 20);
+//						}
+//					}
+//				}
+//			}
 		}
 
-		ItemStack remainder = stack.getRecipeRemainder();
+		ItemStack remainder = CommonProxy.getRecipeRemainder(stack);
 		if (!remainder.isEmpty() && (player == null || !player.getAbilities().instabuild)) {
 			if (stack.isEmpty()) {
 				return remainder;
@@ -68,6 +97,6 @@ public class FoodItem extends ModItem {
 
 	@Override
 	public SoundEvent getEatingSound() {
-		return SoundEvents.GENERIC_DRINK;
+		return FoodModule.HONEY_POMELO_TEA.is(this) ? SoundEvents.GENERIC_DRINK : SoundEvents.GENERIC_EAT;
 	}
 }

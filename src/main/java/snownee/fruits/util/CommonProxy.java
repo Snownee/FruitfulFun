@@ -31,6 +31,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -42,6 +43,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
+import snownee.fruits.food.FoodModule;
 import snownee.kiwi.Mod;
 import snownee.kiwi.util.Util;
 
@@ -111,6 +113,10 @@ public class CommonProxy implements ModInitializer {
 		});
 	}
 
+	public static ItemStack getRecipeRemainder(ItemStack itemStack) {
+		return itemStack.getRecipeRemainder();
+	}
+
 	public static void initBeeModule() {
 		// map in StatType is an IdentityHashMap, update the reference
 		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
@@ -133,5 +139,11 @@ public class CommonProxy implements ModInitializer {
 			return TrinketsCompat.getFlowerCrown(entity);
 		}
 		return null;
+	}
+
+	public static boolean isLitCandle(BlockState blockState) {
+		return blockState.is(FoodModule.RITUAL_CANDLES)
+				&& blockState.hasProperty(CandleBlock.LIT)
+				&& blockState.getValue(CandleBlock.LIT);
 	}
 }

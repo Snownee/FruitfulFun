@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#minecraft:candles",
+      "required": false
+    },
+    {
+      "id": "#supplementaries:candle_holders",
+      "required": false
+    }
+  ]
+}
