@@ -1,5 +1,7 @@
 package snownee.fruits.food;
 
+import java.util.function.Predicate;
+
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.kiwi.AbstractModule;
@@ -20,6 +23,7 @@ import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
+import snownee.kiwi.KiwiModules;
 import snownee.kiwi.loader.event.InitEvent;
 
 @KiwiModule("food")
@@ -79,6 +83,12 @@ public class FoodModule extends AbstractModule {
 				ItemStack itemstack = itemEntity.getItem();
 				return itemEntity.isAlive() && !itemEntity.hasPickUpDelay() && itemstack.is(FoodModule.PANDA_FOOD);
 			});
+
+			KiwiModules.get(uid).getRegistries(BuiltInRegistries.BLOCK).stream()
+					.filter(FoodBlock.class::isInstance)
+					.map(Block::asItem)
+					.filter(Predicate.not(Items.AIR::equals))
+					.forEach($ -> DispenserBlock.registerBehavior($, new FoodDispenseBehavior()));
 		});
 	}
 
