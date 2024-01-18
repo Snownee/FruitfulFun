@@ -31,7 +31,7 @@ public class RideableBeeMixin implements Saddleable {
 	}
 
 	@Inject(method = "wantsToEnterHive", at = @At("HEAD"), cancellable = true)
-	private void fruits_wantsToEnterHive(CallbackInfoReturnable<Boolean> cir) {
+	private void wantsToEnterHive(CallbackInfoReturnable<Boolean> cir) {
 		Bee bee = (Bee) (Object) this;
 		if (bee.isVehicle()) {
 			cir.setReturnValue(false);

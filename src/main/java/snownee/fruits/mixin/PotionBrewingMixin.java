@@ -20,21 +20,21 @@ import snownee.fruits.bee.genetics.MutagenItem;
 public class PotionBrewingMixin {
 
 	@Inject(method = "mix", at = @At("HEAD"), cancellable = true)
-	private static void fruits_mix(ItemStack ingredient, ItemStack container, CallbackInfoReturnable<ItemStack> ci) {
+	private static void mix(ItemStack ingredient, ItemStack container, CallbackInfoReturnable<ItemStack> ci) {
 		if (matchesMutagenRecipe(ingredient, container)) {
 			ci.setReturnValue(BeeModule.MUTAGEN.get().randomMutagen(true, null));
 		}
 	}
 
 	@Inject(method = "hasMix", at = @At("HEAD"), cancellable = true)
-	private static void fruits_hasMix(ItemStack container, ItemStack ingredient, CallbackInfoReturnable<Boolean> ci) {
+	private static void hasMix(ItemStack container, ItemStack ingredient, CallbackInfoReturnable<Boolean> ci) {
 		if (matchesMutagenRecipe(ingredient, container)) {
 			ci.setReturnValue(true);
 		}
 	}
 
 	@Inject(method = "isIngredient", at = @At("HEAD"), cancellable = true)
-	private static void fruits_isIngredient(ItemStack ingredient, CallbackInfoReturnable<Boolean> ci) {
+	private static void isIngredient(ItemStack ingredient, CallbackInfoReturnable<Boolean> ci) {
 		if (ingredient.is(MutagenItem.BREWING_ITEM)) {
 			ci.setReturnValue(true);
 		}

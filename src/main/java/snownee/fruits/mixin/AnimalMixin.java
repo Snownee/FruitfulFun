@@ -15,7 +15,7 @@ import snownee.fruits.Hooks;
 public class AnimalMixin {
 
 	@Inject(method = "finalizeSpawnChildFromBreeding", at = @At("HEAD"))
-	private void fruits_finalizeSpawnChildFromBreeding(ServerLevel serverLevel, Animal animal, AgeableMob ageableMob, CallbackInfo ci) {
+	private void finalizeSpawnChildFromBreeding(ServerLevel serverLevel, Animal animal, AgeableMob ageableMob, CallbackInfo ci) {
 		Animal self = (Animal) (Object) this;
 		if (self instanceof Bee parent1 && animal instanceof Bee parent2 && ageableMob instanceof Bee baby) {
 			Hooks.spawnBeeFromBreeding(parent1, parent2, baby);

@@ -29,7 +29,7 @@ public class ItemRendererMixin {
 	private ItemModelShaper itemModelShaper;
 
 	@Inject(method = "render", at = @At("HEAD"))
-	private void fruits_render(ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean bl, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j, BakedModel bakedModel, CallbackInfo ci, @Local LocalRef<BakedModel> modelSetter) {
+	private void render(ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean bl, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j, BakedModel bakedModel, CallbackInfo ci, @Local LocalRef<BakedModel> modelSetter) {
 		if (itemDisplayContext == ItemDisplayContext.HEAD && itemStack.getItem() instanceof FlowerCrownItem) {
 			ResourceLocation id = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
 			modelSetter.set(ClientProxy.getModel(itemModelShaper.getModelManager(), id.withPrefix("block/")));

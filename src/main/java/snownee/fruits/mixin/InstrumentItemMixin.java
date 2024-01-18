@@ -23,7 +23,7 @@ import snownee.fruits.Hooks;
 public class InstrumentItemMixin {
 
 	@Inject(at = @At("HEAD"), method = "play")
-	private static void fruits_play(Level level, Player player, Instrument instrument, CallbackInfo ci) {
+	private static void play(Level level, Player player, Instrument instrument, CallbackInfo ci) {
 		if (level.isClientSide || Strings.isNullOrEmpty(FFCommonConfig.hornHarvestingInstrument)) {
 			return;
 		}

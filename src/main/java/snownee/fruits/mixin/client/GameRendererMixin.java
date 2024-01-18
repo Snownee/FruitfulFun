@@ -19,7 +19,7 @@ public class GameRendererMixin {
 	Minecraft minecraft;
 
 	@Inject(at = @At("RETURN"), method = "pick")
-	private void fruits_pick(float partialTicks, CallbackInfo cir) {
+	private void pick(float partialTicks, CallbackInfo cir) {
 		Hooks.modifyRayTraceResult(minecraft.hitResult, $ -> minecraft.hitResult = $);
 	}
 }

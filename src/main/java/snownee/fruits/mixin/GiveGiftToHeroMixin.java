@@ -17,7 +17,7 @@ import snownee.fruits.FFCommonConfig;
 public class GiveGiftToHeroMixin {
 
 	@Inject(at = @At("HEAD"), method = "getItemToThrow", cancellable = true)
-	private void fruits_getItemToThrow(Villager villager, CallbackInfoReturnable<List<ItemStack>> ci) {
+	private void getItemToThrow(Villager villager, CallbackInfoReturnable<List<ItemStack>> ci) {
 		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage && villager.isBaby()) {
 			ci.setReturnValue(List.of(CoreModule.APPLE_SAPLING.itemStack()));
 		}

@@ -14,7 +14,7 @@ import snownee.fruits.food.FoodModule;
 public class PandaMixin {
 
 	@Inject(at = @At("HEAD"), method = "isFood", cancellable = true)
-	private void fruits_isFood(ItemStack stack, CallbackInfoReturnable<Boolean> ci) {
+	private void isFood(ItemStack stack, CallbackInfoReturnable<Boolean> ci) {
 		if (Hooks.food && stack.is(FoodModule.PANDA_FOOD)) {
 			ci.setReturnValue(true);
 		}
