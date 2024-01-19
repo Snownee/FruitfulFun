@@ -43,12 +43,15 @@
         {
           "tag": "forge:crops/vanilla"
         },
-        []
+        {
+          "item": "sugar"
+        }
       ],
       "type": "kiwi:alternatives"
     }
   ],
   "experience": 0.35,
+  "recipe_book_tab": "misc",
   "result": {
     "item": "fruitfulfun:grapefruit_panna_cotta"
   },

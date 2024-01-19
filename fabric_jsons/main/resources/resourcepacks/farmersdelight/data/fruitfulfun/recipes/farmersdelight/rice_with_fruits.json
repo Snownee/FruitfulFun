@@ -32,6 +32,7 @@
     "item": "bamboo"
   },
   "experience": 0.35,
+  "recipe_book_tab": "meals",
   "result": {
     "item": "fruitfulfun:rice_with_fruits"
   }

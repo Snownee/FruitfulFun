@@ -12,7 +12,9 @@
         {
           "item": "neapolitan:mint_leaves"
         },
-        []
+        {
+          "tag": "leaves"
+        }
       ],
       "type": "kiwi:alternatives"
     }
@@ -21,6 +23,7 @@
     "item": "honey_bottle"
   },
   "experience": 0.35,
+  "recipe_book_tab": "drinks",
   "result": {
     "item": "fruitfulfun:honey_pomelo_tea"
   },
