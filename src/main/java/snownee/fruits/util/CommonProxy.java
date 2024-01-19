@@ -132,9 +132,7 @@ public class CommonProxy implements ModInitializer {
 
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
 			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
-			if (map != null) {
-				FFPlayer.of(newPlayer).fruits$setGeneNames(map);
-			}
+			FFPlayer.of(newPlayer).fruits$setGeneNames(map);
 		});
 	}
 
