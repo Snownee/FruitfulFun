@@ -50,11 +50,14 @@
         {
           "tag": "c:crops/vanilla"
         },
-        []
+        {
+          "item": "sugar"
+        }
       ]
     }
   ],
   "experience": 0.35,
+  "recipe_book_tab": "misc",
   "result": {
     "item": "fruitfulfun:grapefruit_panna_cotta"
   }
