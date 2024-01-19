@@ -46,6 +46,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.InspectorClientHandler;
+import snownee.fruits.bee.genetics.EditGeneNameScreen;
 import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.PetalParticle;
@@ -170,5 +171,9 @@ public class ClientProxy {
 		arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
 		arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
 		return true;
+	}
+
+	public static void openEditGeneNameScreen() {
+		Minecraft.getInstance().setScreen(new EditGeneNameScreen());
 	}
 }

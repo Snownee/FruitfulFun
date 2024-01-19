@@ -154,9 +154,27 @@ public class InspectorClientHandler {
 		lines.clear();
 
 		lines.add(I18n.get("text.fruitfulfun.gene"));
+		boolean hasDesc = false;
+		FFPlayer ffPlayer = FFPlayer.of(player);
 		for (SInspectBeeReplyPacket.GeneRecord gene : genes) {
-			String gene1 = "" + gene.code() + gene.high();
-			String gene2 = "" + gene.code() + gene.low();
+			String desc = ffPlayer.fruits$getGeneDesc(gene.code());
+			if (!desc.isEmpty()) {
+				hasDesc = true;
+				break;
+			}
+		}
+		for (SInspectBeeReplyPacket.GeneRecord gene : genes) {
+			String code = ffPlayer.fruits$getGeneName(gene.code());
+			if (hasDesc) {
+				String desc = ffPlayer.fruits$getGeneDesc(gene.code());
+				if (desc.isEmpty()) {
+					lines.add(I18n.get("text.fruitfulfun.gene.unnamed", code));
+				} else {
+					lines.add(desc);
+				}
+			}
+			String gene1 = code + gene.high();
+			String gene2 = code + gene.low();
 			lines.add(I18n.get("text.fruitfulfun.gene.pair", gene1, gene2));
 		}
 		pages.add(String.join("\n", lines));

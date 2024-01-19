@@ -1,6 +1,7 @@
 package snownee.fruits.util;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -34,8 +36,10 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +50,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.FFPlayer;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.compat.curios.CuriosCompat;
@@ -139,6 +144,10 @@ public class CommonProxy {
 		return stack.canPerformAction(ToolActions.SHEARS_HARVEST);
 	}
 
+	public static boolean isBookshelf(BlockState blockState) {
+		return blockState.is(Tags.Blocks.BOOKSHELVES);
+	}
+
 	public static ItemStack getRecipeRemainder(ItemStack itemStack) {
 		return itemStack.getCraftingRemainingItem();
 	}
@@ -147,6 +156,15 @@ public class CommonProxy {
 		// map in StatType is an IdentityHashMap, update the reference
 		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
 		BeeModule.BEES_BRED = Stats.makeCustomStat(BeeModule.BEES_BRED.toString(), StatFormatter.DEFAULT);
+
+		MinecraftForge.EVENT_BUS.addListener((PlayerEvent.Clone event) -> {
+			Player oldPlayer = event.getOriginal();
+			Player newPlayer = event.getEntity();
+			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
+			if (map != null) {
+				FFPlayer.of(newPlayer).fruits$setGeneNames(map);
+			}
+		});
 	}
 
 	public static void addFeature(String id) {
