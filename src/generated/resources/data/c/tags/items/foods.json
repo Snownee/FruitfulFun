@@ -25,6 +25,10 @@
     {
       "id": "fruitfulfun:lemon_roast_chicken_block",
       "required": false
+    },
+    {
+      "id": "fruitfulfun:chorus_fruit_pie",
+      "required": false
     }
   ]
 }

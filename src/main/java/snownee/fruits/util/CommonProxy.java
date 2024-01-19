@@ -28,6 +28,7 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -48,6 +49,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.compat.curios.CuriosCompat;
+import snownee.fruits.food.FoodModule;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
@@ -163,5 +165,11 @@ public class CommonProxy {
 			return CuriosCompat.getFlowerCrown(entity);
 		}
 		return null;
+	}
+
+	public static boolean isLitCandle(BlockState blockState) {
+		return blockState.is(FoodModule.RITUAL_CANDLES)
+				&& blockState.hasProperty(CandleBlock.LIT)
+				&& blockState.getValue(CandleBlock.LIT);
 	}
 }
