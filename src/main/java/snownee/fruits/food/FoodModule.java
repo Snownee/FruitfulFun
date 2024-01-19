@@ -28,6 +28,7 @@ import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.KiwiModules;
 import snownee.kiwi.loader.event.InitEvent;
+import snownee.kiwi.util.VanillaActions;
 
 @KiwiModule("food")
 @KiwiModule.Optional
@@ -99,6 +100,9 @@ public class FoodModule extends AbstractModule {
 					.map(Block::asItem)
 					.filter(Predicate.not(Items.AIR::equals))
 					.forEach($ -> DispenserBlock.registerBehavior($, new FoodDispenseBehavior()));
+			KiwiModules.get(uid).<Item>getRegistries(ForgeRegistries.ITEMS).stream()
+					.filter(Item::isEdible)
+					.forEach($ -> VanillaActions.registerCompostable(1, $));
 			if (FFCommonConfig.dispenserCollectDragonBreath) {
 				DispenseItemBehavior original = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
 				if (original != null) {
