@@ -84,7 +84,12 @@ public class PlayerMixin implements FFPlayer {
 
 	@Override
 	public void fruits$setGeneNames(Map<String, GeneName> geneNames) {
-		this.geneNames.putAll(geneNames);
+		if (geneNames.isEmpty()) {
+			this.geneNames = Map.of();
+		} else {
+			this.geneNames = Maps.newHashMapWithExpectedSize(geneNames.size());
+			this.geneNames.putAll(geneNames);
+		}
 	}
 
 	@Override

@@ -161,9 +161,7 @@ public class CommonProxy {
 			Player oldPlayer = event.getOriginal();
 			Player newPlayer = event.getEntity();
 			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
-			if (map != null) {
-				FFPlayer.of(newPlayer).fruits$setGeneNames(map);
-			}
+			FFPlayer.of(newPlayer).fruits$setGeneNames(map);
 		});
 	}
 
