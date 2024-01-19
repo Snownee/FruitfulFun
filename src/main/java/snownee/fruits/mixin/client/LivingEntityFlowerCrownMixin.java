@@ -12,7 +12,7 @@ import snownee.fruits.cherry.item.FlowerCrownItem;
 @Mixin(value = LivingEntity.class, priority = 500)
 public class LivingEntityFlowerCrownMixin {
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;updatingUsingItem()V"))
-	private void fruits_tick(CallbackInfo ci) {
+	private void tick(CallbackInfo ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		if (!entity.level().isClientSide) {
 			return;

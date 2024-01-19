@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityTypeMixin {
 
 	@Inject(at = @At("HEAD"), method = "isValid", cancellable = true)
-	private void fruits_isValid(BlockState pState, CallbackInfoReturnable<Boolean> cir) {
+	private void isValid(BlockState pState, CallbackInfoReturnable<Boolean> cir) {
 		BlockEntityType<?> type = (BlockEntityType<?>) (Object) this;
 		Class<?> blockClass = pState.getBlock().getClass();
 		if (type == BlockEntityType.SIGN && (blockClass == WallSignBlock.class || blockClass == StandingSignBlock.class)) {

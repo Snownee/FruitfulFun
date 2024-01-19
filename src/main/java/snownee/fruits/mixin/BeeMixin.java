@@ -58,7 +58,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@Inject(at = @At("HEAD"), method = "isFlowerValid", cancellable = true)
-	private void fruits_isFlowerValid(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+	private void isFlowerValid(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
 		if (!Hooks.bee || !level().isLoaded(pos)) {
 			return;
 		}
@@ -69,7 +69,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-	private void fruits_addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+	private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
 		CompoundTag data = new CompoundTag();
 		beeAttributes.toNBT(data);
 		compoundTag.put("FruitfulFun", data);
@@ -78,7 +78,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-	private void fruits_readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+	private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
 		Bee bee = (Bee) (Object) this;
 		compoundTag = compoundTag.getCompound("FruitfulFun");
 		if (!compoundTag.contains("Genes")) {
@@ -88,7 +88,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Bee;updateRollAmount()V"))
-	private void fruits_tick(CallbackInfo ci) {
+	private void tick(CallbackInfo ci) {
 		if (level().isClientSide) {
 			return;
 		}
@@ -107,7 +107,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@Inject(method = "customServerAiStep", at = @At("HEAD"))
-	private void fruits_customServerAiStep(CallbackInfo ci) {
+	private void customServerAiStep(CallbackInfo ci) {
 		if (underWaterTicks >= 20) {
 			ejectPassengers();
 		}
@@ -139,12 +139,12 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	int ticksWithoutNectarSinceExitingHive;
 
 	@ModifyExpressionValue(method = "wantsToEnterHive", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
-	private boolean fruits_wantsToEnterHive(boolean original) {
+	private boolean wantsToEnterHive(boolean original) {
 		return original && !BeeAttributes.of(this).hasTrait(Trait.RAIN_CAPABLE);
 	}
 
 	@Inject(method = "isTiredOfLookingForNectar", at = @At("HEAD"), cancellable = true)
-	private void fruits_isTiredOfLookingForNectar(CallbackInfoReturnable<Boolean> cir) {
+	private void isTiredOfLookingForNectar(CallbackInfoReturnable<Boolean> cir) {
 		if (ticksWithoutNectarSinceExitingHive > 1800 && BeeAttributes.of(this).hasTrait(Trait.LAZY)) {
 			cir.setReturnValue(true);
 		}

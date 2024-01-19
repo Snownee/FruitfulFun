@@ -33,14 +33,14 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 	public ModelPart head;
 
 	@Inject(at = @At("HEAD"), method = "poseLeftArm", cancellable = true)
-	private void fruits_poseLeftArm(T entity, CallbackInfo ci) {
+	private void poseLeftArm(T entity, CallbackInfo ci) {
 		if (leftArmPose == HumanoidModel.ArmPose.SPYGLASS && ClientProxy.poseArm(entity, leftArm, head, false)) {
 			ci.cancel();
 		}
 	}
 
 	@Inject(at = @At("HEAD"), method = "poseRightArm", cancellable = true)
-	private void fruits_poseRightArm(T entity, CallbackInfo ci) {
+	private void poseRightArm(T entity, CallbackInfo ci) {
 		if (rightArmPose == HumanoidModel.ArmPose.SPYGLASS && ClientProxy.poseArm(entity, rightArm, head, true)) {
 			ci.cancel();
 		}

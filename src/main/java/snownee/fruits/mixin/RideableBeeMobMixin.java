@@ -17,7 +17,7 @@ import snownee.fruits.bee.BeeAttributes;
 @Mixin(Mob.class)
 public class RideableBeeMobMixin {
 	@Inject(method = "getControllingPassenger", at = @At("HEAD"), cancellable = true)
-	private void fruits_getControllingPassenger(CallbackInfoReturnable<LivingEntity> cir) {
+	private void getControllingPassenger(CallbackInfoReturnable<LivingEntity> cir) {
 		Mob mob = (Mob) (Object) this;
 		if (!mob.isNoAi() && mob instanceof Bee bee && bee.getFirstPassenger() instanceof Player player) {
 			BeeAttributes attributes = BeeAttributes.of(bee);
@@ -28,7 +28,7 @@ public class RideableBeeMobMixin {
 	}
 
 	@Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
-	private void fruits_mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> ci) {
+	private void mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> ci) {
 		if (!Hooks.bee) {
 			return;
 		}

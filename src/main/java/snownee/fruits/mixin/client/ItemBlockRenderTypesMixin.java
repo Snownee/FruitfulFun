@@ -25,7 +25,7 @@ public class ItemBlockRenderTypesMixin {
 	// Here we don't return a constant RenderType because some mods may change it
 
 	@Inject(at = @At(value = "RETURN", ordinal = 0), method = "getChunkRenderType", cancellable = true)
-	private static void fruits_getChunkRenderType(BlockState state, CallbackInfoReturnable<RenderType> ci) {
+	private static void getChunkRenderType(BlockState state, CallbackInfoReturnable<RenderType> ci) {
 		if (state.getBlock() instanceof FruitLeavesBlock) {
 			RenderType renderType = TYPE_BY_BLOCK.get(state.getBlock());
 			ci.setReturnValue(renderType != null ? renderType : RenderType.solid());
@@ -33,7 +33,7 @@ public class ItemBlockRenderTypesMixin {
 	}
 
 	@Inject(at = @At(value = "RETURN", ordinal = 0), method = "getMovingBlockRenderType", cancellable = true)
-	private static void fruits_getMovingBlockRenderType(BlockState state, CallbackInfoReturnable<RenderType> ci) {
+	private static void getMovingBlockRenderType(BlockState state, CallbackInfoReturnable<RenderType> ci) {
 		if (state.getBlock() instanceof FruitLeavesBlock) {
 			RenderType renderType = TYPE_BY_BLOCK.get(state.getBlock());
 			if (renderType != null) {

@@ -27,7 +27,7 @@ public abstract class ItemInHandRendererMixin {
 	protected abstract void applyItemArmAttackTransform(PoseStack poseStack, HumanoidArm humanoidArm, float f);
 
 	@Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;"))
-	private void fruits_renderArmWithItem(AbstractClientPlayer player, float f, float g, InteractionHand hand, float h, ItemStack stack, float i, PoseStack poseStack, MultiBufferSource multiBufferSource, int j, CallbackInfo ci) {
+	private void renderArmWithItem(AbstractClientPlayer player, float f, float g, InteractionHand hand, float h, ItemStack stack, float i, PoseStack poseStack, MultiBufferSource multiBufferSource, int j, CallbackInfo ci) {
 		if (Hooks.bee && BeeModule.INSPECTOR.is(stack)) {
 			boolean bl = hand == InteractionHand.MAIN_HAND;
 			HumanoidArm humanoidArm = bl ? player.getMainArm() : player.getMainArm().getOpposite();

@@ -15,7 +15,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 public abstract class BlockStateMixin {
 
 	@Inject(at = @At("HEAD"), method = "hasBlockEntity", cancellable = true)
-	private void fruits_hasBlockEntity(CallbackInfoReturnable<Boolean> ci) {
+	private void hasBlockEntity(CallbackInfoReturnable<Boolean> ci) {
 		if (getBlock() instanceof FruitLeavesBlock leavesBlock) {
 			ci.setReturnValue(leavesBlock.hasBlockEntity((BlockState) (Object) this));
 		}

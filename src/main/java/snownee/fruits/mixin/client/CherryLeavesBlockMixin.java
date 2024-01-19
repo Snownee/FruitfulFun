@@ -16,7 +16,7 @@ import snownee.fruits.cherry.CherryModule;
 @Mixin(CherryLeavesBlock.class)
 public class CherryLeavesBlockMixin {
 	@Inject(method = "animateTick", at = @At("HEAD"), cancellable = true)
-	private void fruits_animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
+	private void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
 		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Disabled) {
 			ci.cancel();
 		}

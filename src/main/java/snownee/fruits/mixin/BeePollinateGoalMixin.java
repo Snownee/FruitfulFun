@@ -32,14 +32,14 @@ public abstract class BeePollinateGoalMixin {
 	private Predicate<BlockState> VALID_POLLINATION_BLOCKS;
 
 	@Inject(method = "<init>", at = @At("RETURN"))
-	private void fruits_init(Bee bee, CallbackInfo ci) {
+	private void init(Bee bee, CallbackInfo ci) {
 		if (Hooks.bee) {
 			VALID_POLLINATION_BLOCKS = Hooks.wrapPollinationPredicate(VALID_POLLINATION_BLOCKS);
 		}
 	}
 
 	@Inject(method = "stop", at = @At("HEAD"))
-	private void fruits_stop(CallbackInfo cir) {
+	private void stop(CallbackInfo cir) {
 		if (!Hooks.bee || this$0.getSavedFlowerPos() == null) {
 			return;
 		}
@@ -48,12 +48,12 @@ public abstract class BeePollinateGoalMixin {
 	}
 
 	@ModifyExpressionValue(method = "canBeeUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
-	private boolean fruits_canBeeUse(boolean original) {
+	private boolean canBeeUse(boolean original) {
 		return original && !BeeAttributes.of(this$0).hasTrait(Trait.RAIN_CAPABLE);
 	}
 
 	@ModifyExpressionValue(method = "canBeeContinueToUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
-	private boolean fruits_canBeeContinueToUse(boolean original) {
+	private boolean canBeeContinueToUse(boolean original) {
 		return original && !BeeAttributes.of(this$0).hasTrait(Trait.RAIN_CAPABLE);
 	}
 

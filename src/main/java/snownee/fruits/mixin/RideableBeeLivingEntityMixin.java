@@ -20,7 +20,7 @@ import snownee.fruits.bee.BeeAttributes;
 @Mixin(LivingEntity.class)
 public class RideableBeeLivingEntityMixin {
 	@Inject(method = "getRiddenInput", at = @At("HEAD"), cancellable = true)
-	private void fruits_getRiddenInput(Player player, Vec3 vec3, CallbackInfoReturnable<Vec3> ci) {
+	private void getRiddenInput(Player player, Vec3 vec3, CallbackInfoReturnable<Vec3> ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		if (entity instanceof Bee) {
 			ci.setReturnValue(Hooks.getRiddenInput((Bee) entity, player, vec3));
@@ -28,7 +28,7 @@ public class RideableBeeLivingEntityMixin {
 	}
 
 	@Inject(method = "getRiddenSpeed", at = @At("HEAD"), cancellable = true)
-	private void fruits_getRiddenSpeed(Player player, CallbackInfoReturnable<Float> ci) {
+	private void getRiddenSpeed(Player player, CallbackInfoReturnable<Float> ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		if (entity instanceof Bee) {
 			float speed = (float) (entity.onGround() ? entity.getAttributeValue(Attributes.MOVEMENT_SPEED) : entity.getAttributeValue(Attributes.FLYING_SPEED));
@@ -37,7 +37,7 @@ public class RideableBeeLivingEntityMixin {
 	}
 
 	@Inject(method = "tickRidden", at = @At("TAIL"), cancellable = true)
-	private void fruits_tickRidden(Player player, Vec3 vec3, CallbackInfo ci) {
+	private void tickRidden(Player player, Vec3 vec3, CallbackInfo ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		if (entity instanceof Bee) {
 			Vec2 vec2 = this.getRiddenRotation(player);
@@ -50,7 +50,7 @@ public class RideableBeeLivingEntityMixin {
 	}
 
 	@Inject(method = "dropEquipment", at = @At("HEAD"))
-	private void fruits_dropEquipment(CallbackInfo ci) {
+	private void dropEquipment(CallbackInfo ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		if (entity instanceof Bee) {
 			BeeAttributes attributes = BeeAttributes.of(entity);
