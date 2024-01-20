@@ -24,10 +24,3 @@ mandatory = true
 versionRange = "[5.1.4, 6)"
 ordering = "NONE"
 side = "BOTH"
-
-[[dependencies.fruitfulfun]]
-modId = "fabric_api"
-mandatory = true
-versionRange = "*"
-ordering = "NONE"
-side = "BOTH"

@@ -229,7 +229,23 @@ dependencies {
     implementation fg.deobf("maven.modrinth:moonlight:Jv6lR8aV")
     implementation fg.deobf("maven.modrinth:curios:3VUlU5Ga")
 
-    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}"
+//    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}"
+    compileOnly(jarJar("dev.su5ed.sinytra:fabric-loader:2.6.0+0.15.0+1.20.1")) {
+        jarJar.ranged(it, "[0,)")
+        transitive(false)
+    }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-biome-api-v1:13.0.12+dd0389a577")) {
+        jarJar.ranged(it, "[13.0.12,)")
+        transitive(false)
+    }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-resource-loader-v0:0.11.9+142e25ab77")) {
+        jarJar.ranged(it, "[0.11.9,)")
+        transitive(false)
+    }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-convention-tags-v1:1.5.4+fa3d1c0177")) {
+        jarJar.ranged(it, "[1.5.4,)")
+        transitive(false)
+    }
     runtimeOnly fg.deobf("dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}")
 }
 
@@ -296,7 +312,6 @@ unifiedPublishing {
                 relations { // Optional, Inferred from the relations above by default
                     depends "kiwi"
                     depends "lychee"
-                    depends "forgified-fabric-api"
                     optional "jade"
                 }
             }
@@ -310,7 +325,6 @@ unifiedPublishing {
                 relations { // Optional, Inferred from the relations above by default
                     depends "kiwi"
                     depends "lychee"
-                    depends "forgified-fabric-api"
                     optional "jade"
                 }
             }
