@@ -1,6 +1,11 @@
 package snownee.fruits.food;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -11,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import snownee.fruits.Hooks;
@@ -38,7 +44,7 @@ public class FoodItem extends ModItem {
 				player.getFoodData().eat(stack.getItem(), stack);
 			}
 			entity.addEatEffect(stack, level, entity);
-			if (!Hooks.farmersdelight && !level.isClientSide) {
+			if (!level.isClientSide && Hooks.shouldClearHarmfulEffects(stack.getItem())) {
 				ItemStack milk = Items.MILK_BUCKET.getDefaultInstance();
 				entity.getActiveEffectsMap().values().stream()
 						.filter($ -> !$.getEffect().isBeneficial() && CommonProxy.isCurativeItem($, milk))
@@ -98,5 +104,11 @@ public class FoodItem extends ModItem {
 	@Override
 	public SoundEvent getEatingSound() {
 		return FoodModule.HONEY_POMELO_TEA.is(this) ? SoundEvents.GENERIC_DRINK : SoundEvents.GENERIC_EAT;
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+		Hooks.appendEffectTooltip(this, worldIn, tooltip, flagIn);
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 }

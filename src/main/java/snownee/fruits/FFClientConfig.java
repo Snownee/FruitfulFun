@@ -15,4 +15,9 @@ public final class FFClientConfig {
 	@ConfigUI.Slider
 	public static int moddedCherryParticleFrequency = 32;
 
+	@KiwiConfig.Path("food.statusEffectTooltip")
+	public static boolean foodStatusEffectTooltip = true;
+	@KiwiConfig.Path("food.specialEffectTooltip")
+	public static boolean foodSpecialEffectTooltip = true;
+
 }

@@ -43,3 +43,5 @@ accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/wor
 
 accessible field net/minecraft/world/entity/AreaEffectCloud ownerUUID Ljava/util/UUID;
 accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
+
+accessible field net/minecraft/world/food/FoodProperties$Builder effects Ljava/util/List;
