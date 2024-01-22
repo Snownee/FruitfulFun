@@ -18,6 +18,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.ClientProxy;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.item.ModItem;

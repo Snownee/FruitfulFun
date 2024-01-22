@@ -51,6 +51,12 @@
       "data": {
         "value": "food"
       }
+    },
+    {
+      "target": "snownee.fruits.pomegranate.PomegranateModule",
+      "data": {
+        "value": "dev"
+      }
     }
   ],
   "KiwiPacket": [

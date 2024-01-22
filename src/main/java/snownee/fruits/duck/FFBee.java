@@ -1,4 +1,6 @@
-package snownee.fruits.bee;
+package snownee.fruits.duck;
+
+import snownee.fruits.bee.BeeAttributes;
 
 public interface FFBee {
 	BeeAttributes fruits$getBeeAttributes();

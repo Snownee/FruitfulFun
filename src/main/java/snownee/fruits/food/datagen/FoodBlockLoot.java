@@ -25,11 +25,10 @@ public class FoodBlockLoot extends KiwiBlockLoot {
 		handleDefault(this::createSingleItemTable);
 		/* off */
 		handle(FeastBlock.class, $ -> {
-			FeastBlock block = (FeastBlock) $;
 			return LootTable.lootTable().withPool(
 					LootPool.lootPool().add(LootItem.lootTableItem($).when(
 							LootItemBlockStatePropertyCondition.hasBlockStateProperties($).setProperties(
-									StatePropertiesPredicate.Builder.properties().hasProperty(block.getServingsProperty(), block.getMaxServings()))
+									StatePropertiesPredicate.Builder.properties().hasProperty($.getServingsProperty(), $.getMaxServings()))
 					).otherwise(EntryGroup.list(LootItem.lootTableItem(Items.BONE_MEAL), LootItem.lootTableItem(Objects.requireNonNull($.asItem().getCraftingRemainingItem())))))
 			);
 		});
