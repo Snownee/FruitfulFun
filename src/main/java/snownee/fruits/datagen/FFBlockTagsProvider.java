@@ -79,9 +79,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
-import snownee.fruits.food.FoodModule;
+import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
 
 public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
@@ -158,9 +160,16 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				CHERRY_SAPLING.get(),
 				PEACH_PINK_PETALS.get());
 		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).add(PEACH_PINK_PETALS.get());
-		getOrCreateTagBuilder(FoodModule.RITUAL_CANDLES)
-				.addOptionalTag(new ResourceLocation("candles"))
+		getOrCreateTagBuilder(CoreModule.CANDLES)
+				.addOptionalTag(BlockTags.CANDLES.location())
+				.addOptionalTag(BlockTags.CANDLE_CAKES.location())
 				.addOptionalTag(new ResourceLocation("supplementaries:candle_holders"));
+		getOrCreateTagBuilder(VacModule.VCD_PERFORM_USING)
+				.addTag(ALL_LEAVES)
+				.addOptionalTag(BlockTags.CAVE_VINES.location())
+				.add(Blocks.SWEET_BERRY_BUSH);
+		getOrCreateTagBuilder(VacModule.VCD_PERFORM_BREAKING)
+				.add(Blocks.COCOA);
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)

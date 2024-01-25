@@ -74,7 +74,6 @@ public class FoodModule extends AbstractModule {
 	@KiwiModule.NoCategory
 	public static final KiwiGO<Block> CHORUS_FRUIT_PIE = go(() -> new FoodBlock(Block.box(4, 0, 4, 12, 4, 12)));
 	public static final KiwiGO<SimpleParticleType> SMOKE = go(() -> new SimpleParticleType(true));
-	public static final TagKey<Block> RITUAL_CANDLES = blockTag(FruitfulFun.ID, "ritual_candles");
 
 	public FoodModule() {
 		Hooks.food = true;

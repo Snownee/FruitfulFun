@@ -68,6 +68,7 @@ public final class Hooks {
 	public static boolean bee;
 	public static boolean food;
 	public static boolean farmersdelight;
+	public static boolean vac;
 	public static boolean trinkets = Platform.isModLoaded("trinkets");
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
 	public static boolean jade = Platform.isModLoaded("jade");

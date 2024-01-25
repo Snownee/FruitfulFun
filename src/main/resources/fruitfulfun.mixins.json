@@ -17,6 +17,7 @@
     "FlyNodeEvaluatorMixin",
     "GiveGiftToHeroMixin",
     "InstrumentItemMixin",
+    "InteractionEntityMixin",
     "ItemEntityMixin",
     "MobMixin",
     "PandaMixin",
@@ -26,7 +27,9 @@
     "RideableBeeMixin",
     "RideableBeeMobMixin",
     "RideableBeePlayerMixin",
-    "ServerLevelMixin"
+    "ServerEntityMixin",
+    "ServerLevelMixin",
+    "SkullBlockEntityMixin"
   ],
   "client": [
     "client.BeeRendererMixin",
@@ -37,7 +40,8 @@
     "client.ItemBlockRenderTypesMixin",
     "client.ItemInHandRendererMixin",
     "client.ItemRendererMixin",
-    "client.LivingEntityFlowerCrownMixin"
+    "client.LivingEntityFlowerCrownMixin",
+    "client.MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

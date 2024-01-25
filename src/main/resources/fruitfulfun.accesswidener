@@ -42,6 +42,14 @@ accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen curre
 accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
 
 accessible field net/minecraft/world/entity/AreaEffectCloud ownerUUID Ljava/util/UUID;
+
 accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
 
 accessible field net/minecraft/world/food/FoodProperties$Builder effects Ljava/util/List;
+
+accessible field net/minecraft/world/level/block/entity/SkullBlockEntity animationTickCount I
+accessible field net/minecraft/world/level/block/entity/SkullBlockEntity isAnimating Z
+
+accessible field net/minecraft/world/entity/projectile/ThrowableItemProjectile DATA_ITEM_STACK Lnet/minecraft/network/syncher/EntityDataAccessor;
+
+accessible field net/minecraft/server/level/ServerPlayer containerCounter I

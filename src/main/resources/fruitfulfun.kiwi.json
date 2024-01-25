@@ -55,7 +55,13 @@
     {
       "target": "snownee.fruits.pomegranate.PomegranateModule",
       "data": {
-        "value": "dev"
+        "value": "pomegranate"
+      }
+    },
+    {
+      "target": "snownee.fruits.vacuum.VacModule",
+      "data": {
+        "value": "vacuum"
       }
     }
   ],
@@ -93,6 +99,12 @@
         "dir": "PLAY_TO_CLIENT",
         "value": "sync_player"
       }
+    },
+    {
+      "target": "snownee.fruits.vacuum.network.CGunShotPacket",
+      "data": {
+        "value": "gun_shot"
+      }
     }
   ],
   "Optional": [
@@ -104,6 +116,9 @@
     },
     {
       "target": "snownee.fruits.food.FoodModule"
+    },
+    {
+      "target": "snownee.fruits.vacuum.VacModule"
     }
   ]
 }

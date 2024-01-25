@@ -1,22 +1,36 @@
 package snownee.fruits.util;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+
+import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.network.protocol.Packet;
@@ -25,19 +39,28 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
@@ -47,7 +70,8 @@ import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
-import snownee.fruits.food.FoodModule;
+import snownee.fruits.vacuum.VacGunItem;
+import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.Mod;
 import snownee.kiwi.util.Util;
 
@@ -96,6 +120,47 @@ public class CommonProxy implements ModInitializer {
 		return blockState.is(ConventionalBlockTags.BOOKSHELVES);
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
+	public static boolean insertItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction, ItemStack item) {
+		Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, blockPos, blockState, blockEntity, direction);
+		if (storage == null || !storage.supportsInsertion()) {
+			return false;
+		}
+		boolean success = false;
+		try (Transaction tx = Transaction.openOuter()) {
+			long inserted = storage.insert(ItemVariant.of(item), item.getCount(), tx);
+			if (inserted > 0) {
+				tx.commit();
+				item.shrink((int) inserted);
+				success = true;
+			}
+		}
+		return success;
+	}
+
+	@SuppressWarnings("UnstableApiUsage")
+	public static ItemStack extractOneItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction) {
+		Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, blockPos, blockState, blockEntity, direction);
+		if (storage == null || !storage.supportsExtraction()) {
+			return ItemStack.EMPTY;
+		}
+		VacGunItem.playContainerAnimation(blockEntity);
+		Iterator<StorageView<ItemVariant>> iterator = storage.nonEmptyIterator();
+		if (!iterator.hasNext()) {
+			return ItemStack.EMPTY;
+		}
+		ItemStack result = ItemStack.EMPTY;
+		try (Transaction tx = Transaction.openOuter()) {
+			ItemVariant resource = iterator.next().getResource();
+			long extracted = storage.extract(resource, 1, tx);
+			if (extracted > 0) {
+				tx.commit();
+				result = resource.toStack();
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public void onInitialize() {
 		addFeature("citron");
@@ -136,6 +201,35 @@ public class CommonProxy implements ModInitializer {
 		});
 	}
 
+	public static void initVacModule() {
+		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+				player.startUsingItem(hand);
+				return InteractionResult.SUCCESS;
+			}
+			return InteractionResult.PASS;
+		});
+		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
+			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+				return InteractionResult.FAIL;
+			}
+			return InteractionResult.PASS;
+		});
+		UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+				player.startUsingItem(hand);
+				return InteractionResult.CONSUME;
+			}
+			return InteractionResult.PASS;
+		});
+		AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+				return InteractionResult.FAIL;
+			}
+			return InteractionResult.PASS;
+		});
+	}
+
 	public static void addFeature(String id) {
 		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(Util.RL(id, FruitfulFun.ID)).toString());
 		BiomeModifications.addFeature(context -> {
@@ -155,8 +249,22 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	public static boolean isLitCandle(BlockState blockState) {
-		return blockState.is(FoodModule.RITUAL_CANDLES)
-				&& blockState.hasProperty(CandleBlock.LIT)
-				&& blockState.getValue(CandleBlock.LIT);
+		return blockState.hasProperty(AbstractCandleBlock.LIT)
+				&& blockState.getValue(AbstractCandleBlock.LIT)
+				&& blockState.is(CoreModule.CANDLES);
+	}
+
+	public static void extinguishCandle(@Nullable Player player, BlockState blockState, LevelAccessor level, BlockPos blockPos) {
+		if (blockState.getBlock() instanceof AbstractCandleBlock) {
+			AbstractCandleBlock.extinguish(player, blockState, level, blockPos);
+			return;
+		}
+		if (blockState.is(CoreModule.CANDLES) && blockState.getValue(AbstractCandleBlock.LIT)) {
+			level.setBlock(blockPos, blockState.setValue(AbstractCandleBlock.LIT, false), 11);
+			level.addParticle(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.9, blockPos.getZ() + 0.5, 0.0, 0.1, 0.0);
+			level.playSound(null, blockPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
+			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
+			return;
+		}
 	}
 }
