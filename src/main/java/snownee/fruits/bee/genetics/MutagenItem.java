@@ -29,7 +29,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.bee.FFPlayer;
+import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 

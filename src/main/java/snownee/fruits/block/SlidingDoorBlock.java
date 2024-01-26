@@ -101,7 +101,7 @@ public class SlidingDoorBlock extends DoorBlock {
 		boolean flag = blockstate.getBlock() == this && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER;
 		boolean flag1 = blockstate2.getBlock() == this && blockstate2.getValue(HALF) == DoubleBlockHalf.LOWER;
 		if ((!flag || flag1) && i <= 0) {
-			if ((!flag1 || flag) && i >= 0) {
+			if ((!flag1 || flag) && i == 0) {
 				int j = direction.getStepX();
 				int k = direction.getStepZ();
 				Vec3 vec3d = p_208073_1_.getClickLocation();

@@ -16,9 +16,9 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import snownee.fruits.bee.FFPlayer;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.network.SSyncPlayerPacket;
+import snownee.fruits.duck.FFPlayer;
 
 @Mixin(Player.class)
 public class PlayerMixin implements FFPlayer {

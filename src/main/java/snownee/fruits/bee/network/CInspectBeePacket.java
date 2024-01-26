@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import snownee.fruits.bee.BeeAttributes;
-import snownee.fruits.bee.FFPlayer;
+import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PacketHandler;
 

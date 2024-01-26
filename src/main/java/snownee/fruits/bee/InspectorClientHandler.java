@@ -32,6 +32,7 @@ import snownee.fruits.bee.network.CInspectBeePacket;
 import snownee.fruits.bee.network.InspectTarget;
 import snownee.fruits.bee.network.SInspectBeeReplyPacket;
 import snownee.fruits.compat.jade.JadeCompat;
+import snownee.fruits.duck.FFPlayer;
 
 public class InspectorClientHandler {
 	public static final int ANALYZE_TICKS = 12;
@@ -184,10 +185,7 @@ public class InspectorClientHandler {
 	public static boolean startUsing() {
 		Level level = Minecraft.getInstance().level;
 		InspectTarget target = InspectTarget.find(level, Minecraft.getInstance().hitResult);
-		if (target != null && target.getEntity(level) instanceof Bee) {
-			return true;
-		}
-		return false;
+		return target != null && target.getEntity(level) instanceof Bee;
 	}
 
 	public static int getPageNow() {

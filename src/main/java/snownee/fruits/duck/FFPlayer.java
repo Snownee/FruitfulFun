@@ -1,4 +1,4 @@
-package snownee.fruits.bee;
+package snownee.fruits.duck;
 
 import java.util.Map;
 import java.util.Objects;

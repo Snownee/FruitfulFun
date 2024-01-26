@@ -43,12 +43,12 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.bee.FFBee;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
+import snownee.fruits.duck.FFBee;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
 
@@ -288,5 +288,22 @@ public final class Hooks {
 			return null;
 		}
 		return Allele.byIndex(effect.getAmplifier());
+	}
+
+	public static Vec3 modifyExplosionDeltaMovement(Entity entity, double dx, double dy, double dz, float radius) {
+		Vec3 deltaMovement = entity.getDeltaMovement();
+		dx = dx * radius * 0.5;
+		if (Math.abs(deltaMovement.x + dx) > 3) {
+			dx = Mth.clamp(deltaMovement.x + dx, -3, 3) - deltaMovement.x;
+		}
+		dy = dy * radius * 0.5 + Mth.sign(dy) * 0.1;
+		if (Math.abs(deltaMovement.y + dy) > 3) {
+			dy = Mth.clamp(deltaMovement.y + dy, -3, 3) - deltaMovement.y;
+		}
+		dz = dz * radius * 0.5;
+		if (Math.abs(deltaMovement.z + dz) > 3) {
+			dz = Mth.clamp(deltaMovement.z + dz, -3, 3) - deltaMovement.z;
+		}
+		return new Vec3(dx, dy, dz);
 	}
 }

@@ -35,6 +35,7 @@ public record BeeHasTrait(Trait trait) implements ContextualCondition {
 		return 0;
 	}
 
+	@Override
 	public MutableComponent getDescription(boolean inverted) {
 		String key = this.makeDescriptionId(inverted);
 		return Component.translatable(key, trait.getDisplayName().withStyle(ChatFormatting.WHITE));

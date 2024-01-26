@@ -22,10 +22,10 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.bee.FFBee;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.network.SSyncBeePacket;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.duck.FFBee;
 
 @Mixin(Bee.class)
 public abstract class BeeMixin extends Animal implements FFBee {

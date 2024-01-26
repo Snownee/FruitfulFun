@@ -28,6 +28,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Locus;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.duck.FFBee;
 
 public class BeeAttributes {
 	private static final UUID SPEED_MODIFIER = UUID.fromString("d21ceda4-191f-47e7-a7c7-f5eff7012bdd");
