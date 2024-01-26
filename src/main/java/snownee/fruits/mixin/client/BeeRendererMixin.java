@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.layers.SaddleLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Bee;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 
 @Mixin(BeeRenderer.class)
@@ -27,11 +28,17 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeModel<Bee>> {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void init(EntityRendererProvider.Context context, CallbackInfo ci) {
+		if (!Hooks.bee) {
+			return;
+		}
 		this.addLayer((RenderLayer<Bee, BeeModel<Bee>>) new SaddleLayer((BeeRenderer) (Object) this, new BeeModel(context.bakeLayer(ModelLayers.BEE)), new ResourceLocation(FruitfulFun.ID, "textures/entity/bee/bee_saddle.png")));
 	}
 
 	@Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
 	private void getTextureLocation(Bee bee, CallbackInfoReturnable<ResourceLocation> ci) {
+		if (!Hooks.bee) {
+			return;
+		}
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		ResourceLocation texture = attributes.getTexture();
 		if (texture != null) {

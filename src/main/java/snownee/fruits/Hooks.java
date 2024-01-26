@@ -286,12 +286,14 @@ public final class Hooks {
 			}
 		}
 		babyAttributes.setTrusted(builder.build());
-		babyAttributes.breedFrom(
-				BeeAttributes.of(parent1),
-				mutagenAffectedAllele(parent1),
-				BeeAttributes.of(parent2),
-				mutagenAffectedAllele(parent2),
-				baby);
+		if (bee) {
+			babyAttributes.breedFrom(
+					BeeAttributes.of(parent1),
+					mutagenAffectedAllele(parent1),
+					BeeAttributes.of(parent2),
+					mutagenAffectedAllele(parent2),
+					baby);
+		}
 	}
 
 	private static Allele mutagenAffectedAllele(Bee bee) {
