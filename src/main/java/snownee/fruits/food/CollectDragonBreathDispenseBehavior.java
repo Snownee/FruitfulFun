@@ -65,6 +65,6 @@ public class CollectDragonBreathDispenseBehavior extends DefaultDispenseItemBeha
 		if (FFCommonConfig.fixDragonBreathExploit && cloud.getRadius() <= 0) {
 			return false;
 		}
-		return FoodBlock.DUMMY_UUID.equals(cloud.ownerUUID) || cloud.getOwner() instanceof EnderDragon;
+		return DragonRitual.DUMMY_UUID.equals(cloud.ownerUUID) || cloud.getOwner() instanceof EnderDragon;
 	}
 }

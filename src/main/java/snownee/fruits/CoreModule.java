@@ -181,6 +181,7 @@ public final class CoreModule extends AbstractModule {
 	);
 	/* on */
 	public static final TagKey<PoiType> POI_TYPE = AbstractModule.tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
+	public static final TagKey<Block> CANDLES = blockTag(FruitfulFun.ID, "candles");
 
 	@Override
 	protected void preInit() {

@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -74,7 +75,6 @@ public class FoodModule extends AbstractModule {
 	@KiwiModule.NoCategory
 	public static final KiwiGO<Block> CHORUS_FRUIT_PIE = go(() -> new FoodBlock(Block.box(4, 0, 4, 12, 4, 12)));
 	public static final KiwiGO<SimpleParticleType> SMOKE = go(() -> new SimpleParticleType(true));
-	public static final TagKey<Block> RITUAL_CANDLES = blockTag(FruitfulFun.ID, "ritual_candles");
 
 	public FoodModule() {
 		Hooks.food = true;
@@ -88,12 +88,12 @@ public class FoodModule extends AbstractModule {
 				return itemEntity.isAlive() && !itemEntity.hasPickUpDelay() && itemstack.is(FoodModule.PANDA_FOOD);
 			});
 
-			KiwiModules.get(uid).getRegistries(BuiltInRegistries.BLOCK).stream()
+			KiwiModules.get(uid).<Block>getRegistries(ForgeRegistries.BLOCKS).stream()
 					.filter(FoodBlock.class::isInstance)
 					.map(Block::asItem)
 					.filter(Predicate.not(Items.AIR::equals))
 					.forEach($ -> DispenserBlock.registerBehavior($, new FoodDispenseBehavior()));
-			KiwiModules.get(uid).getRegistries(BuiltInRegistries.ITEM).stream()
+			KiwiModules.get(uid).<Item>getRegistries(ForgeRegistries.ITEMS).stream()
 					.filter(Item::isEdible)
 					.forEach($ -> VanillaActions.registerCompostable(1, $));
 			if (FFCommonConfig.dispenserCollectDragonBreath) {

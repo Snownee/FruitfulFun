@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -11,6 +13,8 @@ import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.network.protocol.Packet;
@@ -19,8 +23,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -30,21 +38,33 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import snownee.fruits.CoreFruitTypes;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
@@ -54,7 +74,8 @@ import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.compat.curios.CuriosCompat;
 import snownee.fruits.duck.FFPlayer;
-import snownee.fruits.food.FoodModule;
+import snownee.fruits.vacuum.VacGunItem;
+import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
@@ -148,6 +169,73 @@ public class CommonProxy {
 		return blockState.is(Tags.Blocks.BOOKSHELVES);
 	}
 
+	public static boolean insertItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction, ItemStack item) {
+		if (item.isEmpty()) {
+			return false;
+		}
+		LazyOptional<IItemHandler> cap;
+		if (blockEntity != null && (cap = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction)).isPresent()) {
+			IItemHandler itemHandler = cap.orElseThrow(NullPointerException::new);
+			ItemStack ret = ItemHandlerHelper.insertItem(itemHandler, item.copy(), false);
+			if (ret.getCount() == item.getCount()) {
+				return false;
+			}
+			item.setCount(ret.getCount());
+			return true;
+		}
+		if (blockState.getBlock() instanceof WorldlyContainerHolder containerHolder) {
+			WorldlyContainer container = containerHolder.getContainer(blockState, level, blockPos);
+			//noinspection ConstantValue
+			if (container == null) {
+				return false;
+			}
+			ItemStack ret = HopperBlockEntity.addItem(null, container, item, direction);
+			if (ret.getCount() == item.getCount()) {
+				return false;
+			}
+			item.setCount(ret.getCount());
+			return true;
+		}
+		return false;
+	}
+
+	public static ItemStack extractOneItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction) {
+		LazyOptional<IItemHandler> cap;
+		if (blockEntity != null && (cap = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction)).isPresent()) {
+			VacGunItem.playContainerAnimation(blockEntity);
+			IItemHandler itemHandler = cap.orElseThrow(NullPointerException::new);
+			for (int i = 0; i < itemHandler.getSlots(); i++) {
+				ItemStack stack = itemHandler.extractItem(i, 1, false);
+				if (!stack.isEmpty()) {
+					return stack;
+				}
+			}
+		}
+		if (blockState.getBlock() instanceof WorldlyContainerHolder containerHolder) {
+			WorldlyContainer container = containerHolder.getContainer(blockState, level, blockPos);
+			//noinspection ConstantValue
+			if (container == null || container.isEmpty()) {
+				return ItemStack.EMPTY;
+			}
+			for (int slot : container.getSlotsForFace(direction)) {
+				ItemStack itemStack = container.getItem(slot);
+				if (itemStack.isEmpty()) {
+					continue;
+				}
+				itemStack = itemStack.copyWithCount(1);
+				if (!container.canTakeItemThroughFace(slot, itemStack, direction)) {
+					continue;
+				}
+				itemStack = container.removeItem(slot, 1);
+				if (!itemStack.isEmpty()) {
+					container.setChanged();
+					return itemStack;
+				}
+			}
+		}
+		return ItemStack.EMPTY;
+	}
+
 	public static ItemStack getRecipeRemainder(ItemStack itemStack) {
 		return itemStack.getCraftingRemainingItem();
 	}
@@ -162,6 +250,31 @@ public class CommonProxy {
 			Player newPlayer = event.getEntity();
 			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
 			FFPlayer.of(newPlayer).fruits$setGeneNames(map);
+		});
+	}
+
+	public static void initVacModule() {
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
+			if (VacModule.VAC_GUN.is(event.getItemStack())) {
+				event.getEntity().startUsingItem(event.getHand());
+				event.setCanceled(true);
+			}
+		});
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.LeftClickBlock event) -> {
+			if (VacModule.VAC_GUN.is(event.getItemStack())) {
+				event.setCanceled(true);
+			}
+		});
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.EntityInteract event) -> {
+			if (VacModule.VAC_GUN.is(event.getItemStack())) {
+				event.getEntity().startUsingItem(event.getHand());
+				event.setCanceled(true);
+			}
+		});
+		MinecraftForge.EVENT_BUS.addListener((AttackEntityEvent event) -> {
+			if (VacModule.VAC_GUN.is(event.getEntity().getMainHandItem())) {
+				event.setCanceled(true);
+			}
 		});
 	}
 
@@ -184,8 +297,20 @@ public class CommonProxy {
 	}
 
 	public static boolean isLitCandle(BlockState blockState) {
-		return blockState.is(FoodModule.RITUAL_CANDLES)
-				&& blockState.hasProperty(CandleBlock.LIT)
-				&& blockState.getValue(CandleBlock.LIT);
+		return blockState.hasProperty(AbstractCandleBlock.LIT) && blockState.getValue(AbstractCandleBlock.LIT) && blockState.is(CoreModule.CANDLES);
+	}
+
+	public static void extinguishCandle(@Nullable Player player, BlockState blockState, LevelAccessor level, BlockPos blockPos) {
+		if (blockState.getBlock() instanceof AbstractCandleBlock) {
+			AbstractCandleBlock.extinguish(player, blockState, level, blockPos);
+			return;
+		}
+		if (blockState.is(CoreModule.CANDLES) && blockState.getValue(AbstractCandleBlock.LIT)) {
+			level.setBlock(blockPos, blockState.setValue(AbstractCandleBlock.LIT, false), 11);
+			level.addParticle(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.9, blockPos.getZ() + 0.5, 0.0, 0.1, 0.0);
+			level.playSound(null, blockPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
+			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
+			return;
+		}
 	}
 }

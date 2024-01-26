@@ -17,6 +17,7 @@
     "FlyNodeEvaluatorMixin",
     "GiveGiftToHeroMixin",
     "InstrumentItemMixin",
+    "InteractionEntityMixin",
     "ItemEntityMixin",
     "MobMixin",
     "PandaMixin",
@@ -26,7 +27,9 @@
     "RideableBeeMixin",
     "RideableBeeMobMixin",
     "RideableBeePlayerMixin",
+    "ServerEntityMixin",
     "ServerLevelMixin",
+    "SkullBlockEntityMixin",
     "forge.FoliagePlacerAccess"
   ],
   "client": [
@@ -39,6 +42,7 @@
     "client.ItemInHandRendererMixin",
     "client.ItemRendererMixin",
     "client.LivingEntityFlowerCrownMixin",
+    "client.MinecraftMixin",
     "forge.BlockColorsAccess",
     "forge.ItemColorsAccess"
   ],
