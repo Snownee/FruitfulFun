@@ -89,7 +89,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Bee;updateRollAmount()V"))
 	private void tick(CallbackInfo ci) {
-		if (level().isClientSide) {
+		if (level().isClientSide || !Hooks.bee) {
 			return;
 		}
 		Bee bee = (Bee) (Object) this;
@@ -108,6 +108,9 @@ public abstract class BeeMixin extends Animal implements FFBee {
 
 	@Inject(method = "customServerAiStep", at = @At("HEAD"))
 	private void customServerAiStep(CallbackInfo ci) {
+		if (!Hooks.bee) {
+			return;
+		}
 		if (underWaterTicks >= 20) {
 			ejectPassengers();
 		}

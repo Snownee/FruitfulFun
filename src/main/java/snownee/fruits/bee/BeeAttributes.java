@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Locus;
 import snownee.fruits.bee.genetics.Trait;
@@ -231,7 +232,7 @@ public class BeeAttributes {
 	}
 
 	public boolean hasTrait(Trait trait) {
-		return traits.contains(trait);
+		return Hooks.bee && traits.contains(trait);
 	}
 
 	public Locus getLocus(Allele allele) {

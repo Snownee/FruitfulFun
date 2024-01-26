@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Bee;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.jade.api.EntityAccessor;
@@ -23,7 +24,7 @@ public class BeeDebugProvider implements IEntityComponentProvider, IServerDataPr
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-		if (accessor.getPlayer().isHolding(BeeModule.INSPECTOR.get())) {
+		if (Hooks.bee && accessor.getPlayer().isHolding(BeeModule.INSPECTOR.get())) {
 			return;
 		}
 		CompoundTag data = accessor.getServerData();
