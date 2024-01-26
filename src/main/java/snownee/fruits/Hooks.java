@@ -276,13 +276,13 @@ public final class Hooks {
 		ServerPlayer loveCause1 = parent1.getLoveCause();
 		if (loveCause1 != null) {
 			builder.add(loveCause1.getUUID());
-			loveCause1.awardStat(BeeModule.BEE_ONE_CM);
+			loveCause1.awardStat(BeeModule.BEES_BRED);
 		}
 		ServerPlayer loveCause2 = parent2.getLoveCause();
 		if (loveCause2 != null) {
 			builder.add(loveCause2.getUUID());
 			if (loveCause1 != loveCause2) {
-				loveCause2.awardStat(BeeModule.BEE_ONE_CM);
+				loveCause2.awardStat(BeeModule.BEES_BRED);
 			}
 		}
 		babyAttributes.setTrusted(builder.build());
