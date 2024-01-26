@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -46,10 +45,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.FFCommonConfig;
-import snownee.fruits.Hooks;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.block.IKiwiBlock;
-import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.VoxelUtil;
 
 public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock {
@@ -97,9 +94,7 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 
 	@Override
 	public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		if (FoodModule.HONEY_POMELO_TEA.is(stack) && (!Hooks.farmersdelight || !Platform.isProduction())) {
-			tooltip.add(Component.translatable("tip.fruitfulfun.clearHarmfulEffects").withStyle(ChatFormatting.BLUE));
-		}
+
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 

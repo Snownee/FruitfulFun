@@ -1,18 +1,24 @@
 package snownee.fruits;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
+import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.VibrationParticleOption;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,8 +33,12 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,6 +59,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.duck.FFBee;
+import snownee.fruits.food.FoodModule;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
 
@@ -305,5 +316,28 @@ public final class Hooks {
 			dz = Mth.clamp(deltaMovement.z + dz, -3, 3) - deltaMovement.z;
 		}
 		return new Vec3(dx, dy, dz);
+	}
+
+	public static void appendEffectTooltip(Item item, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+		if (!Platform.isPhysicalClient()) {
+			return; // we don't want to access client config class on server
+		}
+		if (FFClientConfig.foodSpecialEffectTooltip && shouldClearHarmfulEffects(item)) {
+			tooltip.add(Component.translatable("tip.fruitfulfun.clearHarmfulEffects").withStyle(ChatFormatting.BLUE));
+		}
+		FoodProperties properties = item.getFoodProperties();
+		if (FFClientConfig.foodStatusEffectTooltip && properties != null) {
+			List<MobEffectInstance> effects = properties.getEffects().stream()
+					.filter($ -> $.getFirst() != null && $.getSecond() > 0)
+					.map(Pair::getFirst)
+					.toList();
+			if (!effects.isEmpty()) {
+				PotionUtils.addPotionTooltip(effects, tooltip, 1.0F);
+			}
+		}
+	}
+
+	public static boolean shouldClearHarmfulEffects(Item item) {
+		return food && (!farmersdelight || !Platform.isProduction()) && FoodModule.HONEY_POMELO_TEA.get().asItem() == item;
 	}
 }
