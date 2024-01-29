@@ -1,4 +1,4 @@
-package snownee.fruits.food;
+package snownee.fruits.ritual;
 
 import java.util.List;
 
@@ -65,6 +65,6 @@ public class CollectDragonBreathDispenseBehavior extends DefaultDispenseItemBeha
 		if (FFCommonConfig.fixDragonBreathExploit && cloud.getRadius() <= 0) {
 			return false;
 		}
-		return DragonRitual.DUMMY_UUID.equals(cloud.ownerUUID) || cloud.getOwner() instanceof EnderDragon;
+		return RitualModule.DUMMY_UUID.equals(cloud.ownerUUID) || cloud.getOwner() instanceof EnderDragon;
 	}
 }

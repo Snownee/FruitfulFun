@@ -24,6 +24,7 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
+import snownee.fruits.food.FoodModule;
 import snownee.kiwi.recipe.ModuleLoadedCondition;
 
 public class FFAdvancements extends FabricAdvancementProvider {
@@ -121,6 +122,18 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				))
 				.rewards(xp100)
 				.save(beeExporter, "husbandry/fruitfulfun/bee_jockey");
+
+		Consumer<Advancement> ritualExporter = withConditions(consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "ritual")));
+
+		Advancement.Builder.recipeAdvancement()
+				.parent(start)
+				.display(
+						FoodModule.CHORUS_FRUIT_PIE.get(),
+						Component.translatable("advancements.fruitfulfun.ritual.title"),
+						Component.translatable("advancements.fruitfulfun.ritual.description"),
+						null, FrameType.TASK, true, true, false)
+				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
+				.save(ritualExporter, "husbandry/fruitfulfun/ritual");
 		/* on */
 	}
 

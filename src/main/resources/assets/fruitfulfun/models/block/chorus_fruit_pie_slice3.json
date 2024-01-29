@@ -1,0 +1,10 @@
+{
+  "parent": "fruitfulfun:block/pie_slice3",
+  "textures": {
+    "particle": "fruitfulfun:block/pie_top",
+    "bottom": "fruitfulfun:block/pie_bottom",
+    "inner": "fruitfulfun:block/pie_inner",
+    "side": "fruitfulfun:block/pie_side",
+    "top": "fruitfulfun:block/pie_top"
+  }
+}

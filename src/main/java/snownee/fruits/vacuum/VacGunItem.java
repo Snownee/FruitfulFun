@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -43,10 +44,11 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.fruits.util.CommonProxy;
+import snownee.fruits.util.PreventUpdateAnimation;
 import snownee.fruits.vacuum.network.CGunShotPacket;
 import snownee.kiwi.item.ModItem;
 
-public class VacGunItem extends ModItem {
+public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 	public static final int MAX_ITEM_COUNT = 16;
 	private static final int ITEM_BAR_COLOR = Mth.color(0.4F, 1.0F, 0.4F);
 	private static final ThreadLocal<ItemEntity> DUMMY_ITEM_ENTITY = new ThreadLocal<>();
@@ -73,7 +75,9 @@ public class VacGunItem extends ModItem {
 			if (projectile != null && PomegranateModule.POMEGRANATE.is(projectile.getItem())) {
 				player.getCooldowns().addCooldown(gun.getItem(), 15);
 			} else {
-				player.getCooldowns().addCooldown(gun.getItem(), 1);
+				long gameTime = player.level().getGameTime();
+				long lastShot = gun.getOrCreateTag().getLong("LastShot");
+				player.getCooldowns().addCooldown(gun.getItem(), gameTime - lastShot < 8 ? 2 : 4);
 			}
 		} else if ("fluid".equals(ammoType)) {
 			// TODO
@@ -81,6 +85,8 @@ public class VacGunItem extends ModItem {
 		if (player.isLocalPlayer()) {
 			CGunShotPacket.I.sendToServer($ -> {
 			});
+		} else {
+			gun.getOrCreateTag().putLong("LastShot", player.level().getGameTime());
 		}
 	}
 
@@ -104,6 +110,8 @@ public class VacGunItem extends ModItem {
 		player.level().addFreshEntity(projectile);
 		container.setChanged();
 		saveItemContainer(gun, container);
+		RandomSource random = player.getRandom();
+		player.level().playSound(null, player, VacModule.GUN_SHOOT_ITEM.get(), player.getSoundSource(), 0.2f, ((random.nextFloat() - random.nextFloat()) * 0.7f + 1.0f) * 2.0f);
 		return projectile;
 	}
 
@@ -195,7 +203,7 @@ public class VacGunItem extends ModItem {
 
 	@Override
 	public void onUseTick(Level level, LivingEntity living, ItemStack gun, int i) {
-		if (!(living instanceof Player player)) {
+		if (living.level().isClientSide || !(living instanceof Player player)) {
 			return;
 		}
 		Vec3 start = player.getEyePosition(1);
@@ -213,22 +221,33 @@ public class VacGunItem extends ModItem {
 		start = start.add(lookAngle);
 //		level.addParticle(ParticleTypes.BUBBLE, start.x(), start.y(), start.z(), 0, 0, 0);
 		AABB aabb = new AABB(start, end).inflate(1);
-		extractContainer(level, gun, hit);
+		extractContainer(level, gun, lookAngle, start, hit, aabb);
 		processEntities(level, player, gun, lookAngle, start, end, aabb);
 		if (i % 2 == 0) {
 			processBlocks(level, player, gun, lookAngle, start, end, aabb);
 		}
 	}
 
-	private static void extractContainer(Level level, ItemStack gun, HitResult hit) {
-		if (level.isClientSide || hit.getType() != HitResult.Type.BLOCK) {
+	private static void extractContainer(Level level, ItemStack gun, Vec3 lookAngle, Vec3 start, HitResult hit, AABB aabb) {
+		if (hit.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
 		String ammoType = getAmmoType(gun);
 		if (ammoType != null && !"item".equals(ammoType)) {
 			return;
 		}
-		if (getItemCount(gun) >= MAX_ITEM_COUNT) {
+		int count = getItemCount(gun);
+		if (count >= MAX_ITEM_COUNT) {
+			return;
+		}
+		count += level.getEntitiesOfClass(ItemEntity.class, aabb, e -> {
+			if (e.noPhysics || e.isSpectator() || !e.isAlive()) {
+				return false;
+			}
+			Vec3 center = e.getBoundingBox().getCenter();
+			return center.subtract(start).dot(lookAngle) > 0.866;
+		}).size();
+		if (count >= MAX_ITEM_COUNT) {
 			return;
 		}
 		BlockHitResult blockHitResult = (BlockHitResult) hit;
@@ -248,7 +267,7 @@ public class VacGunItem extends ModItem {
 
 	private static void processEntities(Level level, Player player, ItemStack gun, Vec3 lookAngle, Vec3 start, Vec3 end, AABB aabb) {
 		List<Entity> entities = level.getEntitiesOfClass(Entity.class, aabb, e -> {
-			if (e == player || e.noPhysics || e.isSpectator()) {
+			if (e == player || e.noPhysics || e.isSpectator() || !e.isAlive()) {
 				return false;
 			}
 			AABB box = e.getBoundingBox();
@@ -269,7 +288,7 @@ public class VacGunItem extends ModItem {
 			Vec3 center = entity.getBoundingBox().getCenter();
 			Vec3 dist = start.subtract(center);
 			double lengthSqr = dist.lengthSqr();
-			if (!level.isClientSide && lengthSqr < 1 && entity instanceof ItemEntity itemEntity) {
+			if (lengthSqr < 1 && entity instanceof ItemEntity itemEntity) {
 				if (container == null) {
 					container = readItemContainer(gun);
 				}
@@ -292,7 +311,7 @@ public class VacGunItem extends ModItem {
 				entity.setDeltaMovement(deltaMovement);
 			}
 			entity.hasImpulse = true;
-			if (!level.isClientSide && entity instanceof Mob mob) {
+			if (entity instanceof Mob mob) {
 				mob.getNavigation().stop();
 			}
 		}
@@ -302,9 +321,6 @@ public class VacGunItem extends ModItem {
 	}
 
 	private static void processBlocks(Level level, Player player, ItemStack gun, Vec3 lookAngle, Vec3 start, Vec3 end, AABB aabb) {
-		if (level.isClientSide) {
-			return;
-		}
 		BlockPos.betweenClosedStream(aabb).forEach(pos -> {
 			Vec3 center = Vec3.atCenterOf(pos);
 			Vec3 dist = center.subtract(start);

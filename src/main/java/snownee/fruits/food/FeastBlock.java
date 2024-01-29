@@ -2,12 +2,15 @@ package snownee.fruits.food;
 
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,13 +29,23 @@ import snownee.fruits.util.CommonProxy;
 
 public class FeastBlock extends FoodBlock {
 
-	public final Supplier<Item> servingItem;
 	public static final VoxelShape LEFTOVER_SHAPE = Block.box(2, 0, 2, 14, 1, 14);
+	public final Supplier<Item> servingItem;
+	@Nullable
+	private final VoxelShape leftoverShape;
+	private final int maxServings;
 
-	public FeastBlock(VoxelShape northShape, Supplier<Item> servingItem) {
-		super(Shapes.or(northShape, LEFTOVER_SHAPE));
+	public FeastBlock(VoxelShape northShape, @Nullable VoxelShape leftoverShape, Supplier<Item> servingItem) {
+		super(leftoverShape == null ? northShape : Shapes.or(northShape, leftoverShape));
+		this.leftoverShape = leftoverShape;
 		this.servingItem = servingItem;
+		int size = getServingsProperty().getPossibleValues().size();
+		this.maxServings = hasLeftover() ? size - 1 : size;
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(getServingsProperty(), getMaxServings()));
+	}
+
+	public boolean hasLeftover() {
+		return leftoverShape != null;
 	}
 
 	@Override
@@ -42,13 +55,19 @@ public class FeastBlock extends FoodBlock {
 		ItemStack remainder = CommonProxy.getRecipeRemainder(servingItem);
 		ItemStack held = player.getItemInHand(hand);
 		if (serves == 0) {
-			if (!level.isClientSide) {
-				level.destroyBlock(pos, true, player);
+			consumeServing(level, pos, state, player);
+		} else if (remainder.isEmpty()) {
+			// has no container. eat serving item directly
+			FoodProperties food = servingItem.getItem().getFoodProperties();
+			if (food == null || !player.canEat(food.canAlwaysEat())) {
+				return InteractionResult.PASS;
 			}
+			consumeServing(level, pos, state, player);
+			player.eat(level, servingItem);
 		} else if (ItemStack.isSameItem(held, remainder)) {
 			// has container. give serving item
 			if (!level.isClientSide) {
-				level.setBlockAndUpdate(pos, state.setValue(getServingsProperty(), serves - 1));
+				consumeServing(level, pos, state, player);
 				if (!player.getAbilities().instabuild) {
 					held.shrink(1);
 				}
@@ -56,7 +75,7 @@ public class FeastBlock extends FoodBlock {
 					player.drop(servingItem, false);
 				}
 			}
-		} else if (serves == 4 && held.isEmpty()) {
+		} else if (serves == getMaxServings() && held.isEmpty()) {
 			if (!level.isClientSide) {
 				level.removeBlock(pos, false);
 				ItemStack blockItem = new ItemStack(this);
@@ -71,6 +90,17 @@ public class FeastBlock extends FoodBlock {
 			return InteractionResult.PASS;
 		}
 		return InteractionResult.sidedSuccess(level.isClientSide);
+	}
+
+	public void consumeServing(Level level, BlockPos pos, BlockState state, @Nullable Player player) {
+		if (!level.isClientSide) {
+			int serves = getServings(state);
+			if (serves > 1 || hasLeftover()) {
+				level.setBlockAndUpdate(pos, state.setValue(getServingsProperty(), serves - 1));
+			} else {
+				level.destroyBlock(pos, true, player);
+			}
+		}
 	}
 
 	@Override
@@ -93,7 +123,7 @@ public class FeastBlock extends FoodBlock {
 	}
 
 	public int getMaxServings() {
-		return 4;
+		return maxServings;
 	}
 
 	public int getServings(BlockState state) {

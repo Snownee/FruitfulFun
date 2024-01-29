@@ -1,4 +1,4 @@
-package snownee.fruits.food;
+package snownee.fruits.ritual;
 
 import java.util.List;
 import java.util.Objects;
@@ -10,15 +10,19 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -39,12 +43,20 @@ import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.food.FoodModule;
 import snownee.fruits.util.CommonProxy;
 import snownee.fruits.vacuum.VacModule;
+import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiGO;
+import snownee.kiwi.KiwiModule;
 
-public class DragonRitual {
-
+@KiwiModule("ritual")
+@KiwiModule.Optional
+public class RitualModule extends AbstractModule {
+	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "block.ritual.finish")));
 	public static final Supplier<BlockPattern> RITUAL = Suppliers.memoize(() -> BlockPatternBuilder.start()
 			.aisle(
 					" C C ",
@@ -65,8 +77,12 @@ public class DragonRitual {
 	public static final String INTERACTION_NAME = "@FruitfulFun";
 	public static final int LIFETIME = 100;
 
+	public RitualModule() {
+		Hooks.ritual = true;
+	}
+
 	public static void tryStartRitual(Level level, BlockPos pos) {
-		if (!level.getEntities(EntityType.INTERACTION, new AABB(pos), DragonRitual::isFFInteractionEntity).isEmpty()) {
+		if (!level.getEntities(EntityType.INTERACTION, new AABB(pos), RitualModule::isFFInteractionEntity).isEmpty()) {
 			return;
 		}
 		List<BlockPos> heads = findRitual(level, pos);
@@ -74,7 +90,7 @@ public class DragonRitual {
 			return;
 		}
 		for (BlockPos head : heads) {
-			level.playSound(null, head, SoundEvents.ENDER_DRAGON_AMBIENT, SoundSource.NEUTRAL, 1.0F, 1.0F);
+			level.playSound(null, head, SoundEvents.ENDER_DRAGON_AMBIENT, SoundSource.AMBIENT, 1.0F, 1.0F);
 		}
 		Interaction interaction = Objects.requireNonNull(EntityType.INTERACTION.create(level));
 		interaction.setPos(Vec3.atCenterOf(pos));
@@ -129,7 +145,7 @@ public class DragonRitual {
 			return false;
 		}
 		BlockPos center = blockPos.mutable().move(facing, 4).move(Direction.DOWN);
-		List<Interaction> entities = level.getEntities(EntityType.INTERACTION, new AABB(center), DragonRitual::isFFInteractionEntity);
+		List<Interaction> entities = level.getEntities(EntityType.INTERACTION, new AABB(center), RitualModule::isFFInteractionEntity);
 		if (entities.isEmpty()) {
 			return false;
 		}
@@ -167,6 +183,9 @@ public class DragonRitual {
 	public static void tickInteraction(Interaction interaction) {
 		Level level = interaction.level();
 		if (level.isClientSide) {
+			if (interaction.tickCount == 55) {
+				level.playLocalSound(interaction.blockPosition(), RITUAL_FINISH.get(), SoundSource.AMBIENT, 1.0F, 1.0F, false);
+			}
 			if (interaction.tickCount == LIFETIME - 1) {
 				finishRitual(interaction);
 			}
@@ -209,9 +228,22 @@ public class DragonRitual {
 			}
 		}
 		if (level.isClientSide) {
+			BlockState state = level.getBlockState(pos);
+			VoxelShape shape = state.getCollisionShape(level, pos);
+			level.removeBlock(pos, false);
+			if (shape.isEmpty()) {
+				return;
+			}
+			AABB aabb = shape.bounds();
+			for (int i = 0; i < 24; i++) {
+				double x = Mth.lerp(level.random.nextDouble(), aabb.minX, aabb.maxX) + pos.getX();
+				double y = Mth.lerp(level.random.nextDouble(), aabb.minY, aabb.maxY) + pos.getY();
+				double z = Mth.lerp(level.random.nextDouble(), aabb.minZ, aabb.maxZ) + pos.getZ();
+				level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0, 0, 0);
+			}
 			return;
 		}
-		level.removeBlock(interaction.blockPosition(), false);
+		level.removeBlock(pos, false);
 		ItemStack itemStack = ItemStack.EMPTY;
 		if (interaction.getFirstPassenger() instanceof ItemEntity itemEntity) {
 			itemStack = itemEntity.getItem();
@@ -225,21 +257,31 @@ public class DragonRitual {
 		flame.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
 		flame.ownerUUID = DUMMY_UUID;
 		level.addFreshEntity(flame);
-		level.playSound(null, pos, SoundEvents.ENDER_DRAGON_GROWL, SoundSource.NEUTRAL, 1.0F, 1.0F);
-		if (breathCount > 1) {
+		level.playSound(null, pos, SoundEvents.ENDER_DRAGON_GROWL, SoundSource.AMBIENT, 1.0F, 1.0F);
+		if (breathCount == 1) {
 			interaction.spawnAtLocation(VacModule.VAC_GUN.itemStack());
 			itemStack.shrink(1);
 		}
+		ServerLevel serverLevel = (ServerLevel) level;
+		Advancement advancement = Hooks.advancement(serverLevel, "ritual");
+		if (advancement != null) {
+			for (ServerPlayer player : serverLevel.players()) {
+				if (player.distanceToSqr(interaction) > 256) {
+					continue;
+				}
+				player.getAdvancements().award(advancement, "_");
+			}
+		}
 	}
 
-	public static InteractionResult rightClickInteraction(Interaction interaction, Player player, InteractionHand interactionHand) {
+	public static void rightClickInteraction(Interaction interaction, Player player, InteractionHand interactionHand) {
 		Level level = interaction.level();
 		if (level.isClientSide) {
-			return InteractionResult.SUCCESS;
+			return;
 		}
 		ItemStack itemStack = player.getItemInHand(interactionHand);
 		if (itemStack.isEmpty()) {
-			return InteractionResult.SUCCESS;
+			return;
 		}
 		itemStack = itemStack.split(1);
 		ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), itemStack.split(1));
@@ -247,6 +289,5 @@ public class DragonRitual {
 			itemEntity.startRiding(interaction);
 			itemEntity.setPickUpDelay(LIFETIME);
 		}
-		return InteractionResult.SUCCESS;
 	}
 }

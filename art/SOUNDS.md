@@ -1,0 +1,3 @@
+ - V.C.D. collecting: https://pixabay.com/sound-effects/vacuum-cleaner-start-idle-stop-01-25308/
+ - V.C.D. shooting: https://assetstore.unity.com/packages/audio/sound-fx/rpg-magic-sound-effect-pack-3-elemental-aaa-191784
+ - Ritual finished: https://assetstore.unity.com/packages/audio/sound-fx/rpg-magic-sound-effect-pack-3-elemental-aaa-191784

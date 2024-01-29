@@ -51,6 +51,7 @@ public class FFModelProvider extends FabricModelProvider {
 		generators.createHangingSign(CoreModule.STRIPPED_CITRUS_LOG.get(), CoreModule.CITRUS_HANGING_SIGN.get(), CoreModule.CITRUS_WALL_HANGING_SIGN.get());
 		generators.createHangingSign(CherryModule.STRIPPED_REDLOVE_LOG.get(), CherryModule.REDLOVE_HANGING_SIGN.get(), CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
 		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE.get());
+		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE_SLICE.get());
 		generators.createSimpleFlatItemModel(PomegranateModule.POMEGRANATE.get());
 	}
 

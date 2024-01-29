@@ -1,4 +1,4 @@
-// 1.20.1	2024-01-25T13:17:15.508788	Fruitful Fun/Model Definitions
+// 1.20.1	2024-01-29T13:43:09.3495213	Fruitful Fun/Model Definitions
 8b40772fd9cb3436814e546b985af7345aa1659c assets\fruitfulfun\models\block\peach_pink_petals_1.json
 e2da4c9e0b46410b14f728ee2a5e6fa857405cd6 assets\fruitfulfun\models\block\apple_leaves_2.json
 35db9ef913efe9322ec36cda6c00e3addeb9bac0 assets\fruitfulfun\models\block\lime_leaves.json
@@ -26,6 +26,7 @@ a00ebe763ddb0f2f3514292f1ff73c4adba5c022 assets\fruitfulfun\models\item\redlove_
 cf4ea0056f1f3550106105015edf2f19555a2bdb assets\fruitfulfun\blockstates\apple_leaves.json
 8d7431e6e37922a79e369fb2a35feb6da6fde323 assets\fruitfulfun\models\block\citrus_hanging_sign.json
 dbbf1fda902ddb530902bac5d08f40eb7948b81e assets\fruitfulfun\blockstates\citrus_wall_hanging_sign.json
+4da4508f5445008d31abf93aeab134a47ebe9bb4 assets\fruitfulfun\models\item\chorus_fruit_pie_slice.json
 234179b6e5e7fb8f23d131eace16177472ffd7fc assets\fruitfulfun\models\block\lime_leaves_3.json
 0e0ce9ea4bb8acecd610a9487fb067eb6c549461 assets\fruitfulfun\models\block\lemon_leaves.json
 7d15bcabcb8640ed011435d5a97d68030e18df96 assets\fruitfulfun\models\block\peach_pink_petals_4.json

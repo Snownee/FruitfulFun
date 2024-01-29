@@ -11,6 +11,7 @@ import net.minecraft.world.level.storage.loot.entries.EntryGroup;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import snownee.fruits.food.FeastBlock;
+import snownee.fruits.food.FoodModule;
 import snownee.kiwi.datagen.KiwiBlockLoot;
 import snownee.kiwi.util.Util;
 
@@ -24,7 +25,18 @@ public class FoodBlockLoot extends KiwiBlockLoot {
 	protected void addTables() {
 		handleDefault(this::createSingleItemTable);
 		/* off */
-		handle(FeastBlock.class, $ -> {
+		add(FoodModule.CHORUS_FRUIT_PIE.get(), block -> {
+			FeastBlock $ = (FeastBlock) block;
+			return LootTable.lootTable().withPool(
+					LootPool.lootPool().add(LootItem.lootTableItem($).when(
+							LootItemBlockStatePropertyCondition.hasBlockStateProperties($).setProperties(
+									StatePropertiesPredicate.Builder.properties().hasProperty($.getServingsProperty(), $.getMaxServings()))
+					))
+			);
+		});
+
+		add(FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get(), block -> {
+			FeastBlock $ = (FeastBlock) block;
 			return LootTable.lootTable().withPool(
 					LootPool.lootPool().add(LootItem.lootTableItem($).when(
 							LootItemBlockStatePropertyCondition.hasBlockStateProperties($).setProperties(

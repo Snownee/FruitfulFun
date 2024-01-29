@@ -41,6 +41,7 @@
     "client.ItemInHandRendererMixin",
     "client.ItemRendererMixin",
     "client.LivingEntityFlowerCrownMixin",
+    "client.LivingEntitySoundMixin",
     "client.MinecraftMixin"
   ],
   "injectors": {

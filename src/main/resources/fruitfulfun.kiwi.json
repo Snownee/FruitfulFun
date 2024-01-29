@@ -59,6 +59,12 @@
       }
     },
     {
+      "target": "snownee.fruits.ritual.RitualModule",
+      "data": {
+        "value": "ritual"
+      }
+    },
+    {
       "target": "snownee.fruits.vacuum.VacModule",
       "data": {
         "value": "vacuum"
@@ -116,6 +122,9 @@
     },
     {
       "target": "snownee.fruits.food.FoodModule"
+    },
+    {
+      "target": "snownee.fruits.ritual.RitualModule"
     },
     {
       "target": "snownee.fruits.vacuum.VacModule"

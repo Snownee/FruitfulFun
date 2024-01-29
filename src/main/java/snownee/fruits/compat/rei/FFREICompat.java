@@ -64,6 +64,7 @@ public class FFREICompat implements REIClientPlugin {
 		rule.hide(EntryStacks.of(PomegranateModule.POMEGRANATE.get()));
 		if (Hooks.food) {
 			rule.hide(EntryStacks.of(FoodModule.CHORUS_FRUIT_PIE.get()));
+			rule.hide(EntryStacks.of(FoodModule.CHORUS_FRUIT_PIE_SLICE.get()));
 		}
 		if (Hooks.vac) {
 			rule.hide(EntryStacks.of(VacModule.VAC_GUN.get()));

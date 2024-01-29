@@ -2,7 +2,6 @@ package snownee.fruits;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.LevelAccessor;
-import snownee.kiwi.KiwiModule;
 import snownee.kiwi.config.KiwiConfig;
 
 @KiwiConfig
@@ -30,8 +29,6 @@ public final class FFCommonConfig {
 	@KiwiConfig.Range(min = 0)
 	public static int beeNaturalHealingInterval = 900;
 	public static boolean redloveFruitUse = true;
-	@KiwiModule.Skip
-	public static boolean chorusFruitPieRitual = true;
 	@KiwiConfig.Path("dragonBreath.fixExploit")
 	public static boolean fixDragonBreathExploit = true;
 	@KiwiConfig.GameRestart
