@@ -17,7 +17,7 @@ public class FoodBuilderExtension {
 	}
 
 	public FoodBuilderExtension effect(Supplier<MobEffectInstance> mobEffectInstance, float probability) {
-		builder.effect(mobEffectInstance, probability);
+		builder.effect(new CachedSupplier<>(mobEffectInstance), probability);
 		return this;
 	}
 
