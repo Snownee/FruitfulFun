@@ -1,4 +1,4 @@
-// 1.20.1	2024-01-29T13:43:09.3325667	Fruitful Fun/Recipes
+// 1.20.1	2024-01-29T16:05:46.1249605	Fruitful Fun/Recipes
 3c9b84f8994b4e76276c3b768f5167d822fb14f7 data\fruitfulfun\recipes\lemon_roast_chicken.json
 653abe8d54a1d3ddd8292adf3aaae1589c73612d data\fruitfulfun\recipes\rice_with_fruits.json
 7bfb17419a17f8dede939a2a02d1a1e29902de46 data\fruitfulfun\recipes\cherry_crown.json
@@ -51,6 +51,7 @@ be67b41cb8581e3579b31bf2c7a3484d0ca0b8a0 data\fruitfulfun\recipes\citrus_fence_g
 1c39a23e96037f4de37f0af77b0bf966845ee9a1 data\fruitfulfun\advancements\recipes\building_blocks\citrus_wood.json
 60da911f447d73d11ced50b9fd5a2af1432bb2d3 data\fruitfulfun\advancements\recipes\food\donauwelle.json
 8c35f8e5e3e2405f2f3e69c181ccf0705b0ebc8d data\fruitfulfun\advancements\recipes\decorations\redlove_sign.json
+7275741683288d9f19992133edc8620dd56552ae data\fruitfulfun\advancements\recipes\misc\no_hybrid\pomegranate_sapling.json
 3838a5a702118d5aaf01c2544fcedd4c79b77bf1 data\fruitfulfun\recipes\no_hybrid\lemon_sapling.json
 6dba388b22cc4093b90b7b1083b39656860a6e40 data\fruitfulfun\advancements\recipes\building_blocks\redlove_wood.json
 47148bbcb9266db7e110b53306f2cb7c87ba6af1 data\fruitfulfun\recipes\stripped_citrus_wood.json
@@ -89,6 +90,7 @@ e90fde3f3d637e247bc0eb1485bb65ba72bc26fc data\fruitfulfun\recipes\redlove_fence.
 abd3d8f342e2570dc24e83f15d3efaebf7ccab39 data\fruitfulfun\advancements\recipes\building_blocks\redlove_slab.json
 40df0e88dbefbdaaf2e844206beca2ae44a2a1fe data\fruitfulfun\advancements\recipes\decorations\citrus_hanging_sign.json
 1e779e73dfd1b3c1e7f708f6fdda60b8d9cfc734 data\fruitfulfun\recipes\citrus_hanging_sign.json
+423931088c78036a196dff982b18ef5799642a59 data\fruitfulfun\recipes\no_hybrid\pomegranate_sapling.json
 1aec24ce827e5918052ffd57c52d90a38d7e6116 data\fruitfulfun\advancements\recipes\decorations\citrus_fence.json
 36305b924512b11736235458978cb35b797da216 data\fruitfulfun\recipes\redlove_cabinet.json
 77e2d1f57e3b0d0ed0b268c65fc8caeca16a5df7 data\fruitfulfun\advancements\recipes\misc\no_hybrid\cherry_sapling.json

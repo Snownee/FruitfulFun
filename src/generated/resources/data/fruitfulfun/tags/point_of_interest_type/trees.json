@@ -2,20 +2,15 @@
   "replace": false,
   "values": [
     "fruitfulfun:citron",
-    {
-      "id": "fruitfulfun:cherry",
-      "required": false
-    },
     "fruitfulfun:orange",
+    "fruitfulfun:cherry",
     "fruitfulfun:pomelo",
     "fruitfulfun:lemon",
+    "fruitfulfun:pomegranate",
     "fruitfulfun:lime",
     "fruitfulfun:grapefruit",
     "fruitfulfun:apple",
-    {
-      "id": "fruitfulfun:redlove",
-      "required": false
-    },
-    "fruitfulfun:tangerine"
+    "fruitfulfun:tangerine",
+    "fruitfulfun:redlove"
   ]
 }

@@ -4,6 +4,7 @@ import static snownee.fruits.CoreModule.APPLE_LEAVES;
 import static snownee.fruits.CoreModule.CITRUS_LOG;
 import static snownee.fruits.cherry.CherryModule.CHERRY_LEAVES;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
+import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE_LEAVES;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -31,7 +32,7 @@ public class SeasonalBlockTagsProvider extends FabricTagProvider.BlockTagProvide
 
 	// spring: cherry
 	// summer: apple, redlove
-	// autumn: apple, redlove, citrus
+	// autumn: apple, redlove, citrus, pomegranate
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
 		Block[] saplings = FFRegistries.FRUIT_TYPE.stream().map(t -> t.sapling.get()).toArray(Block[]::new);
@@ -44,7 +45,7 @@ public class SeasonalBlockTagsProvider extends FabricTagProvider.BlockTagProvide
 		getOrCreateTagBuilder(SUMMER_CROPS).add(saplings)
 				.add(APPLE_LEAVES.get(), REDLOVE_LEAVES.get());
 		getOrCreateTagBuilder(AUTUMN_CROPS).add(saplings)
-				.add(APPLE_LEAVES.get(), REDLOVE_LEAVES.get())
+				.add(APPLE_LEAVES.get(), REDLOVE_LEAVES.get(), POMEGRANATE_LEAVES.get())
 				.add(citrusLeaves);
 		getOrCreateTagBuilder(WINTER_CROPS).add(saplings);
 

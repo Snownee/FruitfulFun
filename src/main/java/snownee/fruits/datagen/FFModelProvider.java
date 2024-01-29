@@ -36,15 +36,27 @@ public class FFModelProvider extends FabricModelProvider {
 	@Override
 	public void generateBlockStateModels(BlockModelGenerators generators) {
 		createCitrusLeaves(generators, CoreModule.TANGERINE_LEAVES.get(), FruitScale.SMALL);
+		generators.createPlant(CoreModule.TANGERINE_SAPLING.get(), CoreModule.POTTED_TANGERINE.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.CITRON_LEAVES.get(), FruitScale.SMALL);
+		generators.createPlant(CoreModule.CITRON_SAPLING.get(), CoreModule.POTTED_CITRON.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.GRAPEFRUIT_LEAVES.get(), FruitScale.MIDDLE);
+		generators.createPlant(CoreModule.GRAPEFRUIT_SAPLING.get(), CoreModule.POTTED_GRAPEFRUIT.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.LEMON_LEAVES.get(), FruitScale.MIDDLE);
+		generators.createPlant(CoreModule.LEMON_SAPLING.get(), CoreModule.POTTED_LEMON.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.LIME_LEAVES.get(), FruitScale.MIDDLE);
+		generators.createPlant(CoreModule.LIME_SAPLING.get(), CoreModule.POTTED_LIME.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.ORANGE_LEAVES.get(), FruitScale.MIDDLE);
+		generators.createPlant(CoreModule.ORANGE_SAPLING.get(), CoreModule.POTTED_ORANGE.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.APPLE_LEAVES.get(), FruitScale.MIDDLE);
+		generators.createPlant(CoreModule.APPLE_SAPLING.get(), CoreModule.POTTED_APPLE.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.POMELO_LEAVES.get(), FruitScale.LARGE);
+		generators.createPlant(CoreModule.POMELO_SAPLING.get(), CoreModule.POTTED_POMELO.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		createCitrusLeaves(generators, PomegranateModule.POMEGRANATE_LEAVES.get(), FruitScale.LARGE);
+		generators.createPlant(PomegranateModule.POMEGRANATE_SAPLING.get(), PomegranateModule.POTTED_POMEGRANATE.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createRedloveLeaves(generators, CherryModule.REDLOVE_LEAVES.get());
+		generators.createPlant(CherryModule.REDLOVE_SAPLING.get(), CherryModule.POTTED_REDLOVE.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createRedloveLeaves(generators, CherryModule.CHERRY_LEAVES.get());
+		generators.createPlant(CherryModule.CHERRY_SAPLING.get(), CherryModule.POTTED_CHERRY.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		generators.createFlowerBed(CherryModule.PEACH_PINK_PETALS.get());
 		generators.createSimpleFlatItemModel(CherryModule.CHERRY_CROWN.get());
 		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_CROWN.get());

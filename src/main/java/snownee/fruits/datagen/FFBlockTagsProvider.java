@@ -1,10 +1,6 @@
 package snownee.fruits.datagen;
 
 import static snownee.fruits.CoreModule.ALL_LEAVES;
-import static snownee.fruits.CoreModule.APPLE_LEAVES;
-import static snownee.fruits.CoreModule.APPLE_SAPLING;
-import static snownee.fruits.CoreModule.CITRON_LEAVES;
-import static snownee.fruits.CoreModule.CITRON_SAPLING;
 import static snownee.fruits.CoreModule.CITRUS_BUTTON;
 import static snownee.fruits.CoreModule.CITRUS_DOOR;
 import static snownee.fruits.CoreModule.CITRUS_FENCE;
@@ -20,16 +16,6 @@ import static snownee.fruits.CoreModule.CITRUS_TRAPDOOR;
 import static snownee.fruits.CoreModule.CITRUS_WALL_HANGING_SIGN;
 import static snownee.fruits.CoreModule.CITRUS_WALL_SIGN;
 import static snownee.fruits.CoreModule.CITRUS_WOOD;
-import static snownee.fruits.CoreModule.GRAPEFRUIT_LEAVES;
-import static snownee.fruits.CoreModule.GRAPEFRUIT_SAPLING;
-import static snownee.fruits.CoreModule.LEMON_LEAVES;
-import static snownee.fruits.CoreModule.LEMON_SAPLING;
-import static snownee.fruits.CoreModule.LIME_LEAVES;
-import static snownee.fruits.CoreModule.LIME_SAPLING;
-import static snownee.fruits.CoreModule.ORANGE_LEAVES;
-import static snownee.fruits.CoreModule.ORANGE_SAPLING;
-import static snownee.fruits.CoreModule.POMELO_LEAVES;
-import static snownee.fruits.CoreModule.POMELO_SAPLING;
 import static snownee.fruits.CoreModule.POTTED_APPLE;
 import static snownee.fruits.CoreModule.POTTED_CITRON;
 import static snownee.fruits.CoreModule.POTTED_GRAPEFRUIT;
@@ -40,9 +26,6 @@ import static snownee.fruits.CoreModule.POTTED_POMELO;
 import static snownee.fruits.CoreModule.POTTED_TANGERINE;
 import static snownee.fruits.CoreModule.STRIPPED_CITRUS_LOG;
 import static snownee.fruits.CoreModule.STRIPPED_CITRUS_WOOD;
-import static snownee.fruits.CoreModule.TANGERINE_LEAVES;
-import static snownee.fruits.CoreModule.TANGERINE_SAPLING;
-import static snownee.fruits.cherry.CherryModule.CHERRY_LEAVES;
 import static snownee.fruits.cherry.CherryModule.CHERRY_SAPLING;
 import static snownee.fruits.cherry.CherryModule.PEACH_PINK_PETALS;
 import static snownee.fruits.cherry.CherryModule.POTTED_CHERRY;
@@ -56,7 +39,6 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_PLANKS;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_PRESSURE_PLATE;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_SAPLING;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SIGN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SLAB;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SLIDING_DOOR;
@@ -69,6 +51,7 @@ import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_WOOD;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.REDLOVE_CABINET;
+import static snownee.fruits.pomegranate.PomegranateModule.POTTED_POMEGRANATE;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -81,6 +64,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.vacuum.VacModule;
@@ -130,29 +114,16 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				POTTED_ORANGE.get(),
 				POTTED_POMELO.get(),
 				POTTED_REDLOVE.get(),
-				POTTED_CHERRY.get());
-		getOrCreateTagBuilder(BlockTags.SAPLINGS).add(
-				APPLE_SAPLING.get(),
-				CITRON_SAPLING.get(),
-				GRAPEFRUIT_SAPLING.get(),
-				LEMON_SAPLING.get(),
-				LIME_SAPLING.get(),
-				TANGERINE_SAPLING.get(),
-				ORANGE_SAPLING.get(),
-				POMELO_SAPLING.get(),
-				CHERRY_SAPLING.get(),
-				REDLOVE_SAPLING.get());
-		getOrCreateTagBuilder(ALL_LEAVES).add(
-				APPLE_LEAVES.get(),
-				CITRON_LEAVES.get(),
-				GRAPEFRUIT_LEAVES.get(),
-				LEMON_LEAVES.get(),
-				LIME_LEAVES.get(),
-				TANGERINE_LEAVES.get(),
-				ORANGE_LEAVES.get(),
-				POMELO_LEAVES.get(),
-				CHERRY_LEAVES.get(),
-				REDLOVE_LEAVES.get());
+				POTTED_CHERRY.get(),
+				POTTED_POMEGRANATE.get());
+		{
+			FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(BlockTags.SAPLINGS);
+			FFRegistries.FRUIT_TYPE.forEach($ -> builder.add($.sapling.get()));
+		}
+		{
+			FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(ALL_LEAVES);
+			FFRegistries.FRUIT_TYPE.forEach($ -> builder.add($.leaves.get()));
+		}
 		tag(BlockTags.LEAVES).addTag(ALL_LEAVES);
 		getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_HOE).addTag(ALL_LEAVES);
 		getOrCreateTagBuilder(BlockTags.FLOWERS).add(

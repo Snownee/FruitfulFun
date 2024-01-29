@@ -64,6 +64,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.recipe.AlternativesIngredientBuilder;
@@ -279,6 +280,9 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 		sapling(noBeeExporter, CherryModule.CHERRY_SAPLING,
 				Items.CHERRY_SAPLING,
 				Items.PINK_PETALS);
+		sapling(noBeeExporter, PomegranateModule.POMEGRANATE_SAPLING,
+				CoreModule.APPLE_SAPLING.get(),
+				Items.SPORE_BLOSSOM);
 	}
 
 	public static void sapling(Consumer<FinishedRecipe> exporter, KiwiGO<? extends ItemLike> result, ItemLike... inputs) {

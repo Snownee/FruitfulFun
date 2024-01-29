@@ -10,6 +10,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.cherry.datagen.CherryBlockLoot;
 import snownee.fruits.compat.farmersdelight.FarmersDelightBlockLoot;
 import snownee.fruits.food.datagen.FoodBlockLoot;
+import snownee.fruits.pomegranate.datagen.PomegranateBlockLoot;
 
 public class FFDataGen implements DataGeneratorEntrypoint {
 	@Override
@@ -32,5 +33,7 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FoodBlockLoot::new);
 		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "farmersdelight"));
 		pack.addProvider(FarmersDelightBlockLoot::new);
+		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "pomegranate"));
+		pack.addProvider(PomegranateBlockLoot::new);
 	}
 }

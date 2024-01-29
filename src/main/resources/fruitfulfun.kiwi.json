@@ -20,8 +20,7 @@
     {
       "target": "snownee.fruits.cherry.CherryFruitTypes",
       "data": {
-        "value": "cherry_fruits",
-        "dependencies": "@cherry"
+        "value": "cherry_fruits"
       }
     },
     {
@@ -50,6 +49,12 @@
       "target": "snownee.fruits.food.FoodModule",
       "data": {
         "value": "food"
+      }
+    },
+    {
+      "target": "snownee.fruits.pomegranate.PomegranateFruitTypes",
+      "data": {
+        "value": "pomegranate_fruits"
       }
     },
     {

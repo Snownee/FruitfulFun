@@ -1,8 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fruitfulfun:cherry_leaves",
-    "fruitfulfun:redlove_leaves",
+    "fruitfulfun:pomegranate_leaves",
     "fruitfulfun:tangerine_leaves",
     "fruitfulfun:lime_leaves",
     "fruitfulfun:citron_leaves",
@@ -10,6 +9,8 @@
     "fruitfulfun:orange_leaves",
     "fruitfulfun:lemon_leaves",
     "fruitfulfun:grapefruit_leaves",
-    "fruitfulfun:apple_leaves"
+    "fruitfulfun:apple_leaves",
+    "fruitfulfun:cherry_leaves",
+    "fruitfulfun:redlove_leaves"
   ]
 }
