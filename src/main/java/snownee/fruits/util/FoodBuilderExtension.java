@@ -19,10 +19,6 @@ public class FoodBuilderExtension {
 	}
 
 	public FoodBuilderExtension effect(Supplier<MobEffectInstance> mobEffectInstance, float probability) {
-		return effect(new CachedSupplier<>(mobEffectInstance), probability);
-	}
-
-	public FoodBuilderExtension effect(CachedSupplier<MobEffectInstance> mobEffectInstance, float probability) {
 		builder.effects.add(new LazyEffect(mobEffectInstance, probability));
 		return this;
 	}

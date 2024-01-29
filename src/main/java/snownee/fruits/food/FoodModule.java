@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
-import snownee.fruits.util.CachedSupplier;
 import snownee.fruits.util.FoodBuilderExtension;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
@@ -116,14 +115,13 @@ public class FoodModule extends AbstractModule {
 		private static final Supplier<MobEffectInstance> SPEED = make("speed", 1200, 0);
 
 		private static Supplier<MobEffectInstance> make(String id, int duration, int amplifier) {
-			Supplier<MobEffectInstance> supplier = () -> {
+			return () -> {
 				MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(id));
 				if (effect == null) {
 					return null;
 				}
 				return new MobEffectInstance(effect, duration, amplifier);
 			};
-			return new CachedSupplier<>(supplier);
 		}
 	}
 

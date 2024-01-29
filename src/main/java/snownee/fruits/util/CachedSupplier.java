@@ -29,6 +29,8 @@ public class CachedSupplier<T> implements Supplier<T> {
 		synchronized (lock) {
 			if (value == null) {
 				value = delegate.get();
+			}
+			if (value != null) {
 				delegate = null;
 			}
 		}
