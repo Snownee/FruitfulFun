@@ -3,6 +3,8 @@ package snownee.fruits.food;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.google.common.base.Suppliers;
+
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,7 +23,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
-import snownee.fruits.util.CachedSupplier;
 import snownee.fruits.util.FoodBuilderExtension;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
@@ -118,14 +119,13 @@ public class FoodModule extends AbstractModule {
 		private static final Supplier<MobEffectInstance> SPEED = make("speed", 1200, 0);
 
 		private static Supplier<MobEffectInstance> make(String id, int duration, int amplifier) {
-			Supplier<MobEffectInstance> supplier = () -> {
+			return Suppliers.memoize(() -> {
 				MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(id));
 				if (effect == null) {
 					return null;
 				}
 				return new MobEffectInstance(effect, duration, amplifier);
-			};
-			return new CachedSupplier<>(supplier);
+			});
 		}
 	}
 
