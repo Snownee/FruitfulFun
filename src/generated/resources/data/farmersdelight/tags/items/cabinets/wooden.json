@@ -1,7 +1,13 @@
 {
   "replace": false,
   "values": [
-    "fruitfulfun:citrus_cabinet",
-    "fruitfulfun:redlove_cabinet"
+    {
+      "id": "fruitfulfun:citrus_cabinet",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:redlove_cabinet",
+      "required": false
+    }
   ]
 }

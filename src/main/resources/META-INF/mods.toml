@@ -21,6 +21,6 @@ side = "BOTH"
 [[dependencies.fruitfulfun]]
 modId = "lychee"
 mandatory = true
-versionRange = "[5.1.8, 6)"
+versionRange = "[5.1.9, 6)"
 ordering = "NONE"
 side = "BOTH"

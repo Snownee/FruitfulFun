@@ -21,7 +21,6 @@ import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.lychee.LycheeLootContextParams;
 import snownee.lychee.LycheeRegistries;
-import snownee.lychee.RecipeTypes;
 import snownee.lychee.core.contextual.ContextualConditionType;
 import snownee.lychee.core.recipe.LycheeRecipe;
 import snownee.lychee.mixin.LootContextParamSetsAccess;
@@ -58,7 +57,6 @@ public class BeeModule extends AbstractModule {
 	@Override
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
-			RecipeTypes.ALL.add(RECIPE_TYPE.get());
 			PotionBrewing.ALLOWED_CONTAINERS.add(Ingredient.of(BeeModule.MUTAGEN.get()));
 		});
 	}

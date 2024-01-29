@@ -224,7 +224,7 @@ dependencies {
     annotationProcessor "maven.modrinth:kiwi:dHXtj93x"
 //    implementation fg.deobf("libs:Kiwi-1.20.1-forge:11.5.0")
 //    annotationProcessor "libs:Kiwi-1.20.1-forge:11.5.0"
-    implementation fg.deobf("maven.modrinth:lychee:uBcb8d3R")
+    implementation fg.deobf("maven.modrinth:lychee:g9GMvNiF")
     implementation fg.deobf("maven.modrinth:supplementaries:16GEKSIv")
     implementation fg.deobf("maven.modrinth:moonlight:Jv6lR8aV")
     implementation fg.deobf("maven.modrinth:curios:3VUlU5Ga")
