@@ -18,11 +18,11 @@ public class CGunShotPacket extends PacketHandler {
 	public static CGunShotPacket I;
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer serverPlayer) {
+	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer player) {
 		return executor.apply(() -> {
-			Objects.requireNonNull(serverPlayer);
-			if (serverPlayer.getMainHandItem().getItem() instanceof VacGunItem) {
-				VacGunItem.shoot(serverPlayer, InteractionHand.MAIN_HAND);
+			Objects.requireNonNull(player);
+			if (!player.isRemoved() && !player.isSpectator() && player.getMainHandItem().getItem() instanceof VacGunItem) {
+				VacGunItem.shoot(player, InteractionHand.MAIN_HAND);
 			}
 		});
 	}

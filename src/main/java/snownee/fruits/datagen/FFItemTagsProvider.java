@@ -82,7 +82,9 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		getOrCreateTagBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
 
 		if (Hooks.farmersdelight) {
-			getOrCreateTagBuilder(WOODEN_CABINETS).add(CITRUS_CABINET.get().asItem(), REDLOVE_CABINET.get().asItem());
+			getOrCreateTagBuilder(WOODEN_CABINETS)
+					.addOptional(CITRUS_CABINET.key())
+					.addOptional(REDLOVE_CABINET.key());
 		}
 	}
 }

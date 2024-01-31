@@ -1,5 +1,8 @@
 package snownee.fruits.vacuum;
 
+import com.mojang.serialization.Codec;
+
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
@@ -33,6 +36,12 @@ public class VacModule extends AbstractModule {
 			.trackedUpdateRate(10)
 			.entityFactory(VacItemProjectile::new)
 			.build());
+	public static final KiwiGO<ParticleType<AirVortexParticleOption>> AIR_VORTEX = go(() -> new ParticleType<>(true, AirVortexParticleOption.DESERIALIZER) {
+		@Override
+		public Codec<AirVortexParticleOption> codec() {
+			return AirVortexParticleOption.CODEC;
+		}
+	});
 
 	public VacModule() {
 		Hooks.vac = true;
