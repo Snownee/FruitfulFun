@@ -51,6 +51,7 @@ import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_WOOD;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.REDLOVE_CABINET;
+import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE;
 import static snownee.fruits.pomegranate.PomegranateModule.POTTED_POMEGRANATE;
 
 import java.util.concurrent.CompletableFuture;
@@ -140,7 +141,8 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				.addOptionalTag(BlockTags.CAVE_VINES.location())
 				.add(Blocks.SWEET_BERRY_BUSH);
 		getOrCreateTagBuilder(VacModule.VCD_PERFORM_BREAKING)
-				.add(Blocks.COCOA);
+				.add(Blocks.COCOA)
+				.add(POMEGRANATE.get());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)

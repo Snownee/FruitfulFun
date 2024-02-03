@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:cocoa"
+    "minecraft:cocoa",
+    "fruitfulfun:pomegranate"
   ]
 }
