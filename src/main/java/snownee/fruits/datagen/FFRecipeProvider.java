@@ -50,6 +50,7 @@ import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
@@ -243,6 +244,21 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				.noContainers()
 				.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/pomelo")))
 				.save(foodExporterNoFD);
+
+		KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.CHORUS_FRUIT_PIE.get())
+				.requires(Items.CHORUS_FRUIT)
+				.requires(Items.CHORUS_FRUIT)
+				.requires(Items.EGG)
+				.requires(Items.SUGAR)
+				.unlockedBy("has_item", has(Items.CHORUS_FRUIT))
+				.save(foodExporter);
+
+		ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, FoodModule.CHORUS_FRUIT_PIE.get())
+				.define('#', FoodModule.CHORUS_FRUIT_PIE_SLICE.get())
+				.pattern("##")
+				.pattern("##")
+				.unlockedBy("has_item", RecipeProvider.has(FoodModule.CHORUS_FRUIT_PIE_SLICE.get()))
+				.save(foodExporter, "chorus_fruit_pie_packing");
 
 		KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get())
 				.requires(AbstractModule.itemTag("c", "fruits/lemon"))

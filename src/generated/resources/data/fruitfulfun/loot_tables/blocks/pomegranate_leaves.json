@@ -130,25 +130,6 @@
         }
       ],
       "rolls": 1.0
-    },
-    {
-      "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "block": "fruitfulfun:pomegranate_leaves",
-          "condition": "minecraft:block_state_property",
-          "properties": {
-            "age": "3"
-          }
-        }
-      ],
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "fruitfulfun:pomegranate"
-        }
-      ],
-      "rolls": 1.0
     }
   ]
 }

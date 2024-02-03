@@ -14,16 +14,13 @@ import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
 
-import java.text.NumberFormat;
 import java.util.function.Supplier;
 
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -37,7 +34,6 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.entity.FishingHookRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
@@ -111,17 +107,26 @@ public class ClientProxy implements ClientModInitializer {
 		Vector3f vec = new Vector3f(0f, 0f, 0f);
 		poseStack.last().pose().transformPosition(vec);
 		Matrix4f screenToWorld = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
-		Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+
 		Matrix4f rotation = new Matrix4f(RenderSystem.getInverseViewRotationMatrix());
 		screenToWorld = rotation.mul(screenToWorld);
+
+		Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
 		Vec3 cameraPos = camera.getPosition();
+//		screenToWorld.translate((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
 
 //		Vector3f worldPos = screenToWorld.transformPosition(vec);
 //		FruitfulFun.LOGGER.info(worldPos.toString(NumberFormat.getInstance()));
 
 		screenToWorld.transformPosition(vec);
 
+//		Vec3 entityPos = livingEntity.getEyePosition();
+//		vec.add((float) entityPos.x, (float) entityPos.y, (float) entityPos.z);
 		vec.add((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
+
+//		Vector3f worldPos = screenToWorld.transformPosition(new Vector3f());
+//		worldPos.add((float) entityPos.x, (float) entityPos.y, (float) entityPos.z);
+//		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), true), worldPos.x(), worldPos.y(), worldPos.z(), 0, 0, 0);
 
 		boolean mainArm = (livingEntity.getMainArm() == HumanoidArm.LEFT) == leftHand;
 		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), mainArm), vec.x(), vec.y(), vec.z(), 0, 0, 0);
@@ -169,8 +174,8 @@ public class ClientProxy implements ClientModInitializer {
 				APPLE_LEAVES.getOrCreate());
 
 		ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
-		Supplier<ItemColor> itemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
-		ColorProviderRegistry.ITEM.register((stack, i) -> itemColor.get().getColor(oakLeaves, i),
+		Supplier<ItemColor> oakItemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
+		ColorProviderRegistry.ITEM.register((stack, i) -> oakItemColor.get().getColor(oakLeaves, i),
 				TANGERINE_LEAVES.get(),
 				LIME_LEAVES.get(),
 				CITRON_LEAVES.get(),
@@ -196,12 +201,12 @@ public class ClientProxy implements ClientModInitializer {
 			return -1;
 		}, REDLOVE_LEAVES.getOrCreate());
 
-		ColorProviderRegistry.BLOCK.register((blockState, blockAndTintGetter, blockPos, i) -> {
+		ColorProviderRegistry.BLOCK.register((state, world, pos, i) -> {
 			if (i != 0) {
-				if (blockAndTintGetter == null || blockPos == null) {
+				if (world == null || pos == null) {
 					return GrassColor.getDefaultColor();
 				}
-				return BiomeColors.getAverageGrassColor(blockAndTintGetter, blockPos);
+				return BiomeColors.getAverageGrassColor(world, pos);
 			}
 			return -1;
 		}, PEACH_PINK_PETALS.getOrCreate());

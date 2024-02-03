@@ -1,6 +1,6 @@
 {
-  "parent": "fruitfulfun:block/template_leaves_fruit_lg",
+  "parent": "minecraft:block/leaves",
   "textures": {
-    "leaves": "fruitfulfun:block/pomegranate_leaves"
+    "all": "fruitfulfun:block/pomegranate_leaves"
   }
 }

@@ -50,7 +50,7 @@ public class SeasonalItemTagsProvider extends FabricTagProvider.ItemTagProvider 
 		getOrCreateTagBuilder(SUMMER_CROPS)
 				.add(Items.APPLE, REDLOVE.get());
 		getOrCreateTagBuilder(AUTUMN_CROPS)
-				.add(Items.APPLE, REDLOVE.get(), POMEGRANATE.get())
+				.add(Items.APPLE, REDLOVE.get(), POMEGRANATE.get().asItem())
 				.add(citrus);
 	}
 

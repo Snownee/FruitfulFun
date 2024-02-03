@@ -20,8 +20,10 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.treedecorators.BeehiveDecorator;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
+import snownee.fruits.pomegranate.PomegranateFruitTypes;
 
 public class CoreFruitType extends FruitType {
 
@@ -54,9 +56,15 @@ public class CoreFruitType extends FruitType {
 		} else {
 			foliagePlacer = new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3);
 		}
+		TrunkPlacer trunkPlacer;
+		if (PomegranateFruitTypes.POMEGRANATE.is(this)) {
+			trunkPlacer = new StraightTrunkPlacer(5, 2, 0);
+		} else {
+			trunkPlacer = new StraightTrunkPlacer(4, 2, 0);
+		}
 		return new TreeConfiguration.TreeConfigurationBuilder(
 				BlockStateProvider.simple(log.get()),
-				new StraightTrunkPlacer(4, 2, 0),
+				trunkPlacer,
 				BlockStateProvider.simple(leaves.get()),
 				new Fruitify(foliagePlacer, worldgen),
 				new TwoLayersFeatureSize(1, 0, 1)

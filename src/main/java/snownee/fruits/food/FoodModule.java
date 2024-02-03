@@ -65,7 +65,6 @@ public class FoodModule extends AbstractModule {
 			.build()).craftRemainder(Items.BOWL)));
 	public static final KiwiGO<FeastBlock> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Block.box(4, 2, 4, 12, 9, 12),
 			FeastBlock.LEFTOVER_SHAPE, LEMON_ROAST_CHICKEN));
-	@KiwiModule.NoCategory
 	public static final KiwiGO<Item> CHORUS_FRUIT_PIE_SLICE = go(() -> new FoodItem(itemProp().food(new FoodProperties.Builder()
 			.nutrition(2)
 			.saturationMod(0.6F)
@@ -74,7 +73,7 @@ public class FoodModule extends AbstractModule {
 			.nutrition(8)
 			.saturationMod(0.6F)
 			.build());
-	@KiwiModule.NoCategory
+	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<PieBlock> CHORUS_FRUIT_PIE = go(() -> new PieBlock(Block.box(2, 0, 2, 14, 4, 14),
 			null, CHORUS_FRUIT_PIE_SLICE));
 	public static final KiwiGO<SimpleParticleType> SMOKE = go(() -> new SimpleParticleType(true));
