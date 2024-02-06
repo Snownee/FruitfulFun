@@ -1,6 +1,7 @@
 package snownee.fruits.datagen;
 
 import static snownee.fruits.CoreModule.ALL_LEAVES;
+import static snownee.fruits.CoreModule.APPLE_LEAVES;
 import static snownee.fruits.CoreModule.CITRUS_BUTTON;
 import static snownee.fruits.CoreModule.CITRUS_DOOR;
 import static snownee.fruits.CoreModule.CITRUS_FENCE;
@@ -52,6 +53,7 @@ import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_WOOD;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.REDLOVE_CABINET;
 import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE;
+import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE_LEAVES;
 import static snownee.fruits.pomegranate.PomegranateModule.POTTED_POMEGRANATE;
 
 import java.util.concurrent.CompletableFuture;
@@ -74,6 +76,9 @@ import snownee.kiwi.AbstractModule;
 public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 	static final TagKey<Block> CITRUS_LOGS = AbstractModule.blockTag(FruitfulFun.ID, "citrus_logs");
 	static final TagKey<Block> REDLOVE_LOGS = AbstractModule.blockTag(FruitfulFun.ID, "redlove_logs");
+	// Leaves us in Peace mod compatibility
+	static final TagKey<Block> TREE_TYPES_OAK_LOG = AbstractModule.blockTag("minecraft", "tree_types/oak_log");
+	static final TagKey<Block> TREE_TYPES_JUNGLE_LOG = AbstractModule.blockTag("minecraft", "tree_types/jungle_log");
 
 	public FFBlockTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 		super(output, registriesFuture);
@@ -143,6 +148,8 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 		getOrCreateTagBuilder(VacModule.VCD_PERFORM_BREAKING)
 				.add(Blocks.COCOA)
 				.add(POMEGRANATE.get());
+		getOrCreateTagBuilder(TREE_TYPES_OAK_LOG).add(APPLE_LEAVES.get());
+		getOrCreateTagBuilder(TREE_TYPES_JUNGLE_LOG).add(POMEGRANATE_LEAVES.get());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)

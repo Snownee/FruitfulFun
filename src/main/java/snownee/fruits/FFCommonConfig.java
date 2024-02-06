@@ -2,6 +2,7 @@ package snownee.fruits;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.LevelAccessor;
+import snownee.kiwi.config.ConfigUI;
 import snownee.kiwi.config.KiwiConfig;
 
 @KiwiConfig
@@ -34,6 +35,8 @@ public final class FFCommonConfig {
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Path("dragonBreath.dispenserCollecting")
 	public static boolean dispenserCollectDragonBreath = true;
+	@ConfigUI.Hide
+	public static boolean leavesUsInPeaceIncompatibilityNotified;
 
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Range(min = 0, max = 1)

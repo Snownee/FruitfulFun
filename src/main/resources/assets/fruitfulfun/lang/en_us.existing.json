@@ -148,6 +148,7 @@
   "tip.fruitfulfun.noGeneNames": "You haven't found any gene yet.",
   "tip.fruitfulfun.whenUseOnBookshelf": "Use on Bookshelf:",
   "tip.fruitfulfun.renameGenes": " Rename Genes",
+  "tip.fruitfulfun.leavesUsInPeace": "Fruitful Fun detected that you have Leaves Us In Peace installed, which will cause the new leaves to disappear immediately after the bees have finished pollinating them. For a better experience, it is recommended to set the \"Unknown leaves only match self\" option in the Leaves Us In Peace's configuration to \"No\". This message will be displayed only once.",
   "text.fruitfulfun.time": "%s/%s %s:%s:%s",
   "text.fruitfulfun.trait": "Traits",
   "text.fruitfulfun.trait.none": "This bee doesn't have any traits.",

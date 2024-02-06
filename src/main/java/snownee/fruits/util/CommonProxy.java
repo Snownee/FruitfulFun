@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -36,6 +37,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -80,6 +83,8 @@ import snownee.fruits.vacuum.VacGunItem;
 import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Mod;
+import snownee.kiwi.config.KiwiConfigManager;
+import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
 @Mod(FruitfulFun.ID)
@@ -203,6 +208,19 @@ public class CommonProxy implements ModInitializer {
 				geneticData.initAlleles(seed);
 			}
 		});
+
+		if (Platform.isModLoaded("leaves_us_in_peace")) {
+			ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+				if (FFCommonConfig.leavesUsInPeaceIncompatibilityNotified || isFakePlayer(handler.getPlayer())) {
+					return;
+				}
+				MutableComponent msg = Component.translatable("tip.fruitfulfun.leavesUsInPeace");
+				server.sendSystemMessage(msg);
+				handler.getPlayer().sendSystemMessage(msg);
+				FFCommonConfig.leavesUsInPeaceIncompatibilityNotified = true;
+				KiwiConfigManager.getHandler(FFCommonConfig.class).save();
+			});
+		}
 	}
 
 	public static ItemStack getRecipeRemainder(ItemStack itemStack) {
