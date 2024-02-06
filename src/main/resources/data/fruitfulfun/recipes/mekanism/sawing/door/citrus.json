@@ -1,10 +1,12 @@
 {
-	"conditions": [
-		{
-			"type": "forge:mod_loaded",
-			"modid": "mekanism"
-		}
-	],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "mekanism"
+      ]
+    }
+  ],
   "type": "mekanism:sawing",
   "input": {
     "ingredient": {
