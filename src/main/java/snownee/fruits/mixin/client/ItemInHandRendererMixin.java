@@ -14,9 +14,13 @@ import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.util.ClientProxy;
+import snownee.fruits.vacuum.VacModule;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
@@ -36,6 +40,13 @@ public abstract class ItemInHandRendererMixin {
 			int k = humanoidArm == HumanoidArm.RIGHT ? 1 : -1;
 			poseStack.translate(k * -0.641864f, 0.0f, 0.0f);
 			poseStack.mulPose(Axis.YP.rotationDegrees(k * 10.0f));
+		}
+	}
+
+	@Inject(method = "renderItem", at = @At("TAIL"))
+	private void renderItem(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+		if (Hooks.vac && VacModule.VAC_GUN.is(itemStack)) {
+			ClientProxy.renderVacGunInHand(livingEntity, itemStack, itemDisplayContext, leftHand, poseStack);
 		}
 	}
 }

@@ -16,6 +16,13 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
 
 import java.util.function.Supplier;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -29,11 +36,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -53,6 +62,7 @@ import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
 import snownee.fruits.vacuum.client.ItemProjectileColor;
 import snownee.fruits.vacuum.client.ItemProjectileRenderer;
@@ -170,18 +180,22 @@ public class ClientProxy {
 	}
 
 	public static boolean poseArm(LivingEntity entity, ModelPart arm, ModelPart head, boolean rightArm) {
-		if (!Hooks.bee) {
+		if (!Hooks.bee && !Hooks.vac) {
 			return false;
 		}
 		HumanoidArm mainArm = entity.getMainArm();
 		boolean isMainArm = rightArm ? mainArm == HumanoidArm.RIGHT : mainArm == HumanoidArm.LEFT;
 		ItemStack stack = isMainArm ? entity.getMainHandItem() : entity.getOffhandItem();
-		if (!BeeModule.INSPECTOR.is(stack)) {
-			return false;
+		if (Hooks.bee && BeeModule.INSPECTOR.is(stack)) {
+			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
+			arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
+			return true;
+		} else if (Hooks.vac && VacModule.VAC_GUN.is(stack)) {
+			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
+			arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
+			return true;
 		}
-		arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
-		arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
-		return true;
+		return false;
 	}
 
 	public static void openEditGeneNameScreen() {
@@ -189,10 +203,30 @@ public class ClientProxy {
 	}
 
 	public static ItemProjectileColor getItemProjectileColor(Item item) {
-		ItemProjectileColor color = null;
+		ItemProjectileColor color;
 		if (Hooks.supplementaries && (color = SupplementariesCompat.getItemProjectileColor(item)) != null) {
 			return color;
 		}
 		return null;
+	}
+
+	public static void renderVacGunInHand(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean leftHand, PoseStack poseStack) {
+		Vector3f vec = new Vector3f(0f, 0f, 0f);
+		poseStack.last().pose().transformPosition(vec);
+		Matrix4f screenToWorld = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
+		Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+		Matrix4f rotation = new Matrix4f(RenderSystem.getInverseViewRotationMatrix());
+		screenToWorld = rotation.mul(screenToWorld);
+		Vec3 cameraPos = camera.getPosition();
+
+//		Vector3f worldPos = screenToWorld.transformPosition(vec);
+//		FruitfulFun.LOGGER.info(worldPos.toString(NumberFormat.getInstance()));
+
+		screenToWorld.transformPosition(vec);
+
+		vec.add((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
+
+		boolean mainArm = (livingEntity.getMainArm() == HumanoidArm.LEFT) == leftHand;
+		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), mainArm), vec.x(), vec.y(), vec.z(), 0, 0, 0);
 	}
 }

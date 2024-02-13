@@ -190,7 +190,7 @@ public class VacGunItem extends ModItem {
 
 	@Override
 	public UseAnim getUseAnimation(ItemStack itemStack) {
-		return UseAnim.BOW;
+		return UseAnim.SPYGLASS;
 	}
 
 	@Override
@@ -199,6 +199,9 @@ public class VacGunItem extends ModItem {
 			return;
 		}
 		Vec3 start = player.getEyePosition(1);
+		if (level.isClientSide) {
+			return;
+		}
 		Vec3 lookAngle = player.getViewVector(1);
 		double reach = Math.min(i / 2 + 2, 8);
 		Vec3 end = start.add(lookAngle.x * reach, lookAngle.y * reach, lookAngle.z * reach);
