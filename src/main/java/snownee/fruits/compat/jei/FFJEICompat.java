@@ -43,7 +43,7 @@ public class FFJEICompat implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		if (Hooks.bee) {
+		if (FFCommonConfig.isMutagenRecipeEnabled()) {
 			NoHashBrewingRecipe brewingRecipe = new NoHashBrewingRecipe(
 					List.of(new ItemStack(MutagenItem.BREWING_ITEM)),
 					List.of(Items.POTION.getDefaultInstance()),
@@ -69,7 +69,7 @@ public class FFJEICompat implements IModPlugin {
 
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-		if (Hooks.bee) {
+		if (FFCommonConfig.isMutagenRecipeEnabled()) {
 			IRecipeLookup<IJeiBrewingRecipe> recipeLookup = jeiRuntime.getRecipeManager().createRecipeLookup(RecipeTypes.BREWING);
 			List<IJeiBrewingRecipe> recipes = recipeLookup.get().filter($ -> {
 				ItemStack output = $.getPotionOutput();
