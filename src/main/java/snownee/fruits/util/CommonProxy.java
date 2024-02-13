@@ -17,6 +17,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceKey;
@@ -76,6 +78,7 @@ import snownee.fruits.compat.curios.CuriosCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.vacuum.VacGunItem;
 import snownee.fruits.vacuum.VacModule;
+import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
@@ -109,6 +112,22 @@ public class CommonProxy {
 			GeneticData geneticData = world.getDataStorage().computeIfAbsent(GeneticData::load, GeneticData::new, "fruitfulfun_genetics");
 			geneticData.initAlleles(seed);
 		});
+
+		if (Platform.isModLoaded("leaves_us_in_peace")) {
+			MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> {
+				Player player = event.getEntity();
+				if (FFCommonConfig.leavesUsInPeaceIncompatibilityNotified || isFakePlayer(player)) {
+					return;
+				}
+				MutableComponent msg = Component.translatable("tip.fruitfulfun.leavesUsInPeace");
+				if (player.getServer() != null) {
+					player.getServer().sendSystemMessage(msg);
+				}
+				player.sendSystemMessage(msg);
+				FFCommonConfig.leavesUsInPeaceIncompatibilityNotified = true;
+				KiwiConfigManager.getHandler(FFCommonConfig.class).save();
+			});
+		}
 
 //		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 //		eventBus.addListener((AddPackFindersEvent event) -> {

@@ -228,6 +228,7 @@ dependencies {
     implementation fg.deobf("maven.modrinth:supplementaries:16GEKSIv")
     implementation fg.deobf("maven.modrinth:moonlight:Jv6lR8aV")
     implementation fg.deobf("maven.modrinth:curios:3VUlU5Ga")
+    implementation fg.deobf("maven.modrinth:suggestion-tweaker:1.20-1.5.1+forge")
 
 //    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}"
     compileOnly(jarJar("dev.su5ed.sinytra:fabric-loader:2.6.0+0.15.0+1.20.1")) {
