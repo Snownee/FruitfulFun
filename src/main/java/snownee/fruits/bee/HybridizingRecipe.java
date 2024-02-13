@@ -3,6 +3,7 @@ package snownee.fruits.bee;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.kiwi.util.Util;
 import snownee.lychee.core.LycheeContext;
 import snownee.lychee.core.recipe.BlockKeyRecipe;
 import snownee.lychee.core.recipe.ILycheeRecipe;
@@ -137,9 +139,9 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 				String s = element.getAsString();
 				Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(s));
 				Preconditions.checkArgument(block != Blocks.AIR, "Unknown block: " + s);
-				recipe.pollens.add(s);
+				recipe.pollens.add(Util.trimRL(s));
 			}
-			Preconditions.checkArgument(recipe.pollens.size() == Sets.newHashSet(recipe.pollens).size(), "Pollens must be unique");
+			Preconditions.checkArgument(recipe.pollens.size() == Set.copyOf(recipe.pollens).size(), "Pollens must be unique");
 			JsonArray endingStep = GsonHelper.getAsJsonArray(jsonObject, "ending_step", null);
 			if (endingStep != null) {
 				Preconditions.checkArgument(!endingStep.isEmpty() && endingStep.size() <= 4, "Size of ending_step has to be in [1, 4]");
@@ -147,7 +149,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 				for (JsonElement element : endingStep) {
 					String s = element.getAsString();
 					Preconditions.checkArgument(recipe.pollens.contains(s), "Ending step must be in pollens");
-					recipe.endingStep.add(s);
+					recipe.endingStep.add(Util.trimRL(s));
 				}
 			}
 			recipe.refreshIngredients();
