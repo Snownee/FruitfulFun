@@ -44,10 +44,10 @@ public class FFJEICompat implements IModPlugin {
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		if (Hooks.bee) {
-			IJeiBrewingRecipe brewingRecipe = registration.getVanillaRecipeFactory().createBrewingRecipe(
+			NoHashBrewingRecipe brewingRecipe = new NoHashBrewingRecipe(
 					List.of(new ItemStack(MutagenItem.BREWING_ITEM)),
-					Items.POTION.getDefaultInstance(),
-					new ItemStack(BeeModule.MUTAGEN.get()));
+					List.of(Items.POTION.getDefaultInstance()),
+					new ItemStack(BeeModule.MUTAGEN.get()), 1);
 			registration.addRecipes(RecipeTypes.BREWING, List.of(brewingRecipe));
 		}
 
