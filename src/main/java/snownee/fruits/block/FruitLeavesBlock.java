@@ -90,18 +90,26 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			state = state.setValue(PERSISTENT, false);
 		}
 		level.setBlockAndUpdate(pos, state);
-		FruitType type = ((FruitLeavesBlock) state.getBlock()).type.get();
-		ItemStack stack = new ItemStack(type.fruit.get());
+		ItemEntity itemEntity = ((FruitLeavesBlock) state.getBlock()).doDropFruit(level, pos, state, core, consumeLifespan);
+		if (itemEntity != null && !level.addFreshEntity(itemEntity)) {
+			return null;
+		}
+		return itemEntity;
+	}
+
+	@Nullable
+	public ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state, @Nullable FruitTreeBlockEntity core, int consumeLifespan) {
+		return createItemEntity(level, pos, type.get().fruit.get().getDefaultInstance());
+	}
+
+	public static ItemEntity createItemEntity(ServerLevel level, BlockPos pos, ItemStack stack) {
 		float f = EntityType.ITEM.getHeight() / 2.0F;
 		double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
 		double d1 = pos.getY() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D) - f;
 		double d2 = pos.getZ() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
-		ItemEntity itementity = new ItemEntity(level, d0, d1, d2, stack);
-		itementity.setDefaultPickUpDelay();
-		if (!level.addFreshEntity(itementity)) {
-			return null;
-		}
-		return itementity;
+		ItemEntity itemEntity = new ItemEntity(level, d0, d1, d2, stack);
+		itemEntity.setDefaultPickUpDelay();
+		return itemEntity;
 	}
 
 	@Override
@@ -111,12 +119,15 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-		return canGrow(state) || state.getValue(AGE) == 1;
+		if (state.getValue(AGE) == 1) {
+			return true;
+		}
+		return canGrow(state) && state.getValue(AGE) < 3;
 	}
 
 	@Override
 	public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
-		return state.getValue(AGE) != 3;
+		return true;
 	}
 
 	@Override
@@ -136,7 +147,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			dropResources(state, world, pos);
 			world.removeBlock(pos, false);
 		} else if (canGrow(state) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
-			if (state.getValue(AGE) == 3) {
+			if (hasFruit(state, world, pos)) {
 				DropMode mode = FFCommonConfig.getDropMode(world);
 				if (mode == DropMode.NoDrop) {
 					return;
@@ -154,6 +165,10 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				CommonProxy.maybeGrowCrops(world, pos, state, def, () -> performBonemeal(world, rand, pos, state));
 			}
 		}
+	}
+
+	public boolean hasFruit(BlockState state, Level level, BlockPos pos) {
+		return state.getValue(AGE) == 3;
 	}
 
 	@Override
@@ -234,28 +249,24 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult ray) {
-		if (state.getValue(AGE) == 3 && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 1))) {
-			if (!worldIn.isClientSide) {
-				ItemStack fruit = new ItemStack(type.get().fruit.get());
-				if (!CommonProxy.isFakePlayer(playerIn) && playerIn.addItem(fruit)) {
-					worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.ITEM_PICKUP, playerIn.getSoundSource(), 0.2F, ((playerIn.getRandom().nextFloat() - playerIn.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-				} else {
-					popResourceFromFace(worldIn, pos, ray.getDirection(), fruit);
-				}
-			}
+		if (hasFruit(state, worldIn, pos) && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 1))) {
+			giveItemTo(playerIn, ray, type.get().fruit.get().getDefaultInstance());
 			return InteractionResult.sidedSuccess(worldIn.isClientSide);
 		}
 		return InteractionResult.PASS;
 	}
 
-	//FIXME
-//	@Override
-//	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
-//		if (entity instanceof FlyingAnimal) {
-//			return BlockPathTypes.OPEN;
-//		}
-//		return null;
-//	}
+	public static void giveItemTo(Player player, BlockHitResult hit, ItemStack stack) {
+		Level level = player.level();
+		if (level.isClientSide) {
+			return;
+		}
+		if (!CommonProxy.isFakePlayer(player) && player.addItem(stack)) {
+			level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, player.getSoundSource(), 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+		} else {
+			popResourceFromFace(level, hit.getBlockPos(), hit.getDirection(), stack);
+		}
+	}
 
 	public boolean hasBlockEntity(BlockState state) {
 		return state.getValue(PERSISTENT) && state.getValue(DISTANCE) == 1;

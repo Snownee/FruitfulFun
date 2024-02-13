@@ -18,8 +18,6 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
-import snownee.fruits.food.FoodModule;
-import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.fruits.vacuum.VacModule;
 import snownee.lychee.compat.rei.REICompat;
 
@@ -66,10 +64,6 @@ public class FFREICompat implements REIClientPlugin {
 	@SuppressWarnings("UnstableApiUsage")
 	@Override
 	public void registerBasicEntryFiltering(BasicFilteringRule<?> rule) {
-		rule.hide(EntryStacks.of(PomegranateModule.POMEGRANATE.get()));
-		if (Hooks.food) {
-			rule.hide(EntryStacks.of(FoodModule.CHORUS_FRUIT_PIE.get()));
-		}
 		if (Hooks.vac) {
 			rule.hide(EntryStacks.of(VacModule.VAC_GUN.get()));
 			rule.hide(EntryStacks.of(VacModule.VAC_GUN_CASING.get()));

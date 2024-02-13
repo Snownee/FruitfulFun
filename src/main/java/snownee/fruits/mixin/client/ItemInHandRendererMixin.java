@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.util.ClientProxy;
+import snownee.fruits.util.Donk;
 import snownee.fruits.vacuum.VacModule;
 
 @Mixin(ItemInHandRenderer.class)
@@ -48,5 +50,6 @@ public abstract class ItemInHandRendererMixin {
 		if (Hooks.vac && VacModule.VAC_GUN.is(itemStack)) {
 			ClientProxy.renderVacGunInHand(livingEntity, itemStack, itemDisplayContext, leftHand, poseStack);
 		}
+		//Donk.donk(Minecraft.getInstance(), Minecraft.getInstance().getEntityRenderDispatcher(), livingEntity, multiBufferSource);
 	}
 }

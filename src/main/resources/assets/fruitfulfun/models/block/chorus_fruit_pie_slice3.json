@@ -1,0 +1,6 @@
+{
+  "parent": "fruitfulfun:block/pie_slice3",
+  "textures": {
+    "particle": "fruitfulfun:block/pie_top"
+  }
+}
