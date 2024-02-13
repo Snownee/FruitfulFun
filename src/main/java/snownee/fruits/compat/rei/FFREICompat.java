@@ -14,6 +14,7 @@ import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
@@ -39,25 +40,27 @@ public class FFREICompat implements REIClientPlugin {
 
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
-		CategoryIdentifier<Display> categoryIdentifier = CategoryIdentifier.of("minecraft", "plugins/brewing");
-		registry.registerVisibilityPredicate((category, display) -> {
-			if (category.getCategoryIdentifier().equals(categoryIdentifier) && display.getOutputEntries().stream()
-					.flatMap(EntryIngredient::stream)
-					.anyMatch($ -> {
-						if ($.getType() != VanillaEntryTypes.ITEM) {
-							return false;
-						}
-						ItemStack output = $.castValue();
-						return BeeModule.MUTAGEN.is(output) && output.hasTag();
-					})) {
-				return EventResult.interruptFalse();
-			}
-			return EventResult.pass();
-		});
-		registry.add(new BrewingRecipe(
-				Ingredient.of(MutagenItem.BREWING_ITEM),
-				Ingredient.of(Items.POTION.getDefaultInstance()),
-				new ItemStack(BeeModule.MUTAGEN.get())));
+		if (FFCommonConfig.isMutagenRecipeEnabled()) {
+			CategoryIdentifier<Display> categoryIdentifier = CategoryIdentifier.of("minecraft", "plugins/brewing");
+			registry.registerVisibilityPredicate((category, display) -> {
+				if (category.getCategoryIdentifier().equals(categoryIdentifier) && display.getOutputEntries().stream()
+						.flatMap(EntryIngredient::stream)
+						.anyMatch($ -> {
+							if ($.getType() != VanillaEntryTypes.ITEM) {
+								return false;
+							}
+							ItemStack output = $.castValue();
+							return BeeModule.MUTAGEN.is(output) && output.hasTag();
+						})) {
+					return EventResult.interruptFalse();
+				}
+				return EventResult.pass();
+			});
+			registry.add(new BrewingRecipe(
+					Ingredient.of(MutagenItem.BREWING_ITEM),
+					Ingredient.of(Items.POTION.getDefaultInstance()),
+					new ItemStack(BeeModule.MUTAGEN.get())));
+		}
 	}
 
 	@SuppressWarnings("UnstableApiUsage")

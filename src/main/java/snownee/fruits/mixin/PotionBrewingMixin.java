@@ -11,7 +11,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import snownee.fruits.Hooks;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
 
@@ -35,14 +35,14 @@ public class PotionBrewingMixin {
 
 	@Inject(method = "isIngredient", at = @At("HEAD"), cancellable = true)
 	private static void isIngredient(ItemStack ingredient, CallbackInfoReturnable<Boolean> ci) {
-		if (ingredient.is(MutagenItem.BREWING_ITEM)) {
+		if (FFCommonConfig.isMutagenRecipeEnabled() && ingredient.is(MutagenItem.BREWING_ITEM)) {
 			ci.setReturnValue(true);
 		}
 	}
 
 	@Unique
 	private static boolean matchesMutagenRecipe(ItemStack ingredient, ItemStack container) {
-		if (!Hooks.bee) {
+		if (!FFCommonConfig.isMutagenRecipeEnabled()) {
 			return false;
 		}
 		if (!ingredient.is(MutagenItem.BREWING_ITEM)) {

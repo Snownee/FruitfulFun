@@ -29,6 +29,7 @@ public final class FFCommonConfig {
 	public static boolean wanderingTraderSapling = true;
 	@KiwiConfig.Range(min = 0)
 	public static int beeNaturalHealingInterval = 900;
+	public static boolean mutagenRecipe = true;
 	public static boolean redloveFruitUse = true;
 	@KiwiModule.Skip
 	public static boolean chorusFruitPieRitual = true;
@@ -62,5 +63,9 @@ public final class FFCommonConfig {
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();
 		return (server != null && server.isDedicatedServer()) ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;
+	}
+
+	public static boolean isMutagenRecipeEnabled() {
+		return Hooks.bee && mutagenRecipe;
 	}
 }
