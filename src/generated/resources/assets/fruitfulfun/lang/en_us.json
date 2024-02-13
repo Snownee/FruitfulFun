@@ -177,6 +177,8 @@
   "fruitfulfun.config.modules.vacuum.desc": "",
   "fruitfulfun.config.mutagenMutationRate": "Mutagen Mutation Rate",
   "fruitfulfun.config.mutagenMutationRate.desc": "",
+  "fruitfulfun.config.mutagenRecipe": "Mutagen Recipe",
+  "fruitfulfun.config.mutagenRecipe.desc": "",
   "fruitfulfun.config.mutationRate": "Mutation Rate",
   "fruitfulfun.config.mutationRate.FC": "FC",
   "fruitfulfun.config.mutationRate.FC.desc": "",
