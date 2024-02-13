@@ -12,7 +12,7 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 
-@KiwiModule(value = "cherry_fruits", dependencies = "@cherry")
+@KiwiModule("cherry_fruits")
 public class CherryFruitTypes extends AbstractModule {
 
 	public static final KiwiGO<FruitType> CHERRY = go(() -> new CherryFruitType(1, () -> Blocks.CHERRY_LOG, CHERRY_LEAVES, CHERRY_SAPLING, CherryModule.CHERRY));
