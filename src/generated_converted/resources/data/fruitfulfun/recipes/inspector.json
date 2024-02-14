@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "item": "minecraft:glass_pane"
+    },
+    "B": {
+      "item": "minecraft:copper_ingot"
+    },
+    "C": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "A",
+    "B",
+    "C"
+  ],
+  "result": {
+    "item": "fruitfulfun:inspector"
+  },
+  "show_notification": true,
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
+}

@@ -1,11 +1,41 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:or",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "values": [
+            "c:grain/rice"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "values": [
+            "c:seeds/rice"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:farmersdelight"
+      }
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_item": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:fruits/tangerine"
+            "tag": "c:fruits/tangerine"
           }
         ]
       },
@@ -29,47 +59,5 @@
       "fruitfulfun:rice_with_fruits"
     ]
   },
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "values": [
-        {
-          "value": {
-            "type": "forge:or",
-            "values": [
-              {
-                "type": "forge:tag_empty",
-                "tag": "forge:grain/rice"
-              }
-            ]
-          },
-          "type": "forge:not"
-        },
-        {
-          "value": {
-            "type": "forge:or",
-            "values": [
-              {
-                "type": "forge:tag_empty",
-                "tag": "forge:seeds/rice"
-              }
-            ]
-          },
-          "type": "forge:not"
-        }
-      ],
-      "type": "forge:or"
-    },
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    },
-    {
-      "value": {
-        "module": "fruitfulfun:farmersdelight",
-        "type": "kiwi:is_loaded"
-      },
-      "type": "forge:not"
-    }
-  ]
+  "sends_telemetry_event": false
 }

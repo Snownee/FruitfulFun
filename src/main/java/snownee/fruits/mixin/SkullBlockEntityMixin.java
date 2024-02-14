@@ -11,14 +11,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.Hooks;
-import snownee.fruits.food.DragonRitual;
+import snownee.fruits.ritual.RitualModule;
 
 @Mixin(SkullBlockEntity.class)
 public class SkullBlockEntityMixin {
 	@Inject(method = "animation", at = @At("HEAD"), cancellable = true)
 	private static void ritualAnimation(Level level, BlockPos blockPos, BlockState blockState, SkullBlockEntity skullBlockEntity, CallbackInfo ci) {
 		if (blockState.is(Blocks.DRAGON_HEAD) || blockState.is(Blocks.DRAGON_WALL_HEAD)) {
-			if (Hooks.food && DragonRitual.tickDragonHead(level, blockPos, blockState, skullBlockEntity)) {
+			if (Hooks.food && RitualModule.tickDragonHead(level, blockPos, blockState, skullBlockEntity)) {
 				ci.cancel();
 			}
 		}

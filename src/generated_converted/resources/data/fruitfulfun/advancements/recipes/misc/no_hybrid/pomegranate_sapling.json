@@ -1,0 +1,57 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_apple_sapling": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fruitfulfun:apple_sapling"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_spore_blossom": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:spore_blossom"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:no_hybrid/pomegranate_sapling"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_apple_sapling",
+      "has_spore_blossom",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:no_hybrid/pomegranate_sapling"
+    ]
+  },
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "value": {
+        "module": "fruitfulfun:bee",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

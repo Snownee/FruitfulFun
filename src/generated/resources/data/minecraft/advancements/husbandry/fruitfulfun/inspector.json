@@ -1,4 +1,10 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:bee"
+    }
+  ],
   "parent": "minecraft:husbandry/fruitfulfun/start",
   "criteria": {
     "_": {
@@ -25,11 +31,5 @@
       "_"
     ]
   ],
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "module": "fruitfulfun:bee",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  "sends_telemetry_event": false
 }

@@ -7,6 +7,10 @@
       "required": false
     },
     {
+      "id": "fruitfulfun:chorus_fruit_pie_slice",
+      "required": false
+    },
+    {
       "id": "fruitfulfun:grapefruit_panna_cotta",
       "required": false
     },

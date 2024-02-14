@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/start",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.inspector.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fruitfulfun:inspector"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruitfulfun.inspector.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
+}

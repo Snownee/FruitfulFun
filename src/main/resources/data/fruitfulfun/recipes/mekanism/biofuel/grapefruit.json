@@ -1,10 +1,4 @@
 {
-  "conditions": [
-    {
-      "type": "forge:mod_loaded",
-      "modid": "mekanism"
-    }
-  ],
   "type": "mekanism:crushing",
   "input": {
     "ingredient": {
@@ -14,5 +8,16 @@
   "output": {
     "item": "mekanism:bio_fuel",
     "count": 8
-  }
+  },
+  "conditions": [
+    {
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "mekanism"
+        }
+      ],
+      "type": "forge:and"
+    }
+  ]
 }

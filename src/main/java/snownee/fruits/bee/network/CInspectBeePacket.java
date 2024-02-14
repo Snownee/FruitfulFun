@@ -8,11 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.ServerAdvancementManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.network.KiwiPacket;
@@ -33,8 +33,7 @@ public class CInspectBeePacket extends PacketHandler {
 			Entity entity = target.getEntity(player.level());
 			FFPlayer.of(player).fruits$maybeInitGenes();
 			if (entity instanceof Bee bee) {
-				ServerAdvancementManager advancements = Objects.requireNonNull(player.level().getServer()).getAdvancements();
-				Advancement advancement = advancements.getAdvancement(new ResourceLocation("husbandry/fruitfulfun/inspector"));
+				Advancement advancement = Hooks.advancement((ServerLevel) player.level(), "inspector");
 				if (advancement != null) {
 					player.getAdvancements().award(advancement, "_");
 				}

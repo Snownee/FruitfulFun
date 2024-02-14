@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#fruitfulfun:leaves",
+    {
+      "id": "#minecraft:cave_vines",
+      "required": false
+    },
+    "minecraft:sweet_berry_bush"
+  ]
+}

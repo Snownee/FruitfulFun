@@ -1,4 +1,10 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_item": {
@@ -31,11 +37,5 @@
       "fruitfulfun:donauwelle"
     ]
   },
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  "sends_telemetry_event": false
 }

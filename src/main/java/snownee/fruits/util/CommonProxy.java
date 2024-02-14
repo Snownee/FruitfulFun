@@ -3,8 +3,11 @@ package snownee.fruits.util;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.authlib.GameProfile;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -25,10 +28,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -37,6 +42,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -55,6 +61,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -78,12 +85,17 @@ import snownee.fruits.compat.curios.CuriosCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.vacuum.VacGunItem;
 import snownee.fruits.vacuum.VacModule;
+import snownee.kiwi.AbstractModule;
 import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
 @Mod(FruitfulFun.ID)
 public class CommonProxy {
+	public static final UUID FAKE_PLAYER_UUID = UUID.fromString("ae5efe90-eef0-4899-94fc-de4786c242e8");
+	private static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(FAKE_PLAYER_UUID, "[FruitfulFun]");
+	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("farmersdelight", "tools/knives");
+
 	public CommonProxy() {
 		CoreFruitTypes.APPLE.getOrCreate();
 	}
@@ -331,5 +343,13 @@ public class CommonProxy {
 			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
 			return;
 		}
+	}
+
+	public static ServerPlayer getFakePlayer(Level level) {
+		return FakePlayerFactory.get((ServerLevel) level, FAKE_PLAYER_PROFILE);
+	}
+
+	public static boolean isKnife(ItemStack itemStack) {
+		return itemStack.is(KNIVES);
 	}
 }

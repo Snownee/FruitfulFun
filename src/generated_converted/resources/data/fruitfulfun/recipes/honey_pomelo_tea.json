@@ -1,0 +1,44 @@
+{
+  "type": "kiwi:shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "forge:fruits/pomelo"
+    },
+    {
+      "options": [
+        {
+          "tag": "forge:crops/mint"
+        },
+        {
+          "tag": "forge:leaves/mint"
+        },
+        []
+      ],
+      "type": "kiwi:alternatives"
+    },
+    {
+      "item": "minecraft:honey_bottle"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "no_containers": true,
+  "result": {
+    "item": "fruitfulfun:honey_pomelo_tea"
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    },
+    {
+      "value": {
+        "module": "fruitfulfun:farmersdelight",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

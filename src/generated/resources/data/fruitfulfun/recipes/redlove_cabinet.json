@@ -1,4 +1,10 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:farmersdelight"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
@@ -17,11 +23,5 @@
   "result": {
     "item": "fruitfulfun:redlove_cabinet"
   },
-  "show_notification": true,
-  "conditions": [
-    {
-      "module": "fruitfulfun:farmersdelight",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  "show_notification": true
 }

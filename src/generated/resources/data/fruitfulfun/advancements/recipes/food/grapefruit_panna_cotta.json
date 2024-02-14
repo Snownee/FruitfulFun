@@ -1,4 +1,17 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:farmersdelight"
+      }
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_item": {
@@ -31,18 +44,5 @@
       "fruitfulfun:grapefruit_panna_cotta"
     ]
   },
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    },
-    {
-      "value": {
-        "module": "fruitfulfun:farmersdelight",
-        "type": "kiwi:is_loaded"
-      },
-      "type": "forge:not"
-    }
-  ]
+  "sends_telemetry_event": false
 }

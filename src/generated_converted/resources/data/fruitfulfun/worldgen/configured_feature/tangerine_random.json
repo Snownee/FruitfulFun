@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "default": {
+      "feature": "fruitfulfun:tangerine_wg",
+      "placement": []
+    },
+    "features": [
+      {
+        "chance": 0.333,
+        "feature": {
+          "feature": "fruitfulfun:tangerine_fancy_wg",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.333,
+        "feature": {
+          "feature": "fruitfulfun:tangerine_bees_wg",
+          "placement": []
+        }
+      }
+    ]
+  }
+}

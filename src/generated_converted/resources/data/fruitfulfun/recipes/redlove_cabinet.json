@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "fruitfulfun:redlove_slab"
+    },
+    "T": {
+      "item": "fruitfulfun:redlove_trapdoor"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "T T",
+    "SSS"
+  ],
+  "result": {
+    "item": "fruitfulfun:redlove_cabinet"
+  },
+  "show_notification": true,
+  "conditions": [
+    {
+      "module": "fruitfulfun:farmersdelight",
+      "type": "kiwi:is_loaded"
+    }
+  ]
+}

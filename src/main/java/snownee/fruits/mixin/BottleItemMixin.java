@@ -14,13 +14,13 @@ import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.item.BottleItem;
 import snownee.fruits.FFCommonConfig;
-import snownee.fruits.food.DragonRitual;
+import snownee.fruits.ritual.RitualModule;
 
 @Mixin(BottleItem.class)
 public class BottleItemMixin {
 	@WrapOperation(method = {"lambda$use$0", "m_289173_"}, constant = @Constant(classValue = EnderDragon.class))
 	private static boolean allowDummyDragonBreath(Object object, Operation<Boolean> original, @Local AreaEffectCloud cloud) {
-		return DragonRitual.DUMMY_UUID.equals(cloud.ownerUUID) || original.call(object);
+		return RitualModule.DUMMY_UUID.equals(cloud.ownerUUID) || original.call(object);
 	}
 
 	@Inject(method = {"lambda$use$0", "m_289173_"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;isAlive()Z"), cancellable = true)

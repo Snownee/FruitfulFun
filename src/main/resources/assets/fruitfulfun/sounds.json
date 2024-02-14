@@ -46,5 +46,27 @@
       }
     ],
     "subtitle": "subtitles.fruitfulfun.crown.equip"
+  },
+  "item.gun.shoot_item": {
+    "sounds": [
+      "fruitfulfun:gun_shoot_item"
+    ],
+    "subtitle": "subtitles.fruitfulfun.gun.shoot"
+  },
+  "item.gun.stop": {
+    "sounds": [
+      "fruitfulfun:gun_stop"
+    ]
+  },
+  "item.gun.working": {
+    "sounds": [
+      "fruitfulfun:gun_working"
+    ],
+    "subtitle": "subtitles.fruitfulfun.gun.working"
+  },
+  "block.ritual.finish": {
+    "sounds": [
+      "fruitfulfun:ritual_finish"
+    ]
   }
 }

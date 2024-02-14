@@ -1,4 +1,10 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:bee"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_mutagen": {
@@ -31,11 +37,5 @@
       "minecraft:glass_bottle_from_mutagen"
     ]
   },
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "module": "fruitfulfun:bee",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  "sends_telemetry_event": false
 }

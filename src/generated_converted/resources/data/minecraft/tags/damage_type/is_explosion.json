@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruitfulfun:explosion",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:player_explosion",
+      "required": false
+    }
+  ]
+}

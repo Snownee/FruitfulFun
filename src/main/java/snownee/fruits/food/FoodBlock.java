@@ -22,7 +22,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import snownee.fruits.FFCommonConfig;
+import snownee.fruits.Hooks;
+import snownee.fruits.ritual.RitualModule;
 import snownee.kiwi.block.IKiwiBlock;
 import snownee.kiwi.util.VoxelUtil;
 
@@ -95,11 +96,11 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 
 	@Override
 	public void onPlace(BlockState blockState, Level level, BlockPos pos, BlockState blockState2, boolean bl) {
-		if (level.isClientSide || !FFCommonConfig.chorusFruitPieRitual
+		if (level.isClientSide || !Hooks.ritual
 				|| !FoodModule.CHORUS_FRUIT_PIE.is(blockState)
 				|| blockState2.is(blockState.getBlock())) {
 			return;
 		}
-		DragonRitual.tryStartRitual(level, pos);
+		RitualModule.tryStartRitual(level, pos);
 	}
 }

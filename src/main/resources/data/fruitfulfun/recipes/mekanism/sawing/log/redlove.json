@@ -1,10 +1,4 @@
 {
-  "conditions": [
-    {
-      "type": "forge:mod_loaded",
-      "modid": "mekanism"
-    }
-  ],
   "type": "mekanism:sawing",
   "input": {
     "ingredient": {
@@ -18,5 +12,16 @@
   "secondaryOutput": {
     "item": "mekanism:sawdust"
   },
-  "secondaryChance": 0.25
+  "secondaryChance": 0.25,
+  "conditions": [
+    {
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "mekanism"
+        }
+      ],
+      "type": "forge:and"
+    }
+  ]
 }

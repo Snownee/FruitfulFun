@@ -1,11 +1,17 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_item": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:fruits/lemon"
+            "tag": "c:fruits/lemon"
           }
         ]
       },
@@ -29,11 +35,5 @@
       "minecraft:lemon_roast_chicken"
     ]
   },
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  "sends_telemetry_event": false
 }

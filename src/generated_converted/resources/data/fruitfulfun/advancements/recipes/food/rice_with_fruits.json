@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:fruits/tangerine"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fruitfulfun:rice_with_fruits"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_item",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fruitfulfun:rice_with_fruits"
+    ]
+  },
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "values": [
+        {
+          "value": {
+            "type": "forge:or",
+            "values": [
+              {
+                "type": "forge:tag_empty",
+                "tag": "forge:grain/rice"
+              }
+            ]
+          },
+          "type": "forge:not"
+        },
+        {
+          "value": {
+            "type": "forge:or",
+            "values": [
+              {
+                "type": "forge:tag_empty",
+                "tag": "forge:seeds/rice"
+              }
+            ]
+          },
+          "type": "forge:not"
+        }
+      ],
+      "type": "forge:or"
+    },
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    },
+    {
+      "value": {
+        "module": "fruitfulfun:farmersdelight",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

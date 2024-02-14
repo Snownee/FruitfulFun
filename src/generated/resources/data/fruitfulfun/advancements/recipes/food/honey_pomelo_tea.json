@@ -1,11 +1,24 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:farmersdelight"
+      }
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_item": {
       "conditions": {
         "items": [
           {
-            "tag": "forge:fruits/pomelo"
+            "tag": "c:fruits/pomelo"
           }
         ]
       },
@@ -29,18 +42,5 @@
       "fruitfulfun:honey_pomelo_tea"
     ]
   },
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    },
-    {
-      "value": {
-        "module": "fruitfulfun:farmersdelight",
-        "type": "kiwi:is_loaded"
-      },
-      "type": "forge:not"
-    }
-  ]
+  "sends_telemetry_event": false
 }

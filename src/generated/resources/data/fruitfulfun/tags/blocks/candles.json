@@ -6,6 +6,10 @@
       "required": false
     },
     {
+      "id": "#minecraft:candle_cakes",
+      "required": false
+    },
+    {
       "id": "#supplementaries:candle_holders",
       "required": false
     }

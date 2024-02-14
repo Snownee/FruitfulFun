@@ -1,0 +1,6 @@
+{
+  "parent": "fruitfulfun:block/template_leaves_fruit_md",
+  "textures": {
+    "leaves": "minecraft:block/oak_leaves"
+  }
+}

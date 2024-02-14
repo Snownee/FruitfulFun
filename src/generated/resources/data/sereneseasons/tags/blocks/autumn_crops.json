@@ -1,8 +1,7 @@
 {
   "replace": false,
   "values": [
-    "fruitfulfun:cherry_sapling",
-    "fruitfulfun:redlove_sapling",
+    "fruitfulfun:pomegranate_sapling",
     "fruitfulfun:tangerine_sapling",
     "fruitfulfun:lime_sapling",
     "fruitfulfun:citron_sapling",
@@ -11,8 +10,11 @@
     "fruitfulfun:lemon_sapling",
     "fruitfulfun:grapefruit_sapling",
     "fruitfulfun:apple_sapling",
+    "fruitfulfun:cherry_sapling",
+    "fruitfulfun:redlove_sapling",
     "fruitfulfun:apple_leaves",
     "fruitfulfun:redlove_leaves",
+    "fruitfulfun:pomegranate_leaves",
     "fruitfulfun:tangerine_leaves",
     "fruitfulfun:lime_leaves",
     "fruitfulfun:citron_leaves",

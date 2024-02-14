@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fruitfulfun:citrus_trapdoor"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fruitfulfun:citrus_cabinet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_item",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fruitfulfun:citrus_cabinet"
+    ]
+  },
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "module": "fruitfulfun:farmersdelight",
+      "type": "kiwi:is_loaded"
+    }
+  ]
+}

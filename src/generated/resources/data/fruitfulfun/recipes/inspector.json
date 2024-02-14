@@ -1,4 +1,10 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:bee"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
@@ -20,11 +26,5 @@
   "result": {
     "item": "fruitfulfun:inspector"
   },
-  "show_notification": true,
-  "conditions": [
-    {
-      "module": "fruitfulfun:bee",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  "show_notification": true
 }

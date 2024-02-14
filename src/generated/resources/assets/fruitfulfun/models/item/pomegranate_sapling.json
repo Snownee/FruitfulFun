@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "fruitfulfun:block/pomegranate_sapling"
+  }
+}

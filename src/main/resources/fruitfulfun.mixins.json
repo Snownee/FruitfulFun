@@ -30,6 +30,7 @@
     "ServerEntityMixin",
     "ServerLevelMixin",
     "SkullBlockEntityMixin",
+    "client.LivingEntitySoundMixin",
     "forge.FoliagePlacerAccess"
   ],
   "client": [

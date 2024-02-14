@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "fruitfulfun:apple_sapling"
+    },
+    {
+      "item": "minecraft:spore_blossom"
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:pomegranate_sapling"
+  },
+  "conditions": [
+    {
+      "value": {
+        "module": "fruitfulfun:bee",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

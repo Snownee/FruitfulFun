@@ -1,4 +1,10 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
   "type": "kiwi:shapeless",
   "category": "misc",
   "ingredients": [
@@ -6,59 +12,62 @@
       "item": "fruitfulfun:redlove"
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
-        [
-          {
-            "tag": "forge:chocolates"
-          },
-          {
-            "tag": "forge:chocolatebar"
-          }
-        ],
+        {
+          "fabric:type": "fabric:any",
+          "ingredients": [
+            {
+              "tag": "c:chocolates"
+            },
+            {
+              "tag": "c:chocolatebar"
+            }
+          ]
+        },
         {
           "item": "minecraft:cocoa_beans"
         }
-      ],
-      "type": "kiwi:alternatives"
+      ]
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "forge:cream"
+          "tag": "c:cream"
         },
         {
-          "tag": "forge:milk"
+          "tag": "c:milk"
         },
         {
           "item": "minecraft:milk_bucket"
         }
-      ],
-      "type": "kiwi:alternatives"
+      ]
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "forge:eggs"
+          "tag": "c:eggs"
         },
         {
           "item": "minecraft:egg"
         }
-      ],
-      "type": "kiwi:alternatives"
+      ]
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "forge:flour"
+          "tag": "c:flour"
         },
         {
-          "tag": "forge:grain/wheat"
+          "tag": "c:grain/wheat"
         },
         {
           "item": "minecraft:wheat"
         }
-      ],
-      "type": "kiwi:alternatives"
+      ]
     },
     {
       "item": "minecraft:sugar"
@@ -66,11 +75,5 @@
   ],
   "result": {
     "item": "fruitfulfun:donauwelle"
-  },
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  }
 }

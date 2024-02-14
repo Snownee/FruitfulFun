@@ -3,7 +3,6 @@ package snownee.fruits.food;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +17,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.registries.ForgeRegistries;
-import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.util.FoodBuilderExtension;
@@ -101,12 +99,6 @@ public class FoodModule extends AbstractModule {
 			KiwiModules.get(uid).<Item>getRegistries(ForgeRegistries.ITEMS).stream()
 					.filter(Item::isEdible)
 					.forEach($ -> VanillaActions.registerCompostable(1, $));
-			if (FFCommonConfig.dispenserCollectDragonBreath) {
-				DispenseItemBehavior original = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
-				if (original != null) {
-					DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, new CollectDragonBreathDispenseBehavior(original));
-				}
-			}
 		});
 	}
 

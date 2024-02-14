@@ -31,8 +31,7 @@ def process_json_files_recursively(input_folder, output_folder, jq_file):
                 process_json_file(input_file, output_file, jq_file)
 
 # Example usage:
-input_folder = "fabric_jsons"
-output_folder = "src"
 jq_file = "fabric2forge.jq"  # Replace with your desired jq command
 
-process_json_files_recursively(input_folder, output_folder, jq_file)
+process_json_files_recursively("fabric_jsons", "src", jq_file)
+process_json_files_recursively("src/generated", "src/generated_converted", jq_file)

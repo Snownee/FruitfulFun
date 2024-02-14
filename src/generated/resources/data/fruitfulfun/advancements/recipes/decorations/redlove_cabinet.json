@@ -1,4 +1,10 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:farmersdelight"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_item": {
@@ -31,11 +37,5 @@
       "fruitfulfun:redlove_cabinet"
     ]
   },
-  "sends_telemetry_event": false,
-  "conditions": [
-    {
-      "module": "fruitfulfun:farmersdelight",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+  "sends_telemetry_event": false
 }

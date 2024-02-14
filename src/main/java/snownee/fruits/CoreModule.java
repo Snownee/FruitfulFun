@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CeilingHangingSignBlock;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -51,6 +53,7 @@ import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
+import snownee.fruits.ritual.CollectDragonBreathDispenseBehavior;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
@@ -229,6 +232,13 @@ public final class CoreModule extends AbstractModule {
 					.filter($ -> $.module.uid.getNamespace().equals(FruitfulFun.ID))
 					.flatMap($ -> $.<Block>getRegistryEntries(ForgeRegistries.BLOCKS))
 					.forEach(CoreModule::setFlammability);
+
+			if (FFCommonConfig.dispenserCollectDragonBreath) {
+				DispenseItemBehavior original = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
+				if (original != null) {
+					DispenserBlock.registerBehavior(Items.GLASS_BOTTLE, new CollectDragonBreathDispenseBehavior(original));
+				}
+			}
 		});
 	}
 

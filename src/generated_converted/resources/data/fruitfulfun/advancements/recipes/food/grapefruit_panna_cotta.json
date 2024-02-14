@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "fruitfulfun:grapefruit"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fruitfulfun:grapefruit_panna_cotta"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_item",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fruitfulfun:grapefruit_panna_cotta"
+    ]
+  },
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "module": "fruitfulfun:food",
+      "type": "kiwi:is_loaded"
+    },
+    {
+      "value": {
+        "module": "fruitfulfun:farmersdelight",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

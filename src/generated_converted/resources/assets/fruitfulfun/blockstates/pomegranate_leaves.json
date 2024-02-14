@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "fruitfulfun:block/pomegranate_leaves"
+    },
+    "age=1": {
+      "model": "fruitfulfun:block/pomegranate_leaves"
+    },
+    "age=2": {
+      "model": "fruitfulfun:block/pomegranate_leaves_2"
+    },
+    "age=3": {
+      "model": "fruitfulfun:block/pomegranate_leaves_3"
+    }
+  }
+}

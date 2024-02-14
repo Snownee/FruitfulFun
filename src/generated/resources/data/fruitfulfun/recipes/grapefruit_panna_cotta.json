@@ -1,82 +1,82 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:farmersdelight"
+      }
+    }
+  ],
   "type": "kiwi:shapeless",
   "category": "misc",
   "ingredients": [
     {
-      "tag": "forge:fruits/grapefruit"
+      "tag": "c:fruits/grapefruit"
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "forge:cream"
+          "tag": "c:cream"
         },
         {
-          "tag": "forge:milk"
+          "tag": "c:milk"
         },
         {
           "item": "minecraft:milk_bucket"
         }
-      ],
-      "type": "kiwi:alternatives"
+      ]
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "forge:eggs"
+          "tag": "c:eggs"
         },
         {
           "item": "minecraft:egg"
         }
-      ],
-      "type": "kiwi:alternatives"
+      ]
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "forge:gelatin"
+          "tag": "c:gelatin"
         },
         {
-          "tag": "forge:gelatine"
+          "tag": "c:gelatine"
         },
         {
-          "tag": "forge:slime_balls"
+          "tag": "c:slime_balls"
         },
         {
           "item": "minecraft:slime_ball"
         }
-      ],
-      "type": "kiwi:alternatives"
+      ]
     },
     {
       "item": "minecraft:sugar"
     },
     {
+      "fabric:type": "kiwi:alternatives",
       "options": [
         {
-          "tag": "forge:vannila"
+          "tag": "c:vannila"
         },
         {
-          "tag": "forge:crops/vanilla"
+          "tag": "c:crops/vanilla"
         },
         []
-      ],
-      "type": "kiwi:alternatives"
+      ]
     }
   ],
   "result": {
     "item": "fruitfulfun:grapefruit_panna_cotta"
-  },
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    },
-    {
-      "value": {
-        "module": "fruitfulfun:farmersdelight",
-        "type": "kiwi:is_loaded"
-      },
-      "type": "forge:not"
-    }
-  ]
+  }
 }

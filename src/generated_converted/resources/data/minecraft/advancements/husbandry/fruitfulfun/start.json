@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:husbandry/root",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:fruits"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.start.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fruitfulfun:lemon"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.fruitfulfun.start.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

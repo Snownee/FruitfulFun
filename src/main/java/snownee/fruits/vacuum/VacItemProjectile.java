@@ -2,11 +2,18 @@ package snownee.fruits.vacuum;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,8 +23,12 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -80,18 +91,40 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 	@Override
 	protected void onHitBlock(BlockHitResult blockHitResult) {
 		super.onHitBlock(blockHitResult);
-		if (!level().isClientSide && !getItem().isEmpty() && !isRemoved()) {
+		ItemStack item = getItem();
+		if (!level().isClientSide && !item.isEmpty() && !isRemoved()) {
 			BlockPos pos = blockHitResult.getBlockPos();
 			BlockState blockState = level().getBlockState(pos);
-			BlockEntity blockEntity = level().getBlockEntity(pos);
-			if (CommonProxy.insertItem(level(), pos, blockState, blockEntity, blockHitResult.getDirection(), getItem())) {
-				if (getItem().isEmpty()) {
-					discard();
-				} else {
-					setItem(getItem());
+			if (blockState.getBlock() instanceof FarmBlock) {
+				Block block = Block.byItem(item.getItem());
+				if (block != Blocks.AIR && block.defaultBlockState().is(BlockTags.CROPS)) {
+					ItemStack itemCopy = item.copy();
+					BlockHitResult newHit = new BlockHitResult(blockHitResult.getLocation(), Direction.UP, pos, false);
+					// passing null player to make sure the item is consumed
+					item.useOn(new UseOnContext(level(), null, InteractionHand.MAIN_HAND, item, newHit));
+					updateItem();
+					if (getOwner() instanceof ServerPlayer player) {
+						CriteriaTriggers.PLACED_BLOCK.trigger(player, pos, itemCopy);
+						player.awardStat(Stats.ITEM_USED.get(itemCopy.getItem()));
+					}
+					return;
 				}
-				VacGunItem.playContainerAnimation(blockEntity);
 			}
+			BlockEntity blockEntity = level().getBlockEntity(pos);
+			if (CommonProxy.insertItem(level(), pos, blockState, blockEntity, blockHitResult.getDirection(), item)) {
+				playSound(SoundEvents.ITEM_PICKUP, 0.2f, ((random.nextFloat() - random.nextFloat()) * 0.7f + 1.0f) * 2.0f);
+				VacGunItem.playContainerAnimation(blockEntity);
+				updateItem();
+				return;
+			}
+		}
+	}
+
+	private void updateItem() {
+		if (getItem().isEmpty()) {
+			discard();
+		} else {
+			setItem(getItem());
 		}
 	}
 

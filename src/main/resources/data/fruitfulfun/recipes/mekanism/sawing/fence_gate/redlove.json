@@ -1,10 +1,4 @@
 {
-  "conditions": [
-    {
-      "type": "forge:mod_loaded",
-      "modid": "mekanism"
-    }
-  ],
   "type": "mekanism:sawing",
   "input": {
     "ingredient": {
@@ -19,5 +13,16 @@
     "item": "minecraft:stick",
     "count": 4
   },
-  "secondaryChance": 1
+  "secondaryChance": 1,
+  "conditions": [
+    {
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "mekanism"
+        }
+      ],
+      "type": "forge:and"
+    }
+  ]
 }

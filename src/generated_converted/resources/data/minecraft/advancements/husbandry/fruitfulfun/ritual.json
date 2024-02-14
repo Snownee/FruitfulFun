@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/start",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.ritual.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "fruitfulfun:chorus_fruit_pie"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruitfulfun.ritual.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "module": "fruitfulfun:ritual",
+      "type": "kiwi:is_loaded"
+    }
+  ]
+}

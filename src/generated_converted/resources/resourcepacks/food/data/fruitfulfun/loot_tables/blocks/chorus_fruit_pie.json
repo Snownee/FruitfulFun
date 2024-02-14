@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "fruitfulfun:chorus_fruit_pie",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "servings": "4"
+              }
+            }
+          ],
+          "name": "fruitfulfun:chorus_fruit_pie"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

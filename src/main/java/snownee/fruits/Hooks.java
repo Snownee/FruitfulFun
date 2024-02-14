@@ -68,6 +68,7 @@ public final class Hooks {
 	public static boolean bee;
 	public static boolean food;
 	public static boolean farmersdelight;
+	public static boolean ritual;
 	public static boolean vac;
 	public static boolean curios = Platform.isModLoaded("curios");
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
@@ -127,11 +128,15 @@ public final class Hooks {
 				.peek($ -> hornHarvest(level, player, $, eyePos, null))
 				.count();
 		if (count > 0) {
-			Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/horn"));
+			Advancement advancement = advancement(level, "horn");
 			if (advancement != null) {
 				player.getAdvancements().award(advancement, "_");
 			}
 		}
+	}
+
+	public static Advancement advancement(ServerLevel level, String id) {
+		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation(FruitfulFun.ID, "husbandry/fruitfulfun/" + id));
 	}
 
 	private static void hornHarvest(ServerLevel level, ServerPlayer player, FruitTreeBlockEntity core, BlockPos eyePos, Consumer<ItemEntity> consumer) {
