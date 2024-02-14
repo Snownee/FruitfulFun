@@ -30,7 +30,6 @@
     "ServerEntityMixin",
     "ServerLevelMixin",
     "SkullBlockEntityMixin",
-    "client.LivingEntitySoundMixin",
     "forge.FoliagePlacerAccess"
   ],
   "client": [
@@ -43,6 +42,7 @@
     "client.ItemInHandRendererMixin",
     "client.ItemRendererMixin",
     "client.LivingEntityFlowerCrownMixin",
+    "client.LivingEntitySoundMixin",
     "client.MinecraftMixin",
     "forge.BlockColorsAccess",
     "forge.ItemColorsAccess"
