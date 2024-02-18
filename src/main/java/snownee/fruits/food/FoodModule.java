@@ -3,12 +3,15 @@ package snownee.fruits.food;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.animal.Panda;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -26,6 +29,7 @@ import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.RenderLayer;
 import snownee.kiwi.KiwiModule.RenderLayer.Layer;
 import snownee.kiwi.KiwiModules;
+import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.kiwi.util.VanillaActions;
 
@@ -36,22 +40,22 @@ public class FoodModule extends AbstractModule {
 
 	public static final TagKey<Item> PANDA_FOOD = itemTag(FruitfulFun.ID, "panda_food");
 	public static Item.Properties GRAPEFRUIT_PANNA_COTTA_PROP = itemProp().food(basicFood(14, 1)
-			.effect(Foods.SPEED, 1)
+			.effect(Effects.SPEED, 1)
 			.build());
 	public static final KiwiGO<Block> GRAPEFRUIT_PANNA_COTTA = go(() -> new FoodBlock(Block.box(4.5, 0, 4.5, 11.5, 4, 11.5)));
 	public static Item.Properties DONAUWELLE_PROP = itemProp().food(basicFood(14, 1)
-			.effect(Foods.REGENERATION, 1)
+			.effect(Effects.REGENERATION, 1)
 			.build());
 	public static final KiwiGO<Block> DONAUWELLE = go(() -> new FoodBlock(Block.box(5, 0, 5, 11, 4, 11)));
 	public static Item.Properties HONEY_POMELO_TEA_PROP = itemProp().food(basicFood(1, Hooks.farmersdelight ? 0.3F : 4)
-			.effect(Foods.COMFORT, 1)
+			.effect(Effects.COMFORT, 1)
 			.builder()
 			.alwaysEat()
 			.build()).craftRemainder(Items.GLASS_BOTTLE);
 	@RenderLayer(Layer.TRANSLUCENT)
 	public static final KiwiGO<Block> HONEY_POMELO_TEA = go(() -> new FoodBlock(Block.box(5, 0, 5, 11, 7.75, 11)));
 	public static Item.Properties RICE_WITH_FRUITS_PROP = itemProp().food(basicFood(9, 0.6F)
-			.effect(Foods.COMFORT, 1)
+			.effect(Effects.COMFORT, 1)
 			.build());
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<Block> RICE_WITH_FRUITS = go(() -> {
@@ -61,7 +65,7 @@ public class FoodModule extends AbstractModule {
 	});
 	public static Item.Properties LEMON_ROAST_CHICKEN_PROP = itemProp().craftRemainder(Items.BOWL);
 	public static final KiwiGO<Item> LEMON_ROAST_CHICKEN = go(() -> new FoodItem(itemProp().food(basicFood(16, 0.8F)
-			.effect(Foods.NOURISHMENT, 1)
+			.effect(Effects.NOURISHMENT, 1)
 			.build()).craftRemainder(Items.BOWL)));
 	public static final KiwiGO<FeastBlock> LEMON_ROAST_CHICKEN_BLOCK = go(() -> new FeastBlock(Block.box(4, 2, 4, 12, 9, 12),
 			FeastBlock.LEFTOVER_SHAPE, LEMON_ROAST_CHICKEN));
@@ -107,17 +111,22 @@ public class FoodModule extends AbstractModule {
 				.saturationMod(saturation));
 	}
 
-	public static final class Foods {
+	public static final class Effects {
 		private static final Supplier<MobEffectInstance> NOURISHMENT = make("farmersdelight:nourishment", 6000, 0);
 		private static final Supplier<MobEffectInstance> COMFORT = make("farmersdelight:comfort", 3600, 0);
 		private static final Supplier<MobEffectInstance> REGENERATION = make("regeneration", 120, 0);
 		private static final Supplier<MobEffectInstance> SPEED = make("speed", 1200, 0);
 
+		@Nullable
 		private static Supplier<MobEffectInstance> make(String id, int duration, int amplifier) {
+			ResourceLocation resourceLocation = new ResourceLocation(id);
+			if (!Platform.isModLoaded(resourceLocation.getNamespace())) {
+				return null;
+			}
 			return () -> {
-				MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(id));
+				MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(resourceLocation);
 				if (effect == null) {
-					return null;
+					effect = MobEffects.DARKNESS; // something is wrong, hope someone will notice it
 				}
 				return new MobEffectInstance(effect, duration, amplifier);
 			};

@@ -2,6 +2,8 @@ package snownee.fruits.util;
 
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,8 +20,10 @@ public class FoodBuilderExtension {
 		return new FoodBuilderExtension(builder);
 	}
 
-	public FoodBuilderExtension effect(Supplier<MobEffectInstance> mobEffectInstance, float probability) {
-		builder.effects.add(new LazyEffect(mobEffectInstance, probability));
+	public FoodBuilderExtension effect(@Nullable Supplier<MobEffectInstance> mobEffectInstance, float probability) {
+		if (mobEffectInstance != null) {
+			builder.effects.add(new LazyEffect(mobEffectInstance, probability));
+		}
 		return this;
 	}
 
