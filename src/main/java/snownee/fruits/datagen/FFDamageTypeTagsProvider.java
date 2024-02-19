@@ -12,7 +12,10 @@ import net.minecraft.world.damagesource.DamageType;
 import snownee.fruits.FFDamageTypes;
 
 public class FFDamageTypeTagsProvider extends FabricTagProvider<DamageType> {
-	public FFDamageTypeTagsProvider(FabricDataOutput output, ResourceKey<? extends Registry<DamageType>> registryKey, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+	public FFDamageTypeTagsProvider(
+			FabricDataOutput output,
+			ResourceKey<? extends Registry<DamageType>> registryKey,
+			CompletableFuture<HolderLookup.Provider> registriesFuture) {
 		super(output, registryKey, registriesFuture);
 	}
 

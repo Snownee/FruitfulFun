@@ -125,7 +125,8 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	private static void addBuiltinPack(ModContainer modContainer, String id) {
-		ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
+		ResourceManagerHelper.registerBuiltinResourcePack(
+				new ResourceLocation(FruitfulFun.ID, id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
 	}
 
 	public static boolean isShears(ItemStack stack) {
@@ -137,7 +138,13 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	@SuppressWarnings("UnstableApiUsage")
-	public static boolean insertItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction, ItemStack item) {
+	public static boolean insertItem(
+			Level level,
+			BlockPos blockPos,
+			BlockState blockState,
+			@Nullable BlockEntity blockEntity,
+			Direction direction,
+			ItemStack item) {
 		Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, blockPos, blockState, blockEntity, direction);
 		if (storage == null || !storage.supportsInsertion()) {
 			return false;
@@ -155,7 +162,12 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	@SuppressWarnings("UnstableApiUsage")
-	public static ItemStack extractOneItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction) {
+	public static ItemStack extractOneItem(
+			Level level,
+			BlockPos blockPos,
+			BlockState blockState,
+			@Nullable BlockEntity blockEntity,
+			Direction direction) {
 		Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, blockPos, blockState, blockEntity, direction);
 		if (storage == null || !storage.supportsExtraction()) {
 			return ItemStack.EMPTY;
@@ -195,7 +207,10 @@ public class CommonProxy implements ModInitializer {
 				return;
 			}
 			trades.add((entity, random) -> {
-				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(), random).asItem().getDefaultInstance();
+				ItemStack sapling = net.minecraft.Util.getRandom(
+								FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(), random)
+						.asItem()
+						.getDefaultInstance();
 				ItemStack emeralds = new ItemStack(Items.EMERALD, 8);
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});
@@ -204,7 +219,8 @@ public class CommonProxy implements ModInitializer {
 		ServerWorldEvents.LOAD.register((server, world) -> {
 			if (world == server.overworld()) {
 				long seed = world.getSeed();
-				GeneticData geneticData = world.getDataStorage().computeIfAbsent(GeneticData::load, GeneticData::new, "fruitfulfun_genetics");
+				GeneticData geneticData = world.getDataStorage()
+						.computeIfAbsent(GeneticData::load, GeneticData::new, "fruitfulfun_genetics");
 				geneticData.initAlleles(seed);
 			}
 		});
@@ -270,7 +286,8 @@ public class CommonProxy implements ModInitializer {
 	public static void addFeature(String id) {
 		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(Util.RL(id, FruitfulFun.ID)).toString());
 		BiomeModifications.addFeature(context -> {
-			return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) || context.hasFeature(VegetationFeatures.TREES_PLAINS);
+			return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) ||
+					context.hasFeature(VegetationFeatures.TREES_PLAINS);
 		}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
 	}
 
@@ -301,7 +318,6 @@ public class CommonProxy implements ModInitializer {
 			level.addParticle(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.9, blockPos.getZ() + 0.5, 0.0, 0.1, 0.0);
 			level.playSound(null, blockPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
 			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
-			return;
 		}
 	}
 }

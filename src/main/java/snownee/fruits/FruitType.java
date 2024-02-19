@@ -24,7 +24,12 @@ public abstract class FruitType {
 	public final Supplier<Item> fruit;
 	public Holder<PoiType> poiType;
 
-	public FruitType(int tier, Supplier<Block> log, Supplier<? extends FruitLeavesBlock> leaves, Supplier<? extends Block> sapling, Supplier<Item> fruit) {
+	public FruitType(
+			int tier,
+			Supplier<Block> log,
+			Supplier<? extends FruitLeavesBlock> leaves,
+			Supplier<? extends Block> sapling,
+			Supplier<Item> fruit) {
 		this.tier = tier;
 		this.log = log;
 		this.leaves = leaves;

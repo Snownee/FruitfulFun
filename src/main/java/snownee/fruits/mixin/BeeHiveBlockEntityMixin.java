@@ -24,8 +24,17 @@ public class BeeHiveBlockEntityMixin {
 	}
 
 	@Inject(method = "releaseOccupant", at = @At("HEAD"), cancellable = true)
-	private static void releaseOccupant(Level level, BlockPos blockPos, BlockState blockState, BeehiveBlockEntity.BeeData beeData, @Nullable List<Entity> list, BeehiveBlockEntity.BeeReleaseStatus beeReleaseStatus, @Nullable BlockPos blockPos2, CallbackInfoReturnable<Boolean> ci) {
-		if (beeReleaseStatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY && level.isRaining() && !beeData.entityData.getBoolean("RainCapable")) {
+	private static void releaseOccupant(
+			Level level,
+			BlockPos blockPos,
+			BlockState blockState,
+			BeehiveBlockEntity.BeeData beeData,
+			@Nullable List<Entity> list,
+			BeehiveBlockEntity.BeeReleaseStatus beeReleaseStatus,
+			@Nullable BlockPos blockPos2,
+			CallbackInfoReturnable<Boolean> ci) {
+		if (beeReleaseStatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY && level.isRaining() &&
+				!beeData.entityData.getBoolean("RainCapable")) {
 			ci.setReturnValue(false);
 		}
 	}

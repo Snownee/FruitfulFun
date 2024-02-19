@@ -44,7 +44,8 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.holders().toList()) {
 			FruitType type = holder.value();
 			ResourceLocation id = holder.key().location();
-			type.makeFeatures(id, false, (location, config) -> entries.add(FeatureUtils.createKey(location.toString()), cf(Feature.TREE, config)));
+			type.makeFeatures(
+					id, false, (location, config) -> entries.add(FeatureUtils.createKey(location.toString()), cf(Feature.TREE, config)));
 			List<WeightedPlacedFeature> features = Lists.newArrayList();
 			type.makeFeatures(id, true, (location, config) -> {
 				ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(location.withSuffix("_wg").toString());
@@ -54,7 +55,8 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 			});
 			if (type.tier == 0) {
 				ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(id.withSuffix("_random").toString());
-				ConfiguredFeature<?, ?> cf = cf(Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(features, features.remove(0).feature));
+				ConfiguredFeature<?, ?> cf = cf(
+						Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(features, features.remove(0).feature));
 				entries.add(key, cf);
 			}
 		}
@@ -69,7 +71,8 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 				continue;
 			}
 			ResourceLocation id = holder.key().location();
-			PlacedFeature placedFeature = makePlacedFeature(entries.ref(FeatureUtils.createKey(id.withSuffix("_random").toString())), type.sapling.get());
+			PlacedFeature placedFeature = makePlacedFeature(
+					entries.ref(FeatureUtils.createKey(id.withSuffix("_random").toString())), type.sapling.get());
 			entries.add(PlacementUtils.createKey(id.toString()), placedFeature);
 		}
 	}

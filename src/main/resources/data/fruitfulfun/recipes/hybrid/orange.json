@@ -1,24 +1,24 @@
 {
-  "type": "fruitfulfun:hybridizing",
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:bee"
-    }
-  ],
-  "pollens": [
-    "fruitfulfun:lime_leaves",
-    "fruitfulfun:tangerine_leaves"
-  ],
-  "post": {
-    "type": "place",
-    "block": {
-      "blocks": [
-        "fruitfulfun:orange_leaves"
-      ],
-      "state": {
-        "age": 2
-      }
-    }
-  }
+	"type": "fruitfulfun:hybridizing",
+	"fabric:load_conditions": [
+		{
+			"condition": "kiwi:is_loaded",
+			"module": "fruitfulfun:bee"
+		}
+	],
+	"pollens": [
+		"fruitfulfun:lime_leaves",
+		"fruitfulfun:tangerine_leaves"
+	],
+	"post": {
+		"type": "place",
+		"block": {
+			"blocks": [
+				"fruitfulfun:orange_leaves"
+			],
+			"state": {
+				"age": 2
+			}
+		}
+	}
 }

@@ -42,7 +42,10 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 	static final TagKey<Item> WOODEN_CABINETS = AbstractModule.itemTag("farmersdelight", "cabinets/wooden");
 	static final TagKey<Item> HYDRATING_DRINKS = AbstractModule.itemTag("dehydration", "hydrating_drinks");
 
-	public FFItemTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, @Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
+	public FFItemTagsProvider(
+			FabricDataOutput output,
+			CompletableFuture<HolderLookup.Provider> registriesFuture,
+			@Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
 		super(output, registriesFuture, blockTagProvider);
 	}
 

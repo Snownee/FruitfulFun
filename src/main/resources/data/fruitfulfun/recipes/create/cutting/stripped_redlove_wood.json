@@ -1,21 +1,23 @@
 {
-  "type": "create:cutting",
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": ["create"]
-    }
-  ],
-  "ingredients": [
-    {
-      "item": "fruitfulfun:stripped_redlove_wood"
-    }
-  ],
-  "results": [
-    {
-      "item": "fruitfulfun:redlove_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50
+	"type": "create:cutting",
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+			"values": [
+				"create"
+			]
+		}
+	],
+	"ingredients": [
+		{
+			"item": "fruitfulfun:stripped_redlove_wood"
+		}
+	],
+	"results": [
+		{
+			"item": "fruitfulfun:redlove_planks",
+			"count": 6
+		}
+	],
+	"processingTime": 50
 }

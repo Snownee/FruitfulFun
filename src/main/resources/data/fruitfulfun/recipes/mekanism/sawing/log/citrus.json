@@ -1,24 +1,24 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "mekanism"
-      ]
-    }
-  ],
-  "type": "mekanism:sawing",
-  "input": {
-    "ingredient": {
-      "tag": "fruitfulfun:citrus_logs"
-    }
-  },
-  "mainOutput": {
-    "item": "fruitfulfun:citrus_planks",
-    "count": 6
-  },
-  "secondaryOutput": {
-    "item": "mekanism:sawdust"
-  },
-  "secondaryChance": 0.25
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+			"values": [
+				"mekanism"
+			]
+		}
+	],
+	"type": "mekanism:sawing",
+	"input": {
+		"ingredient": {
+			"tag": "fruitfulfun:citrus_logs"
+		}
+	},
+	"mainOutput": {
+		"item": "fruitfulfun:citrus_planks",
+		"count": 6
+	},
+	"secondaryOutput": {
+		"item": "mekanism:sawdust"
+	},
+	"secondaryChance": 0.25
 }

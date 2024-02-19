@@ -48,9 +48,6 @@ public class PotionBrewingMixin {
 		if (!ingredient.is(MutagenItem.BREWING_ITEM)) {
 			return false;
 		}
-		if (!container.is(Items.POTION) || PotionUtils.getPotion(container) != Potions.WATER) {
-			return false;
-		}
-		return true;
+		return container.is(Items.POTION) && PotionUtils.getPotion(container) == Potions.WATER;
 	}
 }

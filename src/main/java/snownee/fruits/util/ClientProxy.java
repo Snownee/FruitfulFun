@@ -103,7 +103,8 @@ public class ClientProxy implements ClientModInitializer {
 		return null;
 	}
 
-	public static void renderVacGunInHand(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean leftHand, PoseStack poseStack) {
+	public static void renderVacGunInHand(
+			LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean leftHand, PoseStack poseStack) {
 		Vector3f vec = new Vector3f(0f, 0f, 0f);
 		poseStack.last().pose().transformPosition(vec);
 		Matrix4f screenToWorld = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
@@ -139,28 +140,36 @@ public class ClientProxy implements ClientModInitializer {
 		WoodType.register(CoreModule.CITRUS_WOOD_TYPE);
 
 		Supplier<BlockColor> oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
-		ColorProviderRegistry.BLOCK.register((state, world, pos, i) ->
-				{
+		ColorProviderRegistry.BLOCK.register(
+				(state, world, pos, i) -> {
 					if (i == 0) {
 						return oakBlockColor.get().getColor(Blocks.OAK_LEAVES.defaultBlockState(), world, pos, i);
 					}
 					if (i == 1) {
-						if (CITRON_LEAVES.is(state))
+						if (CITRON_LEAVES.is(state)) {
 							return 0xDDCC58;
-						if (GRAPEFRUIT_LEAVES.is(state))
+						}
+						if (GRAPEFRUIT_LEAVES.is(state)) {
 							return 0xF7B144;
-						if (LEMON_LEAVES.is(state))
+						}
+						if (LEMON_LEAVES.is(state)) {
 							return 0xEBCA4B;
-						if (LIME_LEAVES.is(state))
+						}
+						if (LIME_LEAVES.is(state)) {
 							return 0xCADA76;
-						if (TANGERINE_LEAVES.is(state))
+						}
+						if (TANGERINE_LEAVES.is(state)) {
 							return 0xF08A19;
-						if (ORANGE_LEAVES.is(state))
+						}
+						if (ORANGE_LEAVES.is(state)) {
 							return 0xF08A19;
-						if (POMELO_LEAVES.is(state))
+						}
+						if (POMELO_LEAVES.is(state)) {
 							return 0xF7F67E;
-						if (APPLE_LEAVES.is(state))
+						}
+						if (APPLE_LEAVES.is(state)) {
 							return 0xFC1C2A;
+						}
 					}
 					return -1;
 				},
@@ -175,7 +184,8 @@ public class ClientProxy implements ClientModInitializer {
 
 		ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
 		Supplier<ItemColor> oakItemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
-		ColorProviderRegistry.ITEM.register((stack, i) -> oakItemColor.get().getColor(oakLeaves, i),
+		ColorProviderRegistry.ITEM.register(
+				(stack, i) -> oakItemColor.get().getColor(oakLeaves, i),
 				TANGERINE_LEAVES.get(),
 				LIME_LEAVES.get(),
 				CITRON_LEAVES.get(),

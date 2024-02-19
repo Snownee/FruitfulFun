@@ -26,7 +26,10 @@ public class SeasonalItemTagsProvider extends FabricTagProvider.ItemTagProvider 
 	static final TagKey<Item> AUTUMN_CROPS = AbstractModule.itemTag(SERENESEASONS, "autumn_crops");
 	static final TagKey<Item> WINTER_CROPS = AbstractModule.itemTag(SERENESEASONS, "winter_crops");
 
-	public SeasonalItemTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, @Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
+	public SeasonalItemTagsProvider(
+			FabricDataOutput output,
+			CompletableFuture<HolderLookup.Provider> completableFuture,
+			@Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
 		super(output, completableFuture, blockTagProvider);
 	}
 

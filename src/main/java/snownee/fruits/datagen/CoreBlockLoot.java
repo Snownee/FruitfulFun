@@ -49,7 +49,7 @@ public class CoreBlockLoot extends KiwiBlockLoot {
 
 		LootPool.Builder pool = LootPool.lootPool();
 		pool.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-				.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(FruitLeavesBlock.AGE, 3)))
+						.setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(FruitLeavesBlock.AGE, 3)))
 				.add(LootItem.lootTableItem(type.fruit.get()));
 		loot.withPool(pool);
 

@@ -20,7 +20,20 @@ import net.minecraft.world.item.ItemStack;
 public class FlowerCrownRenderer implements TrinketRenderer {
 
 	@Override
-	public void render(ItemStack itemStack, SlotReference slotReference, EntityModel<? extends LivingEntity> entityModel, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+	public void render(
+			ItemStack itemStack,
+			SlotReference slotReference,
+			EntityModel<? extends LivingEntity> entityModel,
+			PoseStack poseStack,
+			MultiBufferSource multiBufferSource,
+			int i,
+			LivingEntity entity,
+			float limbAngle,
+			float limbDistance,
+			float tickDelta,
+			float animationProgress,
+			float headYaw,
+			float headPitch) {
 		if (!(entityModel instanceof HeadedModel headedModel)) {
 			return;
 		}
@@ -32,7 +45,10 @@ public class FlowerCrownRenderer implements TrinketRenderer {
 			poseStack.scale(1.18F, 1.18F, 1.18F);
 		}
 		ItemDisplayContext displayContext = ItemDisplayContext.HEAD;
-		Minecraft.getInstance().getItemRenderer().renderStatic(entity, itemStack, displayContext, false, poseStack, multiBufferSource, entity.level(), i, OverlayTexture.NO_OVERLAY, entity.getId() + displayContext.ordinal());
+		Minecraft.getInstance()
+				.getItemRenderer()
+				.renderStatic(entity, itemStack, displayContext, false, poseStack, multiBufferSource, entity.level(), i,
+						OverlayTexture.NO_OVERLAY, entity.getId() + displayContext.ordinal());
 		poseStack.popPose();
 	}
 }

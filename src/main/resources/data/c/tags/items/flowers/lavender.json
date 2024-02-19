@@ -1,7 +1,13 @@
 {
-  "replace": false,
-  "values": [
-    { "id": "biomesoplenty:lavender", "required": false },
-    { "id": "druidcraft:lavender", "required": false }
-  ]
+	"replace": false,
+	"values": [
+		{
+			"id": "biomesoplenty:lavender",
+			"required": false
+		},
+		{
+			"id": "druidcraft:lavender",
+			"required": false
+		}
+	]
 }

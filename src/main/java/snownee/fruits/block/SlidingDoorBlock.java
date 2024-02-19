@@ -32,10 +32,22 @@ import snownee.fruits.block.entity.SlidingDoorEntity;
 
 @SuppressWarnings("hiding")
 public class SlidingDoorBlock extends DoorBlock {
-	protected static final VoxelShape[] SOUTH_AABB = {Block.box(0, 0, 3, 16, 16, 4), Block.box(13, 0, 3, 29, 16, 4), Block.box(-13, 0, 3, 3, 16, 4)};
-	protected static final VoxelShape[] NORTH_AABB = {Block.box(0, 0, 12, 16, 16, 13), Block.box(-13, 0, 12, 3, 16, 13), Block.box(13, 0, 12, 29, 16, 13)};
-	protected static final VoxelShape[] WEST_AABB = {Block.box(12, 0, 0, 13, 16, 16), Block.box(12, 0, 13, 13, 16, 29), Block.box(12, 0, -13, 13, 16, 3)};
-	protected static final VoxelShape[] EAST_AABB = {Block.box(3, 0, 0, 4, 16, 16), Block.box(3, 0, -13, 4, 16, 3), Block.box(3, 0, 13, 4, 16, 29)};
+	protected static final VoxelShape[] SOUTH_AABB = {
+			Block.box(0, 0, 3, 16, 16, 4),
+			Block.box(13, 0, 3, 29, 16, 4),
+			Block.box(-13, 0, 3, 3, 16, 4)};
+	protected static final VoxelShape[] NORTH_AABB = {
+			Block.box(0, 0, 12, 16, 16, 13),
+			Block.box(-13, 0, 12, 3, 16, 13),
+			Block.box(13, 0, 12, 29, 16, 13)};
+	protected static final VoxelShape[] WEST_AABB = {
+			Block.box(12, 0, 0, 13, 16, 16),
+			Block.box(12, 0, 13, 13, 16, 29),
+			Block.box(12, 0, -13, 13, 16, 3)};
+	protected static final VoxelShape[] EAST_AABB = {
+			Block.box(3, 0, 0, 4, 16, 16),
+			Block.box(3, 0, -13, 4, 16, 3),
+			Block.box(3, 0, 13, 4, 16, 29)};
 	protected static final VoxelShape[][] AABB = {SOUTH_AABB, WEST_AABB, NORTH_AABB, EAST_AABB};
 
 	public SlidingDoorBlock(Block.Properties builder, BlockSetType blockSetType) {
@@ -55,12 +67,25 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(
+			BlockState stateIn,
+			Direction facing,
+			BlockState facingState,
+			LevelAccessor worldIn,
+			BlockPos currentPos,
+			BlockPos facingPos) {
 		DoubleBlockHalf doubleblockhalf = stateIn.getValue(HALF);
 		if (facing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
-			return facingState.is(this) && facingState.getValue(HALF) != doubleblockhalf ? stateIn.setValue(FACING, facingState.getValue(FACING)).setValue(OPEN, facingState.getValue(OPEN)).setValue(HINGE, facingState.getValue(HINGE)).setValue(POWERED, facingState.getValue(POWERED)) : Blocks.AIR.defaultBlockState();
+			return facingState.is(this) && facingState.getValue(HALF) != doubleblockhalf ?
+					stateIn.setValue(FACING, facingState.getValue(FACING))
+							.setValue(OPEN, facingState.getValue(OPEN))
+							.setValue(HINGE, facingState.getValue(HINGE))
+							.setValue(POWERED, facingState.getValue(POWERED)) :
+					Blocks.AIR.defaultBlockState();
 		} else {
-			return doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+			return doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ?
+					Blocks.AIR.defaultBlockState() :
+					super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 		}
 	}
 
@@ -76,7 +101,11 @@ public class SlidingDoorBlock extends DoorBlock {
 		if (blockpos.getY() < 255 && context.getLevel().getBlockState(blockpos.above()).canBeReplaced(context)) {
 			Level world = context.getLevel();
 			boolean flag = world.hasNeighborSignal(blockpos) || world.hasNeighborSignal(blockpos.above());
-			return defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(HINGE, getHingeSide(context)).setValue(POWERED, flag).setValue(OPEN, flag).setValue(HALF, DoubleBlockHalf.LOWER);
+			return defaultBlockState().setValue(FACING, context.getHorizontalDirection())
+					.setValue(HINGE, getHingeSide(context))
+					.setValue(POWERED, flag)
+					.setValue(OPEN, flag)
+					.setValue(HALF, DoubleBlockHalf.LOWER);
 		} else {
 			return null;
 		}
@@ -97,7 +126,10 @@ public class SlidingDoorBlock extends DoorBlock {
 		BlockState blockstate2 = iblockreader.getBlockState(blockpos4);
 		BlockPos blockpos5 = blockpos1.relative(direction2);
 		BlockState blockstate3 = iblockreader.getBlockState(blockpos5);
-		int i = (blockstate.isCollisionShapeFullBlock(iblockreader, blockpos2) ? -1 : 0) + (blockstate1.isCollisionShapeFullBlock(iblockreader, blockpos3) ? -1 : 0) + (blockstate2.isCollisionShapeFullBlock(iblockreader, blockpos4) ? 1 : 0) + (blockstate3.isCollisionShapeFullBlock(iblockreader, blockpos5) ? 1 : 0);
+		int i = (blockstate.isCollisionShapeFullBlock(iblockreader, blockpos2) ? -1 : 0) +
+				(blockstate1.isCollisionShapeFullBlock(iblockreader, blockpos3) ? -1 : 0) +
+				(blockstate2.isCollisionShapeFullBlock(iblockreader, blockpos4) ? 1 : 0) +
+				(blockstate3.isCollisionShapeFullBlock(iblockreader, blockpos5) ? 1 : 0);
 		boolean flag = blockstate.getBlock() == this && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER;
 		boolean flag1 = blockstate2.getBlock() == this && blockstate2.getValue(HALF) == DoubleBlockHalf.LOWER;
 		if ((!flag || flag1) && i <= 0) {
@@ -107,7 +139,9 @@ public class SlidingDoorBlock extends DoorBlock {
 				Vec3 vec3d = p_208073_1_.getClickLocation();
 				double d0 = vec3d.x - blockpos.getX();
 				double d1 = vec3d.z - blockpos.getZ();
-				return (j >= 0 || (d1 >= 0.5D)) && (j <= 0 || (d1 <= 0.5D)) && (k >= 0 || (d0 <= 0.5D)) && (k <= 0 || (d0 >= 0.5D)) ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT;
+				return (j >= 0 || (d1 >= 0.5D)) && (j <= 0 || (d1 <= 0.5D)) && (k >= 0 || (d0 <= 0.5D)) && (k <= 0 || (d0 >= 0.5D)) ?
+						DoorHingeSide.LEFT :
+						DoorHingeSide.RIGHT;
 			} else {
 				return DoorHingeSide.LEFT;
 			}
@@ -136,7 +170,8 @@ public class SlidingDoorBlock extends DoorBlock {
 
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		boolean open = level.hasNeighborSignal(pos) || level.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+		boolean open = level.hasNeighborSignal(pos) ||
+				level.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
 		if (blockIn != this && open != state.getValue(POWERED)) {
 			if (open != state.getValue(OPEN)) {
 				playSound(level, pos, open);
@@ -149,17 +184,22 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	private void playSound(Level worldIn, BlockPos pos, boolean isOpening) {
-		worldIn.playSound(null, pos, isOpening ? CoreModule.OPEN_SOUND.get() : CoreModule.CLOSE_SOUND.get(), SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
+		worldIn.playSound(
+				null, pos, isOpening ? CoreModule.OPEN_SOUND.get() : CoreModule.CLOSE_SOUND.get(), SoundSource.BLOCKS, 1.0F,
+				worldIn.random.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Override
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (worldIn.isClientSide)
+		if (worldIn.isClientSide) {
 			return;
-		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER)
+		}
+		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER) {
 			return;
-		if (oldState.is(this) && oldState.getValue(OPEN))
+		}
+		if (oldState.is(this) && oldState.getValue(OPEN)) {
 			return;
+		}
 		SlidingDoorEntity door = new SlidingDoorEntity(worldIn);
 		door.setPos(Vec3.atCenterOf(pos));
 		worldIn.addFreshEntity(door);
@@ -169,12 +209,16 @@ public class SlidingDoorBlock extends DoorBlock {
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, worldIn, pos, newState, isMoving);
-		if (worldIn.isClientSide)
+		if (worldIn.isClientSide) {
 			return;
-		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER)
+		}
+		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER) {
 			return;
-		if (newState.getBlock() == this && newState.getValue(OPEN))
+		}
+		if (newState.getBlock() == this && newState.getValue(OPEN)) {
 			return;
-		worldIn.getEntities(CoreModule.SLIDING_DOOR.get(), new AABB(pos), e -> e.blockPosition().equals(pos)).forEach(e -> e.remove(RemovalReason.KILLED));
+		}
+		worldIn.getEntities(CoreModule.SLIDING_DOOR.get(), new AABB(pos), e -> e.blockPosition().equals(pos))
+				.forEach(e -> e.remove(RemovalReason.KILLED));
 	}
 }

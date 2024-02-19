@@ -38,10 +38,15 @@ public class FoodBlockLoot extends KiwiBlockLoot {
 		add(FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get(), block -> {
 			FeastBlock $ = (FeastBlock) block;
 			return LootTable.lootTable().withPool(
-					LootPool.lootPool().add(LootItem.lootTableItem($).when(
-							LootItemBlockStatePropertyCondition.hasBlockStateProperties($).setProperties(
-									StatePropertiesPredicate.Builder.properties().hasProperty($.getServingsProperty(), $.getMaxServings()))
-					).otherwise(EntryGroup.list(LootItem.lootTableItem(Items.BONE_MEAL), LootItem.lootTableItem(Objects.requireNonNull($.asItem().getCraftingRemainingItem())))))
+					LootPool.lootPool().add(LootItem.lootTableItem($)
+							.when(
+									LootItemBlockStatePropertyCondition.hasBlockStateProperties($).setProperties(
+											StatePropertiesPredicate.Builder.properties()
+													.hasProperty($.getServingsProperty(), $.getMaxServings()))
+							)
+							.otherwise(EntryGroup.list(
+									LootItem.lootTableItem(Items.BONE_MEAL),
+									LootItem.lootTableItem(Objects.requireNonNull($.asItem().getCraftingRemainingItem())))))
 			);
 		});
 		/* on */

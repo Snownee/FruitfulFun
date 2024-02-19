@@ -17,8 +17,10 @@ import snownee.fruits.block.FruitLeavesBlock;
 
 @Mixin(FlyNodeEvaluator.class)
 public class FlyNodeEvaluatorMixin extends WalkNodeEvaluator {
-	@ModifyExpressionValue(method = "getBlockPathType(Lnet/minecraft/world/level/BlockGetter;III)Lnet/minecraft/world/level/pathfinder/BlockPathTypes;",
-			at = @At(value = "INVOKE",
+	@ModifyExpressionValue(
+			method = "getBlockPathType(Lnet/minecraft/world/level/BlockGetter;III)Lnet/minecraft/world/level/pathfinder/BlockPathTypes;",
+			at = @At(
+					value = "INVOKE",
 					target = "Lnet/minecraft/world/level/pathfinder/FlyNodeEvaluator;getBlockPathTypeRaw(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/pathfinder/BlockPathTypes;",
 					ordinal = 0))
 	private BlockPathTypes getBlockPathType(BlockPathTypes original, BlockGetter level, @Local BlockPos.MutableBlockPos pos) {

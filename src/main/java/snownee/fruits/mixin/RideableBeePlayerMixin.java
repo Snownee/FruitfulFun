@@ -13,7 +13,13 @@ import snownee.fruits.bee.BeeModule;
 
 @Mixin(Player.class)
 public class RideableBeePlayerMixin {
-	@Inject(method = "checkRidingStatistics", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getVehicle()Lnet/minecraft/world/entity/Entity;"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
+	@Inject(
+			method = "checkRidingStatistics",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/player/Player;getVehicle()Lnet/minecraft/world/entity/Entity;"),
+			locals = LocalCapture.CAPTURE_FAILSOFT,
+			cancellable = true)
 	private void checkRidingStatistics(double d, double e, double f, CallbackInfo ci, int i) {
 		Player player = (Player) (Object) this;
 		Entity vehicle = player.getVehicle();

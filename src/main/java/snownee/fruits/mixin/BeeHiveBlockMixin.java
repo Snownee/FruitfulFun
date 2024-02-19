@@ -14,7 +14,11 @@ import snownee.fruits.bee.genetics.Trait;
 
 @Mixin(BeehiveBlock.class)
 public class BeeHiveBlockMixin {
-	@ModifyExpressionValue(method = "angerNearbyBees", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Bee;getTarget()Lnet/minecraft/world/entity/LivingEntity;"))
+	@ModifyExpressionValue(
+			method = "angerNearbyBees",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/animal/Bee;getTarget()Lnet/minecraft/world/entity/LivingEntity;"))
 	private static LivingEntity angerNearbyBees(LivingEntity original, @Local Bee bee) {
 		if (original == null && BeeAttributes.of(bee).hasTrait(Trait.MILD)) {
 			return bee; // return anything nonnull to continue the loop

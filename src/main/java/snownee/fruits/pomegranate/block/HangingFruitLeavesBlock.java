@@ -37,14 +37,23 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
-	public @Nullable ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state, @Nullable FruitTreeBlockEntity core, int consumeLifespan) {
+	public @Nullable ItemEntity doDropFruit(
+			ServerLevel level,
+			BlockPos pos,
+			BlockState state,
+			@Nullable FruitTreeBlockEntity core,
+			int consumeLifespan) {
 		BlockPos below = pos.below();
 		level.removeBlock(below, false);
 		return createItemEntity(level, below, type.get().fruit.get().getDefaultInstance());
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
+	public boolean isPathfindable(
+			BlockState blockState,
+			BlockGetter blockGetter,
+			BlockPos blockPos,
+			PathComputationType pathComputationType) {
 		return false;
 	}
 

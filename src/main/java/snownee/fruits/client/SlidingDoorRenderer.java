@@ -17,7 +17,13 @@ public class SlidingDoorRenderer extends EntityRenderer<SlidingDoorEntity> {
 	}
 
 	@Override
-	public void render(SlidingDoorEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+	public void render(
+			SlidingDoorEntity entityIn,
+			float entityYaw,
+			float partialTicks,
+			PoseStack matrixStackIn,
+			MultiBufferSource bufferIn,
+			int packedLightIn) {
 	}
 
 	@Override

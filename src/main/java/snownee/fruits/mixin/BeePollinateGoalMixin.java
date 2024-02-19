@@ -52,7 +52,9 @@ public abstract class BeePollinateGoalMixin {
 		return original && !BeeAttributes.of(this$0).hasTrait(Trait.RAIN_CAPABLE);
 	}
 
-	@ModifyExpressionValue(method = "canBeeContinueToUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
+	@ModifyExpressionValue(
+			method = "canBeeContinueToUse",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
 	private boolean canBeeContinueToUse(boolean original) {
 		return original && !BeeAttributes.of(this$0).hasTrait(Trait.RAIN_CAPABLE);
 	}

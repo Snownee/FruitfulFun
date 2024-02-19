@@ -13,7 +13,10 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 
 public class FFPoiTypeTagsProvider extends FabricTagProvider<PoiType> {
-	public FFPoiTypeTagsProvider(FabricDataOutput output, ResourceKey<? extends Registry<PoiType>> registryKey, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+	public FFPoiTypeTagsProvider(
+			FabricDataOutput output,
+			ResourceKey<? extends Registry<PoiType>> registryKey,
+			CompletableFuture<HolderLookup.Provider> registriesFuture) {
 		super(output, registryKey, registriesFuture);
 	}
 

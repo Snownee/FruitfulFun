@@ -1,17 +1,17 @@
 {
-  "type": "farmersdelight:cutting",
-  "ingredients": [
-    {
-      "item": "fruitfulfun:redlove_sign"
-    }
-  ],
-  "tool": {
-    "type": "farmersdelight:tool",
-    "tag": "c:tools/axes"
-  },
-  "result": [
-    {
-      "item": "fruitfulfun:redlove_planks"
-    }
-  ]
+	"type": "farmersdelight:cutting",
+	"ingredients": [
+		{
+			"item": "fruitfulfun:redlove_sign"
+		}
+	],
+	"tool": {
+		"type": "farmersdelight:tool",
+		"tag": "c:tools/axes"
+	},
+	"result": [
+		{
+			"item": "fruitfulfun:redlove_planks"
+		}
+	]
 }

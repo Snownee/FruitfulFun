@@ -68,15 +68,23 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				.isViewBlocking(Blocks::never)
 				.isRedstoneConductor(Blocks::never));
 		this.type = type;
-		registerDefaultState(stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1).setValue(WATERLOGGED, false));
+		registerDefaultState(
+				stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1).setValue(WATERLOGGED, false));
 	}
 
 	@Nullable
-	public static ItemEntity dropFruit(ServerLevel level, BlockPos pos, BlockState state, @Nullable FruitTreeBlockEntity core, int consumeLifespan) {
-		if (state.getValue(AGE) != 3)
+	public static ItemEntity dropFruit(
+			ServerLevel level,
+			BlockPos pos,
+			BlockState state,
+			@Nullable FruitTreeBlockEntity core,
+			int consumeLifespan) {
+		if (state.getValue(AGE) != 3) {
 			return null;
-		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS))
+		}
+		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
 			return null;
+		}
 		boolean die = true;
 		if (core != null) {
 			core.consumeLifespan(consumeLifespan);
@@ -98,7 +106,12 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Nullable
-	public ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state, @Nullable FruitTreeBlockEntity core, int consumeLifespan) {
+	public ItemEntity doDropFruit(
+			ServerLevel level,
+			BlockPos pos,
+			BlockState state,
+			@Nullable FruitTreeBlockEntity core,
+			int consumeLifespan) {
 		return createItemEntity(level, pos, type.get().fruit.get().getDefaultInstance());
 	}
 
@@ -198,7 +211,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(
+			BlockState state,
+			Direction facing,
+			BlockState facingState,
+			LevelAccessor worldIn,
+			BlockPos currentPos,
+			BlockPos facingPos) {
 		if (canGrow(state) || state.getValue(AGE) == 0) {
 			return super.updateShape(state, facing, facingState, worldIn, currentPos, facingPos);
 		}
@@ -225,7 +244,8 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	@Override
 	public void fallOn(Level worldIn, BlockState stateIn, BlockPos pos, Entity entityIn, float fallDistance) {
 		super.fallOn(worldIn, stateIn, pos, entityIn, fallDistance);
-		if (fallDistance >= 1 && worldIn instanceof ServerLevel serverLevel && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
+		if (fallDistance >= 1 && worldIn instanceof ServerLevel serverLevel &&
+				(entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
 			Iterable<BlockPos> posList = BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1));
 			MutableBoolean success = new MutableBoolean(false);
 			rangeDrop(serverLevel, posList, 2, null, itemEntity -> success.setTrue());
@@ -235,11 +255,17 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		}
 	}
 
-	public static void rangeDrop(ServerLevel level, Iterable<BlockPos> posList, int consumeLifespan, @Nullable FruitTreeBlockEntity core, @Nullable Consumer<ItemEntity> consumer) {
+	public static void rangeDrop(
+			ServerLevel level,
+			Iterable<BlockPos> posList,
+			int consumeLifespan,
+			@Nullable FruitTreeBlockEntity core,
+			@Nullable Consumer<ItemEntity> consumer) {
 		for (BlockPos blockpos : posList) {
 			BlockState state = level.getBlockState(blockpos);
 			if (state.getBlock() instanceof FruitLeavesBlock leavesBlock && state.getValue(AGE) == 3) {
-				ItemEntity itemEntity = dropFruit(level, blockpos, state, core == null ? leavesBlock.findCore(level, blockpos) : core, consumeLifespan);
+				ItemEntity itemEntity = dropFruit(
+						level, blockpos, state, core == null ? leavesBlock.findCore(level, blockpos) : core, consumeLifespan);
 				if (consumer != null && itemEntity != null) {
 					consumer.accept(itemEntity);
 				}
@@ -262,7 +288,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			return;
 		}
 		if (!CommonProxy.isFakePlayer(player) && player.addItem(stack)) {
-			level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, player.getSoundSource(), 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+			level.playSound(
+					null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, player.getSoundSource(), 0.2F,
+					((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		} else {
 			popResourceFromFace(level, hit.getBlockPos(), hit.getDirection(), stack);
 		}

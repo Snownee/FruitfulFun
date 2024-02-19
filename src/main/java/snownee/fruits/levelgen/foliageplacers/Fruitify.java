@@ -55,10 +55,20 @@ public class Fruitify extends FoliagePlacer {
 	}
 
 	@Override
-	public void createFoliage(LevelSimulatedReader level, FoliageSetter foliageSetter, RandomSource pRandom, TreeConfiguration pConfig, int pMaxFreeTreeHeight, FoliageAttachment pAttachment, int pFoliageHeight, int pFoliageRadius, int pOffset) {
+	public void createFoliage(
+			LevelSimulatedReader level,
+			FoliageSetter foliageSetter,
+			RandomSource pRandom,
+			TreeConfiguration pConfig,
+			int pMaxFreeTreeHeight,
+			FoliageAttachment pAttachment,
+			int pFoliageHeight,
+			int pFoliageRadius,
+			int pOffset) {
 		Set<BlockPos> activeLeaves = Sets.newLinkedHashSet();
 		FruitifiedFoliageSetter fruitifiedSetter = new FruitifiedFoliageSetter(foliageSetter, activeLeaves, pRandom, worldgen);
-		wrapped.createFoliage(level, fruitifiedSetter, pRandom, pConfig, pMaxFreeTreeHeight, pAttachment, pFoliageHeight, pFoliageRadius, pOffset);
+		wrapped.createFoliage(
+				level, fruitifiedSetter, pRandom, pConfig, pMaxFreeTreeHeight, pAttachment, pFoliageHeight, pFoliageRadius, pOffset);
 		BlockState core = pConfig.foliageProvider.getState(pRandom, pAttachment.pos());
 		if (core.getBlock() instanceof FruitLeavesBlock) {
 			core = core.setValue(LeavesBlock.DISTANCE, 1).setValue(LeavesBlock.PERSISTENT, true);

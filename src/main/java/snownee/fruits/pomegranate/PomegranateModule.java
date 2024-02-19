@@ -29,13 +29,16 @@ public class PomegranateModule extends AbstractModule {
 			.offsetType(BlockBehaviour.OffsetType.XZ)
 			.pushReaction(PushReaction.DESTROY)));
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
-	public static final KiwiGO<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = go(() -> new HangingFruitLeavesBlock(PomegranateFruitTypes.POMEGRANATE, blockProp(Blocks.JUNGLE_LEAVES)));
+	public static final KiwiGO<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = go(
+			() -> new HangingFruitLeavesBlock(PomegranateFruitTypes.POMEGRANATE, blockProp(Blocks.JUNGLE_LEAVES)));
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> POMEGRANATE_SAPLING = go(() -> new SaplingBlock(new FruitTreeGrower(PomegranateFruitTypes.POMEGRANATE.getOrCreate()), blockProp(Blocks.JUNGLE_SAPLING)));
+	public static final KiwiGO<SaplingBlock> POMEGRANATE_SAPLING = go(
+			() -> new SaplingBlock(new FruitTreeGrower(PomegranateFruitTypes.POMEGRANATE.getOrCreate()), blockProp(Blocks.JUNGLE_SAPLING)));
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	@KiwiModule.NoItem
-	public static final KiwiGO<Block> POTTED_POMEGRANATE = go(() -> new FlowerPotBlock(POMEGRANATE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_POMEGRANATE = go(
+			() -> new FlowerPotBlock(POMEGRANATE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
 
 	@Override
 	protected void preInit() {

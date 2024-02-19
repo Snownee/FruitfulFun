@@ -28,7 +28,8 @@ public abstract class EntityMixin {
 	@Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
 	private void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
 		Entity entity = (Entity) (Object) this;
-		if (entity instanceof Bee && source == entity.damageSources().wither() && BeeAttributes.of(entity).hasTrait(Trait.WITHER_TOLERANT)) {
+		if (entity instanceof Bee && source == entity.damageSources().wither() &&
+				BeeAttributes.of(entity).hasTrait(Trait.WITHER_TOLERANT)) {
 			ci.setReturnValue(true);
 		}
 	}

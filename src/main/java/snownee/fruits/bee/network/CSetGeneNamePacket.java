@@ -18,7 +18,10 @@ public class CSetGeneNamePacket extends PacketHandler {
 	public static CSetGeneNamePacket I;
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer serverPlayer) {
+	public CompletableFuture<FriendlyByteBuf> receive(
+			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
+			FriendlyByteBuf buf,
+			@Nullable ServerPlayer serverPlayer) {
 		char c = buf.readChar();
 		FFPlayer.GeneName name = new FFPlayer.GeneName(buf.readUtf(), buf.readUtf());
 		return executor.apply(() -> {

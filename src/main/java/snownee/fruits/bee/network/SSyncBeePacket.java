@@ -27,7 +27,10 @@ public class SSyncBeePacket extends PacketHandler {
 	public static SSyncBeePacket I;
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer serverPlayer) {
+	public CompletableFuture<FriendlyByteBuf> receive(
+			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
+			FriendlyByteBuf buf,
+			@Nullable ServerPlayer serverPlayer) {
 		int id = buf.readVarInt();
 		ItemStack saddle = buf.readItem();
 		List<UUID> trusted = buf.readList(FriendlyByteBuf::readUUID);

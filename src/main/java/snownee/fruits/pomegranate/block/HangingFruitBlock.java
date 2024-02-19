@@ -27,13 +27,20 @@ public class HangingFruitBlock extends HangingRootsBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+	public InteractionResult use(
+			BlockState blockState,
+			Level level,
+			BlockPos blockPos,
+			Player player,
+			InteractionHand interactionHand,
+			BlockHitResult blockHitResult) {
 		FruitLeavesBlock.giveItemTo(player, blockHitResult, asItem().getDefaultInstance());
 		level.removeBlock(blockPos, false);
 		if (!level.isClientSide) {
 			BlockPos up = blockPos.above();
 			BlockState upState = level.getBlockState(up);
-			if (upState.getBlock() instanceof FruitLeavesBlock leavesBlock && leavesBlock.type.get().fruit.get() == asItem() && upState.getValue(FruitLeavesBlock.AGE) == 3) {
+			if (upState.getBlock() instanceof FruitLeavesBlock leavesBlock && leavesBlock.type.get().fruit.get() == asItem() &&
+					upState.getValue(FruitLeavesBlock.AGE) == 3) {
 				level.setBlockAndUpdate(up, upState.setValue(FruitLeavesBlock.AGE, 1));
 			}
 		}

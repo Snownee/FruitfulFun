@@ -1,7 +1,16 @@
 {
-  "variants": {
-    "axis=y": { "model": "fruitfulfun:block/stripped_citrus_log" },
-    "axis=z": { "model": "fruitfulfun:block/stripped_citrus_log", "x": 90 },
-    "axis=x": { "model": "fruitfulfun:block/stripped_citrus_log", "x": 90, "y": 90 }
-  }
+	"variants": {
+		"axis=y": {
+			"model": "fruitfulfun:block/stripped_citrus_log"
+		},
+		"axis=z": {
+			"model": "fruitfulfun:block/stripped_citrus_log",
+			"x": 90
+		},
+		"axis=x": {
+			"model": "fruitfulfun:block/stripped_citrus_log",
+			"x": 90,
+			"y": 90
+		}
+	}
 }

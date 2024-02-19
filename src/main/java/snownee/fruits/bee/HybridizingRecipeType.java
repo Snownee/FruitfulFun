@@ -96,7 +96,8 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 			return;
 		}
 		boolean isBigFlowerUpper = false;
-		if (block instanceof DoublePlantBlock && state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+		if (block instanceof DoublePlantBlock && state.hasProperty(DoublePlantBlock.HALF) &&
+				state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
 			flowerPos = flowerPos.below();
 			state = level.getBlockState(flowerPos);
 			if (block != state.getBlock()) {

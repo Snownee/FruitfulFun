@@ -60,10 +60,13 @@ public class SlidingDoorEntity extends Entity {
 	protected AABB makeBoundingBox() {
 		BlockPos pos = blockPosition();
 		BlockState state = level().getBlockState(pos);
-		if (!(state.getBlock() instanceof SlidingDoorBlock))
+		if (!(state.getBlock() instanceof SlidingDoorBlock)) {
 			return INITIAL_AABB;
+		}
 		VoxelShape shape = state.getShape(level(), pos).move(pos.getX(), pos.getY(), pos.getZ());
-		AABB aabb = new AABB(shape.min(Direction.Axis.X), shape.min(Direction.Axis.Y), shape.min(Direction.Axis.Z), shape.max(Direction.Axis.X), shape.max(Direction.Axis.Y) + 1, shape.max(Direction.Axis.Z));
+		AABB aabb = new AABB(
+				shape.min(Direction.Axis.X), shape.min(Direction.Axis.Y), shape.min(Direction.Axis.Z), shape.max(Direction.Axis.X),
+				shape.max(Direction.Axis.Y) + 1, shape.max(Direction.Axis.Z));
 		return aabb;
 	}
 

@@ -1,7 +1,13 @@
 {
-  "variants": {
-    "type=bottom": { "model": "fruitfulfun:block/citrus_slab" },
-    "type=top": { "model": "fruitfulfun:block/citrus_slab_top" },
-    "type=double": { "model": "fruitfulfun:block/citrus_planks" }
-  }
+	"variants": {
+		"type=bottom": {
+			"model": "fruitfulfun:block/citrus_slab"
+		},
+		"type=top": {
+			"model": "fruitfulfun:block/citrus_slab_top"
+		},
+		"type=double": {
+			"model": "fruitfulfun:block/citrus_planks"
+		}
+	}
 }

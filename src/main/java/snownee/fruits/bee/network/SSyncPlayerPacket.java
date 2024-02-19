@@ -18,7 +18,10 @@ public class SSyncPlayerPacket extends PacketHandler {
 	public static SSyncPlayerPacket I;
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer serverPlayer) {
+	public CompletableFuture<FriendlyByteBuf> receive(
+			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
+			FriendlyByteBuf buf,
+			@Nullable ServerPlayer serverPlayer) {
 		int size = buf.readVarInt();
 		char[] codes = new char[size];
 		FFPlayer.GeneName[] names = new FFPlayer.GeneName[size];

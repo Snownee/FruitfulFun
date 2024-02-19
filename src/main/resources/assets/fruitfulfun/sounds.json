@@ -1,72 +1,72 @@
 {
-  "block.wooden_door.close": {
-    "sounds": [
-      "fruitfulfun:sliding_door_close"
-    ],
-    "subtitle": "subtitles.block.door.toggle"
-  },
-  "block.wooden_door.open": {
-    "sounds": [
-      "fruitfulfun:sliding_door_open"
-    ],
-    "subtitle": "subtitles.block.door.toggle"
-  },
-  "entity.bee.shear": {
-    "sounds": [
-      "minecraft:mob/sheep/shear"
-    ],
-    "subtitle": "subtitles.item.shears.shear"
-  },
-  "item.armor.equip_crown": {
-    "sounds": [
-      {
-        "name": "block/cherry_leaves/break1",
-        "pitch": 1.2,
-        "volume": 0.8
-      },
-      {
-        "name": "block/cherry_leaves/break2",
-        "pitch": 1.2,
-        "volume": 0.8
-      },
-      {
-        "name": "block/cherry_leaves/break3",
-        "pitch": 1.2,
-        "volume": 0.8
-      },
-      {
-        "name": "block/cherry_leaves/break4",
-        "pitch": 1.2,
-        "volume": 0.8
-      },
-      {
-        "name": "block/cherry_leaves/break5",
-        "pitch": 1.2,
-        "volume": 0.8
-      }
-    ],
-    "subtitle": "subtitles.fruitfulfun.crown.equip"
-  },
-  "item.gun.shoot_item": {
-    "sounds": [
-      "fruitfulfun:gun_shoot_item"
-    ],
-    "subtitle": "subtitles.fruitfulfun.gun.shoot"
-  },
-  "item.gun.stop": {
-    "sounds": [
-      "fruitfulfun:gun_stop"
-    ]
-  },
-  "item.gun.working": {
-    "sounds": [
-      "fruitfulfun:gun_working"
-    ],
-    "subtitle": "subtitles.fruitfulfun.gun.working"
-  },
-  "block.ritual.finish": {
-    "sounds": [
-      "fruitfulfun:ritual_finish"
-    ]
-  }
+	"block.wooden_door.close": {
+		"sounds": [
+			"fruitfulfun:sliding_door_close"
+		],
+		"subtitle": "subtitles.block.door.toggle"
+	},
+	"block.wooden_door.open": {
+		"sounds": [
+			"fruitfulfun:sliding_door_open"
+		],
+		"subtitle": "subtitles.block.door.toggle"
+	},
+	"entity.bee.shear": {
+		"sounds": [
+			"minecraft:mob/sheep/shear"
+		],
+		"subtitle": "subtitles.item.shears.shear"
+	},
+	"item.armor.equip_crown": {
+		"sounds": [
+			{
+				"name": "block/cherry_leaves/break1",
+				"pitch": 1.2,
+				"volume": 0.8
+			},
+			{
+				"name": "block/cherry_leaves/break2",
+				"pitch": 1.2,
+				"volume": 0.8
+			},
+			{
+				"name": "block/cherry_leaves/break3",
+				"pitch": 1.2,
+				"volume": 0.8
+			},
+			{
+				"name": "block/cherry_leaves/break4",
+				"pitch": 1.2,
+				"volume": 0.8
+			},
+			{
+				"name": "block/cherry_leaves/break5",
+				"pitch": 1.2,
+				"volume": 0.8
+			}
+		],
+		"subtitle": "subtitles.fruitfulfun.crown.equip"
+	},
+	"item.gun.shoot_item": {
+		"sounds": [
+			"fruitfulfun:gun_shoot_item"
+		],
+		"subtitle": "subtitles.fruitfulfun.gun.shoot"
+	},
+	"item.gun.stop": {
+		"sounds": [
+			"fruitfulfun:gun_stop"
+		]
+	},
+	"item.gun.working": {
+		"sounds": [
+			"fruitfulfun:gun_working"
+		],
+		"subtitle": "subtitles.fruitfulfun.gun.working"
+	},
+	"block.ritual.finish": {
+		"sounds": [
+			"fruitfulfun:ritual_finish"
+		]
+	}
 }

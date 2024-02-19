@@ -1,60 +1,65 @@
 {
-  "schemaVersion": 1,
-  "id": "fruitfulfun",
-  "version": "${version}",
-
-  "name": "Fruitful Fun",
-  "description": "Introduces insightful content featuring fruits and beekeeping",
-  "authors": ["Snownee"],
-  "contributors": ["WZD", "MalayP", "minzhi", "PixelCraft", "VVVHY"],
-  "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/fruit-trees",
-    "sources": "https://github.com/Snownee/FruitfulFun",
-    "issues": "https://github.com/Snownee/FruitfulFun/issues"
-  },
-
-  "license": "ARR",
-  "icon": "assets/fruitfulfun/icon.png",
-
-  "entrypoints": {
-    "main": [
-      "snownee.fruits.util.CommonProxy"
-    ],
-    "client": [
-      "snownee.fruits.util.ClientProxy"
-    ],
-    "fabric-datagen": [
-      "snownee.fruits.datagen.FFDataGen"
-    ],
-    "rei_client": [
-      "snownee.fruits.compat.rei.FFREICompat"
-    ],
-    "jei_mod_plugin": [
-      "snownee.fruits.compat.jei.FFJEICompat"
-    ],
-    "jade": [
-      "snownee.fruits.compat.jade.JadeCompat"
-    ]
-  },
-  "mixins": [ "fruitfulfun.mixins.json" ],
-  "accessWidener" : "fruitfulfun.accesswidener",
-
-  "depends": {
-    "fabricloader": ">=0.15",
-    "fabric-api": ">=0.73",
-    "minecraft": ">=1.20",
-    "kiwi": ">=11.4",
-    "lychee": ">=5.1.10"
-  },
-  "recommends": {
-    "jade": "*"
-  },
-
-  "custom": {
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://discord.gg/KzGQW7a"
-      }
-    }
-  }
+	"schemaVersion": 1,
+	"id": "fruitfulfun",
+	"version": "${version}",
+	"name": "Fruitful Fun",
+	"description": "Introduces insightful content featuring fruits and beekeeping",
+	"authors": [
+		"Snownee"
+	],
+	"contributors": [
+		"WZD",
+		"MalayP",
+		"minzhi",
+		"PixelCraft",
+		"VVVHY"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/fruit-trees",
+		"sources": "https://github.com/Snownee/FruitfulFun",
+		"issues": "https://github.com/Snownee/FruitfulFun/issues"
+	},
+	"license": "ARR",
+	"icon": "assets/fruitfulfun/icon.png",
+	"entrypoints": {
+		"main": [
+			"snownee.fruits.util.CommonProxy"
+		],
+		"client": [
+			"snownee.fruits.util.ClientProxy"
+		],
+		"fabric-datagen": [
+			"snownee.fruits.datagen.FFDataGen"
+		],
+		"rei_client": [
+			"snownee.fruits.compat.rei.FFREICompat"
+		],
+		"jei_mod_plugin": [
+			"snownee.fruits.compat.jei.FFJEICompat"
+		],
+		"jade": [
+			"snownee.fruits.compat.jade.JadeCompat"
+		]
+	},
+	"mixins": [
+		"fruitfulfun.mixins.json"
+	],
+	"accessWidener": "fruitfulfun.accesswidener",
+	"depends": {
+		"fabricloader": ">=0.15",
+		"fabric-api": ">=0.73",
+		"minecraft": ">=1.20",
+		"kiwi": ">=11.4",
+		"lychee": ">=5.1.10"
+	},
+	"recommends": {
+		"jade": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/KzGQW7a"
+			}
+		}
+	}
 }

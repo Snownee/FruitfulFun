@@ -25,7 +25,11 @@ public class ExplosionMixin {
 	@Shadow
 	public float radius;
 
-	@WrapOperation(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+	@WrapOperation(
+			method = "explode",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
 	private boolean clampGrenadeExplosionDamage(Entity entity, DamageSource source, float f, Operation<Boolean> original) {
 		if (FFDamageTypes.isGrenadeExplosion(source)) {
 			f = Math.min(f / 3, 3);

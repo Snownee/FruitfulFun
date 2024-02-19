@@ -20,7 +20,8 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FFAdvancements::new);
 		FabricTagProvider.BlockTagProvider ffBlockTagsProvider = pack.addProvider(FFBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new FFItemTagsProvider(output, registriesFuture, ffBlockTagsProvider));
-		pack.addProvider((output, registriesFuture) -> new FFPoiTypeTagsProvider(output, Registries.POINT_OF_INTEREST_TYPE, registriesFuture));
+		pack.addProvider(
+				(output, registriesFuture) -> new FFPoiTypeTagsProvider(output, Registries.POINT_OF_INTEREST_TYPE, registriesFuture));
 		pack.addProvider((output, registriesFuture) -> new FFDamageTypeTagsProvider(output, Registries.DAMAGE_TYPE, registriesFuture));
 		FabricTagProvider.BlockTagProvider seasonalBlockTagsProvider = pack.addProvider(SeasonalBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new SeasonalItemTagsProvider(output, registriesFuture, seasonalBlockTagsProvider));

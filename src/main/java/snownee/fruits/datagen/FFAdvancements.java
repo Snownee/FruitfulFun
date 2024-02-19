@@ -46,7 +46,9 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						Component.translatable("advancements.fruitfulfun.start.title"),
 						Component.translatable("advancements.fruitfulfun.start.description"),
 						null, FrameType.TASK, false, true, false)
-				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(FFItemTagsProvider.FRUITS).build()))
+				.addCriterion(
+						"_",
+						InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(FFItemTagsProvider.FRUITS).build()))
 				.save(consumer, "husbandry/fruitfulfun/start");
 
 		Advancement.Builder.recipeAdvancement()
@@ -96,7 +98,8 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(consumer, "husbandry/fruitfulfun/horn");
 
-		Consumer<Advancement> beeExporter = withConditions(consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "bee")));
+		Consumer<Advancement> beeExporter = withConditions(
+				consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "bee")));
 
 		Advancement inspector = Advancement.Builder.recipeAdvancement()
 				.parent(start)
@@ -123,7 +126,8 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.rewards(xp100)
 				.save(beeExporter, "husbandry/fruitfulfun/bee_jockey");
 
-		Consumer<Advancement> ritualExporter = withConditions(consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "ritual")));
+		Consumer<Advancement> ritualExporter = withConditions(
+				consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "ritual")));
 
 		Advancement.Builder.recipeAdvancement()
 				.parent(start)

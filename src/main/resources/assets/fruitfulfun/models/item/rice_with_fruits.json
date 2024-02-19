@@ -1,6 +1,6 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "fruitfulfun:item/rice_with_fruits"
-  }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "fruitfulfun:item/rice_with_fruits"
+	}
 }

@@ -20,7 +20,10 @@ public class MinecraftMixin {
 	@Nullable
 	public LocalPlayer player;
 
-	@Inject(method = "startAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isHandsBusy()Z"), cancellable = true)
+	@Inject(
+			method = "startAttack",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isHandsBusy()Z"),
+			cancellable = true)
 	private void handleVacGun(CallbackInfoReturnable<Boolean> cir) {
 		if (Hooks.vac && player != null && !player.isSpectator() && player.getMainHandItem().getItem() instanceof VacGunItem) {
 			cir.setReturnValue(false);

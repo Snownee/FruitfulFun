@@ -8,13 +8,15 @@ import net.minecraft.resources.ResourceLocation;
 import snownee.kiwi.Kiwi;
 
 public class FFRegistries {
-	public static final DefaultedMappedRegistry<FruitType> FRUIT_TYPE = register("fruit_type", FruitType.class, new ResourceLocation(FruitfulFun.ID, "citron"));
+	public static final DefaultedMappedRegistry<FruitType> FRUIT_TYPE = register(
+			"fruit_type", FruitType.class, new ResourceLocation(FruitfulFun.ID, "citron"));
 
 	public static void init() {
 	}
 
 	private static <T> DefaultedMappedRegistry<T> register(String name, Class<?> clazz, ResourceLocation defaultId) {
-		var registry = FabricRegistryBuilder.<T>createDefaulted(ResourceKey.createRegistryKey(new ResourceLocation(FruitfulFun.ID, name)), defaultId)
+		var registry = FabricRegistryBuilder.<T>createDefaulted(
+						ResourceKey.createRegistryKey(new ResourceLocation(FruitfulFun.ID, name)), defaultId)
 				.attribute(RegistryAttribute.SYNCED)
 				.buildAndRegister();
 		Kiwi.registerRegistry(registry, clazz);

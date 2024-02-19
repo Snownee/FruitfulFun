@@ -25,9 +25,12 @@ import snownee.kiwi.util.KiwiEntityTypeBuilder;
 public class VacModule extends AbstractModule {
 	public static final KiwiGO<Item> VAC_GUN_CASING = go(() -> new ModItem(itemProp().stacksTo(1).rarity(Rarity.RARE)));
 	public static final KiwiGO<VacGunItem> VAC_GUN = go(VacGunItem::new);
-	public static final KiwiGO<SoundEvent> GUN_SHOOT_ITEM = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "item.gun.shoot_item")));
-	public static final KiwiGO<SoundEvent> GUN_WORKING = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "item.gun.working")));
-	public static final KiwiGO<SoundEvent> GUN_STOP = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "item.gun.stop")));
+	public static final KiwiGO<SoundEvent> GUN_SHOOT_ITEM = go(
+			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "item.gun.shoot_item")));
+	public static final KiwiGO<SoundEvent> GUN_WORKING = go(
+			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "item.gun.working")));
+	public static final KiwiGO<SoundEvent> GUN_STOP = go(
+			() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "item.gun.stop")));
 	public static final TagKey<Block> VCD_PERFORM_USING = blockTag(FruitfulFun.ID, "vcd_perform_using");
 	public static final TagKey<Block> VCD_PERFORM_BREAKING = blockTag(FruitfulFun.ID, "vcd_perform_breaking");
 	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = go(() -> KiwiEntityTypeBuilder.<VacItemProjectile>create()
@@ -36,12 +39,13 @@ public class VacModule extends AbstractModule {
 			.trackedUpdateRate(10)
 			.entityFactory(VacItemProjectile::new)
 			.build());
-	public static final KiwiGO<ParticleType<AirVortexParticleOption>> AIR_VORTEX = go(() -> new ParticleType<>(true, AirVortexParticleOption.DESERIALIZER) {
-		@Override
-		public Codec<AirVortexParticleOption> codec() {
-			return AirVortexParticleOption.CODEC;
-		}
-	});
+	public static final KiwiGO<ParticleType<AirVortexParticleOption>> AIR_VORTEX = go(
+			() -> new ParticleType<>(true, AirVortexParticleOption.DESERIALIZER) {
+				@Override
+				public Codec<AirVortexParticleOption> codec() {
+					return AirVortexParticleOption.CODEC;
+				}
+			});
 
 	public VacModule() {
 		Hooks.vac = true;

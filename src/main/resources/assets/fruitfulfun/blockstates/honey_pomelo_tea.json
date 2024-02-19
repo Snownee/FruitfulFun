@@ -1,19 +1,19 @@
 {
-  "variants": {
-    "facing=east": {
-      "model": "fruitfulfun:block/honey_pomelo_tea",
-      "y": 90
-    },
-    "facing=north": {
-      "model": "fruitfulfun:block/honey_pomelo_tea"
-    },
-    "facing=south": {
-      "model": "fruitfulfun:block/honey_pomelo_tea",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "fruitfulfun:block/honey_pomelo_tea",
-      "y": 270
-    }
-  }
+	"variants": {
+		"facing=east": {
+			"model": "fruitfulfun:block/honey_pomelo_tea",
+			"y": 90
+		},
+		"facing=north": {
+			"model": "fruitfulfun:block/honey_pomelo_tea"
+		},
+		"facing=south": {
+			"model": "fruitfulfun:block/honey_pomelo_tea",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "fruitfulfun:block/honey_pomelo_tea",
+			"y": 270
+		}
+	}
 }

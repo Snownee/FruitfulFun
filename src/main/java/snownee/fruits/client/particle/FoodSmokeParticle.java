@@ -50,7 +50,15 @@ public class FoodSmokeParticle extends TextureSheetParticle {
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i) {
+		public Particle createParticle(
+				SimpleParticleType simpleParticleType,
+				ClientLevel clientLevel,
+				double d,
+				double e,
+				double f,
+				double g,
+				double h,
+				double i) {
 			FoodSmokeParticle particle = new FoodSmokeParticle(clientLevel, d, e, f, g, h, i);
 			particle.setAlpha(0.7f);
 			particle.pickSprite(this.sprites);

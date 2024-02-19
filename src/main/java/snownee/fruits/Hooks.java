@@ -90,7 +90,8 @@ public final class Hooks {
 					return false;
 				}
 				return state.getValue(FruitLeavesBlock.AGE) == 2;
-			} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) && state.getValue(LeavesBlock.PERSISTENT)) {
+			} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) &&
+					state.getValue(LeavesBlock.PERSISTENT)) {
 				return false;
 			}
 			return original.test(state);
@@ -107,8 +108,9 @@ public final class Hooks {
 		}
 		Vec3 vec = hitResult.getLocation();
 		BlockPos pos = entity.blockPosition();
-		if (vec.y - pos.getY() >= 1)
+		if (vec.y - pos.getY() >= 1) {
 			pos = pos.above();
+		}
 		AABB intersection = entity.getBoundingBox().intersect(new AABB(pos));
 		vec = intersection.getCenter();
 		//mc.level.addParticle(ParticleTypes.ANGRY_VILLAGER, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -118,12 +120,8 @@ public final class Hooks {
 	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
 		Vec3 eye = player.getEyePosition();
 		BlockPos eyePos = BlockPos.containing(eye);
-		long count = level.getPoiManager().findAll(
-						$ -> $.is(CoreModule.POI_TYPE),
-						Predicates.alwaysTrue(),
-						eyePos,
-						24,
-						PoiManager.Occupancy.ANY)
+		long count = level.getPoiManager()
+				.findAll($ -> $.is(CoreModule.POI_TYPE), Predicates.alwaysTrue(), eyePos, 24, PoiManager.Occupancy.ANY)
 				.flatMap($ -> level.getBlockEntity($, CoreModule.FRUIT_TREE.get()).stream())
 				.peek($ -> hornHarvest(level, player, $, eyePos, null))
 				.count();
@@ -139,7 +137,8 @@ public final class Hooks {
 		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation(FruitfulFun.ID, "husbandry/fruitfulfun/" + id));
 	}
 
-	private static void hornHarvest(ServerLevel level, ServerPlayer player, FruitTreeBlockEntity core, BlockPos eyePos, Consumer<ItemEntity> consumer) {
+	private static void hornHarvest(
+			ServerLevel level, ServerPlayer player, FruitTreeBlockEntity core, BlockPos eyePos, Consumer<ItemEntity> consumer) {
 		Set<BlockPos> leaves = core.getActiveLeaves();
 		BlockPos corePos = core.getBlockPos();
 		if (leaves.isEmpty()) {
@@ -249,8 +248,7 @@ public final class Hooks {
 		}
 		if (y >= 0) {
 			BlockPos pos = BlockPos.containing(player.getEyePosition());
-			if (level.getBlockState(pos).isSuffocating(level, pos)
-					|| level.getBlockState(pos.above()).isSuffocating(level, pos)) {
+			if (level.getBlockState(pos).isSuffocating(level, pos) || level.getBlockState(pos.above()).isSuffocating(level, pos)) {
 				y = -0.07;
 			}
 		}
@@ -335,7 +333,8 @@ public final class Hooks {
 		}
 		FoodProperties properties = item.getFoodProperties();
 		if (FFClientConfig.foodStatusEffectTooltip && properties != null) {
-			List<MobEffectInstance> effects = properties.getEffects().stream()
+			List<MobEffectInstance> effects = properties.getEffects()
+					.stream()
 					.filter($ -> $.getFirst() != null && $.getSecond() > 0)
 					.map(Pair::getFirst)
 					.toList();

@@ -38,7 +38,9 @@ public class HybridizingCategory extends BaseJEICategory<LycheeContext, Hybridiz
 		bee.setLevel(null);
 		infoRect = new Rect2i(80, 38, 8, 8);
 
-		line = JEICompat.GUI.drawableBuilder(new ResourceLocation(FruitfulFun.ID, "textures/gui/jei.png"), 12, 0, 31, 11).setTextureSize(64, 64).build();
+		line = JEICompat.GUI.drawableBuilder(new ResourceLocation(FruitfulFun.ID, "textures/gui/jei.png"), 12, 0, 31, 11)
+				.setTextureSize(64, 64)
+				.build();
 	}
 
 	@Override

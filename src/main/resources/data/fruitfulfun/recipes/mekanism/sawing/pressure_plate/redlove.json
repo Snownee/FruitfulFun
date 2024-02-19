@@ -1,20 +1,20 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "mekanism"
-      ]
-    }
-  ],
-  "type": "mekanism:sawing",
-  "input": {
-    "ingredient": {
-      "item": "fruitfulfun:redlove_pressure_plate"
-    }
-  },
-  "mainOutput": {
-    "item": "fruitfulfun:redlove_planks",
-    "count": 2
-  }
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+			"values": [
+				"mekanism"
+			]
+		}
+	],
+	"type": "mekanism:sawing",
+	"input": {
+		"ingredient": {
+			"item": "fruitfulfun:redlove_pressure_plate"
+		}
+	},
+	"mainOutput": {
+		"item": "fruitfulfun:redlove_planks",
+		"count": 2
+	}
 }

@@ -31,13 +31,20 @@ import snownee.lychee.mixin.LootContextParamSetsAccess;
 public class BeeModule extends AbstractModule {
 
 	@Name("hybridizing")
-	public static final KiwiGO<HybridizingRecipeType> RECIPE_TYPE = go(() -> new HybridizingRecipeType("fruitfulfun:hybridizing", HybridizingRecipe.class, null));
+	public static final KiwiGO<HybridizingRecipeType> RECIPE_TYPE = go(() -> new HybridizingRecipeType(
+			"fruitfulfun:hybridizing",
+			HybridizingRecipe.class,
+			null));
 	@Name("hybridizing")
 	public static final KiwiGO<LycheeRecipe.Serializer<HybridizingRecipe>> SERIALIZER = go(HybridizingRecipe.Serializer::new);
-	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(BeeHasTrait.Type::new, () -> LycheeRegistries.CONTEXTUAL);
+	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(
+			BeeHasTrait.Type::new,
+			() -> LycheeRegistries.CONTEXTUAL);
 	public static ResourceLocation BEE_ONE_CM = new ResourceLocation(FruitfulFun.ID, "bee_one_cm");
 	public static ResourceLocation BEES_BRED = new ResourceLocation(FruitfulFun.ID, "bees_bred");
-	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "entity.bee.shear")));
+	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(
+			FruitfulFun.ID,
+			"entity.bee.shear")));
 	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "shears")
 	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
@@ -46,7 +53,11 @@ public class BeeModule extends AbstractModule {
 	public BeeModule() {
 		Hooks.bee = true;
 		LootContextParamSetsAccess.callRegister("fruitfulfun:hybridizing", $ -> {
-			$.required(LootContextParams.ORIGIN).required(LootContextParams.THIS_ENTITY).required(LootContextParams.BLOCK_STATE).required(LycheeLootContextParams.BLOCK_POS).optional(LootContextParams.BLOCK_ENTITY);
+			$.required(LootContextParams.ORIGIN)
+					.required(LootContextParams.THIS_ENTITY)
+					.required(LootContextParams.BLOCK_STATE)
+					.required(LycheeLootContextParams.BLOCK_POS)
+					.optional(LootContextParams.BLOCK_ENTITY);
 		});
 	}
 

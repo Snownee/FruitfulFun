@@ -36,11 +36,13 @@ public class FFModelProvider extends FabricModelProvider {
 	@Override
 	public void generateBlockStateModels(BlockModelGenerators generators) {
 		createCitrusLeaves(generators, CoreModule.TANGERINE_LEAVES.get(), FruitScale.SMALL);
-		generators.createPlant(CoreModule.TANGERINE_SAPLING.get(), CoreModule.POTTED_TANGERINE.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(
+				CoreModule.TANGERINE_SAPLING.get(), CoreModule.POTTED_TANGERINE.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.CITRON_LEAVES.get(), FruitScale.SMALL);
 		generators.createPlant(CoreModule.CITRON_SAPLING.get(), CoreModule.POTTED_CITRON.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.GRAPEFRUIT_LEAVES.get(), FruitScale.MIDDLE);
-		generators.createPlant(CoreModule.GRAPEFRUIT_SAPLING.get(), CoreModule.POTTED_GRAPEFRUIT.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(
+				CoreModule.GRAPEFRUIT_SAPLING.get(), CoreModule.POTTED_GRAPEFRUIT.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.LEMON_LEAVES.get(), FruitScale.MIDDLE);
 		generators.createPlant(CoreModule.LEMON_SAPLING.get(), CoreModule.POTTED_LEMON.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.LIME_LEAVES.get(), FruitScale.MIDDLE);
@@ -52,16 +54,23 @@ public class FFModelProvider extends FabricModelProvider {
 		createCitrusLeaves(generators, CoreModule.POMELO_LEAVES.get(), FruitScale.LARGE);
 		generators.createPlant(CoreModule.POMELO_SAPLING.get(), CoreModule.POTTED_POMELO.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createCitrusLeaves(generators, PomegranateModule.POMEGRANATE_LEAVES.get(), FruitScale.NONE);
-		generators.createPlant(PomegranateModule.POMEGRANATE_SAPLING.get(), PomegranateModule.POTTED_POMEGRANATE.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(
+				PomegranateModule.POMEGRANATE_SAPLING.get(), PomegranateModule.POTTED_POMEGRANATE.get(),
+				BlockModelGenerators.TintState.NOT_TINTED);
 		createRedloveLeaves(generators, CherryModule.REDLOVE_LEAVES.get());
-		generators.createPlant(CherryModule.REDLOVE_SAPLING.get(), CherryModule.POTTED_REDLOVE.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(
+				CherryModule.REDLOVE_SAPLING.get(), CherryModule.POTTED_REDLOVE.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		createRedloveLeaves(generators, CherryModule.CHERRY_LEAVES.get());
-		generators.createPlant(CherryModule.CHERRY_SAPLING.get(), CherryModule.POTTED_CHERRY.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(
+				CherryModule.CHERRY_SAPLING.get(), CherryModule.POTTED_CHERRY.get(), BlockModelGenerators.TintState.NOT_TINTED);
 		generators.createFlowerBed(CherryModule.PEACH_PINK_PETALS.get());
 		generators.createSimpleFlatItemModel(CherryModule.CHERRY_CROWN.get());
 		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_CROWN.get());
-		generators.createHangingSign(CoreModule.STRIPPED_CITRUS_LOG.get(), CoreModule.CITRUS_HANGING_SIGN.get(), CoreModule.CITRUS_WALL_HANGING_SIGN.get());
-		generators.createHangingSign(CherryModule.STRIPPED_REDLOVE_LOG.get(), CherryModule.REDLOVE_HANGING_SIGN.get(), CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
+		generators.createHangingSign(
+				CoreModule.STRIPPED_CITRUS_LOG.get(), CoreModule.CITRUS_HANGING_SIGN.get(), CoreModule.CITRUS_WALL_HANGING_SIGN.get());
+		generators.createHangingSign(
+				CherryModule.STRIPPED_REDLOVE_LOG.get(), CherryModule.REDLOVE_HANGING_SIGN.get(),
+				CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
 		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE.get().asItem());
 		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE_SLICE.get());
 		generators.createSimpleFlatItemModel(PomegranateModule.POMEGRANATE.get().asItem());
@@ -87,29 +96,30 @@ public class FFModelProvider extends FabricModelProvider {
 		} else {
 			model3 = scale.template.create(block, new TextureMapping().put(FFModelTemplates.LEAVES, baseTexture), generators.modelOutput);
 		}
-		MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FruitLeavesBlock.AGE).generateList(age -> {
-			if (age < 2) {
-				return List.of(Variant.variant().with(VariantProperties.MODEL, model01));
-			}
-			if (age == 2) {
-				return List.of(Variant.variant().with(VariantProperties.MODEL, model2));
-			}
-			if (age == 3) {
-				List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, model3));
-				if (scale.randomRotation) {
-					variants.add(Variant.variant()
-							.with(VariantProperties.MODEL, model3)
-							.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
-							.with(VariantProperties.UV_LOCK, true));
-					variants.add(Variant.variant()
-							.with(VariantProperties.MODEL, model3)
-							.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
-							.with(VariantProperties.UV_LOCK, true));
-				}
-				return variants;
-			}
-			throw new IllegalStateException("Unexpected value: " + age);
-		}));
+		MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block)
+				.with(PropertyDispatch.property(FruitLeavesBlock.AGE).generateList(age -> {
+					if (age < 2) {
+						return List.of(Variant.variant().with(VariantProperties.MODEL, model01));
+					}
+					if (age == 2) {
+						return List.of(Variant.variant().with(VariantProperties.MODEL, model2));
+					}
+					if (age == 3) {
+						List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, model3));
+						if (scale.randomRotation) {
+							variants.add(Variant.variant()
+									.with(VariantProperties.MODEL, model3)
+									.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+									.with(VariantProperties.UV_LOCK, true));
+							variants.add(Variant.variant()
+									.with(VariantProperties.MODEL, model3)
+									.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+									.with(VariantProperties.UV_LOCK, true));
+						}
+						return variants;
+					}
+					throw new IllegalStateException("Unexpected value: " + age);
+				}));
 		generators.blockStateOutput.accept(generator);
 		generators.delegateItemModel(block, model2);
 	}
@@ -121,16 +131,18 @@ public class FFModelProvider extends FabricModelProvider {
 		} else {
 			model012 = TexturedModel.LEAVES.create(block, generators.modelOutput);
 		}
-		ResourceLocation model3 = ModelTemplates.LEAVES.createWithSuffix(block, "_2", TextureMapping.cube(TextureMapping.getBlockTexture(block, "_2")), generators.modelOutput);
-		MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FruitLeavesBlock.AGE).generateList(age -> {
-			if (age < 3) {
-				return List.of(Variant.variant().with(VariantProperties.MODEL, model012));
-			}
-			if (age == 3) {
-				return List.of(Variant.variant().with(VariantProperties.MODEL, model3));
-			}
-			throw new IllegalStateException("Unexpected value: " + age);
-		}));
+		ResourceLocation model3 = ModelTemplates.LEAVES.createWithSuffix(
+				block, "_2", TextureMapping.cube(TextureMapping.getBlockTexture(block, "_2")), generators.modelOutput);
+		MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block)
+				.with(PropertyDispatch.property(FruitLeavesBlock.AGE).generateList(age -> {
+					if (age < 3) {
+						return List.of(Variant.variant().with(VariantProperties.MODEL, model012));
+					}
+					if (age == 3) {
+						return List.of(Variant.variant().with(VariantProperties.MODEL, model3));
+					}
+					throw new IllegalStateException("Unexpected value: " + age);
+				}));
 		generators.blockStateOutput.accept(generator);
 		generators.delegateItemModel(block, model012);
 	}
