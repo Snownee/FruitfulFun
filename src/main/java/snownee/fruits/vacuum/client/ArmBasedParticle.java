@@ -23,7 +23,6 @@ public abstract class ArmBasedParticle extends TextureSheetParticle {
 	public void tick() {
 		if (entity.isRemoved() || this.age++ >= this.lifetime) {
 			this.remove();
-			return;
 		}
 	}
 

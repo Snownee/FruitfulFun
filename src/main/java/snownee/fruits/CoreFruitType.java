@@ -31,7 +31,12 @@ public class CoreFruitType extends FruitType {
 	public ResourceKey<ConfiguredFeature<?, ?>> treeBeesFeature;
 	public ResourceKey<ConfiguredFeature<?, ?>> treeFancyFeature;
 
-	public CoreFruitType(int tier, Supplier<Block> log, Supplier<? extends FruitLeavesBlock> leaves, Supplier<? extends Block> sapling, Supplier<Item> fruit) {
+	public CoreFruitType(
+			int tier,
+			Supplier<Block> log,
+			Supplier<? extends FruitLeavesBlock> leaves,
+			Supplier<? extends Block> sapling,
+			Supplier<Item> fruit) {
 		super(tier, log, leaves, sapling, fruit);
 	}
 

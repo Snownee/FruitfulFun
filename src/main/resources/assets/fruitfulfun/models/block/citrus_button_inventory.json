@@ -1,6 +1,6 @@
 {
-  "parent": "block/button_inventory",
-  "textures": {
-    "texture": "fruitfulfun:block/planks"
-  }
+	"parent": "block/button_inventory",
+	"textures": {
+		"texture": "fruitfulfun:block/planks"
+	}
 }

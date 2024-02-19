@@ -76,8 +76,13 @@ public class JadeCompat implements IWailaPlugin {
 			if (entity instanceof SlidingDoorEntity) {
 				BlockPos pos = entity.blockPosition();
 				Level level = accessor.getLevel();
-				BlockHitResult hitResult = new BlockHitResult(accessor.getHitResult().getLocation(), accessor.getPlayer().getDirection().getOpposite(), pos, false);
-				return registration.blockAccessor().blockState(level.getBlockState(pos)).level(level).player(accessor.getPlayer()).hit(hitResult).build();
+				BlockHitResult hitResult = new BlockHitResult(
+						accessor.getHitResult().getLocation(),
+						accessor.getPlayer().getDirection().getOpposite(),
+						pos,
+						false);
+				return registration.blockAccessor().blockState(level.getBlockState(pos)).level(level).player(accessor.getPlayer()).hit(
+						hitResult).build();
 			}
 		}
 		return accessor;

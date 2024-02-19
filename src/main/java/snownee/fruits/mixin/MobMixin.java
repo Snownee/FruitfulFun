@@ -26,7 +26,13 @@ public class MobMixin {
 	}
 
 	@Inject(method = "finalizeSpawn", at = @At("HEAD"))
-	private void finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, SpawnGroupData spawnGroupData, CompoundTag compoundTag, CallbackInfoReturnable<SpawnGroupData> cir) {
+	private void finalizeSpawn(
+			ServerLevelAccessor level,
+			DifficultyInstance difficultyInstance,
+			MobSpawnType mobSpawnType,
+			SpawnGroupData spawnGroupData,
+			CompoundTag compoundTag,
+			CallbackInfoReturnable<SpawnGroupData> cir) {
 		Mob mob = (Mob) (Object) this;
 		if (mob instanceof Bee bee) {
 			BeeAttributes.of(bee).randomize(bee);

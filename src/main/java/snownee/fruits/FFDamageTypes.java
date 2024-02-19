@@ -11,8 +11,12 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 
 public final class FFDamageTypes {
-	public static final ResourceKey<DamageType> EXPLOSION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(FruitfulFun.ID, "explosion"));
-	public static final ResourceKey<DamageType> PLAYER_EXPLOSION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(FruitfulFun.ID, "player_explosion"));
+	public static final ResourceKey<DamageType> EXPLOSION = ResourceKey.create(
+			Registries.DAMAGE_TYPE,
+			new ResourceLocation(FruitfulFun.ID, "explosion"));
+	public static final ResourceKey<DamageType> PLAYER_EXPLOSION = ResourceKey.create(
+			Registries.DAMAGE_TYPE,
+			new ResourceLocation(FruitfulFun.ID, "player_explosion"));
 
 	public static DamageSource explosion(DamageSources sources, @Nullable Entity entity, @Nullable Entity causingEntity) {
 		return sources.source(causingEntity != null && entity != null ? PLAYER_EXPLOSION : EXPLOSION, entity, causingEntity);

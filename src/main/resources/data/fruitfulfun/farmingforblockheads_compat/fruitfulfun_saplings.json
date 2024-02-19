@@ -1,28 +1,28 @@
 {
-  "modId": "fruitfulfun",
-  "group": {
-    "name": "Fruitful Fun Saplings",
-    "enabledByDefault": true,
-    "defaultPayment": {
-      "item": "minecraft:emerald"
-    },
-    "defaultCategory": "farmingforblockheads:saplings"
-  },
-  "customEntries": [
-    {
-      "output": {
-        "item": "fruitfulfun:lime_sapling"
-      }
-    },
-    {
-      "output": {
-        "item": "fruitfulfun:tangerine_sapling"
-      }
-    },
-    {
-      "output": {
-        "item": "fruitfulfun:citron_sapling"
-      }
-    }
-  ]
+	"modId": "fruitfulfun",
+	"group": {
+		"name": "Fruitful Fun Saplings",
+		"enabledByDefault": true,
+		"defaultPayment": {
+			"item": "minecraft:emerald"
+		},
+		"defaultCategory": "farmingforblockheads:saplings"
+	},
+	"customEntries": [
+		{
+			"output": {
+				"item": "fruitfulfun:lime_sapling"
+			}
+		},
+		{
+			"output": {
+				"item": "fruitfulfun:tangerine_sapling"
+			}
+		},
+		{
+			"output": {
+				"item": "fruitfulfun:citron_sapling"
+			}
+		}
+	]
 }

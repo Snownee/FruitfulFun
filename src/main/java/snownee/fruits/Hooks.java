@@ -90,7 +90,8 @@ public final class Hooks {
 					return false;
 				}
 				return state.getValue(FruitLeavesBlock.AGE) == 2;
-			} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) && state.getValue(LeavesBlock.PERSISTENT)) {
+			} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) &&
+					state.getValue(LeavesBlock.PERSISTENT)) {
 				return false;
 			}
 			return original.test(state);
@@ -107,8 +108,9 @@ public final class Hooks {
 		}
 		Vec3 vec = hitResult.getLocation();
 		BlockPos pos = entity.blockPosition();
-		if (vec.y - pos.getY() >= 1)
+		if (vec.y - pos.getY() >= 1) {
 			pos = pos.above();
+		}
 		AABB intersection = entity.getBoundingBox().intersect(new AABB(pos));
 		vec = intersection.getCenter();
 		//mc.level.addParticle(ParticleTypes.ANGRY_VILLAGER, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -139,7 +141,12 @@ public final class Hooks {
 		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation(FruitfulFun.ID, "husbandry/fruitfulfun/" + id));
 	}
 
-	private static void hornHarvest(ServerLevel level, ServerPlayer player, FruitTreeBlockEntity core, BlockPos eyePos, Consumer<ItemEntity> consumer) {
+	private static void hornHarvest(
+			ServerLevel level,
+			ServerPlayer player,
+			FruitTreeBlockEntity core,
+			BlockPos eyePos,
+			Consumer<ItemEntity> consumer) {
 		Set<BlockPos> leaves = core.getActiveLeaves();
 		BlockPos corePos = core.getBlockPos();
 		if (leaves.isEmpty()) {

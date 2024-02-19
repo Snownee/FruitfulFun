@@ -34,13 +34,19 @@ public class CollectDragonBreathDispenseBehavior extends DefaultDispenseItemBeha
 		ServerLevel level = blockSource.getLevel();
 		BlockPos blockPos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
 		BlockState blockState = level.getBlockState(blockPos);
-		if (blockState.is(BlockTags.BEEHIVES, blockStateBase -> blockStateBase.hasProperty(BeehiveBlock.HONEY_LEVEL) && blockStateBase.getBlock() instanceof BeehiveBlock) && blockState.getValue(BeehiveBlock.HONEY_LEVEL) >= 5) {
+		if (blockState.is(
+				BlockTags.BEEHIVES,
+				blockStateBase -> blockStateBase.hasProperty(BeehiveBlock.HONEY_LEVEL) &&
+						blockStateBase.getBlock() instanceof BeehiveBlock) && blockState.getValue(BeehiveBlock.HONEY_LEVEL) >= 5) {
 			return original.dispense(blockSource, itemStack);
 		}
 		if (level.getFluidState(blockPos).is(FluidTags.WATER)) {
 			return original.dispense(blockSource, itemStack);
 		}
-		List<AreaEffectCloud> list = level.getEntitiesOfClass(AreaEffectCloud.class, new AABB(blockPos).inflate(0.2), CollectDragonBreathDispenseBehavior::isValidDragonBreath);
+		List<AreaEffectCloud> list = level.getEntitiesOfClass(
+				AreaEffectCloud.class,
+				new AABB(blockPos).inflate(0.2),
+				CollectDragonBreathDispenseBehavior::isValidDragonBreath);
 		if (!list.isEmpty()) {
 			AreaEffectCloud areaEffectCloud2 = list.get(0);
 			areaEffectCloud2.setRadius(areaEffectCloud2.getRadius() - 0.5f);

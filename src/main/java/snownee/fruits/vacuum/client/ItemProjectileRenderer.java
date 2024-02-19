@@ -82,9 +82,19 @@ public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile> {
 					poseStack.translate(s, t, 0.0f);
 				}
 			}
-			this.itemRenderer.render(itemStack, ItemDisplayContext.GROUND, false, poseStack, multiBufferSource, i, OverlayTexture.NO_OVERLAY, bakedModel);
+			this.itemRenderer.render(
+					itemStack,
+					ItemDisplayContext.GROUND,
+					false,
+					poseStack,
+					multiBufferSource,
+					i,
+					OverlayTexture.NO_OVERLAY,
+					bakedModel);
 			poseStack.popPose();
-			if (bl) continue;
+			if (bl) {
+				continue;
+			}
 			poseStack.translate(0.0f * o, 0.0f * p, 0.09375f * q);
 		}
 		poseStack.popPose();

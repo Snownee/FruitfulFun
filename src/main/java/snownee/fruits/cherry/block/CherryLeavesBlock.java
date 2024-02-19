@@ -76,7 +76,8 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	}
 
 	public static void spawnDestroyParticles(Level level, Player player, BlockPos pos, ParticleOptions particleType) {
-		if (level.isClientSide && FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded && pos.distToCenterSqr(player.position()) < 81) {
+		if (level.isClientSide && FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded &&
+				pos.distToCenterSqr(player.position()) < 81) {
 			int times = Mth.randomBetweenInclusive(level.random, 6, 12);
 			for (int i = 0; i < times; ++i) {
 				double x = level.random.nextGaussian() * 0.3D;

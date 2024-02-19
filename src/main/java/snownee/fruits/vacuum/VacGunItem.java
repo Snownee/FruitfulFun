@@ -111,7 +111,13 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 		container.setChanged();
 		saveItemContainer(gun, container);
 		RandomSource random = player.getRandom();
-		player.level().playSound(null, player, VacModule.GUN_SHOOT_ITEM.get(), player.getSoundSource(), 0.2f, ((random.nextFloat() - random.nextFloat()) * 0.7f + 1.0f) * 2.0f);
+		player.level().playSound(
+				null,
+				player,
+				VacModule.GUN_SHOOT_ITEM.get(),
+				player.getSoundSource(),
+				0.2f,
+				((random.nextFloat() - random.nextFloat()) * 0.7f + 1.0f) * 2.0f);
 		return projectile;
 	}
 
@@ -350,7 +356,6 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 			}
 			if (state.is(VacModule.VCD_PERFORM_BREAKING)) {
 				level.destroyBlock(pos, true, player);
-				return;
 			}
 		});
 	}
@@ -394,7 +399,13 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 	}
 
 	@Override
-	public boolean overrideOtherStackedOnMe(ItemStack gun, ItemStack itemStack, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess) {
+	public boolean overrideOtherStackedOnMe(
+			ItemStack gun,
+			ItemStack itemStack,
+			Slot slot,
+			ClickAction clickAction,
+			Player player,
+			SlotAccess slotAccess) {
 		if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player) || itemStack.isEmpty()) {
 			return false;
 		}
@@ -421,7 +432,9 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 				int i = 0;
 				int itemCount = 0;
 				for (ItemStack itemStack2 : container.items) {
-					if (itemStack2.isEmpty()) continue;
+					if (itemStack2.isEmpty()) {
+						continue;
+					}
 					++i;
 					if (i > 4) {
 						break;
@@ -432,7 +445,8 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 					tooltip.add(mutableComponent);
 				}
 				if (container.getItemCount() > itemCount) {
-					tooltip.add(Component.translatable("container.shulkerBox.more", container.getItemCount() - itemCount).withStyle(ChatFormatting.ITALIC));
+					tooltip.add(Component.translatable("container.shulkerBox.more", container.getItemCount() - itemCount)
+							.withStyle(ChatFormatting.ITALIC));
 				}
 			}
 		} else if ("fluid".equals(ammoType)) {
@@ -442,7 +456,9 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 
 	public static void playContainerAnimation(BlockEntity blockEntity) {
 		if (blockEntity instanceof Container && blockEntity instanceof MenuProvider menuProvider) {
-			ContainerOpenerFakePlayer player = ContainerOpenerFakePlayer.getOrCreate((ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos());
+			ContainerOpenerFakePlayer player = ContainerOpenerFakePlayer.getOrCreate(
+					(ServerLevel) blockEntity.getLevel(),
+					blockEntity.getBlockPos());
 			player.openMenu(menuProvider);
 		}
 	}

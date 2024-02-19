@@ -1,56 +1,56 @@
 {
-  "type": "fruitfulfun:hybridizing",
-  "pollens": [
-    "torchflower"
-  ],
-  "contextual": {
-    "type": "fruitfulfun:bee_has_trait",
-    "trait": "wither_tolerant"
-  },
-  "post": [
-    {
-      "contextual": {
-        "type": "chance",
-        "chance": 0.1
-      },
-      "type": "place",
-      "block": "*"
-    },
-    {
-      "type": "random",
-      "entries": [
-        {
-          "type": "drop_item",
-          "weight": 5,
-          "item": "minecraft:blaze_powder"
-        },
-        {
-          "type": "drop_item",
-          "weight": 5,
-          "item": "minecraft:gunpowder"
-        },
-        {
-          "type": "drop_item",
-          "weight": 3,
-          "item": "minecraft:coal"
-        },
-        {
-          "type": "drop_item",
-          "weight": 2,
-          "item": "minecraft:gold_ingot"
-        },
-        {
-          "type": "drop_item",
-          "weight": 1,
-          "item": "minecraft:quartz"
-        }
-      ]
-    }
-  ],
-  "conditions": [
-    {
-      "module": "fruitfulfun:bee",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+	"type": "fruitfulfun:hybridizing",
+	"pollens": [
+		"torchflower"
+	],
+	"contextual": {
+		"type": "fruitfulfun:bee_has_trait",
+		"trait": "wither_tolerant"
+	},
+	"post": [
+		{
+			"contextual": {
+				"type": "chance",
+				"chance": 0.1
+			},
+			"type": "place",
+			"block": "*"
+		},
+		{
+			"type": "random",
+			"entries": [
+				{
+					"type": "drop_item",
+					"weight": 5,
+					"item": "minecraft:blaze_powder"
+				},
+				{
+					"type": "drop_item",
+					"weight": 5,
+					"item": "minecraft:gunpowder"
+				},
+				{
+					"type": "drop_item",
+					"weight": 3,
+					"item": "minecraft:coal"
+				},
+				{
+					"type": "drop_item",
+					"weight": 2,
+					"item": "minecraft:gold_ingot"
+				},
+				{
+					"type": "drop_item",
+					"weight": 1,
+					"item": "minecraft:quartz"
+				}
+			]
+		}
+	],
+	"conditions": [
+		{
+			"module": "fruitfulfun:bee",
+			"type": "kiwi:is_loaded"
+		}
+	]
 }

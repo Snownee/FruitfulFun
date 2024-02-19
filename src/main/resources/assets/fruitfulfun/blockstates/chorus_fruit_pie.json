@@ -1,64 +1,64 @@
 {
-  "variants": {
-    "servings=4,facing=north": {
-      "model": "fruitfulfun:block/chorus_fruit_pie"
-    },
-    "servings=3,facing=north": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice1"
-    },
-    "servings=2,facing=north": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice2"
-    },
-    "servings=1,facing=north": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice3"
-    },
-    "servings=4,facing=south": {
-      "model": "fruitfulfun:block/chorus_fruit_pie",
-      "y": 180
-    },
-    "servings=3,facing=south": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice1",
-      "y": 180
-    },
-    "servings=2,facing=south": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice2",
-      "y": 180
-    },
-    "servings=1,facing=south": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice3",
-      "y": 180
-    },
-    "servings=4,facing=west": {
-      "model": "fruitfulfun:block/chorus_fruit_pie",
-      "y": 270
-    },
-    "servings=3,facing=west": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice1",
-      "y": 270
-    },
-    "servings=2,facing=west": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice2",
-      "y": 270
-    },
-    "servings=1,facing=west": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice3",
-      "y": 270
-    },
-    "servings=4,facing=east": {
-      "model": "fruitfulfun:block/chorus_fruit_pie",
-      "y": 90
-    },
-    "servings=3,facing=east": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice1",
-      "y": 90
-    },
-    "servings=2,facing=east": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice2",
-      "y": 90
-    },
-    "servings=1,facing=east": {
-      "model": "fruitfulfun:block/chorus_fruit_pie_slice3",
-      "y": 90
-    }
-  }
+	"variants": {
+		"servings=4,facing=north": {
+			"model": "fruitfulfun:block/chorus_fruit_pie"
+		},
+		"servings=3,facing=north": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice1"
+		},
+		"servings=2,facing=north": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice2"
+		},
+		"servings=1,facing=north": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice3"
+		},
+		"servings=4,facing=south": {
+			"model": "fruitfulfun:block/chorus_fruit_pie",
+			"y": 180
+		},
+		"servings=3,facing=south": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice1",
+			"y": 180
+		},
+		"servings=2,facing=south": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice2",
+			"y": 180
+		},
+		"servings=1,facing=south": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice3",
+			"y": 180
+		},
+		"servings=4,facing=west": {
+			"model": "fruitfulfun:block/chorus_fruit_pie",
+			"y": 270
+		},
+		"servings=3,facing=west": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice1",
+			"y": 270
+		},
+		"servings=2,facing=west": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice2",
+			"y": 270
+		},
+		"servings=1,facing=west": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice3",
+			"y": 270
+		},
+		"servings=4,facing=east": {
+			"model": "fruitfulfun:block/chorus_fruit_pie",
+			"y": 90
+		},
+		"servings=3,facing=east": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice1",
+			"y": 90
+		},
+		"servings=2,facing=east": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice2",
+			"y": 90
+		},
+		"servings=1,facing=east": {
+			"model": "fruitfulfun:block/chorus_fruit_pie_slice3",
+			"y": 90
+		}
+	}
 }

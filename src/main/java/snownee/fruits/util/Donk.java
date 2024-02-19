@@ -17,13 +17,26 @@ import net.minecraft.world.entity.Entity;
 public class Donk {
 
 	public static void donk(Minecraft mc, EntityRenderDispatcher entityRenderDispatcher, Entity p, MultiBufferSource buffers) {
-		var particle = mc.particleEngine.createParticle(ParticleTypes.TOTEM_OF_UNDYING, p.getX() - 0.5, p.getY() + 1, p.getZ() - 0.5, 0, 0, 0);
+		var particle = mc.particleEngine.createParticle(
+				ParticleTypes.TOTEM_OF_UNDYING,
+				p.getX() - 0.5,
+				p.getY() + 1,
+				p.getZ() - 0.5,
+				0,
+				0,
+				0);
 
 		if (particle == null) {
 			System.out.println("Error: particle failed to be created");
 			return;
 		}
-		RenderType renderType = RenderType.create("particle_translucent", DefaultVertexFormat.PARTICLE, VertexFormat.Mode.QUADS, 256, false, true,
+		RenderType renderType = RenderType.create(
+				"particle_translucent",
+				DefaultVertexFormat.PARTICLE,
+				VertexFormat.Mode.QUADS,
+				256,
+				false,
+				true,
 				RenderType.CompositeState.builder()
 						.setWriteMaskState(new RenderStateShard.WriteMaskStateShard(true, false))
 						.setTextureState(new RenderStateShard.TextureStateShard(TextureAtlas.LOCATION_PARTICLES, false, false))

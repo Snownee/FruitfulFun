@@ -39,7 +39,10 @@ public class SInspectBeeReplyPacket extends PacketHandler {
 	}
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer player) {
+	public CompletableFuture<FriendlyByteBuf> receive(
+			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
+			FriendlyByteBuf buf,
+			@Nullable ServerPlayer player) {
 		List<String> traits = buf.readList(FriendlyByteBuf::readUtf);
 		List<String> pollens = buf.readList(FriendlyByteBuf::readUtf);
 		List<GeneRecord> genes = buf.readList($ -> new GeneRecord($.readChar(), $.readVarInt() + 1, $.readVarInt() + 1));

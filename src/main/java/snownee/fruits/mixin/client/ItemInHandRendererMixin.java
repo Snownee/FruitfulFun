@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.util.ClientProxy;
-import snownee.fruits.util.Donk;
 import snownee.fruits.vacuum.VacModule;
 
 @Mixin(ItemInHandRenderer.class)
@@ -32,8 +30,21 @@ public abstract class ItemInHandRendererMixin {
 	@Shadow
 	protected abstract void applyItemArmAttackTransform(PoseStack poseStack, HumanoidArm humanoidArm, float f);
 
-	@Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;"))
-	private void renderArmWithItem(AbstractClientPlayer player, float f, float g, InteractionHand hand, float h, ItemStack stack, float i, PoseStack poseStack, MultiBufferSource multiBufferSource, int j, CallbackInfo ci) {
+	@Inject(
+			method = "renderArmWithItem",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;"))
+	private void renderArmWithItem(
+			AbstractClientPlayer player,
+			float f,
+			float g,
+			InteractionHand hand,
+			float h,
+			ItemStack stack,
+			float i,
+			PoseStack poseStack,
+			MultiBufferSource multiBufferSource,
+			int j,
+			CallbackInfo ci) {
 		if (Hooks.bee && BeeModule.INSPECTOR.is(stack)) {
 			boolean bl = hand == InteractionHand.MAIN_HAND;
 			HumanoidArm humanoidArm = bl ? player.getMainArm() : player.getMainArm().getOpposite();
@@ -46,7 +57,15 @@ public abstract class ItemInHandRendererMixin {
 	}
 
 	@Inject(method = "renderItem", at = @At("TAIL"))
-	private void renderItem(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+	private void renderItem(
+			LivingEntity livingEntity,
+			ItemStack itemStack,
+			ItemDisplayContext itemDisplayContext,
+			boolean leftHand,
+			PoseStack poseStack,
+			MultiBufferSource multiBufferSource,
+			int i,
+			CallbackInfo ci) {
 		if (Hooks.vac && VacModule.VAC_GUN.is(itemStack)) {
 			ClientProxy.renderVacGunInHand(livingEntity, itemStack, itemDisplayContext, leftHand, poseStack);
 		}

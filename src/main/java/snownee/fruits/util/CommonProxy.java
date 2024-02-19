@@ -111,7 +111,10 @@ public class CommonProxy {
 			}
 			List<VillagerTrades.ItemListing> trades = event.getGenericTrades();
 			trades.add((entity, random) -> {
-				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(), random).asItem().getDefaultInstance();
+				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream()
+						.filter($ -> $.tier == 0)
+						.map($ -> $.sapling.get())
+						.toList(), random).asItem().getDefaultInstance();
 				ItemStack emeralds = new ItemStack(Items.EMERALD, 8);
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});
@@ -189,7 +192,10 @@ public class CommonProxy {
 	}
 
 	private static void addBuiltinPack(ModContainer modContainer, String id) {
-		ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
+		ResourceManagerHelper.registerBuiltinResourcePack(
+				new ResourceLocation(FruitfulFun.ID, id),
+				modContainer,
+				ResourcePackActivationType.ALWAYS_ENABLED);
 	}
 
 	public static boolean isShears(ItemStack stack) {
@@ -200,7 +206,13 @@ public class CommonProxy {
 		return blockState.is(Tags.Blocks.BOOKSHELVES);
 	}
 
-	public static boolean insertItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction, ItemStack item) {
+	public static boolean insertItem(
+			Level level,
+			BlockPos blockPos,
+			BlockState blockState,
+			@Nullable BlockEntity blockEntity,
+			Direction direction,
+			ItemStack item) {
 		if (item.isEmpty()) {
 			return false;
 		}
@@ -230,7 +242,12 @@ public class CommonProxy {
 		return false;
 	}
 
-	public static ItemStack extractOneItem(Level level, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, Direction direction) {
+	public static ItemStack extractOneItem(
+			Level level,
+			BlockPos blockPos,
+			BlockState blockState,
+			@Nullable BlockEntity blockEntity,
+			Direction direction) {
 		LazyOptional<IItemHandler> cap;
 		if (blockEntity != null && (cap = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction)).isPresent()) {
 			VacGunItem.playContainerAnimation(blockEntity);
@@ -312,7 +329,8 @@ public class CommonProxy {
 	public static void addFeature(String id) {
 		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(Util.RL(id, FruitfulFun.ID)).toString());
 		BiomeModifications.addFeature(context -> {
-			return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) || context.hasFeature(VegetationFeatures.TREES_PLAINS);
+			return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) ||
+					context.hasFeature(VegetationFeatures.TREES_PLAINS);
 		}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
 	}
 
@@ -328,7 +346,8 @@ public class CommonProxy {
 	}
 
 	public static boolean isLitCandle(BlockState blockState) {
-		return blockState.hasProperty(AbstractCandleBlock.LIT) && blockState.getValue(AbstractCandleBlock.LIT) && blockState.is(CoreModule.CANDLES);
+		return blockState.hasProperty(AbstractCandleBlock.LIT) && blockState.getValue(AbstractCandleBlock.LIT) &&
+				blockState.is(CoreModule.CANDLES);
 	}
 
 	public static void extinguishCandle(@Nullable Player player, BlockState blockState, LevelAccessor level, BlockPos blockPos) {
@@ -341,7 +360,6 @@ public class CommonProxy {
 			level.addParticle(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.9, blockPos.getZ() + 0.5, 0.0, 0.1, 0.0);
 			level.playSound(null, blockPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
 			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
-			return;
 		}
 	}
 

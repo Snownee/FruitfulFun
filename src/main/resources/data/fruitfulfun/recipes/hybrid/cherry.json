@@ -1,27 +1,27 @@
 {
-  "type": "fruitfulfun:hybridizing",
-  "pollens": [
-    "cherry_leaves",
-    "pink_petals"
-  ],
-  "ending_step": [
-    "cherry_leaves"
-  ],
-  "post": {
-    "type": "place",
-    "block": {
-      "blocks": [
-        "fruitfulfun:cherry_leaves"
-      ],
-      "state": {
-        "age": 2
-      }
-    }
-  },
-  "conditions": [
-    {
-      "module": "fruitfulfun:bee",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+	"type": "fruitfulfun:hybridizing",
+	"pollens": [
+		"cherry_leaves",
+		"pink_petals"
+	],
+	"ending_step": [
+		"cherry_leaves"
+	],
+	"post": {
+		"type": "place",
+		"block": {
+			"blocks": [
+				"fruitfulfun:cherry_leaves"
+			],
+			"state": {
+				"age": 2
+			}
+		}
+	},
+	"conditions": [
+		{
+			"module": "fruitfulfun:bee",
+			"type": "kiwi:is_loaded"
+		}
+	]
 }

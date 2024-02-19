@@ -1,6 +1,6 @@
 {
-  "parent": "block/template_fence_gate",
-  "textures": {
-    "texture": "fruitfulfun:block/planks"
-  }
+	"parent": "block/template_fence_gate",
+	"textures": {
+		"texture": "fruitfulfun:block/planks"
+	}
 }

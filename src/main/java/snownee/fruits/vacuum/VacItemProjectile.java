@@ -115,7 +115,6 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 				playSound(SoundEvents.ITEM_PICKUP, 0.2f, ((random.nextFloat() - random.nextFloat()) * 0.7f + 1.0f) * 2.0f);
 				VacGunItem.playContainerAnimation(blockEntity);
 				updateItem();
-				return;
 			}
 		}
 	}
@@ -180,7 +179,14 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 			float l = Mth.sin(getAge() / 10.0f) * 0.1f + 0.2f;
 			DustParticleOptions particleOptions = new DustParticleOptions(Vec3.fromRGB24(color).toVector3f(), 1f);
 			for (int i = 0; i < 4; ++i) {
-				level().addParticle(particleOptions, getX() - x * (double) i / 4.0, getY() + l - y * (double) i / 4.0, getZ() - z * (double) i / 4.0, -x, -y + 0.2, -z);
+				level().addParticle(
+						particleOptions,
+						getX() - x * (double) i / 4.0,
+						getY() + l - y * (double) i / 4.0,
+						getZ() - z * (double) i / 4.0,
+						-x,
+						-y + 0.2,
+						-z);
 			}
 		}
 	}

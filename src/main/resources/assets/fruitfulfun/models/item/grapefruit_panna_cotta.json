@@ -1,6 +1,6 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "fruitfulfun:item/grapefruit_panna_cotta"
-  }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "fruitfulfun:item/grapefruit_panna_cotta"
+	}
 }

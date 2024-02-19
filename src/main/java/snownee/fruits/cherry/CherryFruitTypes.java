@@ -15,7 +15,17 @@ import snownee.kiwi.KiwiModule;
 @KiwiModule("cherry_fruits")
 public class CherryFruitTypes extends AbstractModule {
 
-	public static final KiwiGO<FruitType> CHERRY = go(() -> new CherryFruitType(1, () -> Blocks.CHERRY_LOG, CHERRY_LEAVES, CHERRY_SAPLING, CherryModule.CHERRY));
-	public static final KiwiGO<FruitType> REDLOVE = go(() -> new CherryFruitType(2, REDLOVE_LOG, REDLOVE_LEAVES, REDLOVE_SAPLING, CherryModule.REDLOVE));
+	public static final KiwiGO<FruitType> CHERRY = go(() -> new CherryFruitType(
+			1,
+			() -> Blocks.CHERRY_LOG,
+			CHERRY_LEAVES,
+			CHERRY_SAPLING,
+			CherryModule.CHERRY));
+	public static final KiwiGO<FruitType> REDLOVE = go(() -> new CherryFruitType(
+			2,
+			REDLOVE_LOG,
+			REDLOVE_LEAVES,
+			REDLOVE_SAPLING,
+			CherryModule.REDLOVE));
 
 }

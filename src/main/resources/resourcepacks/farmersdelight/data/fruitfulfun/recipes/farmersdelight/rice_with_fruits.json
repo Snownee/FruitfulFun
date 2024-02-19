@@ -1,39 +1,39 @@
 {
-  "type": "farmersdelight:cooking",
-  "ingredients": [
-    {
-      "tag": "forge:fruits/tangerine"
-    },
-    {
-      "tag": "forge:fruits/apple"
-    },
-    {
-      "tag": "forge:fruits"
-    },
-    {
-      "options": [
-        {
-          "tag": "forge:grain/rice"
-        },
-        {
-          "tag": "forge:seeds/rice"
-        }
-      ],
-      "type": "kiwi:alternatives"
-    }
-  ],
-  "container": {
-    "item": "bamboo"
-  },
-  "experience": 0.35,
-  "recipe_book_tab": "meals",
-  "result": {
-    "item": "fruitfulfun:rice_with_fruits"
-  },
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+	"type": "farmersdelight:cooking",
+	"ingredients": [
+		{
+			"tag": "forge:fruits/tangerine"
+		},
+		{
+			"tag": "forge:fruits/apple"
+		},
+		{
+			"tag": "forge:fruits"
+		},
+		{
+			"options": [
+				{
+					"tag": "forge:grain/rice"
+				},
+				{
+					"tag": "forge:seeds/rice"
+				}
+			],
+			"type": "kiwi:alternatives"
+		}
+	],
+	"container": {
+		"item": "bamboo"
+	},
+	"experience": 0.35,
+	"recipe_book_tab": "meals",
+	"result": {
+		"item": "fruitfulfun:rice_with_fruits"
+	},
+	"conditions": [
+		{
+			"module": "fruitfulfun:food",
+			"type": "kiwi:is_loaded"
+		}
+	]
 }

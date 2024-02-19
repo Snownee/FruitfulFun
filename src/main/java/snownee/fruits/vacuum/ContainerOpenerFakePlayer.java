@@ -21,7 +21,10 @@ public class ContainerOpenerFakePlayer extends FakePlayer {
 
 	public static ContainerOpenerFakePlayer getOrCreate(ServerLevel level, BlockPos pos) {
 		String name = "FruitfulFunOpener " + pos.toShortString();
-		List<ContainerOpenerFakePlayer> entities = level.getEntitiesOfClass(ContainerOpenerFakePlayer.class, new AABB(pos), $ -> $.getName().getString().equals(name));
+		List<ContainerOpenerFakePlayer> entities = level.getEntitiesOfClass(
+				ContainerOpenerFakePlayer.class,
+				new AABB(pos),
+				$ -> $.getName().getString().equals(name));
 		if (!entities.isEmpty()) {
 			return entities.get(0);
 		}

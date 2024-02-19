@@ -23,9 +23,9 @@ public class BlockEntityTypeMixin {
 			cir.setReturnValue(true);
 			return;
 		}
-		if (type == BlockEntityType.HANGING_SIGN && (blockClass == WallHangingSignBlock.class || blockClass == CeilingHangingSignBlock.class)) {
+		if (type == BlockEntityType.HANGING_SIGN &&
+				(blockClass == WallHangingSignBlock.class || blockClass == CeilingHangingSignBlock.class)) {
 			cir.setReturnValue(true);
-			return;
 		}
 	}
 

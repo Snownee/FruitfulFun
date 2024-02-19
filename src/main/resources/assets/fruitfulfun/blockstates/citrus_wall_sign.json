@@ -1,7 +1,7 @@
 {
-  "variants": {
-    "": {
-      "model": "fruitfulfun:block/citrus_sign"
-    }
-  }
+	"variants": {
+		"": {
+			"model": "fruitfulfun:block/citrus_sign"
+		}
+	}
 }

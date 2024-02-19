@@ -22,7 +22,12 @@ public class FFRegistries {
 		FFRegistries.<FruitType>register("fruit_type", FruitType.class, "citron", event, v -> FRUIT_TYPE = v);
 	}
 
-	private static <T> void register(String name, Class<?> clazz, String defaultKey, NewRegistryEvent event, Consumer<DefaultedRegistry<T>> consumer) {
+	private static <T> void register(
+			String name,
+			Class<?> clazz,
+			String defaultKey,
+			NewRegistryEvent event,
+			Consumer<DefaultedRegistry<T>> consumer) {
 		RegistryBuilder<T> builder = new RegistryBuilder<T>().setName(new ResourceLocation(FruitfulFun.ID, name))
 				.setDefaultKey(new ResourceLocation(FruitfulFun.ID, defaultKey))
 				.hasTags(); // call hasWrapper()

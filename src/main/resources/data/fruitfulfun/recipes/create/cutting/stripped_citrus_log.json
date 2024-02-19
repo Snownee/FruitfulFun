@@ -1,26 +1,26 @@
 {
-  "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "fruitfulfun:stripped_citrus_log"
-    }
-  ],
-  "results": [
-    {
-      "item": "fruitfulfun:citrus_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "values": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "create"
-        }
-      ],
-      "type": "forge:and"
-    }
-  ]
+	"type": "create:cutting",
+	"ingredients": [
+		{
+			"item": "fruitfulfun:stripped_citrus_log"
+		}
+	],
+	"results": [
+		{
+			"item": "fruitfulfun:citrus_planks",
+			"count": 6
+		}
+	],
+	"processingTime": 50,
+	"conditions": [
+		{
+			"values": [
+				{
+					"type": "forge:mod_loaded",
+					"modid": "create"
+				}
+			],
+			"type": "forge:and"
+		}
+	]
 }

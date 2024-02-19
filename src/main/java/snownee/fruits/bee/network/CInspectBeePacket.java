@@ -23,7 +23,10 @@ public class CInspectBeePacket extends PacketHandler {
 	public static CInspectBeePacket I;
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor, FriendlyByteBuf buf, @Nullable ServerPlayer player) {
+	public CompletableFuture<FriendlyByteBuf> receive(
+			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
+			FriendlyByteBuf buf,
+			@Nullable ServerPlayer player) {
 		Objects.requireNonNull(player);
 		InspectTarget target = InspectTarget.fromNetwork(buf);
 		if (target == null) {

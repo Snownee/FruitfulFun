@@ -54,7 +54,13 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+	public InteractionResult use(
+			BlockState state,
+			Level level,
+			BlockPos pos,
+			Player player,
+			InteractionHand p_60507_,
+			BlockHitResult p_60508_) {
 		if (!level.isClientSide && !(this instanceof FeastBlock)) {
 			level.removeBlock(pos, false);
 			ItemStack stack = new ItemStack(this);

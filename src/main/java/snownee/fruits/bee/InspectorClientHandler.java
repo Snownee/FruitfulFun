@@ -97,7 +97,11 @@ public class InspectorClientHandler {
 		hoverTicks = 0;
 	}
 
-	public static void writeToBook(LocalPlayer player, List<Trait> traits, List<String> pollens, List<SInspectBeeReplyPacket.GeneRecord> genes) {
+	public static void writeToBook(
+			LocalPlayer player,
+			List<Trait> traits,
+			List<String> pollens,
+			List<SInspectBeeReplyPacket.GeneRecord> genes) {
 		ItemStack stack = player.getOffhandItem();
 		if (!stack.is(Items.WRITABLE_BOOK)) {
 			return;

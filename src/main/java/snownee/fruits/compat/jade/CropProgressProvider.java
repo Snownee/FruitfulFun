@@ -30,7 +30,9 @@ public class CropProgressProvider implements IBlockComponentProvider {
 		if (growthValue < 100.0F) {
 			tooltip.add(Component.translatable("tooltip.jade.crop_growth", IThemeHelper.get().info(String.format("%.0f%%", growthValue))));
 		} else {
-			tooltip.add(Component.translatable("tooltip.jade.crop_growth", IThemeHelper.get().success(Component.translatable("tooltip.jade.crop_mature"))));
+			tooltip.add(Component.translatable(
+					"tooltip.jade.crop_growth",
+					IThemeHelper.get().success(Component.translatable("tooltip.jade.crop_mature"))));
 		}
 	}
 

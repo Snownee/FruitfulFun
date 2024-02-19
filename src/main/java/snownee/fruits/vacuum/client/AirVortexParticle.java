@@ -21,7 +21,15 @@ public class AirVortexParticle extends ArmBasedParticle {
 		}
 
 		@Override
-		public AirVortexParticle createParticle(AirVortexParticleOption option, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i) {
+		public AirVortexParticle createParticle(
+				AirVortexParticleOption option,
+				ClientLevel clientLevel,
+				double d,
+				double e,
+				double f,
+				double g,
+				double h,
+				double i) {
 			Entity entity = clientLevel.getEntity(option.playerId());
 			if (!(entity instanceof LivingEntity living)) {
 				return null;

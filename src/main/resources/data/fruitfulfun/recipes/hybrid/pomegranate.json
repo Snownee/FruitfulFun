@@ -1,27 +1,27 @@
 {
-  "type": "fruitfulfun:hybridizing",
-  "pollens": [
-    "fruitfulfun:apple_leaves",
-    "spore_blossom"
-  ],
-  "ending_step": [
-    "fruitfulfun:apple_leaves"
-  ],
-  "post": {
-    "type": "place",
-    "block": {
-      "blocks": [
-        "fruitfulfun:pomegranate_leaves"
-      ],
-      "state": {
-        "age": 2
-      }
-    }
-  },
-  "conditions": [
-    {
-      "module": "fruitfulfun:bee",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+	"type": "fruitfulfun:hybridizing",
+	"pollens": [
+		"fruitfulfun:apple_leaves",
+		"spore_blossom"
+	],
+	"ending_step": [
+		"fruitfulfun:apple_leaves"
+	],
+	"post": {
+		"type": "place",
+		"block": {
+			"blocks": [
+				"fruitfulfun:pomegranate_leaves"
+			],
+			"state": {
+				"age": 2
+			}
+		}
+	},
+	"conditions": [
+		{
+			"module": "fruitfulfun:bee",
+			"type": "kiwi:is_loaded"
+		}
+	]
 }

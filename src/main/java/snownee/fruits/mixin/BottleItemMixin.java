@@ -23,7 +23,10 @@ public class BottleItemMixin {
 		return RitualModule.DUMMY_UUID.equals(cloud.ownerUUID) || original.call(object);
 	}
 
-	@Inject(method = {"lambda$use$0", "m_289173_"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;isAlive()Z"), cancellable = true)
+	@Inject(
+			method = {"lambda$use$0", "m_289173_"},
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;isAlive()Z"),
+			cancellable = true)
 	private static void fixDragonBreathExploit(AreaEffectCloud cloud, CallbackInfoReturnable<Boolean> ci) {
 		if (FFCommonConfig.fixDragonBreathExploit && cloud.getRadius() <= 0) {
 			// fix MC-114618

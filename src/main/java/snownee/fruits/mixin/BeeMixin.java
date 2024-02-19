@@ -141,7 +141,9 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	@Shadow
 	int ticksWithoutNectarSinceExitingHive;
 
-	@ModifyExpressionValue(method = "wantsToEnterHive", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
+	@ModifyExpressionValue(
+			method = "wantsToEnterHive",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
 	private boolean wantsToEnterHive(boolean original) {
 		return original && !BeeAttributes.of(this).hasTrait(Trait.RAIN_CAPABLE);
 	}

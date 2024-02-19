@@ -1,6 +1,6 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "fruitfulfun:item/lemon_roast_chicken_block"
-  }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "fruitfulfun:item/lemon_roast_chicken_block"
+	}
 }

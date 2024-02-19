@@ -1,10 +1,10 @@
 {
-  "leaves": [
-    "fruitfulfun:apple_leaves",
-    "fruitfulfun:pomegranate_leaves"
-  ],
-  "logs": [
-    "#oak_logs",
-    "#jungle_logs"
-  ]
+	"leaves": [
+		"fruitfulfun:apple_leaves",
+		"fruitfulfun:pomegranate_leaves"
+	],
+	"logs": [
+		"#oak_logs",
+		"#jungle_logs"
+	]
 }

@@ -1,17 +1,17 @@
 {
-  "type": "farmersdelight:cutting",
-  "ingredients": [
-    {
-      "item": "fruitfulfun:citrus_trapdoor"
-    }
-  ],
-  "tool": {
-    "type": "farmersdelight:tool_action",
-    "action": "axe_dig"
-  },
-  "result": [
-    {
-      "item": "fruitfulfun:citrus_planks"
-    }
-  ]
+	"type": "farmersdelight:cutting",
+	"ingredients": [
+		{
+			"item": "fruitfulfun:citrus_trapdoor"
+		}
+	],
+	"tool": {
+		"type": "farmersdelight:tool_action",
+		"action": "axe_dig"
+	},
+	"result": [
+		{
+			"item": "fruitfulfun:citrus_planks"
+		}
+	]
 }

@@ -6,7 +6,6 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.kiwi.loader.Platform;
 import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;

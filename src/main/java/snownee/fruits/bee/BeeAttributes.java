@@ -204,17 +204,37 @@ public class BeeAttributes {
 		healthInstance.removePermanentModifier(HEALTH_MODIFIER);
 		damageInstance.removePermanentModifier(DAMAGE_MODIFIER);
 		if (hasTrait(Trait.FASTER)) {
-			speedInstance.addPermanentModifier(new AttributeModifier(SPEED_MODIFIER, "Genetic speed bonus", 0.25, AttributeModifier.Operation.ADDITION));
+			speedInstance.addPermanentModifier(new AttributeModifier(
+					SPEED_MODIFIER,
+					"Genetic speed bonus",
+					0.25,
+					AttributeModifier.Operation.ADDITION));
 		} else if (hasTrait(Trait.FAST)) {
-			speedInstance.addPermanentModifier(new AttributeModifier(SPEED_MODIFIER, "Genetic speed bonus", 0.15, AttributeModifier.Operation.ADDITION));
+			speedInstance.addPermanentModifier(new AttributeModifier(
+					SPEED_MODIFIER,
+					"Genetic speed bonus",
+					0.15,
+					AttributeModifier.Operation.ADDITION));
 		}
 		if (lazy || hasTrait(Trait.WARRIOR)) {
 			float healthRatio = bee.getHealth() / bee.getMaxHealth();
 			if (lazy) {
-				healthInstance.addPermanentModifier(new AttributeModifier(HEALTH_MODIFIER, "Genetic health bonus", 5, AttributeModifier.Operation.ADDITION));
+				healthInstance.addPermanentModifier(new AttributeModifier(
+						HEALTH_MODIFIER,
+						"Genetic health bonus",
+						5,
+						AttributeModifier.Operation.ADDITION));
 			} else {
-				healthInstance.addPermanentModifier(new AttributeModifier(HEALTH_MODIFIER, "Genetic health bonus", 10, AttributeModifier.Operation.ADDITION));
-				damageInstance.addPermanentModifier(new AttributeModifier(DAMAGE_MODIFIER, "Genetic damage bonus", 2, AttributeModifier.Operation.ADDITION));
+				healthInstance.addPermanentModifier(new AttributeModifier(
+						HEALTH_MODIFIER,
+						"Genetic health bonus",
+						10,
+						AttributeModifier.Operation.ADDITION));
+				damageInstance.addPermanentModifier(new AttributeModifier(
+						DAMAGE_MODIFIER,
+						"Genetic damage bonus",
+						2,
+						AttributeModifier.Operation.ADDITION));
 			}
 			bee.setHealth(healthRatio * bee.getMaxHealth());
 		}

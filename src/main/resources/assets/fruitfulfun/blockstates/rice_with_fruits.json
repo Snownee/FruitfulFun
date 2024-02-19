@@ -1,19 +1,19 @@
 {
-  "variants": {
-    "facing=east": {
-      "model": "fruitfulfun:block/rice_with_fruits",
-      "y": 90
-    },
-    "facing=north": {
-      "model": "fruitfulfun:block/rice_with_fruits"
-    },
-    "facing=south": {
-      "model": "fruitfulfun:block/rice_with_fruits",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "fruitfulfun:block/rice_with_fruits",
-      "y": 270
-    }
-  }
+	"variants": {
+		"facing=east": {
+			"model": "fruitfulfun:block/rice_with_fruits",
+			"y": 90
+		},
+		"facing=north": {
+			"model": "fruitfulfun:block/rice_with_fruits"
+		},
+		"facing=south": {
+			"model": "fruitfulfun:block/rice_with_fruits",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "fruitfulfun:block/rice_with_fruits",
+			"y": 270
+		}
+	}
 }

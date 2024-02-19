@@ -1,5 +1,7 @@
 {
-  "variants": {
-    "": { "model": "fruitfulfun:block/citrus_planks" }
-  }
+	"variants": {
+		"": {
+			"model": "fruitfulfun:block/citrus_planks"
+		}
+	}
 }

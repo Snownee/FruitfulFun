@@ -30,7 +30,12 @@ public class CherryFruitType extends FruitType {
 	public ResourceKey<ConfiguredFeature<?, ?>> treeFeature;
 	public ResourceKey<ConfiguredFeature<?, ?>> treeBeesFeature;
 
-	public CherryFruitType(int tier, Supplier<Block> log, Supplier<? extends FruitLeavesBlock> leaves, Supplier<? extends Block> sapling, Supplier<Item> fruit) {
+	public CherryFruitType(
+			int tier,
+			Supplier<Block> log,
+			Supplier<? extends FruitLeavesBlock> leaves,
+			Supplier<? extends Block> sapling,
+			Supplier<Item> fruit) {
 		super(tier, log, leaves, sapling, fruit);
 	}
 

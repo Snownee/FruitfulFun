@@ -31,7 +31,10 @@ public class RideableBeeLivingEntityMixin {
 	private void getRiddenSpeed(Player player, CallbackInfoReturnable<Float> ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		if (entity instanceof Bee) {
-			float speed = (float) (entity.onGround() ? entity.getAttributeValue(Attributes.MOVEMENT_SPEED) : entity.getAttributeValue(Attributes.FLYING_SPEED));
+			float speed = (float) (
+					entity.onGround() ?
+							entity.getAttributeValue(Attributes.MOVEMENT_SPEED) :
+							entity.getAttributeValue(Attributes.FLYING_SPEED));
 			ci.setReturnValue(speed);
 		}
 	}

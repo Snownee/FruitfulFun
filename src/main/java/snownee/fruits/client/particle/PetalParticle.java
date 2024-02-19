@@ -240,7 +240,12 @@ public class PetalParticle extends TextureSheetParticle {
 
 	// Modified from Entity#collideBoundingBox. Optimize and ignore the collision of leaves
 	public static Vec3 collideBoundingBox(Vec3 vec3, AABB aABB, Level level) {
-		Iterator<VoxelShape> iterator = new BlockCollisions<>(level, null, aABB.expandTowards(vec3), true, (mutableBlockPos, voxelShape) -> voxelShape);
+		Iterator<VoxelShape> iterator = new BlockCollisions<>(
+				level,
+				null,
+				aABB.expandTowards(vec3),
+				true,
+				(mutableBlockPos, voxelShape) -> voxelShape);
 		return Entity.collideWithShapes(vec3, aABB, ImmutableList.copyOf(iterator));
 	}
 
@@ -266,7 +271,11 @@ public class PetalParticle extends TextureSheetParticle {
 		quaternion.rotateZ(rollZ);
 		var quadNormal = new Vector3f(0.0F, 0.0F, 1.0F);
 		quadNormal.rotate(quaternion);
-		Vector3f[] vertex = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
+		Vector3f[] vertex = new Vector3f[]{
+				new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(
+				1.0F,
+				1.0F,
+				0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
 		float[] uv = new float[]{getU0(), getV0(), getU1(), getV1()};
 		if (sub.dot(quadNormal) < 0) {
 			for (int i = 0; i < 4; ++i) {
@@ -302,7 +311,15 @@ public class PetalParticle extends TextureSheetParticle {
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(
+				SimpleParticleType typeIn,
+				ClientLevel worldIn,
+				double x,
+				double y,
+				double z,
+				double xSpeed,
+				double ySpeed,
+				double zSpeed) {
 			PetalParticle particle = new PetalParticle(worldIn, x, y, z);
 			particle.pickSprite(spriteSet);
 			particle.xd += xSpeed;

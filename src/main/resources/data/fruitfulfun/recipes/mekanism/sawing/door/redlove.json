@@ -1,23 +1,23 @@
 {
-  "type": "mekanism:sawing",
-  "input": {
-    "ingredient": {
-      "item": "fruitfulfun:redlove_door"
-    }
-  },
-  "mainOutput": {
-    "item": "fruitfulfun:redlove_planks",
-    "count": 2
-  },
-  "conditions": [
-    {
-      "values": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "mekanism"
-        }
-      ],
-      "type": "forge:and"
-    }
-  ]
+	"type": "mekanism:sawing",
+	"input": {
+		"ingredient": {
+			"item": "fruitfulfun:redlove_door"
+		}
+	},
+	"mainOutput": {
+		"item": "fruitfulfun:redlove_planks",
+		"count": 2
+	},
+	"conditions": [
+		{
+			"values": [
+				{
+					"type": "forge:mod_loaded",
+					"modid": "mekanism"
+				}
+			],
+			"type": "forge:and"
+		}
+	]
 }

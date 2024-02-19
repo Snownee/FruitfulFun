@@ -10,7 +10,8 @@ public class AirVortexParticleOption extends ArmBasedParticleOption {
 			Codec.INT.fieldOf("player_id").forGetter(AirVortexParticleOption::playerId),
 			Codec.BOOL.fieldOf("main_arm").forGetter(AirVortexParticleOption::mainArm)
 	).apply(instance, AirVortexParticleOption::new));
-	public static final ArmBasedParticleOption.Deserializer<AirVortexParticleOption> DESERIALIZER = new ArmBasedParticleOption.Deserializer<>(AirVortexParticleOption::new);
+	public static final ArmBasedParticleOption.Deserializer<AirVortexParticleOption> DESERIALIZER = new ArmBasedParticleOption.Deserializer<>(
+			AirVortexParticleOption::new);
 
 	public AirVortexParticleOption(int playerId, boolean mainArm) {
 		super(playerId, mainArm);

@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "fruitfulfun:item/banner_pattern"
-    }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "fruitfulfun:item/banner_pattern"
+	}
 }

@@ -1,28 +1,28 @@
 {
-  "type": "mekanism:sawing",
-  "input": {
-    "ingredient": {
-      "item": "fruitfulfun:citrus_fence_gate"
-    }
-  },
-  "mainOutput": {
-    "item": "fruitfulfun:citrus_planks",
-    "count": 2
-  },
-  "secondaryOutput": {
-    "item": "minecraft:stick",
-    "count": 4
-  },
-  "secondaryChance": 1,
-  "conditions": [
-    {
-      "values": [
-        {
-          "type": "forge:mod_loaded",
-          "modid": "mekanism"
-        }
-      ],
-      "type": "forge:and"
-    }
-  ]
+	"type": "mekanism:sawing",
+	"input": {
+		"ingredient": {
+			"item": "fruitfulfun:citrus_fence_gate"
+		}
+	},
+	"mainOutput": {
+		"item": "fruitfulfun:citrus_planks",
+		"count": 2
+	},
+	"secondaryOutput": {
+		"item": "minecraft:stick",
+		"count": 4
+	},
+	"secondaryChance": 1,
+	"conditions": [
+		{
+			"values": [
+				{
+					"type": "forge:mod_loaded",
+					"modid": "mekanism"
+				}
+			],
+			"type": "forge:and"
+		}
+	]
 }

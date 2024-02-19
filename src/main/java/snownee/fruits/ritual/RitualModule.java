@@ -56,7 +56,9 @@ import snownee.kiwi.KiwiModule;
 @KiwiModule("ritual")
 @KiwiModule.Optional
 public class RitualModule extends AbstractModule {
-	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(FruitfulFun.ID, "block.ritual.finish")));
+	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(
+			FruitfulFun.ID,
+			"block.ritual.finish")));
 	public static final Supplier<BlockPattern> RITUAL = Suppliers.memoize(() -> BlockPatternBuilder.start()
 			.aisle(
 					" C C ",
@@ -204,9 +206,12 @@ public class RitualModule extends AbstractModule {
 			return;
 		}
 		if (!interaction.isVehicle()) {
-			List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class, interaction.getBoundingBox(), (ItemEntity itemEntity) -> {
-				return itemEntity.isAlive() && !itemEntity.isNoGravity();
-			});
+			List<ItemEntity> itemEntities = level.getEntitiesOfClass(
+					ItemEntity.class,
+					interaction.getBoundingBox(),
+					(ItemEntity itemEntity) -> {
+						return itemEntity.isAlive() && !itemEntity.isNoGravity();
+					});
 			if (!itemEntities.isEmpty()) {
 				ItemEntity itemEntity = itemEntities.get(0);
 				itemEntity.startRiding(interaction);

@@ -14,5 +14,14 @@ public interface FoliagePlacerAccess {
 	boolean callShouldSkipLocation(RandomSource var1, int var2, int var3, int var4, int var5, boolean var6);
 
 	@Invoker
-	void callCreateFoliage(LevelSimulatedReader var1, FoliagePlacer.FoliageSetter var2, RandomSource var3, TreeConfiguration var4, int var5, FoliagePlacer.FoliageAttachment var6, int var7, int var8, int var9);
+	void callCreateFoliage(
+			LevelSimulatedReader var1,
+			FoliagePlacer.FoliageSetter var2,
+			RandomSource var3,
+			TreeConfiguration var4,
+			int var5,
+			FoliagePlacer.FoliageAttachment var6,
+			int var7,
+			int var8,
+			int var9);
 }

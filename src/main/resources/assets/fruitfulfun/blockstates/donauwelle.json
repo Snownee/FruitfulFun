@@ -1,19 +1,19 @@
 {
-  "variants": {
-    "facing=east": {
-      "model": "fruitfulfun:block/donauwelle",
-      "y": 90
-    },
-    "facing=north": {
-      "model": "fruitfulfun:block/donauwelle"
-    },
-    "facing=south": {
-      "model": "fruitfulfun:block/donauwelle",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "fruitfulfun:block/donauwelle",
-      "y": 270
-    }
-  }
+	"variants": {
+		"facing=east": {
+			"model": "fruitfulfun:block/donauwelle",
+			"y": 90
+		},
+		"facing=north": {
+			"model": "fruitfulfun:block/donauwelle"
+		},
+		"facing=south": {
+			"model": "fruitfulfun:block/donauwelle",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "fruitfulfun:block/donauwelle",
+			"y": 270
+		}
+	}
 }

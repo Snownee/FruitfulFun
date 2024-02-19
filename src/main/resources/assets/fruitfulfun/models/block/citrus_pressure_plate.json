@@ -1,6 +1,6 @@
 {
-  "parent": "block/pressure_plate_up",
-  "textures": {
-    "texture": "fruitfulfun:block/planks"
-  }
+	"parent": "block/pressure_plate_up",
+	"textures": {
+		"texture": "fruitfulfun:block/planks"
+	}
 }

@@ -1,64 +1,64 @@
 {
-  "type": "farmersdelight:cooking",
-  "ingredients": [
-    {
-      "tag": "forge:fruits/grapefruit"
-    },
-    {
-      "options": [
-        {
-          "tag": "forge:cream"
-        },
-        {
-          "tag": "forge:milk"
-        }
-      ],
-      "type": "kiwi:alternatives"
-    },
-    {
-      "tag": "forge:eggs"
-    },
-    {
-      "options": [
-        {
-          "item": "atmospheric:aloe_gel_bottle"
-        },
-        {
-          "tag": "forge:slime_balls"
-        },
-        {
-          "item": "slime_ball"
-        }
-      ],
-      "type": "kiwi:alternatives"
-    },
-    {
-      "item": "sugar"
-    },
-    {
-      "options": [
-        {
-          "item": "neapolitan:dried_vanilla_pods"
-        },
-        {
-          "tag": "forge:crops/vanilla"
-        },
-        {
-          "item": "sugar"
-        }
-      ],
-      "type": "kiwi:alternatives"
-    }
-  ],
-  "experience": 0.35,
-  "recipe_book_tab": "misc",
-  "result": {
-    "item": "fruitfulfun:grapefruit_panna_cotta"
-  },
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+	"type": "farmersdelight:cooking",
+	"ingredients": [
+		{
+			"tag": "forge:fruits/grapefruit"
+		},
+		{
+			"options": [
+				{
+					"tag": "forge:cream"
+				},
+				{
+					"tag": "forge:milk"
+				}
+			],
+			"type": "kiwi:alternatives"
+		},
+		{
+			"tag": "forge:eggs"
+		},
+		{
+			"options": [
+				{
+					"item": "atmospheric:aloe_gel_bottle"
+				},
+				{
+					"tag": "forge:slime_balls"
+				},
+				{
+					"item": "slime_ball"
+				}
+			],
+			"type": "kiwi:alternatives"
+		},
+		{
+			"item": "sugar"
+		},
+		{
+			"options": [
+				{
+					"item": "neapolitan:dried_vanilla_pods"
+				},
+				{
+					"tag": "forge:crops/vanilla"
+				},
+				{
+					"item": "sugar"
+				}
+			],
+			"type": "kiwi:alternatives"
+		}
+	],
+	"experience": 0.35,
+	"recipe_book_tab": "misc",
+	"result": {
+		"item": "fruitfulfun:grapefruit_panna_cotta"
+	},
+	"conditions": [
+		{
+			"module": "fruitfulfun:food",
+			"type": "kiwi:is_loaded"
+		}
+	]
 }

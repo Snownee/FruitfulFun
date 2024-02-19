@@ -21,7 +21,19 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 public class FlowerCrownRenderer implements ICurioRenderer {
 
 	@Override
-	public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack itemStack, SlotContext slotContext, PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource multiBufferSource, int i, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+	public <T extends LivingEntity, M extends EntityModel<T>> void render(
+			ItemStack itemStack,
+			SlotContext slotContext,
+			PoseStack poseStack,
+			RenderLayerParent<T, M> renderLayerParent,
+			MultiBufferSource multiBufferSource,
+			int i,
+			float limbSwing,
+			float limbSwingAmount,
+			float partialTicks,
+			float ageInTicks,
+			float netHeadYaw,
+			float headPitch) {
 		M entityModel = renderLayerParent.getModel();
 		if (!(entityModel instanceof HeadedModel headedModel)) {
 			return;
@@ -35,7 +47,17 @@ public class FlowerCrownRenderer implements ICurioRenderer {
 			poseStack.scale(1.18F, 1.18F, 1.18F);
 		}
 		ItemDisplayContext displayContext = ItemDisplayContext.HEAD;
-		Minecraft.getInstance().getItemRenderer().renderStatic(entity, itemStack, displayContext, false, poseStack, multiBufferSource, entity.level(), i, OverlayTexture.NO_OVERLAY, entity.getId() + displayContext.ordinal());
+		Minecraft.getInstance().getItemRenderer().renderStatic(
+				entity,
+				itemStack,
+				displayContext,
+				false,
+				poseStack,
+				multiBufferSource,
+				entity.level(),
+				i,
+				OverlayTexture.NO_OVERLAY,
+				entity.getId() + displayContext.ordinal());
 		poseStack.popPose();
 	}
 }

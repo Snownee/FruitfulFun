@@ -1,36 +1,36 @@
 {
-  "type": "farmersdelight:cooking",
-  "ingredients": [
-    {
-      "tag": "forge:fruits/pomelo"
-    },
-    {
-      "item": "sugar"
-    },
-    {
-      "options": [
-        {
-          "item": "neapolitan:mint_leaves"
-        },
-        {
-          "tag": "leaves"
-        }
-      ],
-      "type": "kiwi:alternatives"
-    }
-  ],
-  "container": {
-    "item": "honey_bottle"
-  },
-  "experience": 0.35,
-  "recipe_book_tab": "drinks",
-  "result": {
-    "item": "fruitfulfun:honey_pomelo_tea"
-  },
-  "conditions": [
-    {
-      "module": "fruitfulfun:food",
-      "type": "kiwi:is_loaded"
-    }
-  ]
+	"type": "farmersdelight:cooking",
+	"ingredients": [
+		{
+			"tag": "forge:fruits/pomelo"
+		},
+		{
+			"item": "sugar"
+		},
+		{
+			"options": [
+				{
+					"item": "neapolitan:mint_leaves"
+				},
+				{
+					"tag": "leaves"
+				}
+			],
+			"type": "kiwi:alternatives"
+		}
+	],
+	"container": {
+		"item": "honey_bottle"
+	},
+	"experience": 0.35,
+	"recipe_book_tab": "drinks",
+	"result": {
+		"item": "fruitfulfun:honey_pomelo_tea"
+	},
+	"conditions": [
+		{
+			"module": "fruitfulfun:food",
+			"type": "kiwi:is_loaded"
+		}
+	]
 }
