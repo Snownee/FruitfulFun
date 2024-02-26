@@ -10,10 +10,8 @@ import snownee.fruits.FruitfulFun;
 public class FFModelTemplates {
 	public static final TextureSlot LEAVES = TextureSlot.create("leaves");
 	public static final TextureSlot FLOWERS = TextureSlot.create("flowers");
-	public static final ModelTemplate FLOWERING_LEAVES = create("template_leaves_flowering", "_2", LEAVES, FLOWERS);
-	public static final ModelTemplate FRUIT_LG_LEAVES = create("template_leaves_fruit_lg", "_3", LEAVES);
-	public static final ModelTemplate FRUIT_MD_LEAVES = create("template_leaves_fruit_md", "_3", LEAVES);
-	public static final ModelTemplate FRUIT_SM_LEAVES = create("template_leaves_fruit_sm", "_3", LEAVES);
+	public static final ModelTemplate FLOWERING_LEAVES = create("template_leaves_flowering", "_flowers", FLOWERS);
+	public static final ModelTemplate FLOWERING_INVENTORY = createItem("template_leaves_flowering", LEAVES, FLOWERS);
 
 	private static ModelTemplate create(TextureSlot... textureSlots) {
 		return new ModelTemplate(Optional.empty(), Optional.empty(), textureSlots);

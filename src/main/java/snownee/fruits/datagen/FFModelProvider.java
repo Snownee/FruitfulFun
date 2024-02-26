@@ -8,12 +8,13 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.blockstates.Condition;
+import net.minecraft.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.data.models.blockstates.Variant;
 import net.minecraft.data.models.blockstates.VariantProperties;
 import net.minecraft.data.models.model.ModelLocationUtils;
-import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.data.models.model.TexturedModel;
@@ -85,43 +86,34 @@ public class FFModelProvider extends FabricModelProvider {
 		} else {
 			model01 = TexturedModel.LEAVES.create(block, generators.modelOutput);
 		}
-		ResourceLocation baseTexture = TextureMapping.getBlockTexture(CoreModule.APPLE_LEAVES.is(block) ? Blocks.OAK_LEAVES : block);
+		ResourceLocation flowersTexture = tex("%s_flowers".formatted(typeId.getPath()));
 		ResourceLocation model2 = FFModelTemplates.FLOWERING_LEAVES.create(block, new TextureMapping()
-						.put(FFModelTemplates.LEAVES, baseTexture)
-						.put(FFModelTemplates.FLOWERS, tex("%s_flowers".formatted(typeId.getPath()))),
+						.put(FFModelTemplates.FLOWERS, flowersTexture),
 				generators.modelOutput);
-		ResourceLocation model3;
-		if (scale == FruitScale.NONE) {
-			model3 = TexturedModel.LEAVES.createWithSuffix(block, "_3", generators.modelOutput);
-		} else {
-			model3 = scale.template.create(block, new TextureMapping().put(FFModelTemplates.LEAVES, baseTexture), generators.modelOutput);
+		MultiPartGenerator generator = MultiPartGenerator.multiPart(block)
+				.with(Variant.variant()
+						.with(VariantProperties.MODEL, model01)
+						.with(VariantProperties.UV_LOCK, true))
+				.with(Condition.condition().term(FruitLeavesBlock.AGE, 2), Variant.variant()
+						.with(VariantProperties.MODEL, model2));
+		if (scale != FruitScale.NONE) {
+			List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, scale.model));
+			if (scale.randomRotation) {
+				variants.add(Variant.variant()
+						.with(VariantProperties.MODEL, scale.model)
+						.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90));
+				variants.add(Variant.variant()
+						.with(VariantProperties.MODEL, scale.model)
+						.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180));
+			}
+			generator.with(Condition.condition().term(FruitLeavesBlock.AGE, 3), variants);
 		}
-		MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block)
-				.with(PropertyDispatch.property(FruitLeavesBlock.AGE).generateList(age -> {
-					if (age < 2) {
-						return List.of(Variant.variant().with(VariantProperties.MODEL, model01));
-					}
-					if (age == 2) {
-						return List.of(Variant.variant().with(VariantProperties.MODEL, model2));
-					}
-					if (age == 3) {
-						List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, model3));
-						if (scale.randomRotation) {
-							variants.add(Variant.variant()
-									.with(VariantProperties.MODEL, model3)
-									.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
-									.with(VariantProperties.UV_LOCK, true));
-							variants.add(Variant.variant()
-									.with(VariantProperties.MODEL, model3)
-									.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
-									.with(VariantProperties.UV_LOCK, true));
-						}
-						return variants;
-					}
-					throw new IllegalStateException("Unexpected value: " + age);
-				}));
 		generators.blockStateOutput.accept(generator);
-		generators.delegateItemModel(block, model2);
+		ResourceLocation baseTexture = TextureMapping.getBlockTexture(CoreModule.APPLE_LEAVES.is(block) ? Blocks.OAK_LEAVES : block);
+		FFModelTemplates.FLOWERING_INVENTORY.create(
+				ModelLocationUtils.getModelLocation(block.asItem()),
+				new TextureMapping().put(FFModelTemplates.LEAVES, baseTexture).put(FFModelTemplates.FLOWERS, flowersTexture),
+				generators.modelOutput);
 	}
 
 	public static void createRedloveLeaves(BlockModelGenerators generators, FruitLeavesBlock block) {
@@ -157,17 +149,17 @@ public class FFModelProvider extends FabricModelProvider {
 	}
 
 	public enum FruitScale {
-		NONE(ModelTemplates.LEAVES),
-		SMALL(FFModelTemplates.FRUIT_SM_LEAVES),
-		MIDDLE(FFModelTemplates.FRUIT_MD_LEAVES),
-		LARGE(FFModelTemplates.FRUIT_LG_LEAVES);
+		NONE(null, false),
+		SMALL("template_leaves_fruit_sm", true),
+		MIDDLE("template_leaves_fruit_md", true),
+		LARGE("template_leaves_fruit_lg", false);
 
-		public final ModelTemplate template;
+		public final ResourceLocation model;
 		public final boolean randomRotation;
 
-		FruitScale(ModelTemplate template) {
-			this.template = template;
-			randomRotation = template == FFModelTemplates.FRUIT_SM_LEAVES || template == FFModelTemplates.FRUIT_MD_LEAVES;
+		FruitScale(String model, boolean randomRotation) {
+			this.model = model == null ? null : new ResourceLocation(FruitfulFun.ID, "block/" + model);
+			this.randomRotation = randomRotation;
 		}
 	}
 }

@@ -1,3 +1,7 @@
 {
-  "parent": "fruitfulfun:block/citron_leaves_2"
+  "parent": "fruitfulfun:item/template_leaves_flowering",
+  "textures": {
+    "flowers": "fruitfulfun:block/citron_flowers",
+    "leaves": "fruitfulfun:block/citron_leaves"
+  }
 }
