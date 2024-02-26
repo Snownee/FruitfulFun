@@ -1,7 +1,6 @@
 package snownee.fruits.bee.network;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -27,10 +26,9 @@ public class SInspectBeeReplyPacket extends PacketHandler {
 		SInspectBeeReplyPacket.I.send(player, buf0 -> {
 			buf0.writeCollection(attributes.getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf0.writeCollection(attributes.getPollens(), FriendlyByteBuf::writeUtf);
-			Map<Allele, Locus> loci = attributes.getLoci();
 			buf0.writeVarInt(Allele.sortedByCode().size());
 			for (Allele allele : Allele.sortedByCode()) {
-				Locus locus = loci.get(allele);
+				Locus locus = attributes.getLocus(allele);
 				buf0.writeChar(allele.codename);
 				buf0.writeVarInt(locus.getHigh());
 				buf0.writeVarInt(locus.getLow());

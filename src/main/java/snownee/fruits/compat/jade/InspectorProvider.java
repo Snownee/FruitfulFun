@@ -61,11 +61,10 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 			}
 			data.put("Traits", list);
 		}
-		Map<Allele, Locus> loci = attributes.getLoci();
 		ListTag list = new ListTag();
 		for (Allele allele : Allele.sortedByCode()) {
 			CompoundTag tag = new CompoundTag();
-			Locus locus = loci.get(allele);
+			Locus locus = attributes.getLocus(allele);
 			tag.putString("Code", String.valueOf(allele.codename));
 			tag.putInt("High", locus.getHigh());
 			tag.putInt("Low", locus.getLow());
