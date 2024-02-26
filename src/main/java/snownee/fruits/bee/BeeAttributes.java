@@ -265,12 +265,12 @@ public class BeeAttributes {
 	}
 
 	public boolean anyGene(Allele allele, int gene) {
-		Locus locus = loci.get(allele);
+		Locus locus = getLocus(allele);
 		return locus.getHigh() == gene || locus.getLow() == gene;
 	}
 
 	public boolean allGene(Allele allele, int gene) {
-		Locus locus = loci.get(allele);
+		Locus locus = getLocus(allele);
 		return locus.getHigh() == gene && locus.getLow() == gene;
 	}
 
