@@ -16,12 +16,13 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.network.SSyncPlayerPacket;
 import snownee.fruits.duck.FFPlayer;
 
 @Mixin(Player.class)
-public class PlayerMixin implements FFPlayer {
+public abstract class PlayerMixin implements FFPlayer {
 	@Unique
 	private Map<String, GeneName> geneNames = Map.of();
 
@@ -37,6 +38,7 @@ public class PlayerMixin implements FFPlayer {
 				list.add(nameTag);
 			}
 			compoundTag.put("FruitfulFun:GeneNames", list);
+			compoundTag.putString("FruitfulFun:GeneticsDifficulty", FFCommonConfig.geneticsDifficulty.name());
 		}
 	}
 
@@ -49,6 +51,24 @@ public class PlayerMixin implements FFPlayer {
 				String name = nameTag.getString(1);
 				String desc = nameTag.getString(2);
 				fruits$setGeneName(code, new GeneName(name, desc));
+			}
+		}
+		if (FFCommonConfig.geneticsDifficulty == FFCommonConfig.GeneticsDifficulty.Easy) {
+			FFCommonConfig.GeneticsDifficulty difficulty = null;
+			if (compoundTag.contains("FruitfulFun:GeneticsDifficulty")) {
+				try {
+					difficulty = FFCommonConfig.GeneticsDifficulty.valueOf(compoundTag.getString("FruitfulFun:GeneticsDifficulty"));
+				} catch (Throwable ignored) {
+				}
+			}
+			if (difficulty != FFCommonConfig.geneticsDifficulty) {
+				for (Allele allele : Allele.sortedByCode()) {
+					String code = String.valueOf(allele.codename);
+					GeneName geneName = geneNames.get(code);
+					if (geneName != null && geneName.name().equals(code)) {
+						fruits$setGeneName(code, new GeneName(allele.name, ""));
+					}
+				}
 			}
 		}
 	}
@@ -98,7 +118,11 @@ public class PlayerMixin implements FFPlayer {
 		for (Allele allele : Allele.sortedByCode()) {
 			String code = String.valueOf(allele.codename);
 			if (!geneNames.containsKey(code)) {
-				fruits$setGeneName(code, new GeneName(code, ""));
+				if (FFCommonConfig.geneticsDifficulty == FFCommonConfig.GeneticsDifficulty.Easy) {
+					fruits$setGeneName(code, new GeneName(allele.name, ""));
+				} else {
+					fruits$setGeneName(code, new GeneName(code, ""));
+				}
 				changed = true;
 			}
 		}
