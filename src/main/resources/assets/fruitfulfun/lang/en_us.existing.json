@@ -207,5 +207,6 @@
 	"contextual.fruitfulfun.bee_has_trait.not": "Bee doesn't have trait: %s",
 	"death.attack.fruitfulfun.explosion": "%1$s was blown up by pomegranate",
 	"death.attack.fruitfulfun.explosion.player": "%1$s was blown up by %2$s's pomegranate",
-	"death.attack.fruitfulfun.explosion.player.item": "%1$s was blown up by %2$s using %3$s"
+	"death.attack.fruitfulfun.explosion.player.item": "%1$s was blown up by %2$s using %3$s",
+	"fruitfulfun.config.geneticsDifficulty.desc": "Easy - Real gene names will be shown as preset."
 }

@@ -174,7 +174,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 					core.setOnlyItem(itemEntity);
 				}
 			} else {
-				boolean def = rand.nextInt(100) > (99 - FFCommonConfig.growingSpeed);
+				boolean def = rand.nextInt(100) > (99 - FFCommonConfig.treeGrowingSpeed);
 				CommonProxy.maybeGrowCrops(world, pos, state, def, () -> performBonemeal(world, rand, pos, state));
 			}
 		}

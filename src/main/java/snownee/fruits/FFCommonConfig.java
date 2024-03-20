@@ -12,8 +12,12 @@ public final class FFCommonConfig {
 		NoDrop, Independent, OneByOne
 	}
 
+	public enum GeneticsDifficulty {
+		Easy, Normal
+	}
+
 	@KiwiConfig.Range(min = 0, max = 100)
-	public static int growingSpeed = 5;
+	public static int treeGrowingSpeed = 5;
 	@KiwiConfig.Path("fruitDropMode.singleplayer")
 	public static DropMode fruitDropModeSingleplayer = DropMode.Independent;
 	@KiwiConfig.Path("fruitDropMode.multiplayer")
@@ -39,6 +43,8 @@ public final class FFCommonConfig {
 	@ConfigUI.Hide
 	public static boolean leavesUsInPeaceIncompatibilityNotified;
 
+	@KiwiConfig.GameRestart
+	public static GeneticsDifficulty geneticsDifficulty = GeneticsDifficulty.Normal;
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Range(min = 0, max = 1)
 	@KiwiConfig.Path("mutationRate.RC")
