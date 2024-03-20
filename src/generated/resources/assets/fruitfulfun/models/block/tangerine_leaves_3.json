@@ -1,6 +1,0 @@
-{
-  "parent": "fruitfulfun:block/template_leaves_fruit_sm",
-  "textures": {
-    "leaves": "fruitfulfun:block/tangerine_leaves"
-  }
-}

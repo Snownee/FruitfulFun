@@ -1,28 +1,36 @@
 {
-  "variants": {
-    "age=0": {
-      "model": "minecraft:block/oak_leaves"
-    },
-    "age=1": {
-      "model": "minecraft:block/oak_leaves"
-    },
-    "age=2": {
-      "model": "fruitfulfun:block/apple_leaves_2"
-    },
-    "age=3": [
-      {
-        "model": "fruitfulfun:block/apple_leaves_3"
-      },
-      {
-        "model": "fruitfulfun:block/apple_leaves_3",
-        "uvlock": true,
-        "y": 90
-      },
-      {
-        "model": "fruitfulfun:block/apple_leaves_3",
-        "uvlock": true,
-        "y": 180
+  "multipart": [
+    {
+      "apply": {
+        "model": "minecraft:block/oak_leaves",
+        "uvlock": true
       }
-    ]
-  }
+    },
+    {
+      "apply": {
+        "model": "fruitfulfun:block/apple_leaves_flowers"
+      },
+      "when": {
+        "age": "2"
+      }
+    },
+    {
+      "apply": [
+        {
+          "model": "fruitfulfun:block/template_leaves_fruit_md"
+        },
+        {
+          "model": "fruitfulfun:block/template_leaves_fruit_md",
+          "y": 90
+        },
+        {
+          "model": "fruitfulfun:block/template_leaves_fruit_md",
+          "y": 180
+        }
+      ],
+      "when": {
+        "age": "3"
+      }
+    }
+  ]
 }
