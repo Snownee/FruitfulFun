@@ -80,19 +80,21 @@ dependencies {
 
     //modImplementation "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
     //annotationProcessor "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
-    modImplementation "curse.maven:kiwi-549404:5049491"
-    annotationProcessor "curse.maven:kiwi-549404:5049491"
+    modImplementation "curse.maven:kiwi-549404:5140632"
+    annotationProcessor "curse.maven:kiwi-549404:5140632"
     //modImplementation "libs:Lychee-1.20.1-fabric:${project.lychee_version}"
-    modImplementation "maven.modrinth:lychee:CvndaK4h"
+    modImplementation "maven.modrinth:lychee:22JEIieU"
+    modImplementation "curse.maven:jade-324717:5106745"
 
-    modImplementation "curse.maven:jade-324717:4792447"
-
+    // do not upgrade, otherwise it will crash
     modImplementation "dev.emi:trinkets:${project.trinkets_version}"
     modImplementation "curse.maven:selene-499980:4981682"
+    modImplementation "maven.modrinth:supplementaries:8rvsAEun"
+    modImplementation "maven.modrinth:farmers-delight-fabric:QXYNitXw"
+//    modImplementation "curse.maven:farmers-delight-refabricated-993166:5219672"
+//    modImplementation "vectorwing:FarmersDelight-Refabricated:1.20.1-2.0.8"
 
     modImplementation "maven.modrinth:debugutils:woRp83Qc"
-    modImplementation "maven.modrinth:farmers-delight-fabric:QXYNitXw"
-    modImplementation "maven.modrinth:supplementaries:8rvsAEun"
     modImplementation "maven.modrinth:suggestion-tweaker:1.20-1.5.1+fabric"
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2"))

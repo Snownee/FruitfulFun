@@ -35,5 +35,7 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FoodBlockLoot::new);
 		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "farmersdelight"));
 		pack.addProvider(FarmersDelightBlockLoot::new);
+		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "farmersdelight_nhoryzon"));
+		pack.addProvider(FarmersDelightBlockLoot::new);
 	}
 }

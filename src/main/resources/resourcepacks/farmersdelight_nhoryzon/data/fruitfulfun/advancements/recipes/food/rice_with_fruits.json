@@ -1,0 +1,35 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_any_ingredient": {
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"fruitfulfun:tangerine"
+						]
+					}
+				]
+			},
+			"trigger": "minecraft:inventory_changed"
+		},
+		"has_the_recipe": {
+			"conditions": {
+				"recipe": "fruitfulfun:farmersdelight/rice_with_fruits"
+			},
+			"trigger": "minecraft:recipe_unlocked"
+		}
+	},
+	"requirements": [
+		[
+			"has_any_ingredient",
+			"has_the_recipe"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"fruitfulfun:farmersdelight/rice_with_fruits"
+		]
+	},
+	"sends_telemetry_event": false
+}

@@ -1,0 +1,17 @@
+{
+	"type": "farmersdelight:cutting",
+	"ingredients": [
+		{
+			"item": "fruitfulfun:chorus_fruit_pie"
+		}
+	],
+	"result": [
+		{
+			"count": 4,
+			"item": "fruitfulfun:chorus_fruit_pie_slice"
+		}
+	],
+	"tool": {
+		"tag": "c:tools/knives"
+	}
+}

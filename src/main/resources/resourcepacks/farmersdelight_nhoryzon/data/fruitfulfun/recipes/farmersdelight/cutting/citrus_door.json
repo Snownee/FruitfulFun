@@ -1,0 +1,17 @@
+{
+	"type": "farmersdelight:cutting",
+	"ingredients": [
+		{
+			"item": "fruitfulfun:citrus_door"
+		}
+	],
+	"tool": {
+		"type": "farmersdelight:tool",
+		"tag": "c:tools/axes"
+	},
+	"result": [
+		{
+			"item": "fruitfulfun:citrus_planks"
+		}
+	]
+}
