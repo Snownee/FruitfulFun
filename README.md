@@ -40,6 +40,17 @@ around the world. The Farmer's Delight integration will also be enabled if you h
 **NOTE: This description page is for Minecraft 1.20.1+. Older versions have many differences and are no
 longer receive updates.**
 
+## Farmer's Delight Integration Information
+
+On Fabric, There are two ports of the original project. Fruitful Fun works with any of them (Farmer's Delight Refabricated / Farmer's
+Delight [Fabric]). And if it doesn't, please open an issue on GitHub.
+
+## Known Incompatible Mods (not my fault!)
+
+- CreativeCore (Forge) - [you can manually fix it](https://github.com/Sinytra/ForgifiedFabricAPI/issues/37#issuecomment-1751684746)
+- Valkyrien Skies (Fabric) - [you can manually fix it](https://github.com/ValkyrienSkies/Valkyrien-Skies-2/issues/616)
+- OptiFine - [please use alternatives](https://optifine.alternatives.lambdaurora.dev/)
+
 ## Commercial Use
 
 Redistribution of this mod or its assets is not allowed, especially for commercial purposes.
