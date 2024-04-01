@@ -20,7 +20,7 @@ import snownee.lychee.LycheeRegistries;
 @KiwiModule("pomegranate")
 public class PomegranateModule extends AbstractModule {
 	public static final KiwiGO<FFExplodeAction.Type> EXPLODE = go(FFExplodeAction.Type::new, () -> LycheeRegistries.POST_ACTION.registry());
-	@KiwiModule.Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
+	@KiwiModule.Category(value = Categories.INGREDIENTS, after = "wheat")
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	public static final KiwiGO<HangingFruitBlock> POMEGRANATE = go(() -> new HangingFruitBlock(blockProp()
 			.instabreak()
