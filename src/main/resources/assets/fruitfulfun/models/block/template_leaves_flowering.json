@@ -1,7 +1,7 @@
 {
 	"parent": "block/block",
 	"textures": {
-		"particle": "#leaves"
+		"particle": "#flowers"
 	},
 	"elements": [
 		{
@@ -75,50 +75,6 @@
 					],
 					"texture": "#flowers",
 					"cullface": "down"
-				}
-			}
-		},
-		{
-			"from": [
-				0,
-				0,
-				0
-			],
-			"to": [
-				16,
-				16,
-				16
-			],
-			"faces": {
-				"down": {
-					"texture": "#leaves",
-					"cullface": "down",
-					"tintindex": 0
-				},
-				"up": {
-					"texture": "#leaves",
-					"cullface": "up",
-					"tintindex": 0
-				},
-				"north": {
-					"texture": "#leaves",
-					"cullface": "north",
-					"tintindex": 0
-				},
-				"south": {
-					"texture": "#leaves",
-					"cullface": "south",
-					"tintindex": 0
-				},
-				"west": {
-					"texture": "#leaves",
-					"cullface": "west",
-					"tintindex": 0
-				},
-				"east": {
-					"texture": "#leaves",
-					"cullface": "east",
-					"tintindex": 0
 				}
 			}
 		}
