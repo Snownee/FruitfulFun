@@ -6,22 +6,19 @@ import me.shedaniel.rei.plugincompatibilities.api.REIPluginCompatIgnore;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeLookup;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
+import snownee.fruits.compat.FFJEIREI;
 import snownee.lychee.compat.jei.JEICompat;
 
 @JeiPlugin
@@ -53,20 +50,7 @@ public class FFJEICompat implements IModPlugin {
 			registration.addRecipes(RecipeTypes.BREWING, List.of(brewingRecipe));
 		}
 
-		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage || FFCommonConfig.villageAppleTreeWorldGen) {
-			String info = "";
-			if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
-				info = I18n.get("gui.fruitfulfun.tip.appleSaplingFromHeroOfTheVillage");
-			}
-			if (FFCommonConfig.villageAppleTreeWorldGen) {
-				if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
-					info += "\n";
-				}
-				info += I18n.get("gui.fruitfulfun.tip.villageAppleTreeWorldGen");
-			}
-			ItemStack appleSapling = CoreModule.APPLE_SAPLING.itemStack();
-			registration.addIngredientInfo(appleSapling, VanillaTypes.ITEM_STACK, Component.literal(info));
-		}
+		FFJEIREI.addInformation(registration::addItemStackInfo);
 	}
 
 	@Override

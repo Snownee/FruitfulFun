@@ -8,8 +8,10 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.forge.REIPluginClient;
+import me.shedaniel.rei.plugin.common.displays.DefaultInformationDisplay;
 import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,6 +20,7 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
+import snownee.fruits.compat.FFJEIREI;
 import snownee.fruits.vacuum.VacModule;
 import snownee.lychee.compat.rei.REICompat;
 
@@ -59,6 +62,11 @@ public class FFREICompat implements REIClientPlugin {
 					Ingredient.of(Items.POTION.getDefaultInstance()),
 					new ItemStack(BeeModule.MUTAGEN.get())));
 		}
+
+		FFJEIREI.addInformation((items, component) -> {
+			registry.add(DefaultInformationDisplay.createFromEntries(EntryIngredients.ofItemStacks(items), items.get(0).getHoverName())
+					.line(component));
+		});
 	}
 
 	@SuppressWarnings("UnstableApiUsage")

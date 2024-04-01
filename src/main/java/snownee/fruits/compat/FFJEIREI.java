@@ -1,5 +1,8 @@
 package snownee.fruits.compat;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import org.joml.Quaternionf;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -8,7 +11,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.ItemStack;
+import snownee.fruits.CoreModule;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeHasTrait;
 import snownee.fruits.bee.BeeModule;
@@ -59,5 +67,22 @@ public class FFJEIREI {
 		matrixStack.popPose();
 		bee.setLevel(null);
 		ILightingSettings.DEFAULT_3D.applyLighting();
+	}
+
+	public static void addInformation(BiConsumer<List<ItemStack>, Component> registrar) {
+		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage || FFCommonConfig.villageAppleTreeWorldGen) {
+			String info = "";
+			if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
+				info = I18n.get("gui.fruitfulfun.tip.appleSaplingFromHeroOfTheVillage");
+			}
+			if (FFCommonConfig.villageAppleTreeWorldGen) {
+				if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
+					info += "\n";
+				}
+				info += I18n.get("gui.fruitfulfun.tip.villageAppleTreeWorldGen");
+			}
+			ItemStack appleSapling = CoreModule.APPLE_SAPLING.itemStack();
+			registrar.accept(List.of(appleSapling), Component.literal(info));
+		}
 	}
 }
