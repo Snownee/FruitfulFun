@@ -1,3 +1,7 @@
 {
-  "parent": "fruitfulfun:block/apple_leaves_2"
+  "parent": "fruitfulfun:item/template_leaves_flowering",
+  "textures": {
+    "flowers": "fruitfulfun:block/apple_flowers",
+    "leaves": "minecraft:block/oak_leaves"
+  }
 }

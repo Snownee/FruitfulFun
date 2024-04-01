@@ -1,22 +1,22 @@
 {
-	"type": "lychee:item_inside",
-	"hide_in_viewer": true,
-	"contextual": [
-		{
-			"type": "fall_distance",
-			"range": 0
-		}
-	],
-	"post": [
-		{
-			"type": "fruitfulfun:explode",
-			"block_interaction": "keep",
-			"radius": 3
-		}
-	],
-	"item_in": {
-		"item": "fruitfulfun:pomegranate"
-	},
-	"block_in": "*",
-	"time": 1
+  "type": "lychee:item_inside",
+  "hide_in_viewer": true,
+  "contextual": [
+    {
+      "type": "fall_distance",
+      "range": 0
+    }
+  ],
+  "post": [
+    {
+      "type": "fruitfulfun:explode",
+      "block_interaction": "keep",
+      "radius": 3
+    }
+  ],
+  "item_in": {
+    "item": "fruitfulfun:pomegranate"
+  },
+  "block_in": "*",
+  "time": 1
 }

@@ -1,18 +1,18 @@
 {
-	"type": "fruitfulfun:hybridizing",
-	"pollens": [
-		"blue_orchid",
-		"oxeye_daisy"
-	],
-	"post": {
-		"type": "place",
-		"block": "mycelium",
-		"offsetY": -1
-	},
-	"conditions": [
-		{
-			"module": "fruitfulfun:bee",
-			"type": "kiwi:is_loaded"
-		}
-	]
+  "type": "fruitfulfun:hybridizing",
+  "pollens": [
+    "blue_orchid",
+    "oxeye_daisy"
+  ],
+  "post": {
+    "type": "place",
+    "block": "mycelium",
+    "offsetY": -1
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

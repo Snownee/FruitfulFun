@@ -1,21 +1,21 @@
 {
-  "type": "farmersdelight:cutting",
-  "ingredients": [
-    {
-      "item": "fruitfulfun:redlove_wood"
-    }
-  ],
-  "tool": {
-    "type": "farmersdelight:tool",
-    "tag": "c:tools/axes"
-  },
-  "result": [
-    {
-      "item": "fruitfulfun:stripped_redlove_wood"
-    },
-    {
-      "item": "farmersdelight:tree_bark"
-    }
-  ],
-  "sound": "minecraft:item.axe.strip"
+	"type": "farmersdelight:cutting",
+	"ingredients": [
+		{
+			"item": "fruitfulfun:redlove_wood"
+		}
+	],
+	"tool": {
+		"fabric:type": "farmersdelight:tool_action",
+		"action": "axe_strip"
+	},
+	"result": [
+		{
+			"item": "fruitfulfun:stripped_redlove_wood"
+		},
+		{
+			"item": "farmersdelight:tree_bark"
+		}
+	],
+	"sound": "minecraft:item.axe.strip"
 }

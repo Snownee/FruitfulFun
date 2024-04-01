@@ -1,24 +1,24 @@
 {
-	"type": "fruitfulfun:hybridizing",
-	"pollens": [
-		"fruitfulfun:tangerine_leaves",
-		"fruitfulfun:citron_leaves"
-	],
-	"post": {
-		"type": "place",
-		"block": {
-			"blocks": [
-				"fruitfulfun:pomelo_leaves"
-			],
-			"state": {
-				"age": 2
-			}
-		}
-	},
-	"conditions": [
-		{
-			"module": "fruitfulfun:bee",
-			"type": "kiwi:is_loaded"
-		}
-	]
+  "type": "fruitfulfun:hybridizing",
+  "pollens": [
+    "fruitfulfun:tangerine_leaves",
+    "fruitfulfun:citron_leaves"
+  ],
+  "post": {
+    "type": "place",
+    "block": {
+      "blocks": [
+        "fruitfulfun:pomelo_leaves"
+      ],
+      "state": {
+        "age": 2
+      }
+    }
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

@@ -1,26 +1,26 @@
 {
-	"type": "create:cutting",
-	"ingredients": [
-		{
-			"item": "fruitfulfun:stripped_redlove_wood"
-		}
-	],
-	"results": [
-		{
-			"item": "fruitfulfun:redlove_planks",
-			"count": 6
-		}
-	],
-	"processingTime": 50,
-	"conditions": [
-		{
-			"values": [
-				{
-					"type": "forge:mod_loaded",
-					"modid": "create"
-				}
-			],
-			"type": "forge:and"
-		}
-	]
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "fruitfulfun:stripped_redlove_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "fruitfulfun:redlove_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "create"
+        }
+      ],
+      "type": "forge:and"
+    }
+  ]
 }

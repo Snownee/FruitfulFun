@@ -82,6 +82,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.compat.curios.CuriosCompat;
+import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.vacuum.VacGunItem;
 import snownee.fruits.vacuum.VacModule;
@@ -184,7 +185,12 @@ public class CommonProxy {
 			addBuiltinPack(modContainer, "food");
 		}
 		if (Hooks.farmersdelight) {
-			addBuiltinPack(modContainer, "farmersdelight");
+			String mode = FarmersDelightModule.getMode();
+			if ("vectorwing".equals(mode)) {
+				addBuiltinPack(modContainer, "farmersdelight");
+			} else {
+				addBuiltinPack(modContainer, "farmersdelight_" + mode);
+			}
 		}
 		if (FFCommonConfig.villageAppleTreeWorldGen) {
 			addBuiltinPack(modContainer, "apple_tree_in_village");

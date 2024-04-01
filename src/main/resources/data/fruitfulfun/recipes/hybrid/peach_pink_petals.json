@@ -1,21 +1,21 @@
 {
-	"type": "fruitfulfun:hybridizing",
-	"hide_in_viewer": true,
-	"pollens": [
-		"fruitfulfun:redlove_leaves",
-		"pink_petals"
-	],
-	"ending_step": [
-		"pink_petals"
-	],
-	"post": {
-		"type": "place",
-		"block": "fruitfulfun:peach_pink_petals"
-	},
-	"conditions": [
-		{
-			"module": "fruitfulfun:bee",
-			"type": "kiwi:is_loaded"
-		}
-	]
+  "type": "fruitfulfun:hybridizing",
+  "hide_in_viewer": true,
+  "pollens": [
+    "fruitfulfun:redlove_leaves",
+    "pink_petals"
+  ],
+  "ending_step": [
+    "pink_petals"
+  ],
+  "post": {
+    "type": "place",
+    "block": "fruitfulfun:peach_pink_petals"
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

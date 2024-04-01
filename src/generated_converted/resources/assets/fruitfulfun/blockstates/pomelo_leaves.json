@@ -1,16 +1,26 @@
 {
-  "variants": {
-    "age=0": {
-      "model": "fruitfulfun:block/pomelo_leaves"
+  "multipart": [
+    {
+      "apply": {
+        "model": "fruitfulfun:block/pomelo_leaves",
+        "uvlock": true
+      }
     },
-    "age=1": {
-      "model": "fruitfulfun:block/pomelo_leaves"
+    {
+      "apply": {
+        "model": "fruitfulfun:block/pomelo_leaves_flowers"
+      },
+      "when": {
+        "age": "2"
+      }
     },
-    "age=2": {
-      "model": "fruitfulfun:block/pomelo_leaves_2"
-    },
-    "age=3": {
-      "model": "fruitfulfun:block/pomelo_leaves_3"
+    {
+      "apply": {
+        "model": "fruitfulfun:block/template_leaves_fruit_lg"
+      },
+      "when": {
+        "age": "3"
+      }
     }
-  }
+  ]
 }
