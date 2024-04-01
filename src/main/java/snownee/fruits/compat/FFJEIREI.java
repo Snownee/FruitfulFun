@@ -73,13 +73,13 @@ public class FFJEIREI {
 		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage || FFCommonConfig.villageAppleTreeWorldGen) {
 			String info = "";
 			if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
-				info = I18n.get("gui.fruitfulfun.tip.appleSaplingFromHeroOfTheVillage");
+				info = I18n.get("tip.fruitfulfun.appleSaplingFromHeroOfTheVillage");
 			}
 			if (FFCommonConfig.villageAppleTreeWorldGen) {
 				if (FFCommonConfig.appleSaplingFromHeroOfTheVillage) {
 					info += "\n";
 				}
-				info += I18n.get("gui.fruitfulfun.tip.villageAppleTreeWorldGen");
+				info += I18n.get("tip.fruitfulfun.villageAppleTreeWorldGen");
 			}
 			ItemStack appleSapling = CoreModule.APPLE_SAPLING.itemStack();
 			registrar.accept(List.of(appleSapling), Component.literal(info));

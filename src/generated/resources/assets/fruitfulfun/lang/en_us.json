@@ -200,8 +200,6 @@
   "gui.fruitfulfun.editGeneName": "Edit Gene Name",
   "gui.fruitfulfun.geneDesc": "Gene Description",
   "gui.fruitfulfun.geneName": "Gene Name",
-  "gui.fruitfulfun.tip.appleSaplingFromHeroOfTheVillage": "Gift from baby villager when you become hero of the village.",
-  "gui.fruitfulfun.tip.villageAppleTreeWorldGen": "Apple trees sometimes grow in villages in plains.",
   "item.fruitfulfun.cherry": "Cherry",
   "item.fruitfulfun.cherry_crown": "Cherry Crown",
   "item.fruitfulfun.chorus_fruit_pie_slice": "Slice of Chorus Fruit Pie",
@@ -264,6 +262,7 @@
   "text.fruitfulfun.trait.wither_tolerant": "Wither Tolerant",
   "text.fruitfulfun.trait.wither_tolerant.desc": "Invulnerable to Wither effect.",
   "tip.fruitfulfun.analyzing": "Analyzing...",
+  "tip.fruitfulfun.appleSaplingFromHeroOfTheVillage": "Gift from baby villager when you become hero of the village.",
   "tip.fruitfulfun.bookIsFull": "This book has no enough pages...",
   "tip.fruitfulfun.clearHarmfulEffects": "Clears Harmful Effects",
   "tip.fruitfulfun.invalidMutagen": "This mutagen is not usable for some reason.",
@@ -271,7 +270,10 @@
   "tip.fruitfulfun.noGeneNames": "You haven't found any gene yet.",
   "tip.fruitfulfun.pressAlt": "Press Alt for next page",
   "tip.fruitfulfun.recommendJade": "It's recommended to install Jade to see information, or you will need to hold a Writable Book on your off-hand.",
-  "tip.fruitfulfun.renameGenes": " Rename Genes",
+  "tip.fruitfulfun.redloveFruitUse": " Reduce breeding cooldown",
+  "tip.fruitfulfun.renameGenes": " Rename genes",
   "tip.fruitfulfun.useContainer": "You need a %s to eat this.",
+  "tip.fruitfulfun.villageAppleTreeWorldGen": "Apple trees sometimes grow in villages in plains.",
+  "tip.fruitfulfun.whenUseOnAnimal": "Use on Animal:",
   "tip.fruitfulfun.whenUseOnBookshelf": "Use on Bookshelf:"
 }
