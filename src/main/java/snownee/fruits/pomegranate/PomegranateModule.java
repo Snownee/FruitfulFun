@@ -20,7 +20,10 @@ import snownee.lychee.LycheeRegistries;
 @KiwiModule("pomegranate")
 public class PomegranateModule extends AbstractModule {
 	public static final KiwiGO<FFExplodeAction.Type> EXPLODE = go(FFExplodeAction.Type::new, () -> LycheeRegistries.POST_ACTION);
-	@KiwiModule.Category(value = Categories.INGREDIENTS, after = "wheat")
+	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
+	public static final KiwiGO<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = go(
+			() -> new HangingFruitLeavesBlock(PomegranateFruitTypes.POMEGRANATE, blockProp(Blocks.JUNGLE_LEAVES)));
+	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	public static final KiwiGO<HangingFruitBlock> POMEGRANATE = go(() -> new HangingFruitBlock(blockProp()
 			.instabreak()
@@ -28,9 +31,6 @@ public class PomegranateModule extends AbstractModule {
 			.dynamicShape()
 			.offsetType(BlockBehaviour.OffsetType.XZ)
 			.pushReaction(PushReaction.DESTROY)));
-	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
-	public static final KiwiGO<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = go(
-			() -> new HangingFruitLeavesBlock(PomegranateFruitTypes.POMEGRANATE, blockProp(Blocks.JUNGLE_LEAVES)));
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	public static final KiwiGO<SaplingBlock> POMEGRANATE_SAPLING = go(
