@@ -197,6 +197,8 @@
 	"advancements.fruitfulfun.inspector.description": "Use Bee Inspector on a Bee",
 	"advancements.fruitfulfun.ritual.title": "Listen to the Dragon Roar",
 	"advancements.fruitfulfun.ritual.description": "Start a Dragon Ritual",
+	"advancements.fruitfulfun.all_fruit.title": "Please Pass the All Fruit",
+	"advancements.fruitfulfun.all_fruit.description": "Eat every food that is from Fruitful Fun",
 	"config.jade.plugin_fruitfulfun": "Fruitful Fun",
 	"config.jade.plugin_fruitfulfun.inspector": "Bee Inspector",
 	"stat.fruitfulfun.bee_one_cm": "Distance by Bee",

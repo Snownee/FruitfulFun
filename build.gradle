@@ -96,6 +96,7 @@ dependencies {
 
     modImplementation "maven.modrinth:debugutils:woRp83Qc"
     modImplementation "maven.modrinth:suggestion-tweaker:1.20-1.5.1+fabric"
+    modImplementation "maven.modrinth:advancementinfo:gfcbMV82"
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2"))
 }
