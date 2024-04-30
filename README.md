@@ -6,7 +6,7 @@ by exploring the world and improving your farming skills.
 
 ## New Fruit Trees 🌳
 
-![Fruit falls off the tree](art/Fruit falls off the tree.webp)
+![Fruit falls off the tree](art/Fruit%20falls%20off%20the%20tree.webp)
 
 Fruitful Fun adds 10 new fruits to the game. Most of the fruits are not generated in the world. Instead,
 you must obtain them in other fun ways. If there is no people to harvest the fruits, the tree will stop
@@ -15,14 +15,14 @@ fruits at once.
 
 ## Pollination and Crossbreeding 🐝
 
-![Bee is helping to crossbreed the tree](art/Bee is helping to crossbreed the tree.webp)
+![Bee is helping to crossbreed the tree](art/Bee%20is%20helping%20to%20crossbreed%20the%20tree.webp)
 
 If a bee pollinates different types of trees or flowers, it can probably produce some interesting effects.
 By pollinating some specific blocks, you can get new fruit saplings that are more nutritious and valuable.
 
 ## Beekeeping and Genetics 🧬
 
-![Bee Inspector](art/Bee Inspector.webp)
+![Bee Inspector](art/Bee%20Inspector.webp)
 
 Bees now have different traits and they basically inherit according to Mendel's law. You can unlock some
 new perks and looks, and even be able to ride on a flying bee. In each new world, the genes will have a random
