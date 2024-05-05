@@ -1,0 +1,227 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
+  "parent": "minecraft:husbandry/fruitfulfun/grapefruit",
+  "criteria": {
+    "cherry": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:cherry"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "chorus_fruit_pie": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:chorus_fruit_pie"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "chorus_fruit_pie_slice": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:chorus_fruit_pie_slice"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "citron": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:citron"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "donauwelle": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:donauwelle"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "grapefruit": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:grapefruit"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "grapefruit_panna_cotta": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:grapefruit_panna_cotta"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "honey_pomelo_tea": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:honey_pomelo_tea"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "lemon": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:lemon"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "lemon_roast_chicken": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:lemon_roast_chicken"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "lime": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:lime"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "orange": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:orange"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "pomelo": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:pomelo"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "redlove": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:redlove"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "tangerine": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:tangerine"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.all_fruit.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "fruitfulfun:pomegranate"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruitfulfun.all_fruit.title"
+    }
+  },
+  "requirements": [
+    [
+      "cherry"
+    ],
+    [
+      "redlove"
+    ],
+    [
+      "tangerine"
+    ],
+    [
+      "lime"
+    ],
+    [
+      "citron"
+    ],
+    [
+      "pomelo"
+    ],
+    [
+      "orange"
+    ],
+    [
+      "lemon"
+    ],
+    [
+      "grapefruit"
+    ],
+    [
+      "lemon_roast_chicken"
+    ],
+    [
+      "chorus_fruit_pie_slice"
+    ],
+    [
+      "grapefruit_panna_cotta"
+    ],
+    [
+      "donauwelle"
+    ],
+    [
+      "honey_pomelo_tea"
+    ],
+    [
+      "chorus_fruit_pie"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": false
+}
