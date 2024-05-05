@@ -11,6 +11,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFDamageTypes;
@@ -32,7 +33,8 @@ public class ExplosionMixin {
 					target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
 	private boolean clampGrenadeExplosionDamage(Entity entity, DamageSource source, float f, Operation<Boolean> original) {
 		if (FFDamageTypes.isGrenadeExplosion(source)) {
-			f = Math.min(f / 3, 3);
+			boolean isPlayer = entity.getType() == EntityType.PLAYER;
+			f = Math.min(f / (isPlayer ? 6F : 3F), isPlayer ? 1.5F : 3F);
 		}
 		return original.call(entity, source, f);
 	}
