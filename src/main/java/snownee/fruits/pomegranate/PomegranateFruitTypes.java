@@ -14,5 +14,5 @@ public class PomegranateFruitTypes extends AbstractModule {
 			() -> Blocks.JUNGLE_LOG,
 			PomegranateModule.POMEGRANATE_LEAVES,
 			PomegranateModule.POMEGRANATE_SAPLING,
-			PomegranateModule.POMEGRANATE.getOrCreate()::asItem));
+			PomegranateModule.POMEGRANATE_ITEM::getOrCreate));
 }
