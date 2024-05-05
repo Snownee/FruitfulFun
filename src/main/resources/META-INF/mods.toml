@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
 license = "ARR"
+issueTrackerURL = "https://github.com/Snownee/FruitfulFun/issues"
 
 [[mods]]
 modId = "fruitfulfun"
@@ -22,5 +23,12 @@ side = "BOTH"
 modId = "lychee"
 mandatory = true
 versionRange = "[5.1.9, 6)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.fruitfulfun]]
+modId = "jade"
+mandatory = false
+versionRange = "[11.8, 12)"
 ordering = "NONE"
 side = "BOTH"
