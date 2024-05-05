@@ -161,7 +161,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.fruitfulfun.all_fruit.description"
+      "translate": "advancements.fruitfulfun.all_fruit_and_food.description"
     },
     "frame": "challenge",
     "hidden": false,
