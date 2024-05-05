@@ -3,7 +3,7 @@ package snownee.fruits.datagen;
 import static snownee.fruits.cherry.CherryModule.CHERRY;
 import static snownee.fruits.cherry.CherryModule.REDLOVE;
 import static snownee.fruits.datagen.SeasonalBlockTagsProvider.SERENESEASONS;
-import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE;
+import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE_ITEM;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -53,7 +53,7 @@ public class SeasonalItemTagsProvider extends FabricTagProvider.ItemTagProvider 
 		getOrCreateTagBuilder(SUMMER_CROPS)
 				.add(Items.APPLE, REDLOVE.get());
 		getOrCreateTagBuilder(AUTUMN_CROPS)
-				.add(Items.APPLE, REDLOVE.get(), POMEGRANATE.get().asItem())
+				.add(Items.APPLE, REDLOVE.get(), POMEGRANATE_ITEM.get())
 				.add(citrus);
 	}
 

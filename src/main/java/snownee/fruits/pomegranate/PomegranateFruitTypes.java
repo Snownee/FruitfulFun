@@ -11,5 +11,5 @@ import snownee.kiwi.KiwiModule;
 public class PomegranateFruitTypes extends AbstractModule {
 	public static final KiwiGO<FruitType> POMEGRANATE = go(
 			() -> new CoreFruitType(2, () -> Blocks.JUNGLE_LOG, PomegranateModule.POMEGRANATE_LEAVES, PomegranateModule.POMEGRANATE_SAPLING,
-					PomegranateModule.POMEGRANATE.getOrCreate()::asItem));
+					PomegranateModule.POMEGRANATE_ITEM::getOrCreate));
 }

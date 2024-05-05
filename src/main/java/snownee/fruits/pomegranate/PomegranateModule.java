@@ -11,6 +11,7 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.pomegranate.block.HangingFruitBlock;
 import snownee.fruits.pomegranate.block.HangingFruitLeavesBlock;
+import snownee.fruits.pomegranate.block.PomegranateItem;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
@@ -23,7 +24,7 @@ public class PomegranateModule extends AbstractModule {
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final KiwiGO<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = go(
 			() -> new HangingFruitLeavesBlock(PomegranateFruitTypes.POMEGRANATE, blockProp(Blocks.JUNGLE_LEAVES)));
-	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
+	@KiwiModule.NoItem
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	public static final KiwiGO<HangingFruitBlock> POMEGRANATE = go(() -> new HangingFruitBlock(blockProp()
 			.instabreak()
@@ -31,6 +32,9 @@ public class PomegranateModule extends AbstractModule {
 			.dynamicShape()
 			.offsetType(BlockBehaviour.OffsetType.XZ)
 			.pushReaction(PushReaction.DESTROY)));
+	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
+	@KiwiModule.Name("pomegranate")
+	public static final KiwiGO<PomegranateItem> POMEGRANATE_ITEM = go(() -> new PomegranateItem(POMEGRANATE.getOrCreate(), itemProp()));
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	public static final KiwiGO<SaplingBlock> POMEGRANATE_SAPLING = go(

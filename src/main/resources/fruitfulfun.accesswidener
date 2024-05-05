@@ -39,6 +39,7 @@ accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen pages
 accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen isModified Z
 accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen currentPage I
 
+accessible field net/minecraft/world/entity/Entity random Lnet/minecraft/util/RandomSource;
 accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
 
 accessible field net/minecraft/world/entity/AreaEffectCloud ownerUUID Ljava/util/UUID;

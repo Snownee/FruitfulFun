@@ -72,8 +72,8 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 				return;
 			}
 			VacItemProjectile projectile = shootItem(player, gun, container);
-			if (projectile != null && PomegranateModule.POMEGRANATE.is(projectile.getItem())) {
-				player.getCooldowns().addCooldown(gun.getItem(), 15);
+			if (projectile != null && PomegranateModule.POMEGRANATE_ITEM.is(projectile.getItem())) {
+				player.getCooldowns().addCooldown(gun.getItem(), 10);
 			} else {
 				long gameTime = player.level().getGameTime();
 				long lastShot = gun.getOrCreateTag().getLong("LastShot");

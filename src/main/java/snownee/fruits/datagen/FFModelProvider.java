@@ -74,7 +74,7 @@ public class FFModelProvider extends FabricModelProvider {
 				CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
 		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE.get().asItem());
 		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE_SLICE.get());
-		generators.createSimpleFlatItemModel(PomegranateModule.POMEGRANATE.get().asItem());
+		generators.createSimpleFlatItemModel(PomegranateModule.POMEGRANATE_ITEM.get());
 	}
 
 	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {
