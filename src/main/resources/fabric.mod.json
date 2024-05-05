@@ -53,7 +53,10 @@
 		"lychee": ">=5.1.10"
 	},
 	"recommends": {
-		"jade": "*"
+		"jade": ">=11.8"
+	},
+	"breaks": {
+		"jade": "<11.8"
 	},
 	"custom": {
 		"modmenu": {
