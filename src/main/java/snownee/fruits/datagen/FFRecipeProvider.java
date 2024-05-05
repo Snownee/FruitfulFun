@@ -123,7 +123,7 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 		woodenBoat(exporter, Items.CHERRY_BOAT, REDLOVE_PLANKS.get());
 		hangingSign(exporter, CITRUS_HANGING_SIGN_ITEM.get(), STRIPPED_REDLOVE_LOG.get());
 		hangingSign(exporter, REDLOVE_HANGING_SIGN_ITEM.get(), STRIPPED_CITRUS_LOG.get());
-		flowerCrown(exporter, CherryModule.CHERRY_CROWN.get(), CherryModule.CHERRY_LEAVES.get());
+		flowerCrown(exporter, CherryModule.CHERRY_CROWN.get(), Items.CHERRY_LEAVES);
 		flowerCrown(exporter, CherryModule.REDLOVE_CROWN.get(), CherryModule.REDLOVE_LEAVES.get());
 
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, HEART_BANNER_PATTERN.get())
