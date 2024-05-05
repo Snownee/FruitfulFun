@@ -159,7 +159,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.display(
 						PomegranateModule.POMEGRANATE.get(),
 						Component.translatable("advancements.fruitfulfun.all_fruit.title"),
-						Component.translatable("advancements.fruitfulfun.all_fruit.description"),
+						Component.translatable("advancements.fruitfulfun.all_fruit_and_food.description"),
 						null, FrameType.CHALLENGE, true, true, false)
 				.rewards(xp100)
 				.save(foodExporter, "husbandry/fruitfulfun/all_fruit_and_food");
