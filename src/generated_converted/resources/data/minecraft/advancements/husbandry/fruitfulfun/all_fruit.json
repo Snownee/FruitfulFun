@@ -1,0 +1,165 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/grapefruit",
+  "criteria": {
+    "apple": {
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:apple"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "cherry": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:cherry"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "citron": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:citron"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "grapefruit": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:grapefruit"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "lemon": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:lemon"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "lime": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:lime"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "orange": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:orange"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "pomelo": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:pomelo"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "redlove": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:redlove"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "tangerine": {
+      "conditions": {
+        "item": {
+          "items": [
+            "fruitfulfun:tangerine"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.all_fruit.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "fruitfulfun:pomegranate"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruitfulfun.all_fruit.title"
+    }
+  },
+  "requirements": [
+    [
+      "tangerine"
+    ],
+    [
+      "lime"
+    ],
+    [
+      "citron"
+    ],
+    [
+      "pomelo"
+    ],
+    [
+      "orange"
+    ],
+    [
+      "lemon"
+    ],
+    [
+      "grapefruit"
+    ],
+    [
+      "apple"
+    ],
+    [
+      "cherry"
+    ],
+    [
+      "redlove"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "value": {
+        "module": "fruitfulfun:food",
+        "type": "kiwi:is_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}
