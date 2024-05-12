@@ -19,7 +19,7 @@ import snownee.fruits.ritual.RitualModule;
 @Mixin(BottleItem.class)
 public class BottleItemMixin {
 	@WrapOperation(method = {"lambda$use$0", "m_289173_"}, constant = @Constant(classValue = EnderDragon.class))
-	private static boolean allowDummyDragonBreath(Object object, Operation<Boolean> original, @Local AreaEffectCloud cloud) {
+	private static boolean allowDummyDragonBreath(Object object, Operation<Boolean> original, @Local(argsOnly = true) AreaEffectCloud cloud) {
 		return RitualModule.DUMMY_UUID.equals(cloud.ownerUUID) || original.call(object);
 	}
 
