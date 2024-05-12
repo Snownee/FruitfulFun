@@ -219,12 +219,12 @@ dependencies {
 
     implementation fg.deobf("curse.maven:farmers-delight-398521:4679319")
     //implementation fg.deobf("curse.maven:jei-238222:4175833")
-    implementation fg.deobf("curse.maven:jade-324717:5072729")
-    implementation fg.deobf("maven.modrinth:kiwi:dHXtj93x")
-    annotationProcessor "maven.modrinth:kiwi:dHXtj93x"
+    implementation fg.deobf("curse.maven:jade-324717:5329131")
+    implementation fg.deobf("maven.modrinth:kiwi:1lL360rM")
+    annotationProcessor "maven.modrinth:kiwi:1lL360rM"
 //    implementation fg.deobf("libs:Kiwi-1.20.1-forge:11.5.0")
 //    annotationProcessor "libs:Kiwi-1.20.1-forge:11.5.0"
-    implementation fg.deobf("maven.modrinth:lychee:g9GMvNiF")
+    implementation fg.deobf("maven.modrinth:lychee:qwaP2Vvx")
     implementation fg.deobf("maven.modrinth:supplementaries:16GEKSIv")
     implementation fg.deobf("maven.modrinth:moonlight:Jv6lR8aV")
     implementation fg.deobf("maven.modrinth:curios:3VUlU5Ga")
@@ -232,19 +232,19 @@ dependencies {
 
 //    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}"
     compileOnly(jarJar("dev.su5ed.sinytra:fabric-loader:2.6.0+0.15.0+1.20.1")) {
-        jarJar.ranged(it, "[0,)")
+        jarJar.ranged(it, "[2,)")
         transitive(false)
     }
-    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-biome-api-v1:13.0.12+dd0389a577")) {
-        jarJar.ranged(it, "[13.0.12,)")
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-biome-api-v1:13.0.13+dc36698e77")) {
+        jarJar.ranged(it, "[13.0.13,)")
         transitive(false)
     }
-    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-resource-loader-v0:0.11.9+142e25ab77")) {
-        jarJar.ranged(it, "[0.11.9,)")
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-resource-loader-v0:0.11.10+bcd08ed377")) {
+        jarJar.ranged(it, "[0.11.10,)")
         transitive(false)
     }
-    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-convention-tags-v1:1.5.4+fa3d1c0177")) {
-        jarJar.ranged(it, "[1.5.4,)")
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-convention-tags-v1:1.5.5+fa3d1c0177")) {
+        jarJar.ranged(it, "[1.5.5,)")
         transitive(false)
     }
     runtimeOnly fg.deobf("dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}")

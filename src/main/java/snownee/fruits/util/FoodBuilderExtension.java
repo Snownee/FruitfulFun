@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import snownee.kiwi.util.CachedSupplier;
 
 public class FoodBuilderExtension {
 	private final FoodProperties.Builder builder;

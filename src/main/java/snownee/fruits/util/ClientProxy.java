@@ -14,8 +14,6 @@ import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
 
-import java.util.function.Supplier;
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -66,6 +64,7 @@ import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
 import snownee.fruits.vacuum.client.ItemProjectileColor;
 import snownee.fruits.vacuum.client.ItemProjectileRenderer;
+import snownee.kiwi.util.ColorProviderUtil;
 
 public class ClientProxy {
 	public static void init() {
@@ -77,11 +76,11 @@ public class ClientProxy {
 		WoodType.register(CoreModule.CITRUS_WOOD_TYPE);
 
 		eventBus.addListener((RegisterColorHandlersEvent.Block event) -> {
-			Supplier<BlockColor> oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
+			BlockColor oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
 			event.register(
 					(state, world, pos, i) -> {
 						if (i == 0) {
-							return oakBlockColor.get().getColor(Blocks.OAK_LEAVES.defaultBlockState(), world, pos, i);
+							return oakBlockColor.getColor(Blocks.OAK_LEAVES.defaultBlockState(), world, pos, i);
 						}
 						if (i == 1) {
 							if (CITRON_LEAVES.is(state)) {
@@ -123,9 +122,9 @@ public class ClientProxy {
 
 		eventBus.addListener((RegisterColorHandlersEvent.Item event) -> {
 			ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
-			Supplier<ItemColor> itemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
+			ItemColor itemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
 			event.register(
-					(stack, i) -> itemColor.get().getColor(oakLeaves, i),
+					(stack, i) -> itemColor.getColor(oakLeaves, i),
 					TANGERINE_LEAVES.get(),
 					LIME_LEAVES.get(),
 					CITRON_LEAVES.get(),
@@ -144,13 +143,13 @@ public class ClientProxy {
 		});
 
 		eventBus.addListener((RegisterColorHandlersEvent.Block event) -> {
-			Supplier<BlockColor> birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
+			BlockColor birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
 			event.register((state, world, pos, i) -> {
 				if (i == 1) {
 					return 0xC22626;
 				}
 				if (i == 2) {
-					return birchBlockColor.get().getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
+					return birchBlockColor.getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
 				}
 				return -1;
 			}, REDLOVE_LEAVES.getOrCreate());
