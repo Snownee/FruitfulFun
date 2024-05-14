@@ -62,8 +62,10 @@ public class FruitTreeBlockEntity extends ModBlockEntity {
 		}
 		lifespan = helper.getInt("Lifespan");
 		ListTag list = helper.getTagList("ActiveLeaves", Tag.TAG_COMPOUND);
-		for (Tag tag : list) {
-			activeLeaves.add(NbtUtils.readBlockPos((CompoundTag) tag));
+		if (list != null) {
+			for (Tag tag : list) {
+				activeLeaves.add(NbtUtils.readBlockPos((CompoundTag) tag));
+			}
 		}
 		super.load(compound);
 	}
