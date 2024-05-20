@@ -12,7 +12,6 @@ import static snownee.fruits.cherry.CherryModule.PEACH_PINK_PETALS;
 import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -39,7 +38,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
@@ -72,8 +70,6 @@ public class ClientProxy {
 		eventBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
 			event.registerEntityRenderer(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
 		});
-
-		WoodType.register(CoreModule.CITRUS_WOOD_TYPE);
 
 		eventBus.addListener((RegisterColorHandlersEvent.Block event) -> {
 			BlockColor oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
@@ -134,8 +130,6 @@ public class ClientProxy {
 					GRAPEFRUIT_LEAVES.get(),
 					APPLE_LEAVES.get());
 		});
-
-		WoodType.register(REDLOVE_WOOD_TYPE);
 
 		eventBus.addListener((RegisterParticleProvidersEvent event) -> {
 			event.registerSpriteSet(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
