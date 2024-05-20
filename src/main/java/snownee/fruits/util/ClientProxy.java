@@ -12,7 +12,6 @@ import static snownee.fruits.cherry.CherryModule.PEACH_PINK_PETALS;
 import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD_TYPE;
 
 import java.util.function.Supplier;
 
@@ -47,7 +46,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
@@ -137,8 +135,6 @@ public class ClientProxy implements ClientModInitializer {
 	public void onInitializeClient() {
 		EntityRendererRegistry.register(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
 
-		WoodType.register(CoreModule.CITRUS_WOOD_TYPE);
-
 		Supplier<BlockColor> oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
 		ColorProviderRegistry.BLOCK.register(
 				(state, world, pos, i) -> {
@@ -194,8 +190,6 @@ public class ClientProxy implements ClientModInitializer {
 				LEMON_LEAVES.get(),
 				GRAPEFRUIT_LEAVES.get(),
 				APPLE_LEAVES.get());
-
-		WoodType.register(REDLOVE_WOOD_TYPE);
 
 		ParticleFactoryRegistry.getInstance().register(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);

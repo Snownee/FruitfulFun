@@ -29,7 +29,8 @@
 		"RideableBeePlayerMixin",
 		"ServerEntityMixin",
 		"ServerLevelMixin",
-		"SkullBlockEntityMixin"
+		"SkullBlockEntityMixin",
+		"WoodTypeMixin"
 	],
 	"client": [
 		"client.BeeRendererMixin",
