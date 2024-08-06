@@ -47,6 +47,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.food.PieBlock;
 import snownee.fruits.util.CommonProxy;
 import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
@@ -82,11 +83,11 @@ public class RitualModule extends AbstractModule {
 		Hooks.ritual = true;
 	}
 
-	public static void tryStartRitual(Level level, BlockPos pos) {
+	public static void tryStartRitual(Level level, BlockPos pos, BlockState pieState) {
 		if (!level.getEntities(EntityType.INTERACTION, new AABB(pos), RitualModule::isFFInteractionEntity).isEmpty()) {
 			return;
 		}
-		List<BlockPos> heads = findRitual(level, pos);
+		List<BlockPos> heads = findRitual(level, pos, pieState);
 		if (heads.isEmpty()) {
 			return;
 		}
@@ -99,7 +100,10 @@ public class RitualModule extends AbstractModule {
 		level.addFreshEntity(interaction);
 	}
 
-	public static List<BlockPos> findRitual(Level level, BlockPos pos) {
+	public static List<BlockPos> findRitual(Level level, BlockPos pos, BlockState pieState) {
+		if (!isCenterBlock(pieState)) {
+			return List.of();
+		}
 		BlockPattern pattern = RITUAL.get();
 		BlockPos.MutableBlockPos mutable = pos.mutable()
 				.move(Direction.NORTH, 2)
@@ -181,6 +185,10 @@ public class RitualModule extends AbstractModule {
 		return interaction.getCustomName() != null && interaction.getCustomName().getString().equals(INTERACTION_NAME);
 	}
 
+	public static boolean isCenterBlock(BlockState blockState) {
+		return FoodModule.CHORUS_FRUIT_PIE.is(blockState) && blockState.getValue(PieBlock.PIE_SERVINGS) == 4;
+	}
+
 	public static void tickInteraction(Interaction interaction) {
 		Level level = interaction.level();
 		if (level.isClientSide) {
@@ -196,7 +204,7 @@ public class RitualModule extends AbstractModule {
 			interaction.discard();
 			return;
 		}
-		if (!FoodModule.CHORUS_FRUIT_PIE.is(level.getBlockState(interaction.blockPosition()))) {
+		if (!isCenterBlock(level.getBlockState(interaction.blockPosition()))) {
 			interaction.discard();
 			return;
 		}
@@ -220,7 +228,8 @@ public class RitualModule extends AbstractModule {
 	public static void finishRitual(Interaction interaction) {
 		Level level = interaction.level();
 		BlockPos pos = interaction.blockPosition();
-		List<BlockPos> heads = findRitual(level, pos);
+		BlockState state = level.getBlockState(pos);
+		List<BlockPos> heads = findRitual(level, pos, state);
 		if (heads.isEmpty()) {
 			return;
 		}
@@ -230,7 +239,6 @@ public class RitualModule extends AbstractModule {
 			}
 		}
 		if (level.isClientSide) {
-			BlockState state = level.getBlockState(pos);
 			VoxelShape shape = state.getCollisionShape(level, pos);
 			level.removeBlock(pos, false);
 			if (shape.isEmpty()) {

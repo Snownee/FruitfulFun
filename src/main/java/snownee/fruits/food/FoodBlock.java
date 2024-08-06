@@ -107,6 +107,6 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 				|| blockState2.is(blockState.getBlock())) {
 			return;
 		}
-		RitualModule.tryStartRitual(level, pos);
+		RitualModule.tryStartRitual(level, pos, blockState);
 	}
 }
