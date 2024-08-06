@@ -42,7 +42,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 
 	public Collection<String> pollens = List.of();
 	public Collection<String> endingStep = List.of();
-	public final NonNullList<Ingredient> ingredients = NonNullList.create();
+	public NonNullList<Ingredient> ingredients;
 
 	public HybridizingRecipe(ResourceLocation id) {
 		super(id);
@@ -83,11 +83,15 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 
 	@Override
 	public @NotNull NonNullList<Ingredient> getIngredients() {
+		refreshIngredients();
 		return ingredients;
 	}
 
 	public void refreshIngredients() {
-		ingredients.clear();
+		if (ingredients != null) {
+			return;
+		}
+		ingredients = NonNullList.create();
 		for (String pollen : pollens) {
 			Item item = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen)).asItem();
 			if (item != Items.AIR) {
@@ -152,14 +156,12 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 					recipe.endingStep.add(Util.trimRL(s));
 				}
 			}
-			recipe.refreshIngredients();
 		}
 
 		@Override
 		public void fromNetwork(HybridizingRecipe recipe, FriendlyByteBuf buf) {
 			recipe.pollens = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
 			recipe.endingStep = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
-			recipe.refreshIngredients();
 		}
 
 		@Override

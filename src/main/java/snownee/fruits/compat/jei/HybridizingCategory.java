@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.HybridizingRecipe;
+import snownee.fruits.compat.DummyBlockInput;
 import snownee.fruits.compat.FFJEIREI;
 import snownee.lychee.client.gui.GuiGameElement;
 import snownee.lychee.compat.jei.JEICompat;
@@ -64,11 +66,24 @@ public class HybridizingCategory extends BaseJEICategory<LycheeContext, Hybridiz
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, HybridizingRecipe recipe, IFocusGroup focuses) {
 		int xCenter = getWidth() / 2;
-		int y = recipe.getIngredients().size() > 9 || recipe.showingActionsCount() > 9 ? 26 : 28;
-		ingredientGroup(builder, recipe, xCenter - 45, y);
+		List<FFJEIREI.Input> inputs = FFJEIREI.getInputs(recipe);
+		int y = inputs.size() > 9 || recipe.showingActionsCount() > 9 ? 26 : 28;
+		ingredientGroup(builder, inputs, xCenter - 45, y);
 		actionGroup(builder, recipe, xCenter + 50, y);
 		addBlockIngredients(builder, recipe);
 		recipe.addInvisibleInputs(builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)::addItemStack);
 		recipe.addInvisibleOutputs(builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)::addItemStack);
+	}
+
+	public void ingredientGroup(IRecipeLayoutBuilder builder, List<FFJEIREI.Input> inputs, int x, int y) {
+		slotGroup(builder, x + 1, y + 1, 0, inputs, (layout0, input, i, x0, y0) -> {
+			IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, x0, y0);
+			if (input.isItem()) {
+				slot.addIngredients(Objects.requireNonNull(input.itemIngredient));
+			} else {
+				slot.addIngredient(JEICompat.POST_ACTION, new DummyBlockInput(input.block));
+			}
+			slot.setBackground(JEICompat.slot(JEICompat.SlotType.NORMAL), -1, -1);
+		});
 	}
 }

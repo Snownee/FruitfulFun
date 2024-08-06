@@ -8,6 +8,8 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
+import me.shedaniel.rei.api.common.entry.EntryStack;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
@@ -17,8 +19,10 @@ import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.HybridizingRecipe;
+import snownee.fruits.compat.DummyBlockInput;
 import snownee.fruits.compat.FFJEIREI;
 import snownee.lychee.client.gui.GuiGameElement;
+import snownee.lychee.compat.rei.LEntryWidget;
 import snownee.lychee.compat.rei.REICompat;
 import snownee.lychee.compat.rei.SideBlockIcon;
 import snownee.lychee.compat.rei.category.BaseREICategory;
@@ -59,11 +63,25 @@ public class HybridizingCategory extends BaseREICategory<LycheeContext, Hybridiz
 		List<Widget> widgets = super.setupDisplay(display, bounds);
 		this.drawInfoBadge(widgets, display, startPoint);
 		int xCenter = bounds.getCenterX();
-		int y = recipe.getIngredients().size() <= 9 && recipe.showingActionsCount() <= 9 ? 28 : 26;
-		this.ingredientGroup(widgets, startPoint, recipe, xCenter - 45 - startPoint.x, y);
+		List<FFJEIREI.Input> inputs = FFJEIREI.getInputs(recipe);
+		int y = inputs.size() <= 9 && recipe.showingActionsCount() <= 9 ? 28 : 26;
+		this.ingredientGroup(widgets, startPoint, inputs, xCenter - 45 - startPoint.x, y);
 		this.actionGroup(widgets, startPoint, recipe, xCenter + 50 - startPoint.x, y);
 		this.drawExtra(widgets, display, bounds);
 		return widgets;
+	}
+
+	public void ingredientGroup(List<Widget> widgets, Point startPoint, List<FFJEIREI.Input> inputs, int x, int y) {
+		slotGroup(widgets, startPoint, x, y, inputs, (widgets0, startPoint0, input, x0, y0) -> {
+			LEntryWidget slot = REICompat.slot(startPoint, x0, y0, REICompat.SlotType.NORMAL);
+			if (input.isItem()) {
+				slot.entries(EntryIngredients.ofIngredient(Objects.requireNonNull(input.itemIngredient)));
+			} else {
+				slot.entry(EntryStack.of(REICompat.POST_ACTION, new DummyBlockInput(input.block)));
+			}
+			slot.markInput();
+			widgets.add(slot);
+		});
 	}
 
 	public void drawExtra(List<Widget> widgets, HybridizingDisplay display, Rectangle bounds) {
