@@ -1,10 +1,14 @@
 package snownee.fruits.compat;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -12,9 +16,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
@@ -83,6 +93,41 @@ public class FFJEIREI {
 			}
 			ItemStack appleSapling = CoreModule.APPLE_SAPLING.itemStack();
 			registrar.accept(List.of(appleSapling), Component.literal(info));
+		}
+	}
+
+	public static List<Input> getInputs(HybridizingRecipe recipe) {
+		List<Input> inputs = Lists.newArrayListWithExpectedSize(recipe.pollens.size());
+		for (String pollen : recipe.pollens) {
+			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen));
+			Item item = block.asItem();
+			if (item == Items.AIR) {
+				inputs.add(new Input(block));
+			} else {
+				inputs.add(new Input(Ingredient.of(item)));
+			}
+		}
+		return inputs;
+	}
+
+	public static class Input {
+		@Nullable
+		public final Ingredient itemIngredient;
+		@Nullable
+		public final Block block;
+
+		public Input(@NotNull Ingredient itemIngredient) {
+			this.itemIngredient = Objects.requireNonNull(itemIngredient);
+			this.block = null;
+		}
+
+		public Input(@NotNull Block block) {
+			this.itemIngredient = null;
+			this.block = Objects.requireNonNull(block);
+		}
+
+		public boolean isItem() {
+			return itemIngredient != null;
 		}
 	}
 }
