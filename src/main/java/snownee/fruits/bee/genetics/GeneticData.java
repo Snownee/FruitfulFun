@@ -2,8 +2,10 @@ package snownee.fruits.bee.genetics;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -29,15 +31,23 @@ public class GeneticData extends SavedData {
 	public static GeneticData load(CompoundTag compoundTag) {
 		GeneticData data = new GeneticData();
 		CompoundTag alleleTag = compoundTag.getCompound("Alleles");
+		Set<String> knownCodes = Sets.newHashSetWithExpectedSize(alleleTag.size());
 		for (String key : alleleTag.getAllKeys()) {
 			CompoundTag recordTag = alleleTag.getCompound(key);
-			data.alleles.put(key, new AlleleRecord(recordTag.getString("Code"), recordTag.getInt("Index")));
+			String code = recordTag.getString("Code");
+			if (knownCodes.add(code)) {
+				data.alleles.put(key, new AlleleRecord(code, recordTag.getInt("Index")));
+			}
 		}
 		data.setDirty();
 		return data;
 	}
 
 	public void initAlleles(long seed) {
+		for (Allele allele : Allele.values()) {
+			allele.codename = '0';
+			allele.index = -1;
+		}
 		RandomSource random = RandomSource.create(seed);
 		for (Allele allele : Allele.values()) {
 			AlleleRecord alleleRecord = alleles.get(allele.name);

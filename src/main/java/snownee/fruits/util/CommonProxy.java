@@ -11,6 +11,7 @@ import com.mojang.authlib.GameProfile;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -77,6 +78,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
+import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
@@ -241,6 +243,12 @@ public class CommonProxy implements ModInitializer {
 				handler.getPlayer().sendSystemMessage(msg);
 				FFCommonConfig.leavesUsInPeaceIncompatibilityNotified = true;
 				KiwiConfigManager.getHandler(FFCommonConfig.class).save();
+			});
+		}
+
+		if (!Platform.isProduction()) {
+			CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+				dispatcher.register(FFCommands.register());
 			});
 		}
 	}

@@ -153,6 +153,7 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     exclude "/assets/${project.mod_id}/lang/en_us.existing.json"
+    exclude "/snownee/fruits/command"
     exclude '**/*.bat'
     exclude '**/*.psd'
     from("LICENSE") {
