@@ -63,6 +63,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -81,6 +82,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneticData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
+import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.curios.CuriosCompat;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.duck.FFPlayer;
@@ -145,10 +147,11 @@ public class CommonProxy {
 			});
 		}
 
-//		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-//		eventBus.addListener((AddPackFindersEvent event) -> {
-//			event.addRepositorySource();
-//		});
+		if (!Platform.isProduction()) {
+			MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
+				event.getDispatcher().register(FFCommands.register());
+			});
+		}
 
 		if (Platform.isPhysicalClient()) {
 			ClientProxy.init();
