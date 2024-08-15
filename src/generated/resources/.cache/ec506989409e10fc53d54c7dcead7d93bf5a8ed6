@@ -1,7 +1,7 @@
-// 1.20.1	2024-05-06T00:45:51.5453938	fruitfulfun:food/Block Loot Tables - fruitfulfun:food
+// 1.20.1	2024-08-15T18:28:09.1522414	fruitfulfun:food/Block Loot Tables - fruitfulfun:food
 7204d23c953272b8b58486d36a1d7147af838ee4 resourcepacks\food\data\fruitfulfun\loot_tables\blocks\donauwelle.json
-8442f6a826c2a17452844bea93914b0a9db32627 resourcepacks\food\data\fruitfulfun\loot_tables\blocks\chorus_fruit_pie.json
 e74fa37d68a018ba6a0971fc1f30e41a913733bb resourcepacks\food\data\fruitfulfun\loot_tables\blocks\grapefruit_panna_cotta.json
+8442f6a826c2a17452844bea93914b0a9db32627 resourcepacks\food\data\fruitfulfun\loot_tables\blocks\chorus_fruit_pie.json
 0ee6df8d6a194573e21d06dd8520ee151b3a667d resourcepacks\food\data\fruitfulfun\loot_tables\blocks\rice_with_fruits.json
 9bee6a17c713a1b14618e4e234cc9e17be8e7a00 resourcepacks\food\data\fruitfulfun\loot_tables\blocks\honey_pomelo_tea.json
 5956a8eb324a365bf587bc693209ca4830c1db0f resourcepacks\food\data\fruitfulfun\loot_tables\blocks\lemon_roast_chicken_block.json

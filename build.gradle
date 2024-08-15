@@ -81,11 +81,11 @@ dependencies {
 
     //modImplementation "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
     //annotationProcessor "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
-    modImplementation "curse.maven:kiwi-549404:5140632"
-    annotationProcessor "curse.maven:kiwi-549404:5140632"
+    modImplementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
     //modImplementation "libs:Lychee-1.20.1-fabric:${project.lychee_version}"
-    modImplementation "maven.modrinth:lychee:22JEIieU"
-    modImplementation "curse.maven:jade-324717:5106745"
+    modImplementation "maven.modrinth:lychee:zCrffyJ6"
+    modImplementation "maven.modrinth:jade:${project.jade_version}+fabric"
 
     // do not upgrade, otherwise it will crash
     modImplementation "dev.emi:trinkets:${project.trinkets_version}"
@@ -152,7 +152,7 @@ java {
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-    exclude "/assets/${project.mod_id}/lang/en_us.existing.json"
+    exclude "/assets/${project.mod_id}/lang/en_us.existing.yaml"
     exclude "/snownee/fruits/command"
     exclude '**/*.bat'
     exclude '**/*.psd'

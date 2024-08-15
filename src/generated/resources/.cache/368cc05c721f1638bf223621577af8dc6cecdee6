@@ -1,4 +1,4 @@
-// 1.20.1	2024-05-06T00:45:51.5433978	Fruitful Fun/Block Loot Tables - fruitfulfun:core
+// 1.20.1	2024-08-15T18:28:09.1492487	Fruitful Fun/Block Loot Tables - fruitfulfun:core
 8161d0d9242765519f1767647d443bac70785439 data\fruitfulfun\loot_tables\blocks\pomelo_sapling.json
 be52f1229b541db7c4a69da2ac83de855f27dc9e data\fruitfulfun\loot_tables\blocks\potted_tangerine.json
 71b7dd9cb59b8a7dfca95f10b01e780c4b74b00b data\fruitfulfun\loot_tables\blocks\citrus_hanging_sign.json
@@ -13,8 +13,8 @@ d5fd0505e26446abfd550fb5080bc742754527fc data\fruitfulfun\loot_tables\blocks\cit
 babf2bd58a8843547df21630d19c9d6c7669c8b0 data\fruitfulfun\loot_tables\blocks\potted_citron.json
 3f281b00a218aaf5591667511948a744f82fcff3 data\fruitfulfun\loot_tables\blocks\potted_grapefruit.json
 fe7489b32edd5ae3feb930cd0de0735d7719ddcb data\fruitfulfun\loot_tables\blocks\potted_apple.json
-8b51b8ee9106d356328f8609c9693a1d8afceb3e data\fruitfulfun\loot_tables\blocks\pomelo_leaves.json
 e1fcf1a6a27a0cc4dcdd2a6dcd418c7f5e18211b data\fruitfulfun\loot_tables\blocks\grapefruit_sapling.json
+8b51b8ee9106d356328f8609c9693a1d8afceb3e data\fruitfulfun\loot_tables\blocks\pomelo_leaves.json
 bfde8a3ab20a9d9f89ca5be4cb3763f78d1d3fb2 data\fruitfulfun\loot_tables\blocks\apple_sapling.json
 9af1492b4bd438e2ab9f88e61f50a25d0a2fdd90 data\fruitfulfun\loot_tables\blocks\citrus_slab.json
 dab1c77e23c04d21fb061c4f03e2c080d1c7b217 data\fruitfulfun\loot_tables\blocks\stripped_citrus_log.json
