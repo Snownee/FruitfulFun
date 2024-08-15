@@ -28,7 +28,7 @@ public final class FFCommonConfig {
 	public static int fruitTreeLifespanMax = 24;
 	public static boolean appleSaplingFromHeroOfTheVillage = true;
 	@KiwiConfig.GameRestart
-	public static boolean villageAppleTreeWorldGen = true;
+	public static boolean villageAppleTreeWorldGen = false;
 	public static String hornHarvestingInstrument = "minecraft:sing_goat_horn";
 	public static boolean wanderingTraderSapling = true;
 	@KiwiConfig.Range(min = 0)
