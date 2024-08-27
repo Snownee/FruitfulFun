@@ -1,12 +1,19 @@
 package snownee.fruits.bee;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.ParticleUtils;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -49,6 +56,8 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
+	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
+	public static final int WAXED_TICKS = 1200;
 
 	public BeeModule() {
 		Hooks.bee = true;
@@ -59,6 +68,31 @@ public class BeeModule extends AbstractModule {
 					.required(LycheeLootContextParams.BLOCK_POS)
 					.optional(LootContextParams.BLOCK_ENTITY);
 		});
+	}
+
+	public static boolean isWaxedMarker(Display display) {
+		return display.getType() == EntityType.BLOCK_DISPLAY && display.getCustomName() != null &&
+				display.getCustomName().getString().equals(WAXED_MARKER_NAME);
+	}
+
+	public static void tickWaxedMarker(Display display) {
+		Level level = display.level();
+		if (level.isClientSide) {
+			if (display.random.nextInt(50) == 0) {
+				ParticleUtils.spawnParticlesOnBlockFaces(
+						level,
+						display.blockPosition(),
+						ParticleTypes.WAX_ON,
+						UniformInt.of(2, 4));
+			}
+			return;
+		}
+		if (!Hooks.bee || display.tickCount > WAXED_TICKS) {
+			display.discard();
+		} else if (display.tickCount % 20 == 0 &&
+				!(level.getBlockEntity(display.blockPosition()) instanceof BeehiveBlockEntity)) {
+			display.discard();
+		}
 	}
 
 	@Override

@@ -63,6 +63,7 @@ public class HangingFruitBlock extends HangingRootsBlock {
 
 	@Override
 	public void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
+		//TODO(1.21): gamerule projectilesCanBreakBlocks
 		BlockPos blockPos = blockHitResult.getBlockPos();
 		if (!level.isClientSide && projectile.mayInteract(level, blockPos) && projectile.getType().is(EntityTypeTags.IMPACT_PROJECTILES)) {
 			level.destroyBlock(blockPos, true, projectile);

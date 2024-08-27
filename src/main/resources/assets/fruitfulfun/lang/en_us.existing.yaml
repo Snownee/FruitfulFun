@@ -99,6 +99,7 @@ tip.fruitfulfun.leavesUsInPeace: >-
   pollinating them. For a better experience, it is recommended to set the
   "Unknown leaves only match self" option in the Leaves Us In Peace's
   configuration to "No". This message will be displayed only once.
+tip.fruitfulfun.beehiveWaxing: You can then mine this block as if you're holding a silk touching tool.
 text.fruitfulfun.time: '%s/%s %s:%s:%s'
 text.fruitfulfun.trait: Traits
 text.fruitfulfun.trait.none: This bee doesn't have any traits.
