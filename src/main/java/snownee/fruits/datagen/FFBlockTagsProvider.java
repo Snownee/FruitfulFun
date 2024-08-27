@@ -135,7 +135,8 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 		getOrCreateTagBuilder(BlockTags.FLOWERS).add(
 				REDLOVE_LEAVES.get(),
 				CHERRY_SAPLING.get(),
-				PEACH_PINK_PETALS.get());
+				PEACH_PINK_PETALS.get(),
+				Blocks.SPORE_BLOSSOM);
 		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).add(PEACH_PINK_PETALS.get());
 		getOrCreateTagBuilder(CoreModule.CANDLES)
 				.addOptionalTag(BlockTags.CANDLES.location())

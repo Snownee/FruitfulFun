@@ -68,6 +68,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 		if (entity instanceof FFBee && BeeAttributes.of(entity).hasTrait(Trait.RAIN_CAPABLE)) {
 			compoundTag.putBoolean("RainCapable", true);
 		}
+		original.call(instance, compoundTag, i, bl);
 	}
 
 	@Inject(method = "serverTick", at = @At("HEAD"))
