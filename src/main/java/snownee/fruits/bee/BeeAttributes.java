@@ -1,32 +1,27 @@
 package snownee.fruits.bee;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.FruitfulFun;
-import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.Allele;
+import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Locus;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFBee;
@@ -36,8 +31,7 @@ public class BeeAttributes {
 	private static final UUID HEALTH_MODIFIER = UUID.fromString("aa3feeef-be3e-4d05-b98c-689bae6e22e7");
 	private static final UUID DAMAGE_MODIFIER = UUID.fromString("168df6fe-fa8d-426f-8198-d89a5bc01397");
 	private final List<String> pollens = Lists.newArrayList();
-	private final Map<Allele, Locus> loci = Maps.newIdentityHashMap();
-	private final Set<Trait> traits = Sets.newIdentityHashSet();
+	private final GeneData genes = new GeneData();
 	public boolean dirty;
 	private ItemStack saddle = ItemStack.EMPTY;
 	private List<UUID> trusted = List.of();
@@ -67,11 +61,9 @@ public class BeeAttributes {
 			}
 			data.put("Pollens", pollensList);
 		}
-		if (!loci.isEmpty()) {
-			CompoundTag lociTag = new CompoundTag();
-			for (Map.Entry<Allele, Locus> entry : loci.entrySet()) {
-				lociTag.putByte(entry.getKey().name, entry.getValue().getData());
-			}
+		CompoundTag lociTag = new CompoundTag();
+		genes.toNBT(lociTag);
+		if (!lociTag.isEmpty()) {
 			data.put("Genes", lociTag);
 		}
 	}
@@ -90,14 +82,8 @@ public class BeeAttributes {
 		for (Tag tag : data.getList("Pollens", Tag.TAG_STRING)) {
 			pollens.add(tag.getAsString());
 		}
-		loci.clear();
-		CompoundTag lociTag = data.getCompound("Genes");
-		for (Allele allele : Allele.REGISTRY.values()) {
-			Locus locus = new Locus(allele);
-			if (lociTag.contains(allele.name)) {
-				locus.setData(lociTag.getByte(allele.name));
-			}
-			loci.put(allele, locus);
+		if (data.contains("Genes")) {
+			genes.fromNBT(data.getCompound("Genes"));
 		}
 		updateTraits(bee);
 	}
@@ -143,55 +129,8 @@ public class BeeAttributes {
 		return trusted.contains(uuid);
 	}
 
-	public void breedFrom(BeeAttributes parent1, Allele allele1, BeeAttributes parent2, Allele allele2, Bee bee) {
-		RandomSource random = bee.getRandom();
-		for (Allele allele : Allele.values()) {
-			byte gene1 = parent1.pickAllele(allele, random, allele == allele1);
-			byte gene2 = parent2.pickAllele(allele, random, allele == allele2);
-			Locus locus = new Locus(allele);
-			locus.setData((byte) (gene1 << 4 | gene2));
-			loci.put(allele, locus);
-		}
-		updateTraits(bee);
-	}
-
 	public void updateTraits(Bee bee) {
-		traits.clear();
-		if (allGene(Allele.RAINC, 1)) {
-			traits.add(Trait.RAIN_CAPABLE);
-		}
-
-		if (allGene(Allele.FANCY, 1)) {
-			traits.add(Trait.PINK);
-		} else if (allGene(Allele.FANCY, 2)) {
-			traits.add(Trait.WITHER_TOLERANT);
-		}
-
-		boolean lazy = false;
-		if (allGene(Allele.FEAT1, 1)) {
-			traits.add(Trait.LAZY);
-			traits.add(Trait.MILD);
-			lazy = true;
-		} else if (anyGene(Allele.FEAT1, 1)) {
-			traits.add(Trait.MILD);
-		}
-
-		if (allGene(Allele.FEAT1, 2)) {
-			traits.add(Trait.FASTER);
-		} else if (anyGene(Allele.FEAT1, 2)) {
-			traits.add(Trait.FAST);
-		}
-
-		if (anyGene(Allele.FEAT1, 2) && !hasTrait(Trait.MILD)) {
-			traits.add(Trait.WARRIOR);
-		} else if (allGene(Allele.FEAT2, 1)) {
-			traits.add(Trait.ADVANCED_POLLINATION);
-		}
-
-		if (allGene(Allele.FEAT2, 2)) {
-			traits.add(Trait.MOUNTABLE);
-		}
-
+		genes.updateTraits();
 		updateTexture();
 		if (bee.level().isClientSide) {
 			return;
@@ -210,6 +149,7 @@ public class BeeAttributes {
 			speedInstance.addPermanentModifier(
 					new AttributeModifier(SPEED_MODIFIER, "Genetic speed bonus", 0.15, AttributeModifier.Operation.ADDITION));
 		}
+		boolean lazy = hasTrait(Trait.LAZY);
 		if (lazy || hasTrait(Trait.WARRIOR)) {
 			float healthRatio = bee.getHealth() / bee.getMaxHealth();
 			if (lazy) {
@@ -236,25 +176,6 @@ public class BeeAttributes {
 		}
 	}
 
-	public boolean hasTrait(Trait trait) {
-		return Hooks.bee && traits.contains(trait);
-	}
-
-	public Locus getLocus(Allele allele) {
-		return loci.computeIfAbsent(allele, Locus::new);
-	}
-
-	private byte pickAllele(Allele allele, RandomSource random, boolean highMutation) {
-		Locus locus = getLocus(allele);
-		int gene;
-		if (random.nextBoolean()) {
-			gene = locus.getHigh();
-		} else {
-			gene = locus.getLow();
-		}
-		return allele.maybeMutate((byte) gene, random, highMutation);
-	}
-
 	public @Nullable ResourceLocation getTexture() {
 		return texture;
 	}
@@ -262,38 +183,6 @@ public class BeeAttributes {
 	public void setTexture(@Nullable ResourceLocation texture) {
 		this.texture = texture;
 		dirty = true;
-	}
-
-	public boolean anyGene(Allele allele, int gene) {
-		Locus locus = getLocus(allele);
-		return locus.getHigh() == gene || locus.getLow() == gene;
-	}
-
-	public boolean allGene(Allele allele, int gene) {
-		Locus locus = getLocus(allele);
-		return locus.getHigh() == gene && locus.getLow() == gene;
-	}
-
-	public void randomize(Bee bee) {
-		for (Allele type : Allele.values()) {
-			Locus locus = new Locus(type);
-			locus.randomize(bee.getRandom());
-			loci.put(type, locus);
-		}
-		updateTraits(bee);
-	}
-
-	public Map<Allele, Locus> getLoci() {
-		return loci;
-	}
-
-	public Set<Trait> getTraits() {
-		return traits;
-	}
-
-	public void setTraits(List<Trait> list) {
-		traits.clear();
-		traits.addAll(list);
 	}
 
 	public void setMutagenEndsIn(long mutagenEndsIn, long gameTime) {
@@ -309,5 +198,22 @@ public class BeeAttributes {
 
 	public long getMutagenEndsIn() {
 		return mutagenEndsIn;
+	}
+
+	public boolean hasTrait(Trait trait) {
+		return genes.hasTrait(trait);
+	}
+
+	public GeneData getGenes() {
+		return genes;
+	}
+
+	public Locus getLocus(Allele allele) {
+		return genes.getLocus(allele);
+	}
+
+	public void randomize(Bee bee) {
+		genes.randomize(bee.getRandom());
+		updateTraits(bee);
 	}
 }

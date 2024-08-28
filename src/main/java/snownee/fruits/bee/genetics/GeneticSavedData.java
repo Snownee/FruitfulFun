@@ -12,7 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.saveddata.SavedData;
 
-public class GeneticData extends SavedData {
+public class GeneticSavedData extends SavedData {
 	private final Map<String, AlleleRecord> alleles = Maps.newHashMap();
 
 	@Override
@@ -28,8 +28,8 @@ public class GeneticData extends SavedData {
 		return compoundTag;
 	}
 
-	public static GeneticData load(CompoundTag compoundTag) {
-		GeneticData data = new GeneticData();
+	public static GeneticSavedData load(CompoundTag compoundTag) {
+		GeneticSavedData data = new GeneticSavedData();
 		CompoundTag alleleTag = compoundTag.getCompound("Alleles");
 		Set<String> knownCodes = Sets.newHashSetWithExpectedSize(alleleTag.size());
 		for (String key : alleleTag.getAllKeys()) {

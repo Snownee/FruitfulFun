@@ -126,15 +126,23 @@ public final class Hooks {
 				.peek($ -> hornHarvest(level, player, $, eyePos, null))
 				.count();
 		if (count > 0) {
-			Advancement advancement = advancement(level, "horn");
-			if (advancement != null) {
-				player.getAdvancements().award(advancement, "_");
-			}
+			awardSimpleAdvancement(player, "horn");
 		}
 	}
 
+	public static void awardSimpleAdvancement(Player player, String id) {
+		if (!(player instanceof ServerPlayer serverPlayer)) {
+			return;
+		}
+		Advancement advancement = advancement(serverPlayer.serverLevel(), id);
+		if (advancement != null) {
+			serverPlayer.getAdvancements().award(advancement, "_");
+		}
+	}
+
+	@Nullable
 	public static Advancement advancement(ServerLevel level, String id) {
-		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation(FruitfulFun.ID, "husbandry/fruitfulfun/" + id));
+		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/" + id));
 	}
 
 	private static void hornHarvest(
@@ -178,8 +186,10 @@ public final class Hooks {
 			if (!player.level().isClientSide) {
 				// add debug code here
 //				attributes.setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
-//				attributes.getLocus(Allele.FANCY).setData((byte) 0x22);
-				attributes.getLocus(Allele.FEAT2).setData((byte) 0x11);
+				attributes.getLocus(Allele.FANCY).setData((byte) 0x11);
+				attributes.getLocus(Allele.FEAT1).setData((byte) 0x22);
+				attributes.getLocus(Allele.FEAT2).setData((byte) 0x22);
+				attributes.getLocus(Allele.RAINC).setData((byte) 0x11);
 				attributes.getPollens().add("fruitfulfun:apple_leaves");
 				attributes.getPollens().add("wither_rose");
 				attributes.updateTraits(bee);
@@ -290,12 +300,13 @@ public final class Hooks {
 		}
 		babyAttributes.setTrusted(builder.build());
 		if (bee) {
-			babyAttributes.breedFrom(
-					BeeAttributes.of(parent1),
+			babyAttributes.getGenes().breedFrom(
+					BeeAttributes.of(parent1).getGenes(),
 					mutagenAffectedAllele(parent1),
-					BeeAttributes.of(parent2),
+					BeeAttributes.of(parent2).getGenes(),
 					mutagenAffectedAllele(parent2),
-					baby);
+					baby.getRandom());
+			babyAttributes.updateTraits(baby);
 		}
 	}
 

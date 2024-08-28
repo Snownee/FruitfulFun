@@ -135,6 +135,16 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.rewards(xp100)
 				.save(beeExporter, "husbandry/fruitfulfun/bee_jockey");
 
+		Advancement.Builder.recipeAdvancement()
+				.parent(inspector)
+				.display(
+						Items.BEEHIVE,
+						Component.translatable("advancements.fruitfulfun.apiarist.title"),
+						Component.translatable("advancements.fruitfulfun.apiarist.description"),
+						null, FrameType.CHALLENGE, true, true, false)
+				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
+				.save(beeExporter, "husbandry/fruitfulfun/apiarist");
+
 		Consumer<Advancement> ritualExporter = withConditions(
 				consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "ritual")));
 

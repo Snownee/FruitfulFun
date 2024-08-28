@@ -100,6 +100,9 @@ tip.fruitfulfun.leavesUsInPeace: >-
   "Unknown leaves only match self" option in the Leaves Us In Peace's
   configuration to "No". This message will be displayed only once.
 tip.fruitfulfun.beehiveWaxing: You can then mine this block as if you're holding a silk touching tool.
+tip.fruitfulfun.beehiveTradeInputName: Beehive with Bees
+tip.fruitfulfun.beehiveTradeInputHint: Bee traits can affect the purchase price. 3 bees with the same traits can increase the price significantly.
+tip.fruitfulfun.bees: 'Bees: %s'
 text.fruitfulfun.time: '%s/%s %s:%s:%s'
 text.fruitfulfun.trait: Traits
 text.fruitfulfun.trait.none: This bee doesn't have any traits.
@@ -145,6 +148,8 @@ advancements.fruitfulfun.horn.title: Burst into Song
 advancements.fruitfulfun.horn.description: Harvesting fruits using a specific type of Goat Horn
 advancements.fruitfulfun.bee_jockey.title: Bee-approved for Takeoff
 advancements.fruitfulfun.bee_jockey.description: Breed a rideable Bee
+advancements.fruitfulfun.apiarist.title: Master Apiarist
+advancements.fruitfulfun.apiarist.description: Exchange a beehive for at least 50 emeralds in a single trade
 advancements.fruitfulfun.inspector.title: Science Mania
 advancements.fruitfulfun.inspector.description: Use Bee Inspector on a Bee
 advancements.fruitfulfun.ritual.title: Listen to the Dragon Roar

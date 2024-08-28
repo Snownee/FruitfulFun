@@ -23,10 +23,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -36,16 +38,19 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
@@ -235,6 +240,20 @@ public class ClientProxy implements ClientModInitializer {
 					return;
 				}
 				InspectorClientHandler.tick(client);
+			});
+
+			ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+				if (CommonProxy.isBeehive(stack)) {
+					CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
+					if (blockEntityData == null) {
+						return;
+					}
+					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
+					if (bees == 0) {
+						return;
+					}
+					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
+				}
 			});
 		}
 
