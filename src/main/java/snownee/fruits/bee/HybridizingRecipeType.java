@@ -1,6 +1,7 @@
 package snownee.fruits.bee;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -15,6 +16,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -25,6 +27,8 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import snownee.fruits.FruitfulFun;
+import snownee.fruits.block.FruitLeavesBlock;
 import snownee.kiwi.util.Util;
 import snownee.lychee.LycheeLootContextParams;
 import snownee.lychee.core.LycheeContext;
@@ -59,17 +63,28 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 		}
 		recipes = stream.toList();
 		Multimap<Block, HybridizingRecipe> multimap = HashMultimap.create();
+		LinkedHashSet<Block> pollenBlocks = new LinkedHashSet<>();
 		for (HybridizingRecipe recipe : recipes) {
 			recipe.endingStep().stream()
 					.map(ResourceLocation::new)
 					.map(BuiltInRegistries.BLOCK::get)
 					.forEach($ -> multimap.put($, recipe));
+			recipe.pollens.stream()
+					.map(ResourceLocation::new)
+					.map(BuiltInRegistries.BLOCK::get)
+					.forEach(pollenBlocks::add);
 		}
 
 		for (Map.Entry<Block, Collection<HybridizingRecipe>> entry : multimap.asMap().entrySet()) {
 			List<HybridizingRecipe> list = Lists.newArrayList(entry.getValue());
 			list.sort(null);
 			recipesByBlock.put(entry.getKey(), list);
+		}
+
+		for (Block block : pollenBlocks) {
+			if (!(block instanceof FruitLeavesBlock) && !block.defaultBlockState().is(BlockTags.FLOWERS)) {
+				FruitfulFun.LOGGER.warn("Pollen {} does not have a flower block tag, this may cause issues", block);
+			}
 		}
 	}
 
