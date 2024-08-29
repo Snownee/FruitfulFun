@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BeehiveBlock;
+import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -29,6 +31,7 @@ public class JadeCompat implements IWailaPlugin {
 	public static final ResourceLocation INSPECTOR = new ResourceLocation(FruitfulFun.ID, "inspector");
 	public static final ResourceLocation INSPECTOR_BLOCK = new ResourceLocation(FruitfulFun.ID, "inspector_block");
 	public static final ResourceLocation CROP_PROGRESS = new ResourceLocation(FruitfulFun.ID, "crop_progress");
+	public static final ResourceLocation WAXED = new ResourceLocation(FruitfulFun.ID, "waxed");
 
 	public static void ensureVisibility(boolean fromEntity) {
 		IWailaConfig.IConfigGeneral config = IWailaConfig.get().getGeneral();
@@ -48,6 +51,7 @@ public class JadeCompat implements IWailaPlugin {
 		}
 		if (Hooks.bee) {
 			registration.registerEntityDataProvider(new InspectorProvider(), Bee.class);
+			registration.registerBlockDataProvider(new BeehiveProvider(), BeehiveBlockEntity.class);
 			if (Hooks.supplementaries) {
 				SupplementariesJadeCompat.register(registration);
 			}
@@ -64,6 +68,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.addRayTraceCallback((hit, accessor, original) -> override(original, registration));
 		if (Hooks.bee) {
 			registration.registerEntityComponent(new InspectorProvider(), Bee.class);
+			registration.registerBlockIcon(new BeehiveProvider(), BeehiveBlock.class);
 			if (Hooks.supplementaries) {
 				SupplementariesJadeCompat.registerClient(registration);
 			}
