@@ -13,12 +13,15 @@ import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
+import java.util.List;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -28,16 +31,19 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
@@ -45,9 +51,11 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFClientConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
@@ -186,6 +194,22 @@ public class ClientProxy {
 					return;
 				}
 				InspectorClientHandler.tick(client);
+			});
+
+			MinecraftForge.EVENT_BUS.addListener((ItemTooltipEvent event) -> {
+				ItemStack stack = event.getItemStack();
+				List<Component> lines = event.getToolTip();
+				if (FFClientConfig.beehiveTooltipDisplayBees && CommonProxy.isBeehive(stack)) {
+					CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
+					if (blockEntityData == null) {
+						return;
+					}
+					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
+					if (bees == 0) {
+						return;
+					}
+					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
+				}
 			});
 		}
 
