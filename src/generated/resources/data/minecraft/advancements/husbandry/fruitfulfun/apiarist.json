@@ -1,0 +1,35 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:bee"
+    }
+  ],
+  "parent": "minecraft:husbandry/fruitfulfun/inspector",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.apiarist.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:beehive"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruitfulfun.apiarist.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

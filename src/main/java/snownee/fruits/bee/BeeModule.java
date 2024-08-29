@@ -1,6 +1,15 @@
 package snownee.fruits.bee;
 
+import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ParticleUtils;
@@ -9,15 +18,25 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.MutagenItem;
+import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
@@ -57,6 +76,7 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
+	public static Set<VillagerProfession> BEEKEEPER_PROFESSIONS;
 
 	public BeeModule() {
 		Hooks.bee = true;
@@ -91,6 +111,49 @@ public class BeeModule extends AbstractModule {
 		}
 	}
 
+	public static void addBeekeeperTrades(MerchantOffers merchantOffers, AbstractVillager villager) {
+		if (!Hooks.bee || !FFCommonConfig.beehiveTrade) {
+			return;
+		}
+		if (BEEKEEPER_PROFESSIONS == null) {
+			ImmutableSet.Builder<VillagerProfession> builder = ImmutableSet.builder();
+			for (VillagerProfession profession : BuiltInRegistries.VILLAGER_PROFESSION) {
+				if (profession.name().endsWith("beekeeper")) {
+					builder.add(profession);
+				}
+			}
+			BEEKEEPER_PROFESSIONS = builder.build();
+		}
+		if (villager instanceof Villager v) {
+			if (v.getVillagerData().getLevel() != 1) {
+				return;
+			}
+			if (!BEEKEEPER_PROFESSIONS.contains(v.getVillagerData().getProfession())) {
+				return;
+			}
+		} else if (villager.getType() == EntityType.WANDERING_TRADER) {
+			if (!BEEKEEPER_PROFESSIONS.isEmpty()) {
+				return;
+			}
+		} else {
+			return;
+		}
+		ItemStack input = Items.BEEHIVE.getDefaultInstance();
+		input.setHoverName(Component.translatable("tip.fruitfulfun.beehiveTradeInputName"));
+		input.getOrCreateTag().putBoolean("FFTrade", true);
+		ListTag lore = new ListTag();
+		lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.translatable("tip.fruitfulfun.beehiveTradeInputHint"))));
+		input.getOrCreateTag().getCompound(ItemStack.TAG_DISPLAY).put(ItemStack.TAG_LORE, lore);
+		ItemStack output = Items.EMERALD.getDefaultInstance();
+		output.getOrCreateTag().putBoolean("FFTrade", true);
+		merchantOffers.add(new MerchantOffer(input, output, 1000, 2, 0));
+	}
+
+	public static boolean isBeehiveTrade(MerchantOffer merchantOffer) {
+		ItemStack cost = merchantOffer.getBaseCostA();
+		return cost.is(Items.BEEHIVE) && cost.getTag() != null && cost.getTag().getBoolean("FFTrade");
+	}
+
 	@Override
 	protected void preInit() {
 		CommonProxy.initBeeModule();
@@ -101,5 +164,36 @@ public class BeeModule extends AbstractModule {
 		event.enqueueWork(() -> {
 			PotionBrewing.ALLOWED_CONTAINERS.add(Ingredient.of(BeeModule.MUTAGEN.get()));
 		});
+	}
+
+	public static int getBeesValue(List<GeneData> dataList) {
+		if (dataList.isEmpty()) {
+			return 0;
+		}
+		int value = 0;
+		for (GeneData geneData : dataList) {
+			int singleValue = 0;
+			for (Trait trait : geneData.getTraits()) {
+				singleValue += trait.value();
+			}
+			if (geneData.hasTrait(Trait.FASTER) && geneData.hasTrait(Trait.MOUNTABLE)) {
+				singleValue += geneData.hasTrait(Trait.RAIN_CAPABLE) ? 4 : 2;
+			} else if (geneData.hasTrait(Trait.ADVANCED_POLLINATION) && geneData.hasTrait(Trait.WITHER_TOLERANT)) {
+				singleValue += 3;
+			}
+			value += Math.max(0, singleValue);
+		}
+		combo:
+		if (value > 0 && dataList.size() >= 3) {
+			Set<Trait> first = dataList.get(0).getTraits();
+			for (int i = 1; i < dataList.size(); i++) {
+				if (!first.equals(dataList.get(i).getTraits())) {
+					break combo;
+				}
+			}
+			value += (int) (value * 0.5F);
+		}
+		value += dataList.size();
+		return value;
 	}
 }

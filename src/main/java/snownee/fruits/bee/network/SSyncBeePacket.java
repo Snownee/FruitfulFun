@@ -48,7 +48,7 @@ public class SSyncBeePacket extends PacketHandler {
 				} else {
 					attributes.setTexture(ResourceLocation.tryParse(texture));
 				}
-				attributes.setTraits(traits.stream()
+				attributes.getGenes().setTraits(traits.stream()
 						.map(Trait.REGISTRY::get)
 						.filter(Objects::nonNull)
 						.toList());
@@ -73,7 +73,7 @@ public class SSyncBeePacket extends PacketHandler {
 			buf.writeCollection(attributes.getTrusted(), FriendlyByteBuf::writeUUID);
 			ResourceLocation texture = attributes.getTexture();
 			buf.writeUtf(texture == null ? "" : texture.toString());
-			buf.writeCollection(attributes.getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
+			buf.writeCollection(attributes.getGenes().getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf.writeLong(attributes.getMutagenEndsIn());
 		};
 	}

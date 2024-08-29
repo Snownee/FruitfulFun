@@ -24,7 +24,7 @@ public class SInspectBeeReplyPacket extends PacketHandler {
 
 	public static void send(ServerPlayer player, BeeAttributes attributes) {
 		SInspectBeeReplyPacket.I.send(player, buf0 -> {
-			buf0.writeCollection(attributes.getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
+			buf0.writeCollection(attributes.getGenes().getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf0.writeCollection(attributes.getPollens(), FriendlyByteBuf::writeUtf);
 			buf0.writeVarInt(Allele.sortedByCode().size());
 			for (Allele allele : Allele.sortedByCode()) {

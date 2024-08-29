@@ -70,7 +70,7 @@ public final class Hooks {
 	public static boolean farmersdelight;
 	public static boolean ritual;
 	public static boolean vac;
-	public static boolean curios = Platform.isModLoaded("curios");
+	public static boolean curios = Platform.isModLoaded("curios"); //TODO move to CommonProxy
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
 	public static boolean jade = Platform.isModLoaded("jade");
 
@@ -120,33 +120,33 @@ public final class Hooks {
 	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
 		Vec3 eye = player.getEyePosition();
 		BlockPos eyePos = BlockPos.containing(eye);
-		long count = level.getPoiManager().findAll(
-						$ -> $.is(CoreModule.POI_TYPE),
-						Predicates.alwaysTrue(),
-						eyePos,
-						24,
-						PoiManager.Occupancy.ANY)
+		long count = level.getPoiManager()
+				.findAll($ -> $.is(CoreModule.POI_TYPE), Predicates.alwaysTrue(), eyePos, 24, PoiManager.Occupancy.ANY)
 				.flatMap($ -> level.getBlockEntity($, CoreModule.FRUIT_TREE.get()).stream())
 				.peek($ -> hornHarvest(level, player, $, eyePos, null))
 				.count();
 		if (count > 0) {
-			Advancement advancement = advancement(level, "horn");
-			if (advancement != null) {
-				player.getAdvancements().award(advancement, "_");
-			}
+			awardSimpleAdvancement(player, "horn");
 		}
 	}
 
+	public static void awardSimpleAdvancement(Player player, String id) {
+		if (!(player instanceof ServerPlayer serverPlayer)) {
+			return;
+		}
+		Advancement advancement = advancement(serverPlayer.serverLevel(), id);
+		if (advancement != null) {
+			serverPlayer.getAdvancements().award(advancement, "_");
+		}
+	}
+
+	@Nullable
 	public static Advancement advancement(ServerLevel level, String id) {
-		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation(FruitfulFun.ID, "husbandry/fruitfulfun/" + id));
+		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/" + id));
 	}
 
 	private static void hornHarvest(
-			ServerLevel level,
-			ServerPlayer player,
-			FruitTreeBlockEntity core,
-			BlockPos eyePos,
-			Consumer<ItemEntity> consumer) {
+			ServerLevel level, ServerPlayer player, FruitTreeBlockEntity core, BlockPos eyePos, Consumer<ItemEntity> consumer) {
 		Set<BlockPos> leaves = core.getActiveLeaves();
 		BlockPos corePos = core.getBlockPos();
 		if (leaves.isEmpty()) {
@@ -186,8 +186,10 @@ public final class Hooks {
 			if (!player.level().isClientSide) {
 				// add debug code here
 //				attributes.setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
-//				attributes.getLocus(Allele.FANCY).setData((byte) 0x22);
-				attributes.getLocus(Allele.FEAT2).setData((byte) 0x11);
+				attributes.getLocus(Allele.FANCY).setData((byte) 0x11);
+				attributes.getLocus(Allele.FEAT1).setData((byte) 0x22);
+				attributes.getLocus(Allele.FEAT2).setData((byte) 0x22);
+				attributes.getLocus(Allele.RAINC).setData((byte) 0x11);
 				attributes.getPollens().add("fruitfulfun:apple_leaves");
 				attributes.getPollens().add("wither_rose");
 				attributes.updateTraits(bee);
@@ -256,8 +258,7 @@ public final class Hooks {
 		}
 		if (y >= 0) {
 			BlockPos pos = BlockPos.containing(player.getEyePosition());
-			if (level.getBlockState(pos).isSuffocating(level, pos)
-					|| level.getBlockState(pos.above()).isSuffocating(level, pos)) {
+			if (level.getBlockState(pos).isSuffocating(level, pos) || level.getBlockState(pos.above()).isSuffocating(level, pos)) {
 				y = -0.07;
 			}
 		}
@@ -299,12 +300,13 @@ public final class Hooks {
 		}
 		babyAttributes.setTrusted(builder.build());
 		if (bee) {
-			babyAttributes.breedFrom(
-					BeeAttributes.of(parent1),
+			babyAttributes.getGenes().breedFrom(
+					BeeAttributes.of(parent1).getGenes(),
 					mutagenAffectedAllele(parent1),
-					BeeAttributes.of(parent2),
+					BeeAttributes.of(parent2).getGenes(),
 					mutagenAffectedAllele(parent2),
-					baby);
+					baby.getRandom());
+			babyAttributes.updateTraits(baby);
 		}
 	}
 
@@ -342,7 +344,8 @@ public final class Hooks {
 		}
 		FoodProperties properties = item.getFoodProperties();
 		if (FFClientConfig.foodStatusEffectTooltip && properties != null) {
-			List<MobEffectInstance> effects = properties.getEffects().stream()
+			List<MobEffectInstance> effects = properties.getEffects()
+					.stream()
 					.filter($ -> $.getFirst() != null && $.getSecond() > 0)
 					.map(Pair::getFirst)
 					.toList();

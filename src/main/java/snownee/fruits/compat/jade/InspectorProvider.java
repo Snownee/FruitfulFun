@@ -52,7 +52,7 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 			}
 			data.put("Pollens", list);
 		}
-		Set<Trait> traits = attributes.getTraits();
+		Set<Trait> traits = attributes.getGenes().getTraits();
 		if (!traits.isEmpty()) {
 			ListTag list = new ListTag();
 			for (Trait trait : traits) {

@@ -33,6 +33,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
@@ -49,6 +50,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -80,7 +82,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.bee.genetics.GeneticData;
+import snownee.fruits.bee.genetics.GeneticSavedData;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.curios.CuriosCompat;
@@ -109,7 +111,7 @@ public class CommonProxy {
 		addFeature("lime");
 
 		MinecraftForge.EVENT_BUS.addListener((WandererTradesEvent event) -> {
-			if (!FFCommonConfig.wanderingTraderSapling) {
+			if (FFCommonConfig.wanderingTraderSaplingPrice == 0) {
 				return;
 			}
 			List<VillagerTrades.ItemListing> trades = event.getGenericTrades();
@@ -118,7 +120,7 @@ public class CommonProxy {
 						.filter($ -> $.tier == 0)
 						.map($ -> $.sapling.get())
 						.toList(), random).asItem().getDefaultInstance();
-				ItemStack emeralds = new ItemStack(Items.EMERALD, 8);
+				ItemStack emeralds = new ItemStack(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice);
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});
 		});
@@ -127,7 +129,10 @@ public class CommonProxy {
 			MinecraftServer server = event.getServer();
 			ServerLevel world = server.overworld();
 			long seed = world.getSeed();
-			GeneticData geneticData = world.getDataStorage().computeIfAbsent(GeneticData::load, GeneticData::new, "fruitfulfun_genetics");
+			GeneticSavedData geneticData = world.getDataStorage().computeIfAbsent(
+					GeneticSavedData::load,
+					GeneticSavedData::new,
+					"fruitfulfun_genetics");
 			geneticData.initAlleles(seed);
 		});
 
@@ -378,5 +383,10 @@ public class CommonProxy {
 
 	public static boolean isKnife(ItemStack itemStack) {
 		return itemStack.is(KNIVES);
+	}
+
+	public static boolean isBeehive(ItemStack itemStack) {
+		return itemStack.is(Items.BEEHIVE) || itemStack.is(Items.BEE_NEST) || Block.byItem(itemStack.getItem()).defaultBlockState().is(
+				BlockTags.BEEHIVES);
 	}
 }
