@@ -218,9 +218,9 @@ dependencies {
 
     implementation fg.deobf("curse.maven:farmers-delight-398521:4679319")
     //implementation fg.deobf("curse.maven:jei-238222:4175833")
-    implementation fg.deobf("curse.maven:jade-324717:5329131")
-    implementation fg.deobf("maven.modrinth:kiwi:1lL360rM")
-    annotationProcessor "maven.modrinth:kiwi:1lL360rM"
+    implementation fg.deobf("maven.modrinth:jade:${project.jade_version}+forge")
+    implementation fg.deobf("maven.modrinth:kiwi:${project.kiwi_version}+forge")
+    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+forge"
 //    implementation fg.deobf("libs:Kiwi-1.20.1-forge:11.5.0")
 //    annotationProcessor "libs:Kiwi-1.20.1-forge:11.5.0"
     implementation fg.deobf("maven.modrinth:lychee:qwaP2Vvx")
@@ -250,7 +250,7 @@ dependencies {
 }
 
 processResources {
-    exclude "/assets/${project.mod_id}/lang/en_us.existing.json"
+    exclude "/assets/${project.mod_id}/lang/en_us.existing.yaml"
     exclude "/snownee/fruits/command"
     exclude '**/*.bat'
     exclude '**/*.psd'

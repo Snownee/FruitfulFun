@@ -185,4 +185,9 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 	public int getDefaultPriority() {
 		return 5001;
 	}
+
+	@Override
+	public boolean isRequired() {
+		return true;
+	}
 }
