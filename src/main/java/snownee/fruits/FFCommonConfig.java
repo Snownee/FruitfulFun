@@ -33,7 +33,6 @@ public final class FFCommonConfig {
 	@KiwiConfig.Range(min = 0, max = 64)
 	public static int wanderingTraderSaplingPrice = 12;
 	public static boolean beehiveTrade = true;
-	public static boolean beehiveTooltipDisplayBees = true;
 	@KiwiConfig.Range(min = 0)
 	public static int beeNaturalHealingInterval = 900;
 	public static boolean mutagenRecipe = true;

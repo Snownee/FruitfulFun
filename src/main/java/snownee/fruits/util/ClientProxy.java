@@ -53,6 +53,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFClientConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
@@ -243,15 +244,12 @@ public class ClientProxy implements ClientModInitializer {
 			});
 
 			ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-				if (CommonProxy.isBeehive(stack)) {
+				if (FFClientConfig.beehiveTooltipDisplayBees && CommonProxy.isBeehive(stack)) {
 					CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
 					if (blockEntityData == null) {
 						return;
 					}
 					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
-					if (bees == 0) {
-						return;
-					}
 					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
 				}
 			});
