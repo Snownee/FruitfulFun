@@ -1,15 +1,15 @@
 {
-	"type": "lychee:block_interacting",
-	"fabric:load_conditions": [
-		{
-			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:bee"
-		}
-	],
-	"comment": "tip.fruitfulfun.beehiveWaxing",
-	"ghost": true,
-	"item_in": {
-		"item": "minecraft:honeycomb"
-	},
-	"block_in": "#beehives"
+  "type": "lychee:block_interacting",
+  "comment": "tip.fruitfulfun.beehiveWaxing",
+  "ghost": true,
+  "item_in": {
+    "item": "minecraft:honeycomb"
+  },
+  "block_in": "#beehives",
+  "conditions": [
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

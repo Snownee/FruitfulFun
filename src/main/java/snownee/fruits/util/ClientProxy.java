@@ -205,9 +205,6 @@ public class ClientProxy {
 						return;
 					}
 					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
-					if (bees == 0) {
-						return;
-					}
 					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
 				}
 			});

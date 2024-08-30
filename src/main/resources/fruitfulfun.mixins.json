@@ -14,7 +14,6 @@
 		"WoodTypeMixin",
 		"bee.AbstractVillagerMixin",
 		"bee.AnimalMixin",
-		"bee.AxeItemMixin",
 		"bee.BeehiveBlockEntityMixin",
 		"bee.BeehiveBlockMixin",
 		"bee.BeehiveDisplayMixin",
@@ -38,6 +37,7 @@
 		"food.InteractionEntityMixin",
 		"food.PandaMixin",
 		"food.SkullBlockEntityMixin",
+		"forge.AxeItemMixin",
 		"forge.FoliagePlacerAccess",
 		"gene_data.BeeMixin",
 		"gene_data.MobMixin",
@@ -57,8 +57,6 @@
 		"client.HumanoidModelMixin",
 		"client.ItemBlockRenderTypesMixin",
 		"client.ItemInHandRendererMixin",
-		"forge.BlockColorsAccess",
-		"forge.ItemColorsAccess",
 		"vac.MinecraftMixin"
 	],
 	"injectors": {
