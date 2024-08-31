@@ -30,10 +30,7 @@
 		"bee.RideableBeeMixin",
 		"bee.RideableBeeMobMixin",
 		"bee.RideableBeePlayerMixin",
-		"cherry.BlockMixin",
-		"cherry.CherryLeavesBlockMixin",
 		"cherry.LivingEntityFlowerCrownMixin",
-		"client.BlockMixin",
 		"food.InteractionEntityMixin",
 		"food.PandaMixin",
 		"food.SkullBlockEntityMixin",
@@ -46,17 +43,20 @@
 		"pomegranate.ItemEntityMixin",
 		"supp.SuppBeehiveBlockEntityMixin",
 		"vac.ItemEntityMixin",
-		"vac.LivingEntitySoundMixin",
 		"vac.ServerEntityMixin"
 	],
 	"client": [
 		"bee.BeeRendererMixin",
 		"bee.GuiGraphicsMixin",
+		"cherry.BlockMixin",
+		"cherry.CherryLeavesBlockMixin",
 		"cherry.ItemRendererMixin",
+		"client.BlockMixin",
 		"client.GameRendererMixin",
 		"client.HumanoidModelMixin",
 		"client.ItemBlockRenderTypesMixin",
 		"client.ItemInHandRendererMixin",
+		"vac.LivingEntitySoundMixin",
 		"vac.MinecraftMixin"
 	],
 	"injectors": {
