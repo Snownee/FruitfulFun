@@ -19,7 +19,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${minecraft_version}-forge-${mod_version}"
+version = "${minecraft_version}-Forge-${mod_version}"
 group = "${mod_base_package}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_name
 
@@ -186,21 +186,21 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
-    
+
     // Real mod deobf dependency examples - these get remapped to your current mappings
     //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}") // Adds JEI API as a compile dependency
     //runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-	
-	implementation fg.deobf("curse.maven:jei-238222:3550020")
-	implementation fg.deobf("curse.maven:jade-324717:3544015")
-	//implementation fg.deobf("curse.maven:kiwi-303657:3573946")
-    //annotationProcessor "curse.maven:kiwi-303657:3573946"
+
+	implementation fg.deobf("curse.maven:jei-238222:4060769")
+	implementation fg.deobf("curse.maven:jade-324717:5698324")
+	implementation fg.deobf("curse.maven:kiwi-303657:3623424")
+    annotationProcessor "curse.maven:kiwi-303657:3623424"
 
     // Examples using mod jars from ./libs
-    implementation fg.deobf("libs:Kiwi-1.18-forge:5.2.2")
-    annotationProcessor "libs:Kiwi-1.18-forge:5.2.2"
-	
+//    implementation fg.deobf("libs:Kiwi-1.18-forge:5.2.2")
+//    annotationProcessor "libs:Kiwi-1.18-forge:5.2.2"
+
     //implementation fg.deobf("libs:Jade-1.18:3.1.6")
 
     // For more info...
