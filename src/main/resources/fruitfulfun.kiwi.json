@@ -98,6 +98,13 @@
 			}
 		},
 		{
+			"target": "snownee.fruits.bee.network.SHauntPacket",
+			"data": {
+				"dir": "PLAY_TO_CLIENT",
+				"value": "haunt"
+			}
+		},
+		{
 			"target": "snownee.fruits.bee.network.SSyncBeePacket",
 			"data": {
 				"dir": "PLAY_TO_CLIENT",

@@ -3,11 +3,8 @@ package snownee.fruits.util;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
-
-import com.mojang.authlib.GameProfile;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -46,7 +43,6 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.StatFormatter;
@@ -94,8 +90,6 @@ import snownee.kiwi.util.Util;
 
 @Mod(FruitfulFun.ID)
 public class CommonProxy implements ModInitializer {
-	public static final UUID FAKE_PLAYER_UUID = UUID.fromString("ae5efe90-eef0-4899-94fc-de4786c242e8");
-	private static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(FAKE_PLAYER_UUID, "[FruitfulFun]");
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("c", "tools/knives");
 
 	public static boolean isCurativeItem(MobEffectInstance effectInstance, ItemStack stack) {
@@ -197,10 +191,6 @@ public class CommonProxy implements ModInitializer {
 			}
 		}
 		return result;
-	}
-
-	public static ServerPlayer getFakePlayer(Level level) {
-		return FakePlayer.get((ServerLevel) level, FAKE_PLAYER_PROFILE);
 	}
 
 	public static boolean isKnife(ItemStack itemStack) {

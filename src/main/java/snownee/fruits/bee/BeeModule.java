@@ -3,6 +3,8 @@ package snownee.fruits.bee;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -11,16 +13,20 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -37,6 +43,8 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.duck.FFLivingEntity;
+import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
@@ -75,9 +83,11 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
+	public static final KiwiGO<MobEffect> FRAGILITY = go(() -> new MobEffect(MobEffectCategory.HARMFUL, 0x875A49));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
 	public static Set<VillagerProfession> BEEKEEPER_PROFESSIONS;
+	public static final TagKey<EntityType<?>> CANNOT_HAUNT = entityTag(FruitfulFun.ID, "cannot_haunt");
 
 	public BeeModule() {
 		Hooks.bee = true;
@@ -200,5 +210,25 @@ public class BeeModule extends AbstractModule {
 		}
 		value += dataList.size();
 		return value;
+	}
+
+	public static void changeDimension(ServerLevel destination, Entity entity, @Nullable Entity newEntity) {
+		if (!Hooks.bee || newEntity == null) {
+			return;
+		}
+		if (!(entity instanceof FFLivingEntity)) {
+			return;
+		}
+		Player hauntedBy = ((FFLivingEntity) entity).fruits$getHauntedBy();
+		if (hauntedBy == null || !hauntedBy.canChangeDimensions()) {
+			return;
+		}
+		if (hauntedBy.portalEntrancePos == null || destination.dimension() == Level.NETHER) {
+			hauntedBy.portalEntrancePos = entity.portalEntrancePos;
+		}
+		Entity newSpectator = hauntedBy.changeDimension(destination);
+		if (newSpectator instanceof FFPlayer) {
+			((FFPlayer) newSpectator).fruits$setHauntingTarget(newEntity);
+		}
 	}
 }

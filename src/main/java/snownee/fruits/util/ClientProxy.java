@@ -64,6 +64,7 @@ import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
+import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
@@ -251,6 +252,13 @@ public class ClientProxy implements ClientModInitializer {
 					}
 					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
 					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
+				}
+			});
+
+			ClientTickEvents.END_CLIENT_TICK.register(mc -> {
+				if (mc.player instanceof FFPlayer player && player.fruits$isHaunting() && mc.options.keyJump.isDown()) {
+					mc.player.setXRot(0);
+					mc.player.setYRot(0);
 				}
 			});
 		}

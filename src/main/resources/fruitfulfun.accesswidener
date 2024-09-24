@@ -40,6 +40,7 @@ accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen isMod
 accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen currentPage I
 
 accessible field net/minecraft/world/entity/Entity random Lnet/minecraft/util/RandomSource;
+accessible field net/minecraft/world/entity/Entity portalEntrancePos Lnet/minecraft/core/BlockPos;
 accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
 
 accessible field net/minecraft/world/entity/AreaEffectCloud ownerUUID Ljava/util/UUID;
@@ -54,3 +55,6 @@ accessible field net/minecraft/world/level/block/entity/SkullBlockEntity isAnima
 accessible field net/minecraft/world/entity/projectile/ThrowableItemProjectile DATA_ITEM_STACK Lnet/minecraft/network/syncher/EntityDataAccessor;
 
 accessible field net/minecraft/server/level/ServerPlayer containerCounter I
+
+accessible field net/minecraft/network/protocol/game/ServerboundInteractPacket action Lnet/minecraft/network/protocol/game/ServerboundInteractPacket$Action;
+accessible class net/minecraft/network/protocol/game/ServerboundInteractPacket$ActionType

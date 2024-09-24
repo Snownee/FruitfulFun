@@ -1,7 +1,8 @@
-package snownee.fruits.mixin.gene_data;
+package snownee.fruits.mixin;
 
 import java.util.Map;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,17 +15,24 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.protocol.game.ClientboundSetCameraPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.Allele;
+import snownee.fruits.bee.network.SHauntPacket;
 import snownee.fruits.bee.network.SSyncPlayerPacket;
+import snownee.fruits.duck.FFLivingEntity;
 import snownee.fruits.duck.FFPlayer;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin implements FFPlayer {
 	@Unique
 	private Map<String, GeneName> geneNames = Map.of();
+	@Unique
+	private HauntingManager hauntingManager;
 
 	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
 	private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
@@ -131,4 +139,58 @@ public abstract class PlayerMixin implements FFPlayer {
 		}
 	}
 
+	@Override
+	public void fruits$setHauntingTarget(Entity target) {
+		if (target == fruits$hauntingTarget()) {
+			return;
+		}
+		Player player = (Player) (Object) this;
+		if (player instanceof ServerPlayer serverPlayer) {
+			if (!serverPlayer.isChangingDimension()) {
+				SHauntPacket.send(serverPlayer, target);
+			}
+			if (target != player) {
+				player.setXRot(0);
+				player.setYRot(0);
+				serverPlayer.setCamera(target);
+				if (target instanceof FFLivingEntity entity) {
+					entity.fruits$setHauntedBy(player.getUUID());
+				}
+			}
+			if (fruits$hauntingTarget() instanceof FFLivingEntity former) {
+				former.fruits$setHauntedBy(null);
+			}
+		}
+		hauntingManager = target == player ? null : new HauntingManager(target);
+	}
+
+	@Override
+	@Nullable
+	public Entity fruits$hauntingTarget() {
+		return hauntingManager == null ? null : hauntingManager.target;
+	}
+
+	@Override
+	@Nullable
+	public HauntingManager fruits$hauntingManager() {
+		return hauntingManager;
+	}
+
+	@Override
+	public boolean fruits$isHaunting() {
+		return hauntingManager != null;
+	}
+
+	@Override
+	public void fruits$ensureCamera() {
+		if ((Object) this instanceof ServerPlayer player) {
+			Entity target = fruits$hauntingTarget();
+			if (target == null) {
+				target = player;
+			}
+			SHauntPacket.send(player, target);
+			player.connection.send(new ClientboundSetCameraPacket(target));
+			player.connection.resetPosition();
+		}
+	}
 }
