@@ -203,11 +203,9 @@ public final class Hooks {
 					((FFBee) bee).fruits$roll();
 					return InteractionResult.FAIL;
 				}
-				ItemStack saddle = attributes.getSaddle();
-				attributes.setSaddle(ItemStack.EMPTY);
 				if (!player.level().isClientSide) {
 					held.hurtAndBreak(1, player, $ -> $.broadcastBreakEvent(hand));
-					bee.spawnAtLocation(saddle);
+					attributes.dropSaddle(bee);
 					bee.gameEvent(GameEvent.SHEAR, player);
 					bee.level().playSound(null, bee, BeeModule.BEE_SHEAR.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 				}

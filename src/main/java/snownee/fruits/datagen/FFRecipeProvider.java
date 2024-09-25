@@ -54,7 +54,6 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -138,7 +137,7 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				.save(exporter);
 
 		Consumer<FinishedRecipe> beeExporter = withConditions(
-				exporter, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "bee")));
+				exporter, ModuleLoadedCondition.provider(FruitfulFun.id("bee")));
 		oneToOneConversionRecipe(beeExporter, Items.GLASS_BOTTLE, BeeModule.MUTAGEN.get(), null);
 		ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, BeeModule.INSPECTOR.get())
 				.pattern("A")
@@ -152,17 +151,17 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 
 		if (Hooks.farmersdelight) {
 			Consumer<FinishedRecipe> fdExporter = withConditions(
-					exporter, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "farmersdelight")));
+					exporter, ModuleLoadedCondition.provider(FruitfulFun.id("farmersdelight")));
 			cabinet(fdExporter, FarmersDelightModule.CITRUS_CABINET.get(), CITRUS_SLAB.get(), CITRUS_TRAPDOOR.get());
 			cabinet(fdExporter, FarmersDelightModule.REDLOVE_CABINET.get(), REDLOVE_SLAB.get(), REDLOVE_TRAPDOOR.get());
 		}
 
 		Consumer<FinishedRecipe> foodExporter = withConditions(
-				exporter, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "food")));
+				exporter, ModuleLoadedCondition.provider(FruitfulFun.id("food")));
 		Consumer<FinishedRecipe> foodExporterNoFD = withConditions(
 				exporter,
-				ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "food")),
-				DefaultResourceConditions.not(ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "farmersdelight"))));
+				ModuleLoadedCondition.provider(FruitfulFun.id("food")),
+				DefaultResourceConditions.not(ModuleLoadedCondition.provider(FruitfulFun.id("farmersdelight"))));
 		KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.DONAUWELLE.get())
 				.requires(CherryModule.REDLOVE.get())
 				.requires(AlternativesIngredientBuilder.of()
@@ -197,8 +196,8 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 		Consumer<FinishedRecipe> riceWithFruitsExporter = withConditions(
 				exporter,
 				hasRice,
-				ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "food")),
-				DefaultResourceConditions.not(ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "farmersdelight"))));
+				ModuleLoadedCondition.provider(FruitfulFun.id("food")),
+				DefaultResourceConditions.not(ModuleLoadedCondition.provider(FruitfulFun.id("farmersdelight"))));
 		KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.RICE_WITH_FRUITS.get())
 				.requires(AbstractModule.itemTag("c", "fruits/tangerine"))
 				.requires(AbstractModule.itemTag("c", "fruits/apple"))
@@ -281,7 +280,7 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				.save(foodExporter, "lemon_roast_chicken");
 
 		Consumer<FinishedRecipe> noBeeExporter = withConditions(
-				exporter, DefaultResourceConditions.not(ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "bee"))));
+				exporter, DefaultResourceConditions.not(ModuleLoadedCondition.provider(FruitfulFun.id("bee"))));
 		sapling(noBeeExporter, CoreModule.GRAPEFRUIT_SAPLING,
 				CoreModule.LEMON_SAPLING.get(),
 				CoreModule.POMELO_SAPLING.get(),

@@ -14,7 +14,7 @@ import snownee.jade.api.config.IPluginConfig;
 
 public class FruitLeavesDebugProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
 
-	public static final ResourceLocation UID = new ResourceLocation(FruitfulFun.ID, "fruit_leaves");
+	public static final ResourceLocation UID = FruitfulFun.id("fruit_leaves");
 
 	@Override
 	public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

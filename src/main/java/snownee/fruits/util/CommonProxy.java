@@ -41,7 +41,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -130,7 +129,7 @@ public class CommonProxy implements ModInitializer {
 
 	private static void addBuiltinPack(ModContainer modContainer, String id) {
 		ResourceManagerHelper.registerBuiltinResourcePack(
-				new ResourceLocation(FruitfulFun.ID, id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
+				FruitfulFun.id(id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
 	}
 
 	public static boolean isShears(ItemStack stack) {

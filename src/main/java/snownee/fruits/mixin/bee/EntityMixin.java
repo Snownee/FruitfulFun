@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import snownee.fruits.Hooks;
@@ -29,9 +30,16 @@ public abstract class EntityMixin {
 	@Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
 	private void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
 		Entity entity = (Entity) (Object) this;
-		if (entity instanceof Bee && source == entity.damageSources().wither() &&
-				BeeAttributes.of(entity).hasTrait(Trait.WITHER_TOLERANT)) {
-			ci.setReturnValue(true);
+		if (entity instanceof Bee) {
+			BeeAttributes attributes = BeeAttributes.of(entity);
+			if (source.is(DamageTypes.WITHER) && attributes.hasTrait(Trait.WITHER_TOLERANT)) {
+				ci.setReturnValue(true);
+				// fix MC-84595
+//			} else if (source.is(DamageTypes.DRAGON_BREATH) && attributes.hasTrait(Trait.GHOST)) {
+//				ci.setReturnValue(true);
+//			} else if (source.is(DamageTypes.MAGIC) && attributes.hasTrait(Trait.GHOST)) {
+//				ci.setReturnValue(true);
+			}
 		}
 	}
 

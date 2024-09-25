@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.TextureSlot;
-import net.minecraft.resources.ResourceLocation;
 import snownee.fruits.FruitfulFun;
 
 public class FFModelTemplates {
@@ -18,14 +17,14 @@ public class FFModelTemplates {
 	}
 
 	private static ModelTemplate create(String string, TextureSlot... textureSlots) {
-		return new ModelTemplate(Optional.of(new ResourceLocation(FruitfulFun.ID, "block/" + string)), Optional.empty(), textureSlots);
+		return new ModelTemplate(Optional.of(FruitfulFun.id("block/" + string)), Optional.empty(), textureSlots);
 	}
 
 	private static ModelTemplate createItem(String string, TextureSlot... textureSlots) {
-		return new ModelTemplate(Optional.of(new ResourceLocation(FruitfulFun.ID, "item/" + string)), Optional.empty(), textureSlots);
+		return new ModelTemplate(Optional.of(FruitfulFun.id("item/" + string)), Optional.empty(), textureSlots);
 	}
 
 	private static ModelTemplate create(String string, String string2, TextureSlot... textureSlots) {
-		return new ModelTemplate(Optional.of(new ResourceLocation(FruitfulFun.ID, "block/" + string)), Optional.of(string2), textureSlots);
+		return new ModelTemplate(Optional.of(FruitfulFun.id("block/" + string)), Optional.of(string2), textureSlots);
 	}
 }

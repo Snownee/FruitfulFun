@@ -12,7 +12,6 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.block.Blocks;
@@ -91,7 +90,7 @@ public class HybridizingCategory extends BaseREICategory<LycheeContext, Hybridiz
 			FFJEIREI.renderBee(graphics, display.recipe, bee);
 			graphics.pose().popPose();
 		}));
-		widgets.add(Widgets.createTexturedWidget(new ResourceLocation(FruitfulFun.ID, "textures/gui/jei.png"),
+		widgets.add(Widgets.createTexturedWidget(FruitfulFun.id("textures/gui/jei.png"),
 				bounds.x + 68, bounds.y + 28, 12, 0, 31, 11, 64, 64));
 	}
 

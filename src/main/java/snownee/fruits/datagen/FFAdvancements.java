@@ -22,7 +22,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -108,7 +107,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.save(consumer, "husbandry/fruitfulfun/horn");
 
 		Consumer<Advancement> beeExporter = withConditions(
-				consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "bee")));
+				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("bee")));
 
 		Advancement inspector = Advancement.Builder.recipeAdvancement()
 				.parent(start)
@@ -146,7 +145,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.save(beeExporter, "husbandry/fruitfulfun/apiarist");
 
 		Consumer<Advancement> ritualExporter = withConditions(
-				consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "ritual")));
+				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("ritual")));
 
 		Advancement.Builder.recipeAdvancement()
 				.parent(start)
@@ -159,7 +158,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.save(ritualExporter, "husbandry/fruitfulfun/ritual");
 
 		Consumer<Advancement> foodExporter = withConditions(
-				consumer, ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "food")));
+				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("food")));
 		Item[] foods = GameObjectLookup.all(Registries.ITEM, FruitfulFun.ID)
 				.filter($ -> $.getDefaultInstance().isEdible())
 				.filter(Predicate.not(FoodModule.RICE_WITH_FRUITS.get().asItem()::equals))
@@ -175,7 +174,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.save(foodExporter, "husbandry/fruitfulfun/all_fruit_and_food");
 
 		Consumer<Advancement> noFoodExporter = withConditions(
-				consumer, DefaultResourceConditions.not(ModuleLoadedCondition.provider(new ResourceLocation(FruitfulFun.ID, "food"))));
+				consumer, DefaultResourceConditions.not(ModuleLoadedCondition.provider(FruitfulFun.id("food"))));
 		foods = FFRegistries.FRUIT_TYPE.stream()
 				.map($ -> $.fruit.get())
 				.filter($ -> $.getDefaultInstance().isEdible())

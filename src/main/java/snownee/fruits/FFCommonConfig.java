@@ -37,7 +37,7 @@ public final class FFCommonConfig {
 	public static int beeNaturalHealingInterval = 900;
 	public static boolean mutagenRecipe = true;
 	public static boolean redloveFruitUse = true;
-	@KiwiConfig.Path("dragonBreath.fixExploit")
+	@KiwiConfig.Path("dragonBreath.fixExploit") // fix MC-114618
 	public static boolean fixDragonBreathExploit = true;
 	@KiwiConfig.GameRestart
 	@KiwiConfig.Path("dragonBreath.dispenserCollecting")

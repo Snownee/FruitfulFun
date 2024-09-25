@@ -1,0 +1,21 @@
+{
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+			"values": [
+				"jeed"
+			]
+		},
+		{
+			"condition": "kiwi:is_loaded",
+			"module": "fruitfulfun:bee"
+		}
+	],
+	"type": "jeed:effect_provider",
+	"effect": "fruitfulfun:mutagen_effect",
+	"providers": [
+		{
+			"item": "fruitfulfun:mutagen"
+		}
+	]
+}

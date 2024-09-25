@@ -8,15 +8,20 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 import snownee.fruits.Hooks;
 
 public class GeneData {
 	protected final Map<Allele, Locus> loci = Maps.newIdentityHashMap();
 	protected final Set<Trait> traits = Sets.newIdentityHashSet();
+	protected Set<Trait> extraTraits = Set.of();
 
 	public void updateTraits() {
 		traits.clear();
+		traits.addAll(extraTraits);
 		if (allGene(Allele.RAINC, 1)) {
 			traits.add(Trait.RAIN_CAPABLE);
 		}
@@ -46,7 +51,7 @@ public class GeneData {
 			traits.add(Trait.ADVANCED_POLLINATION);
 		}
 
-		if (allGene(Allele.FEAT2, 2)) {
+		if (allGene(Allele.FEAT2, 2) && !hasTrait(Trait.GHOST)) {
 			traits.add(Trait.MOUNTABLE);
 		}
 	}
@@ -111,9 +116,24 @@ public class GeneData {
 		return allele.maybeMutate((byte) gene, random, highMutation);
 	}
 
+	public void addExtraTrait(Trait trait) {
+		if (extraTraits.isEmpty()) {
+			extraTraits = Sets.newIdentityHashSet();
+		}
+		extraTraits.add(trait);
+		traits.add(trait);
+	}
+
 	public void toNBT(CompoundTag lociTag) {
 		for (Map.Entry<Allele, Locus> entry : loci.entrySet()) {
 			lociTag.putByte(entry.getKey().name, entry.getValue().getData());
+		}
+		if (!extraTraits.isEmpty()) {
+			ListTag extraTag = new ListTag();
+			for (Trait trait : extraTraits) {
+				extraTag.add(StringTag.valueOf(trait.name()));
+			}
+			lociTag.put("ExtraTraits", extraTag);
 		}
 	}
 
@@ -125,6 +145,15 @@ public class GeneData {
 				locus.setData(lociTag.getByte(allele.name));
 			}
 			loci.put(allele, locus);
+		}
+		if (lociTag.contains("ExtraTraits")) {
+			extraTraits = Sets.newIdentityHashSet();
+			ListTag extraTag = lociTag.getList("ExtraTraits", Tag.TAG_STRING);
+			for (int i = 0; i < extraTag.size(); i++) {
+				extraTraits.add(Trait.REGISTRY.get(extraTag.getString(i)));
+			}
+		} else {
+			extraTraits = Set.of();
 		}
 	}
 }

@@ -145,7 +145,7 @@ public class FFModelProvider extends FabricModelProvider {
 	}
 
 	public static ResourceLocation tex(String path) {
-		return new ResourceLocation(FruitfulFun.ID, "block/" + path);
+		return FruitfulFun.id("block/" + path);
 	}
 
 	public enum FruitScale {
@@ -158,7 +158,7 @@ public class FFModelProvider extends FabricModelProvider {
 		public final boolean randomRotation;
 
 		FruitScale(String model, boolean randomRotation) {
-			this.model = model == null ? null : new ResourceLocation(FruitfulFun.ID, "block/" + model);
+			this.model = model == null ? null : FruitfulFun.id("block/" + model);
 			this.randomRotation = randomRotation;
 		}
 	}

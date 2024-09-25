@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.cherry.datagen.CherryBlockLoot;
 import snownee.fruits.compat.farmersdelight.FarmersDelightBlockLoot;
@@ -32,11 +31,11 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FFLanguageProvider::new);
 		pack.addProvider(CherryBlockLoot::new);
 		pack.addProvider(PomegranateBlockLoot::new);
-		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "food"));
+		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("food"));
 		pack.addProvider(FoodBlockLoot::new);
-		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "farmersdelight"));
+		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("farmersdelight"));
 		pack.addProvider(FarmersDelightBlockLoot::new);
-		pack = fabricDataGenerator.createBuiltinResourcePack(new ResourceLocation(FruitfulFun.ID, "farmersdelight_nhoryzon"));
+		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("farmersdelight_nhoryzon"));
 		pack.addProvider(FarmersDelightBlockLoot::new);
 	}
 }

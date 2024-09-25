@@ -125,6 +125,14 @@ public class BeeAttributes {
 		return saddle;
 	}
 
+	public void dropSaddle(Bee bee) {
+		if (isSaddled()) {
+			bee.ejectPassengers();
+			bee.spawnAtLocation(saddle);
+			setSaddle(ItemStack.EMPTY);
+		}
+	}
+
 	public boolean trusts(UUID uuid) {
 		return trusted.contains(uuid);
 	}
@@ -167,10 +175,12 @@ public class BeeAttributes {
 	}
 
 	public void updateTexture() {
-		if (hasTrait(Trait.PINK)) {
-			setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
+		if (hasTrait(Trait.GHOST)) {
+			setTexture(FruitfulFun.id("ghost_bee"));
+		} else if (hasTrait(Trait.PINK)) {
+			setTexture(FruitfulFun.id("pink_bee"));
 		} else if (hasTrait(Trait.WITHER_TOLERANT)) {
-			setTexture(new ResourceLocation(FruitfulFun.ID, "wither_bee"));
+			setTexture(FruitfulFun.id("wither_bee"));
 		} else {
 			setTexture(null);
 		}

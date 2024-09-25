@@ -74,8 +74,8 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(
 			BeeHasTrait.Type::new,
 			() -> LycheeRegistries.CONTEXTUAL);
-	public static ResourceLocation BEE_ONE_CM = new ResourceLocation(FruitfulFun.ID, "bee_one_cm");
-	public static ResourceLocation BEES_BRED = new ResourceLocation(FruitfulFun.ID, "bees_bred");
+	public static ResourceLocation BEE_ONE_CM = FruitfulFun.id("bee_one_cm");
+	public static ResourceLocation BEES_BRED = FruitfulFun.id("bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(
 			FruitfulFun.ID,
 			"entity.bee.shear")));

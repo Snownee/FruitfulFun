@@ -224,8 +224,8 @@ public class ClientProxy implements ClientModInitializer {
 
 		ModelLoadingPlugin.register(ctx -> {
 			ctx.addModels(
-					new ResourceLocation(FruitfulFun.ID, "block/cherry_crown"),
-					new ResourceLocation(FruitfulFun.ID, "block/redlove_crown"));
+					FruitfulFun.id("block/cherry_crown"),
+					FruitfulFun.id("block/redlove_crown"));
 		});
 
 		if (Hooks.bee) {

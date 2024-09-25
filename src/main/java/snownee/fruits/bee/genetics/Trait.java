@@ -30,6 +30,7 @@ public record Trait(String name, int value) {
 	public static final Trait WARRIOR = register(new Trait("warrior", 2));
 	public static final Trait ADVANCED_POLLINATION = register(new Trait("advanced_pollination", 4));
 	public static final Trait PINK = register(new Trait("pink", 2));
+	public static final Trait GHOST = register(new Trait("ghost", 0));
 
 	public MutableComponent getDisplayName() {
 		return Component.translatable("text.fruitfulfun.trait." + name);
