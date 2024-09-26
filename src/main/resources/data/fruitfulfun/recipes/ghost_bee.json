@@ -1,0 +1,27 @@
+{
+	"type": "fruitfulfun:dragon_ritual",
+	"fabric:load_conditions": [
+		{
+			"condition": "kiwi:is_loaded",
+			"module": "fruitfulfun:bee"
+		},
+		{
+			"condition": "kiwi:is_loaded",
+			"module": "fruitfulfun:ritual"
+		}
+	],
+	"item_in": {
+		"fabric:type": "fruitfulfun:beehive"
+	},
+	"post": [
+		{
+			"type": "prevent_default"
+		},
+		{
+			"type": "fruitfulfun:transform_bees",
+			"traits": [
+				"ghost"
+			]
+		}
+	]
+}

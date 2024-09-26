@@ -34,6 +34,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
@@ -43,6 +44,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -136,6 +138,10 @@ public class ClientProxy implements ClientModInitializer {
 
 		boolean mainArm = (livingEntity.getMainArm() == HumanoidArm.LEFT) == leftHand;
 		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), mainArm), vec.x(), vec.y(), vec.z(), 0, 0, 0);
+	}
+
+	public static Player getPlayer() {
+		return Minecraft.getInstance().player;
 	}
 
 	@Override
@@ -256,9 +262,12 @@ public class ClientProxy implements ClientModInitializer {
 			});
 
 			ClientTickEvents.END_CLIENT_TICK.register(mc -> {
-				if (mc.player instanceof FFPlayer player && player.fruits$isHaunting() && mc.options.keyJump.isDown()) {
-					mc.player.setXRot(0);
-					mc.player.setYRot(0);
+				LocalPlayer localPlayer = mc.player;
+				if (localPlayer instanceof FFPlayer player && player.fruits$isHaunting() && BeeModule.isHauntingNormalEntity(
+						localPlayer,
+						null) && mc.options.keyJump.isDown()) {
+					localPlayer.setXRot(0);
+					localPlayer.setYRot(0);
 				}
 			});
 		}

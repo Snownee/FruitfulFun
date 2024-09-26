@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
@@ -53,6 +54,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -72,13 +74,17 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.GeneticSavedData;
+import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
+import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.fruits.vacuum.VacGunItem;
 import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
@@ -247,6 +253,8 @@ public class CommonProxy implements ModInitializer {
 				dispatcher.register(FFCommands.register());
 			});
 		}
+
+		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
 	}
 
 	public static ItemStack getRecipeRemainder(ItemStack itemStack) {
@@ -261,6 +269,23 @@ public class CommonProxy implements ModInitializer {
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
 			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
 			FFPlayer.of(newPlayer).fruits$setGeneNames(map);
+		});
+
+		UseEntityCallback.EVENT.register((player, level, hand, target, hitResult) -> {
+			FFPlayer ffPlayer = (FFPlayer) player;
+			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
+					ffPlayer.fruits$hauntingTarget() instanceof Bee bee &&
+					BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+				if (!level.isClientSide) {
+					ffPlayer.fruits$setHauntingTarget(target);
+					HauntingManager manager = ffPlayer.fruits$hauntingManager();
+					if (manager != null) {
+						manager.storeBee(bee);
+					}
+				}
+				return InteractionResult.sidedSuccess(level.isClientSide);
+			}
+			return InteractionResult.PASS;
 		});
 	}
 

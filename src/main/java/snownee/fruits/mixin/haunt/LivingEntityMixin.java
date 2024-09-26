@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,11 +22,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.HauntingManager;
+import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFLivingEntity;
 import snownee.fruits.duck.FFPlayer;
+import snownee.fruits.util.ClientProxy;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements FFLivingEntity {
+	@Shadow
+	protected int lerpSteps;
+
+	@Shadow
+	protected abstract boolean isImmobile();
+
+	@Shadow
+	protected abstract void serverAiStep();
+
 	@Unique
 	@Nullable
 	private UUID hauntedBy;
@@ -48,6 +60,15 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 		}
 		fruits$getHauntedBy(); // remove invalid spectatedBy
 		if (this instanceof FFPlayer player && player.fruits$isHaunting()) {
+			if (isControlledByLocalInstance()) {
+				lerpSteps = 0;
+				syncPacketPositionCodec(getX(), getY(), getZ());
+			}
+			if (!isImmobile() && isEffectiveAi()) {
+				level().getProfiler().push("newAi");
+				serverAiStep();
+				level().getProfiler().pop();
+			}
 			ci.cancel();
 		}
 	}
@@ -56,6 +77,9 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	@Nullable
 	public Player fruits$getHauntedBy() {
 		if (hauntedBy == null) {
+			if (level().isClientSide && ClientProxy.getPlayer() instanceof FFPlayer player && player.fruits$hauntingTarget() == this) {
+				return (Player) player;
+			}
 			return null;
 		}
 		if (level() instanceof ServerLevel level && level.getEntity(hauntedBy) instanceof Player player && player.isAlive()) {
@@ -68,6 +92,16 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	@Override
 	public void fruits$setHauntedBy(@Nullable UUID uuid) {
 		hauntedBy = uuid;
+	}
+
+	@Override
+	public boolean fruit$hasHauntedTrait(Trait trait) {
+		Player player = fruits$getHauntedBy();
+		if (player == null) {
+			return false;
+		}
+		HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
+		return manager != null && manager.hasTrait(trait);
 	}
 
 	@Inject(

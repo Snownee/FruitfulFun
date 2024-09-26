@@ -5,7 +5,6 @@ import java.util.Objects;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,8 +22,8 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.duck.FFPlayer;
-import snownee.fruits.mixin.EntityAccess;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
@@ -66,9 +65,9 @@ public class GameRendererMixin {
 			target = "Lnet/minecraft/world/entity/Entity;pick(DFZ)Lnet/minecraft/world/phys/HitResult;"))
 	private HitResult pickBlock(Entity entity, double hitDistance, float partialTicks, boolean hitFluids, Operation<HitResult> original) {
 		LocalPlayer localPlayer = minecraft.player;
-		if (Hooks.bee && localPlayer instanceof FFPlayer player && player.fruits$hauntingTarget() == entity) {
+		if (BeeModule.isHauntingNormalEntity(localPlayer, entity)) {
 			Vec3 eyePosition = entity.getEyePosition(partialTicks);
-			Vec3 viewVector = calculateViewVector(entity, partialTicks);
+			Vec3 viewVector = Hooks.calculateViewVector(entity, Objects.requireNonNull(localPlayer), partialTicks);
 			Vec3 end = eyePosition.add(viewVector.x * hitDistance, viewVector.y * hitDistance, viewVector.z * hitDistance);
 			return entity.level().clip(new ClipContext(
 					eyePosition,
@@ -85,17 +84,11 @@ public class GameRendererMixin {
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/Entity;getViewVector(F)Lnet/minecraft/world/phys/Vec3;"))
 	private Vec3 pickEntity(Entity entity, float partialTicks, Operation<Vec3> original) {
-		if (minecraft.player instanceof FFPlayer player && player.fruits$hauntingTarget() == entity) {
-			return calculateViewVector(entity, partialTicks);
+		LocalPlayer localPlayer = minecraft.player;
+		if (BeeModule.isHauntingNormalEntity(localPlayer, entity)) {
+			return Hooks.calculateViewVector(entity, Objects.requireNonNull(localPlayer), partialTicks);
 		}
 		return original.call(entity, partialTicks);
 	}
 
-	@Unique
-	private static Vec3 calculateViewVector(Entity entity, float partialTicks) {
-		LocalPlayer localPlayer = Objects.requireNonNull(Minecraft.getInstance().player);
-		return ((EntityAccess) entity).callCalculateViewVector(
-				entity.getViewXRot(partialTicks) + localPlayer.getViewXRot(partialTicks),
-				entity.getViewYRot(partialTicks) + localPlayer.getViewYRot(partialTicks));
-	}
 }

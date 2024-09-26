@@ -15,6 +15,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.network.SSyncBeePacket;
+import snownee.fruits.duck.FFLivingEntity;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
@@ -30,15 +31,12 @@ public abstract class EntityMixin {
 	@Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
 	private void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
 		Entity entity = (Entity) (Object) this;
-		if (entity instanceof Bee) {
-			BeeAttributes attributes = BeeAttributes.of(entity);
-			if (source.is(DamageTypes.WITHER) && attributes.hasTrait(Trait.WITHER_TOLERANT)) {
+		if (source.is(DamageTypes.WITHER)) {
+			if (entity instanceof Bee && BeeAttributes.of(entity).hasTrait(Trait.WITHER_TOLERANT)) {
 				ci.setReturnValue(true);
-				// fix MC-84595
-//			} else if (source.is(DamageTypes.DRAGON_BREATH) && attributes.hasTrait(Trait.GHOST)) {
-//				ci.setReturnValue(true);
-//			} else if (source.is(DamageTypes.MAGIC) && attributes.hasTrait(Trait.GHOST)) {
-//				ci.setReturnValue(true);
+			}
+			if (entity instanceof FFLivingEntity living && living.fruit$hasHauntedTrait(Trait.WITHER_TOLERANT)) {
+				ci.setReturnValue(true);
 			}
 		}
 	}

@@ -6,6 +6,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import snownee.fruits.CoreModule;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.loader.Platform;
 
@@ -51,6 +55,25 @@ public class ServerPlayerMixin {
 		ServerPlayer player = (ServerPlayer) (Object) this;
 		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
 			((FFPlayer) player).fruits$ensureCamera();
+		}
+	}
+
+	@WrapOperation(
+			method = "setPlayerInput",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isPassenger()Z"))
+	private boolean setPlayerInput(ServerPlayer player, Operation<Boolean> original) {
+		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+			return true;
+		}
+		return original.call(player);
+	}
+
+	@Inject(method = "tick", at = @At("HEAD"))
+	private void tick(CallbackInfo ci) {
+		ServerPlayer player = (ServerPlayer) (Object) this;
+		HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
+		if (Hooks.bee && manager != null) {
+			manager.tick(player);
 		}
 	}
 }

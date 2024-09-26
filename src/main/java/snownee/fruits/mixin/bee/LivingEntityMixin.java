@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.sugar.Local;
@@ -15,13 +16,15 @@ import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.duck.FFLivingEntity;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -36,6 +39,9 @@ public abstract class LivingEntityMixin extends Entity {
 	@Nullable
 	public abstract MobEffectInstance getEffect(MobEffect effect);
 
+	@Shadow
+	public abstract boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity);
+
 	@Inject(method = "getDamageAfterMagicAbsorb", at = @At("HEAD"))
 	private void getDamageAfterMagicAbsorb(
 			DamageSource damageSource,
@@ -48,22 +54,11 @@ public abstract class LivingEntityMixin extends Entity {
 		}
 	}
 
-//	@Inject(
-//			method = "die", at = @At(
-//			value = "INVOKE",
-//			target = "Lnet/minecraft/world/damagesource/DamageSource;getEntity()Lnet/minecraft/world/entity/Entity;"), cancellable = true)
-//	private void die(DamageSource damageSource, CallbackInfo ci) {
-//		if (!Hooks.bee || getType() != EntityType.BEE || !damageSource.is(DamageTypes.DRAGON_BREATH)) {
-//			return;
-//		}
-//		Bee bee = (Bee) (Object) this;
-//		bee.heal(bee.getMaxHealth());
-//		bee.stopBeingAngry();
-//		bee.setHasNectar(false);
-//		BeeAttributes attributes = BeeAttributes.of(bee);
-//		attributes.dropSaddle(bee);
-//		attributes.getGenes().addExtraTrait(Trait.GHOST);
-//		attributes.updateTraits(bee);
-//		ci.cancel();
-//	}
+	@Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setHealth(F)V"))
+	private void addPoisonEffect(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
+		if (Hooks.bee && !damageSource.isIndirect() && damageSource.getEntity() instanceof FFLivingEntity living &&
+				living.fruit$hasHauntedTrait(Trait.WARRIOR)) {
+			addEffect(new MobEffectInstance(MobEffects.POISON, 200), damageSource.getEntity());
+		}
+	}
 }

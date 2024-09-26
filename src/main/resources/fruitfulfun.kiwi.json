@@ -78,6 +78,12 @@
 	],
 	"KiwiPacket": [
 		{
+			"target": "snownee.fruits.bee.network.CHauntingActionPacket",
+			"data": {
+				"value": "haunting_action"
+			}
+		},
+		{
 			"target": "snownee.fruits.bee.network.CInspectBeePacket",
 			"data": {
 				"dir": "PLAY_TO_SERVER",
@@ -91,17 +97,17 @@
 			}
 		},
 		{
-			"target": "snownee.fruits.bee.network.SInspectBeeReplyPacket",
-			"data": {
-				"dir": "PLAY_TO_CLIENT",
-				"value": "inspect_bee_reply"
-			}
-		},
-		{
 			"target": "snownee.fruits.bee.network.SHauntPacket",
 			"data": {
 				"dir": "PLAY_TO_CLIENT",
 				"value": "haunt"
+			}
+		},
+		{
+			"target": "snownee.fruits.bee.network.SInspectBeeReplyPacket",
+			"data": {
+				"dir": "PLAY_TO_CLIENT",
+				"value": "inspect_bee_reply"
 			}
 		},
 		{

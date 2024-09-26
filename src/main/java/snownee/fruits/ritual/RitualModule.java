@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -49,14 +50,30 @@ import snownee.fruits.Hooks;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.food.PieBlock;
 import snownee.fruits.util.CommonProxy;
-import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
+import snownee.kiwi.loader.event.InitEvent;
+import snownee.lychee.LycheeLootContextParams;
+import snownee.lychee.LycheeRegistries;
+import snownee.lychee.core.post.PostActionType;
+import snownee.lychee.core.recipe.LycheeRecipe;
+import snownee.lychee.core.recipe.type.LycheeRecipeType;
+import snownee.lychee.mixin.LootContextParamSetsAccess;
 
 @KiwiModule("ritual")
 @KiwiModule.Optional
 public class RitualModule extends AbstractModule {
+	@KiwiModule.Name("dragon_ritual")
+	public static final KiwiGO<LycheeRecipeType<DragonRitualContext, DragonRitualRecipe>> RECIPE_TYPE = go(() -> new LycheeRecipeType<>(
+			"fruitfulfun:dragon_ritual",
+			DragonRitualRecipe.class,
+			null));
+	@KiwiModule.Name("dragon_ritual")
+	public static final KiwiGO<LycheeRecipe.Serializer<DragonRitualRecipe>> SERIALIZER = go(DragonRitualRecipe.Serializer::new);
+	public static final KiwiGO<PostActionType<TransformBees>> TRANSFORM_BEES = go(
+			TransformBees.Type::new,
+			() -> LycheeRegistries.POST_ACTION);
 	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(
 			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.ritual.finish")));
 	public static final Supplier<BlockPattern> RITUAL = Suppliers.memoize(() -> BlockPatternBuilder.start()
@@ -81,6 +98,16 @@ public class RitualModule extends AbstractModule {
 
 	public RitualModule() {
 		Hooks.ritual = true;
+		LootContextParamSetsAccess.callRegister("fruitfulfun:dragon_ritual", $ -> {
+			$.required(LootContextParams.ORIGIN)
+					.required(LootContextParams.THIS_ENTITY)
+					.required(LycheeLootContextParams.BLOCK_POS);
+		});
+	}
+
+	@Override
+	protected void init(InitEvent event) {
+		RECIPE_TYPE.get().canPreventConsumeInputs = true;
 	}
 
 	public static void tryStartRitual(Level level, BlockPos pos, BlockState pieState) {
@@ -254,12 +281,11 @@ public class RitualModule extends AbstractModule {
 			return;
 		}
 		level.removeBlock(pos, false);
-		ItemStack itemStack = ItemStack.EMPTY;
-		if (interaction.getFirstPassenger() instanceof ItemEntity itemEntity) {
-			itemStack = itemEntity.getItem();
+		int breathCount = heads.size() + 1;
+		if (interaction.getFirstPassenger() instanceof ItemEntity itemEntity && DragonRitualRecipe.on(itemEntity, pos, heads.size())) {
+			breathCount = 1;
 		}
 		interaction.discard();
-		int breathCount = Hooks.vac && VacModule.VAC_GUN_CASING.is(itemStack) ? 1 : heads.size() + 1;
 		AreaEffectCloud flame = new AreaEffectCloud(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 		flame.setRadius(0.5f * breathCount);
 		flame.setDuration(200);
@@ -268,10 +294,6 @@ public class RitualModule extends AbstractModule {
 		flame.ownerUUID = DUMMY_UUID;
 		level.addFreshEntity(flame);
 		level.playSound(null, pos, SoundEvents.ENDER_DRAGON_GROWL, SoundSource.AMBIENT, 1.0F, 1.0F);
-		if (breathCount == 1) {
-			interaction.spawnAtLocation(VacModule.VAC_GUN.itemStack());
-			itemStack.shrink(1);
-		}
 		ServerLevel serverLevel = (ServerLevel) level;
 		Advancement advancement = Hooks.advancement(serverLevel, "ritual");
 		if (advancement != null) {

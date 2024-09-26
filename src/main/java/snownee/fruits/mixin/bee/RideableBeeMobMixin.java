@@ -13,6 +13,8 @@ import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.duck.FFLivingEntity;
 
 @Mixin(Mob.class)
 public class RideableBeeMobMixin {
@@ -22,10 +24,17 @@ public class RideableBeeMobMixin {
 			return;
 		}
 		Mob mob = (Mob) (Object) this;
-		if (!mob.isNoAi() && mob instanceof Bee bee && bee.getFirstPassenger() instanceof Player player) {
+		if (!mob.isNoAi() && mob instanceof Bee bee) {
 			BeeAttributes attributes = BeeAttributes.of(bee);
-			if (attributes.isSaddled() && player.isCreative() || attributes.trusts(player.getUUID())) {
+			if (attributes.isSaddled() && bee.getFirstPassenger() instanceof Player player && (
+					player.isCreative() || attributes.trusts(player.getUUID()))) {
 				cir.setReturnValue(player);
+			}
+			if (attributes.hasTrait(Trait.GHOST)) {
+				Player player = ((FFLivingEntity) bee).fruits$getHauntedBy();
+				if (player != null) {
+					cir.setReturnValue(player);
+				}
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-25T14:23:12.0912823	Fruitful Fun/Tags for minecraft:block
+// 1.20.1	2024-09-27T11:03:52.325613	Fruitful Fun/Tags for minecraft:block
 c82204d4cd415c30685cfee6ad68f7d9bd52238f data\fruitfulfun\tags\blocks\redlove_logs.json
 453632af22716f27e9ed868057d9f94fa724b1b6 data\minecraft\tags\blocks\planks.json
 1ba405c2786d55329238dc19f4e3ac0cedf80e15 data\minecraft\tags\blocks\wall_hanging_signs.json
@@ -18,7 +18,7 @@ b08afdfafc5dcb294f9da2e0594f2d617d63a6b6 data\minecraft\tags\blocks\inside_step_
 8950030816342d6e630ef869cff6909563de4faf data\minecraft\tags\blocks\fence_gates.json
 ee70a6d8b0a83889452e4fafe02fb0663f98e671 data\minecraft\tags\blocks\logs_that_burn.json
 214c20c9bddab5bf9d58e59d4823d6ac92065402 data\minecraft\tags\blocks\wooden_stairs.json
-d8c863c2cba30aa64ed6ef3aa776277ff9038939 data\fruitfulfun\tags\blocks\candles.json
+53d889f6d1461cf50541f2adf569900d1b7c77d7 data\fruitfulfun\tags\blocks\candles.json
 288f202c56a2f41b5ddcd367f3b54629f4274276 data\minecraft\tags\blocks\wooden_buttons.json
 556132c96922506301a42d9b6ba8b6a0f8236a0a data\fruitfulfun\tags\blocks\citrus_logs.json
 2aaafe761dcf5ca6fee9b6579001bf80ee944a2d data\fruitfulfun\tags\blocks\vcd_perform_using.json

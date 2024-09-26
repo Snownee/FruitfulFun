@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 public class FFFakePlayer extends FakePlayer {
@@ -38,6 +39,11 @@ public class FFFakePlayer extends FakePlayer {
 
 	@Override
 	public boolean canBeHitByProjectile() {
+		return false;
+	}
+
+	@Override
+	protected boolean canRide(Entity vehicle) {
 		return false;
 	}
 }
