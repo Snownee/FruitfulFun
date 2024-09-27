@@ -20,6 +20,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
@@ -57,7 +58,7 @@ public abstract class LivingEntityMixin extends Entity {
 	@Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setHealth(F)V"))
 	private void addPoisonEffect(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
 		if (Hooks.bee && !damageSource.isIndirect() && damageSource.getEntity() instanceof FFLivingEntity living &&
-				living.fruit$hasHauntedTrait(Trait.WARRIOR)) {
+				!(damageSource.getEntity() instanceof Creeper) && living.fruit$hasHauntedTrait(Trait.WARRIOR)) {
 			addEffect(new MobEffectInstance(MobEffects.POISON, 200), damageSource.getEntity());
 		}
 	}

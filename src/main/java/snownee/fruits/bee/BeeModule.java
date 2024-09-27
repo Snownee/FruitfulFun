@@ -76,9 +76,11 @@ public class BeeModule extends AbstractModule {
 			() -> LycheeRegistries.CONTEXTUAL);
 	public static ResourceLocation BEE_ONE_CM = FruitfulFun.id("bee_one_cm");
 	public static ResourceLocation BEES_BRED = FruitfulFun.id("bees_bred");
-	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(
-			FruitfulFun.ID,
-			"entity.bee.shear")));
+	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("entity.bee.shear")));
+	public static final KiwiGO<SoundEvent> START_HAUNTING = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
+			"entity.start_haunting")));
+	public static final KiwiGO<SoundEvent> STOP_HAUNTING = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
+			"entity.stop_haunting")));
 	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "shears")
 	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);

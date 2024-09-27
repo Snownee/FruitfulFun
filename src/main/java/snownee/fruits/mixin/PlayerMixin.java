@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.network.SHauntPacket;
@@ -158,9 +159,10 @@ public abstract class PlayerMixin implements FFPlayer {
 			}
 			if (target == player) {
 				if (hauntingManager != null) {
-					hauntingManager.respawnStoredBee(serverPlayer);
+					hauntingManager.getExorcised(serverPlayer);
 				}
 			} else {
+				player.level().playSound(null, player, BeeModule.START_HAUNTING.get(), player.getSoundSource(), 1, 1);
 				player.setXRot(0);
 				player.setYRot(0);
 				serverPlayer.setCamera(target);

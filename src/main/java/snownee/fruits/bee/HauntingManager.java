@@ -41,9 +41,15 @@ public class HauntingManager {
 	}
 
 	public void getExorcised(ServerPlayer player) {
-		player.setCamera(null);
+		if (player.getCamera() != player) {
+			player.setCamera(null);
+		}
+		if (isGhostBee) {
+			addNegativeEffects((LivingEntity) target);
+		}
 		respawnStoredBee(player);
 		addNegativeEffects(player);
+		player.level().playSound(null, player, BeeModule.STOP_HAUNTING.get(), player.getSoundSource(), 1, 1);
 	}
 
 	private static void addNegativeEffects(LivingEntity entity) {

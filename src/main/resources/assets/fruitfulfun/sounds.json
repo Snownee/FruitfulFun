@@ -17,6 +17,19 @@
 		],
 		"subtitle": "subtitles.item.shears.shear"
 	},
+	"entity.start_haunting": {
+		"sounds": [
+			"fruitfulfun:start_haunting_1",
+			"fruitfulfun:start_haunting_2"
+		],
+		"subtitle": "subtitles.fruitfulfun.start_haunting"
+	},
+	"entity.stop_haunting": {
+		"sounds": [
+			"fruitfulfun:stop_haunting"
+		],
+		"subtitle": "subtitles.fruitfulfun.stop_haunting"
+	},
 	"item.armor.equip_crown": {
 		"sounds": [
 			{
