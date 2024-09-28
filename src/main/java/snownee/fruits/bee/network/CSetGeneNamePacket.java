@@ -21,7 +21,7 @@ public class CSetGeneNamePacket extends PacketHandler {
 	public CompletableFuture<FriendlyByteBuf> receive(
 			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
 			FriendlyByteBuf buf,
-			@Nullable ServerPlayer serverPlayer) {
+			@Nullable ServerPlayer player) {
 		char c = buf.readChar();
 		FFPlayer.GeneName name = new FFPlayer.GeneName(buf.readUtf(), buf.readUtf());
 		return executor.apply(() -> {
@@ -29,14 +29,14 @@ public class CSetGeneNamePacket extends PacketHandler {
 				return;
 			}
 			String code = String.valueOf(c);
-			FFPlayer player = Objects.requireNonNull(FFPlayer.of(serverPlayer));
-			String oldName = player.fruits$getGeneName(code);
-			String oldDesc = player.fruits$getGeneDesc(code);
+			FFPlayer ffPlayer = Objects.requireNonNull(FFPlayer.of(player));
+			String oldName = ffPlayer.fruits$getGeneName(code);
+			String oldDesc = ffPlayer.fruits$getGeneDesc(code);
 			if (oldName.equals(name.name()) && oldDesc.equals(name.desc())) {
 				return;
 			}
-			player.fruits$setGeneName(code, name);
-			SSyncPlayerPacket.send(serverPlayer);
+			ffPlayer.fruits$setGeneName(code, name);
+			SSyncPlayerPacket.send(player);
 		});
 	}
 

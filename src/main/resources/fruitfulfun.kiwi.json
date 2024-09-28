@@ -97,6 +97,13 @@
 			}
 		},
 		{
+			"target": "snownee.fruits.bee.network.SHauntingParticles",
+			"data": {
+				"dir": "PLAY_TO_CLIENT",
+				"value": "haunting_particles"
+			}
+		},
+		{
 			"target": "snownee.fruits.bee.network.SHauntPacket",
 			"data": {
 				"dir": "PLAY_TO_CLIENT",

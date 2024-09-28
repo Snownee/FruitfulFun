@@ -34,6 +34,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.particle.SoulParticle;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.resources.model.BakedModel;
@@ -270,6 +271,8 @@ public class ClientProxy implements ClientModInitializer {
 					localPlayer.setYRot(0);
 				}
 			});
+
+			ParticleFactoryRegistry.getInstance().register(BeeModule.GHOST.getOrCreate(), SoulParticle.EmissiveProvider::new);
 		}
 
 		if (Hooks.food) {
