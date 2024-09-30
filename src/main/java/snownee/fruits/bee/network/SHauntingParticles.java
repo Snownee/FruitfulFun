@@ -13,6 +13,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
+import snownee.fruits.FFClientConfig;
 import snownee.fruits.bee.BeeModule;
 import snownee.kiwi.network.KPacketTarget;
 import snownee.kiwi.network.KiwiPacket;
@@ -29,6 +30,9 @@ public class SHauntingParticles extends PacketHandler {
 			@Nullable ServerPlayer player) {
 		Vec3 vec3 = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
 		return executor.apply(() -> {
+			if (!FFClientConfig.hauntingInteractionParticles) {
+				return;
+			}
 			ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
 			int count = 1 + level.random.nextInt(3);
 			for (int i = 0; i < count; i++) {

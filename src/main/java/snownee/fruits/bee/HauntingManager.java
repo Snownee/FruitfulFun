@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.genetics.Trait;
 
 public class HauntingManager {
@@ -53,8 +54,12 @@ public class HauntingManager {
 	}
 
 	private static void addNegativeEffects(LivingEntity entity) {
-		entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
-		entity.addEffect(new MobEffectInstance(BeeModule.FRAGILITY.get(), 200, 1));
+		if (FFCommonConfig.hauntingCooldownSeconds <= 0) {
+			return;
+		}
+		int ticks = FFCommonConfig.hauntingCooldownSeconds * 20;
+		entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, ticks, 1));
+		entity.addEffect(new MobEffectInstance(BeeModule.FRAGILITY.get(), ticks, 1));
 	}
 
 	public void tick(ServerPlayer player) {
@@ -62,7 +67,7 @@ public class HauntingManager {
 			getExorcised(player);
 			return;
 		}
-		if (++ticks > 120 && isGhostBee) {
+		if (++ticks > FFCommonConfig.hauntingGhostBeeTimeLimitTicks && FFCommonConfig.hauntingGhostBeeTimeLimitTicks > 0 && isGhostBee) {
 			getExorcised(player);
 		}
 	}

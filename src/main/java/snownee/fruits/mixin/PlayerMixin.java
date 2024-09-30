@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,11 +16,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetCameraPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.Allele;
@@ -30,6 +33,9 @@ import snownee.fruits.duck.FFPlayer;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin implements FFPlayer {
+	@Shadow
+	public abstract Component getName();
+
 	@Unique
 	private Map<String, GeneName> geneNames = Map.of();
 	@Unique
@@ -149,33 +155,32 @@ public abstract class PlayerMixin implements FFPlayer {
 
 	@Override
 	public void fruits$setHauntingTarget(Entity target) {
+//		FruitfulFun.LOGGER.info("Player {} haunting target set to {}", this.getName(), target.getName());
 		if (target == fruits$hauntingTarget()) {
 			return;
 		}
+		if (fruits$hauntingTarget() instanceof FFLivingEntity former) {
+			former.fruits$setHauntedBy(null);
+		}
 		Player player = (Player) (Object) this;
-		if (player instanceof ServerPlayer serverPlayer) {
-			if (!serverPlayer.isChangingDimension()) {
-				SHauntPacket.send(serverPlayer, target);
-			}
-			if (target == player) {
-				if (hauntingManager != null) {
-					hauntingManager.getExorcised(serverPlayer);
-				}
-			} else {
-				player.level().playSound(null, player, BeeModule.START_HAUNTING.get(), player.getSoundSource(), 1, 1);
-				player.setXRot(0);
-				player.setYRot(0);
-				serverPlayer.setCamera(target);
-				if (target instanceof FFLivingEntity entity) {
-					entity.fruits$setHauntedBy(player.getUUID());
-				}
-			}
-			if (fruits$hauntingTarget() instanceof FFLivingEntity former) {
-				former.fruits$setHauntedBy(null);
+		if (target == player && player instanceof ServerPlayer serverPlayer) {
+			if (hauntingManager != null) {
+				hauntingManager.getExorcised(serverPlayer);
 			}
 		}
-//		FruitfulFun.LOGGER.info("Haunting target set to {}", target);
 		hauntingManager = target == player ? null : new HauntingManager(target);
+		if (player instanceof ServerPlayer serverPlayer) {
+			if (!serverPlayer.isChangingDimension()) {
+				SHauntPacket.send(serverPlayer);
+			}
+			player.level().playSound(null, player, BeeModule.START_HAUNTING.get(), player.getSoundSource(), 1, 1);
+			player.setXRot(0);
+			player.setYRot(0);
+			serverPlayer.setCamera(target);
+			if (target instanceof FFLivingEntity entity) {
+				entity.fruits$setHauntedBy(player.getUUID());
+			}
+		}
 	}
 
 	@Override
@@ -198,11 +203,11 @@ public abstract class PlayerMixin implements FFPlayer {
 	@Override
 	public void fruits$ensureCamera() {
 		if ((Object) this instanceof ServerPlayer player) {
+			SHauntPacket.send(player);
 			Entity target = fruits$hauntingTarget();
 			if (target == null) {
 				target = player;
 			}
-			SHauntPacket.send(player, target);
 			player.connection.send(new ClientboundSetCameraPacket(target));
 			player.connection.resetPosition();
 		}

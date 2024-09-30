@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-27T21:39:28.5992894	Fruitful Fun/Tags for minecraft:item
+// 1.20.1	2024-09-29T20:51:29.329699	Fruitful Fun/Tags for minecraft:item
 bcf8693a497f4cb8d3f114b1f8c18232351a6774 data\c\tags\items\foods.json
 08eb51b86a97ebb3c8cdf0dbba71a76e61b4f631 data\farmersdelight\tags\items\cabinets\wooden.json
 154a0152eeae1cec3e72ee0022a65ba55068daa4 data\minecraft\tags\items\signs.json
@@ -19,7 +19,7 @@ c82204d4cd415c30685cfee6ad68f7d9bd52238f data\fruitfulfun\tags\items\redlove_log
 4af733725e3feda8b8209d87ca16b9a4d418addf data\dehydration\tags\items\hydrating_drinks.json
 589e66aba7f7879b43dede77a7f910a66df9c7ee data\minecraft\tags\items\wooden_trapdoors.json
 cd6b17f7d816a47e6547c6d9fa5e587a83c4a821 data\minecraft\tags\items\fox_food.json
-2d0cb84ef272eb7604223c0f0d6f74451bcfde12 data\minecraft\tags\items\wooden_doors.json
 ee70a6d8b0a83889452e4fafe02fb0663f98e671 data\minecraft\tags\items\logs_that_burn.json
+2d0cb84ef272eb7604223c0f0d6f74451bcfde12 data\minecraft\tags\items\wooden_doors.json
 288f202c56a2f41b5ddcd367f3b54629f4274276 data\minecraft\tags\items\wooden_buttons.json
 e2a53dc47ca3bc489cab9d8ad617c71d6d5d29aa data\minecraft\tags\items\flowers.json

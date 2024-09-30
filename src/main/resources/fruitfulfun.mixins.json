@@ -11,7 +11,6 @@
 		"EntityAccess",
 		"GiveGiftToHeroMixin",
 		"InstrumentItemMixin",
-		"LivingEntityAccess",
 		"PlayerMixin",
 		"ServerEntityMixin",
 		"ServerLevelMixin",
@@ -70,6 +69,8 @@
 		"client.MinecraftMixin",
 		"client.MultiPlayerGameModeMixin",
 		"haunt.LocalPlayerMixin",
+		"haunt.PlayerRendererMixin",
+		"haunt.RemotePlayerMixin",
 		"vac.LivingEntitySoundMixin",
 		"vac.MinecraftMixin"
 	],
