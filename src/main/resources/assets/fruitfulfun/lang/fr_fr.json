@@ -6,7 +6,6 @@
 	"item.fruitfulfun.orange": "Orange",
 	"item.fruitfulfun.lemon": "Limon",
 	"item.fruitfulfun.grapefruit": "Pamplemousse",
-	"item.fruitfulfun.empowered_citron": "Citron autonomisé",
 	"item.fruitfulfun.cherry": "Cerise",
 	"item.fruitfulfun.redlove": "Redlove",
 	"item.fruitfulfun.heart_banner_pattern": "Motif de bannière",
@@ -88,14 +87,9 @@
 	"block.fruitfulfun.citrus_pressure_plate": "Plaque de pression en citronnier",
 	"block.fruitfulfun.citrus_door": "Porte en citronnier",
 	"block.fruitfulfun.citrus_trapdoor": "Trappe en citronnier",
-	"gui.fruitfulfun.hybridizing": "Abeille pollinisatrice",
-	"gui.fruitfulfun.tip.flowering": "%s (Fleur)",
+	"recipeType.fruitfulfun.hybridizing": "Abeille pollinisatrice",
 	"advancements.fruitfulfun.grapefruit.title": "Le parfum du citron",
 	"advancements.fruitfulfun.grapefruit.description": "Hybridez un pamplemoussier.",
 	"advancements.fruitfulfun.redlove.title": "Bienvenue au Dortoir Sakura",
-	"advancements.fruitfulfun.redlove.description": "Hybridez un pommier Redlove.",
-	"advancements.fruitfulfun.forestbat.title": "Accélérationniste",
-	"advancements.fruitfulfun.forestbat.description": "Rencontrez une chauve-souris forestière.",
-	"fruitfulfun.forestbat": "Chauve-souris forestière",
-	"config.jade.plugin_fruitfulfun.bee": "Bee"
+	"advancements.fruitfulfun.redlove.description": "Hybridez un pommier Redlove."
 }

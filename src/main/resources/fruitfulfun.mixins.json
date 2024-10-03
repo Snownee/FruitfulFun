@@ -55,7 +55,9 @@
 	],
 	"client": [
 		"bee.BeeRendererMixin",
+		"bee.EntityRendererMixin",
 		"bee.GuiGraphicsMixin",
+		"bee.LivingEntityRendererMixin",
 		"cherry.BlockMixin",
 		"cherry.CherryLeavesBlockMixin",
 		"cherry.ItemRendererMixin",

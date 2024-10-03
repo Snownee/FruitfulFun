@@ -82,6 +82,8 @@ public final class FFCommonConfig {
 	public static int hauntingInitiativeSkillCooldownTicks = 90;
 	@KiwiConfig.Path("haunting.ghostBeeTimeLimitTicks")
 	public static int hauntingGhostBeeTimeLimitTicks = 120;
+	@KiwiConfig.Path("haunting.interactionParticles")
+	public static boolean hauntingInteractionParticles = true;
 
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();

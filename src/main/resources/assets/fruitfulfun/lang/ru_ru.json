@@ -6,7 +6,6 @@
 	"item.fruitfulfun.orange": "Апельсин",
 	"item.fruitfulfun.lemon": "Лимон",
 	"item.fruitfulfun.grapefruit": "Грейпфрут",
-	"item.fruitfulfun.empowered_citron": "Усилиный цитрон",
 	"item.fruitfulfun.cherry": "Вишня",
 	"item.fruitfulfun.redlove": "Сердцефрукт",
 	"block.fruitfulfun.tangerine_sapling": "Саженец мандарина",
@@ -52,13 +51,8 @@
 	"block.fruitfulfun.citrus_pressure_plate": "Цитрусовая нажимная плита",
 	"block.fruitfulfun.citrus_door": "Цитрусовая дверь",
 	"block.fruitfulfun.citrus_trapdoor": "Цитрусовый люк",
-	"gui.fruitfulfun.hybridizing": "Пчелоопыляемый",
-	"gui.fruitfulfun.tip.flowering": "%s (Цветение)",
 	"advancements.fruitfulfun.grapefruit.title": "Цитрусовый аромат",
 	"advancements.fruitfulfun.grapefruit.description": "Выведите грепфрутово дерево",
 	"advancements.fruitfulfun.redlove.title": "Добро пожаловать в мир сакуры!",
-	"advancements.fruitfulfun.redlove.description": "Выведите сердцефруктовое дерево",
-	"advancements.fruitfulfun.forestbat.title": "Акселерационизм",
-	"advancements.fruitfulfun.forestbat.description": "Встретьте лесных летучих мышей",
-	"fruitfulfun.forestbat": "Лесная летучая мышь"
+	"advancements.fruitfulfun.redlove.description": "Выведите сердцефруктовое дерево"
 }

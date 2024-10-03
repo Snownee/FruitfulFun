@@ -147,7 +147,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 		Consumer<Advancement> ritualExporter = withConditions(
 				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("ritual")));
 
-		Advancement.Builder.recipeAdvancement()
+		Advancement ritual = Advancement.Builder.recipeAdvancement()
 				.parent(start)
 				.display(
 						FoodModule.CHORUS_FRUIT_PIE.get(),
@@ -156,6 +156,16 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						null, FrameType.TASK, true, true, false)
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(ritualExporter, "husbandry/fruitfulfun/ritual");
+
+		Advancement.Builder.recipeAdvancement()
+				.parent(ritual)
+				.display(
+						Items.BELL,
+						Component.translatable("advancements.fruitfulfun.haunting_interaction.title"),
+						Component.translatable("advancements.fruitfulfun.haunting_interaction.description"),
+						null, FrameType.TASK, true, true, false)
+				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
+				.save(ritualExporter, "husbandry/fruitfulfun/haunting_interaction");
 
 		Consumer<Advancement> foodExporter = withConditions(
 				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("food")));

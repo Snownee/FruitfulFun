@@ -117,4 +117,21 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 			}
 		}
 	}
+
+	@Inject(
+			method = "hurt",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/LivingEntity;die(Lnet/minecraft/world/damagesource/DamageSource;)V"))
+	private void die(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+		if (Hooks.bee && !level().isClientSide && fruits$getHauntedBy() instanceof ServerPlayer player) {
+			if (player.getHealth() > 2) {
+				player.hurt(player.damageSources().genericKill(), player.getHealth() - 2);
+			}
+			HauntingManager hauntingManager = ((FFPlayer) player).fruits$hauntingManager();
+			if (hauntingManager != null) {
+				hauntingManager.getExorcised(player);
+			}
+		}
+	}
 }
