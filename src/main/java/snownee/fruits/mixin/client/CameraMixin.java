@@ -11,6 +11,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import snownee.fruits.bee.BeeModule;
 
@@ -21,7 +22,7 @@ public class CameraMixin {
 		float value = original.call(entity, partialTicks);
 		LocalPlayer localPlayer = Minecraft.getInstance().player;
 		if (BeeModule.isHauntingNormalEntity(localPlayer, entity)) {
-			value += Objects.requireNonNull(localPlayer).getViewXRot(partialTicks);
+			value = Mth.clamp(value + Objects.requireNonNull(localPlayer).getViewXRot(partialTicks), -90F, 90F);
 		}
 		return value;
 	}

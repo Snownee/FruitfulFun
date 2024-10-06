@@ -40,7 +40,9 @@ public class ServerPlayerMixin {
 	@Inject(method = "setCamera", at = @At("TAIL"))
 	private void setCamera(Entity target, CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
+//		Hooks.debugInChat(player, "setCamera to %s".formatted(target == null ? "null" : target.getName().getString()));
 		if (Hooks.bee && (target == null || target == player) && ((FFPlayer) player).fruits$isHaunting()) {
+//			Hooks.debugInChat(player, "setCamera 2 to %s".formatted(target == null ? "null" : target.getName().getString()));
 			((FFPlayer) this).fruits$setHauntingTarget(player);
 		}
 	}
