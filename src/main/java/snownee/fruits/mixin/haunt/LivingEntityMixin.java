@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -130,13 +131,25 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 					value = "INVOKE",
 					target = "Lnet/minecraft/world/entity/LivingEntity;die(Lnet/minecraft/world/damagesource/DamageSource;)V"))
 	private void die(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-		if (Hooks.bee && !level().isClientSide && fruits$getHauntedBy() instanceof ServerPlayer player) {
+		if (!Hooks.bee || level().isClientSide) {
+			return;
+		}
+		if (fruits$getHauntedBy() instanceof ServerPlayer player) {
 			if (player.getHealth() > 2) {
 				player.hurt(player.damageSources().genericKill(), player.getHealth() - 2);
 			}
 			HauntingManager hauntingManager = ((FFPlayer) player).fruits$hauntingManager();
 			if (hauntingManager != null) {
 				hauntingManager.getExorcised(player);
+			}
+		}
+		if (source.getEntity() != null && source.getEntity().getType() == EntityType.RAVAGER && getType().is(EntityTypeTags.RAIDERS)) {
+			Player player = ((FFLivingEntity) source.getEntity()).fruits$getHauntedBy();
+			if (player != null) {
+				HauntingManager hauntingManager = ((FFPlayer) player).fruits$hauntingManager();
+				if (hauntingManager != null) {
+					hauntingManager.onRavagerKill(player);
+				}
 			}
 		}
 	}

@@ -78,4 +78,13 @@ public class ServerPlayerMixin {
 			manager.tick(player);
 		}
 	}
+
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;absMoveTo(DDDFF)V"))
+	private void tick(ServerPlayer player, double x, double y, double z, float yRot, float xRot, Operation<Void> original) {
+		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+			yRot = player.getYRot();
+			xRot = player.getXRot();
+		}
+		original.call(player, x, y, z, yRot, xRot);
+	}
 }
