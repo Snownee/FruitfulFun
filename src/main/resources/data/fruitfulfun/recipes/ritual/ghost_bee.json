@@ -3,11 +3,11 @@
 	"fabric:load_conditions": [
 		{
 			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:bee"
+			"module": "fruitfulfun:ritual"
 		},
 		{
 			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:ritual"
+			"module": "fruitfulfun:bee"
 		}
 	],
 	"item_in": {

@@ -1,0 +1,19 @@
+{
+	"type": "fruitfulfun:dragon_ritual",
+	"fabric:load_conditions": [
+		{
+			"condition": "kiwi:is_loaded",
+			"module": "fruitfulfun:ritual"
+		}
+	],
+	"item_in": {
+		"item": "glass_bottle"
+	},
+	"post": [
+		{
+			"type": "drop_item",
+			"item": "dragon_breath"
+		}
+	],
+	"max_repeats": 1
+}

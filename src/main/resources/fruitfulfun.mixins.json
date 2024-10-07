@@ -70,6 +70,7 @@
 		"client.ItemInHandRendererMixin",
 		"client.MinecraftMixin",
 		"client.MultiPlayerGameModeMixin",
+		"haunt.AbstractClientPlayerMixin",
 		"haunt.LocalPlayerMixin",
 		"haunt.PlayerRendererMixin",
 		"haunt.RemotePlayerMixin",

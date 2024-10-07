@@ -1,5 +1,6 @@
 package snownee.fruits.pomegranate;
 
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -11,7 +12,8 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.pomegranate.block.HangingFruitBlock;
 import snownee.fruits.pomegranate.block.HangingFruitLeavesBlock;
-import snownee.fruits.pomegranate.block.PomegranateItem;
+import snownee.fruits.pomegranate.item.EnchantedPomegranateItem;
+import snownee.fruits.pomegranate.item.PomegranateItem;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
@@ -32,9 +34,12 @@ public class PomegranateModule extends AbstractModule {
 			.dynamicShape()
 			.offsetType(BlockBehaviour.OffsetType.XZ)
 			.pushReaction(PushReaction.DESTROY)));
-	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
+	@KiwiModule.Category(value = {Categories.NATURAL_BLOCKS, Categories.COMBAT}, after = "cherry_leaves")
 	@KiwiModule.Name("pomegranate")
 	public static final KiwiGO<PomegranateItem> POMEGRANATE_ITEM = go(() -> new PomegranateItem(POMEGRANATE.getOrCreate(), itemProp()));
+	@KiwiModule.Category(value = Categories.COMBAT)
+	public static final KiwiGO<EnchantedPomegranateItem> ENCHANTED_POMEGRANATE = go(() -> new EnchantedPomegranateItem(itemProp().rarity(
+			Rarity.UNCOMMON)));
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	public static final KiwiGO<SaplingBlock> POMEGRANATE_SAPLING = go(
