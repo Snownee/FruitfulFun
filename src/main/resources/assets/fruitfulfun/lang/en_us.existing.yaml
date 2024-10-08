@@ -73,6 +73,8 @@ block.fruitfulfun.cherry_leaves: Cherry Fruit Leaves
 item.fruitfulfun.vac_gun: V.C.D.
 item.fruitfulfun.vac_gun_casing: V.C.D. Casing
 recipeType.fruitfulfun.hybridizing: Bee Pollinating
+recipeType.fruitfulfun.dragon_ritual: Dragon Ritual
+postAction.fruitfulfun.transform_bees: Transform Bees Inside
 gui.fruitfulfun.editGeneName: Edit Gene Name
 gui.fruitfulfun.cycleGenes: Cycle Genes
 gui.fruitfulfun.geneName: Gene Name

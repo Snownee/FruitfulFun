@@ -69,11 +69,14 @@ import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.ritual.RitualModule;
+import snownee.fruits.ritual.TransformBeesRenderer;
 import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
 import snownee.fruits.vacuum.client.AirVortexParticle;
 import snownee.fruits.vacuum.client.ItemProjectileColor;
 import snownee.fruits.vacuum.client.ItemProjectileRenderer;
+import snownee.lychee.client.core.post.PostActionRenderer;
 
 public class ClientProxy implements ClientModInitializer {
 	public static BakedModel getModel(ModelManager modelManager, ResourceLocation id) {
@@ -286,6 +289,10 @@ public class ClientProxy implements ClientModInitializer {
 		if (Hooks.vac) {
 			EntityRendererRegistry.register(VacModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
 			ParticleFactoryRegistry.getInstance().register(VacModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
+		}
+
+		if (Hooks.ritual) {
+			PostActionRenderer.register(RitualModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
 		}
 	}
 }

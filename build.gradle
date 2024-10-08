@@ -102,7 +102,7 @@ dependencies {
     modImplementation "maven.modrinth:suggestion-tweaker:1.20-1.5.1+fabric"
     modImplementation "maven.modrinth:advancementinfo:gfcbMV82"
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.2"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.0"))
 }
 
 loom {
@@ -171,6 +171,7 @@ jar {
 configurations.all {
     resolutionStrategy {
         force "dev.architectury:architectury-fabric:${project.architectury_version}"
+        force "net.fabricmc:sponge-mixin:0.15.3+mixin.0.8.7"
     }
 }
 

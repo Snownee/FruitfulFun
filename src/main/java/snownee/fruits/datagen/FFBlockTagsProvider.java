@@ -61,6 +61,7 @@ import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -72,6 +73,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiModules;
 
 public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 	static final TagKey<Block> CITRUS_LOGS = AbstractModule.blockTag(FruitfulFun.ID, "citrus_logs");
@@ -79,6 +81,7 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 	// Leaves us in Peace mod compatibility
 	static final TagKey<Block> TREE_TYPES_OAK_LOG = AbstractModule.blockTag("minecraft", "tree_types/oak_log");
 	static final TagKey<Block> TREE_TYPES_JUNGLE_LOG = AbstractModule.blockTag("minecraft", "tree_types/jungle_log");
+	static final TagKey<Block> MINEABLE_WITH_KNIFE = AbstractModule.blockTag("farmersdelight", "mineable/knife");
 
 	public FFBlockTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 		super(output, registriesFuture);
@@ -158,5 +161,10 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 					.addOptional(CITRUS_CABINET.key())
 					.addOptional(REDLOVE_CABINET.key());
 		}
+
+		FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(MINEABLE_WITH_KNIFE);
+		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.BLOCK)
+				.map($ -> $.name)
+				.forEach(builder::addOptional);
 	}
 }

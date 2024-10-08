@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "fruitfulfun:grapefruit_panna_cotta",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:donauwelle",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:honey_pomelo_tea",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:rice_with_fruits",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:lemon_roast_chicken_block",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:chorus_fruit_pie",
+      "required": false
+    }
+  ]
+}

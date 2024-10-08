@@ -30,6 +30,7 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.food.FoodModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModules;
@@ -41,6 +42,7 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 	static final TagKey<Item> HAT = AbstractModule.itemTag("trinkets", "head/hat");
 	static final TagKey<Item> WOODEN_CABINETS = AbstractModule.itemTag("farmersdelight", "cabinets/wooden");
 	static final TagKey<Item> HYDRATING_DRINKS = AbstractModule.itemTag("dehydration", "hydrating_drinks");
+	static final TagKey<Item> UPRIGHT_ON_BELT = AbstractModule.itemTag("create", "upright_on_belt");
 
 	public FFItemTagsProvider(
 			FabricDataOutput output,
@@ -81,6 +83,11 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.ITEM)
 				.map($ -> $.name)
 				.forEach(tagAppender::addOptional);
+		tagAppender = tag(UPRIGHT_ON_BELT);
+		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.ITEM)
+				.map($ -> $.name)
+				.forEach(tagAppender::addOptional);
+		tagAppender.addOptional(BeeModule.MUTAGEN.key());
 		getOrCreateTagBuilder(HYDRATING_DRINKS).addOptional(HONEY_POMELO_TEA.key());
 		getOrCreateTagBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
 

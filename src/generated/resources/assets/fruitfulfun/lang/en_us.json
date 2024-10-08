@@ -258,6 +258,8 @@
   "item.fruitfulfun.vac_gun_casing": "V.C.D. Casing",
   "modmenu.descriptionTranslation.fruitfulfun": "Introduces insightful content featuring fruits and beekeeping",
   "modmenu.nameTranslation.fruitfulfun": "Fruitful Fun",
+  "postAction.fruitfulfun.transform_bees": "Transform Bees Inside",
+  "recipeType.fruitfulfun.dragon_ritual": "Dragon Ritual",
   "recipeType.fruitfulfun.hybridizing": "Bee Pollinating",
   "stat.fruitfulfun.bee_one_cm": "Distance by Bee",
   "stat.fruitfulfun.bees_bred": "Bees Bred",
