@@ -1,4 +1,4 @@
-package snownee.fruits.pomegranate.block;
+package snownee.fruits.pomegranate.item;
 
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;

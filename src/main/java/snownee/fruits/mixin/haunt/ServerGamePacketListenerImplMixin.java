@@ -83,7 +83,7 @@ public class ServerGamePacketListenerImplMixin {
 		if (!Hooks.bee || !((FFPlayer) player).fruits$isHaunting()) {
 			return;
 		}
-		ServerboundInteractPacket.ActionType actionType = ((ServerboundInteractPacketActionAccess) packet.action).callGetType();
+		ServerboundInteractPacket.ActionType actionType = packet.action.getType();
 		boolean hauntingNormalEntity = BeeModule.isHauntingNormalEntity(player, null);
 		if (actionType == ServerboundInteractPacket.ActionType.INTERACT_AT && !hauntingNormalEntity) {
 			return;

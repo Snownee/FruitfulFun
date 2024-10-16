@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.common.util.ITeleporter;
 import snownee.fruits.CoreModule;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
@@ -47,8 +48,8 @@ public class ServerPlayerMixin {
 		}
 	}
 
-	@Inject(method = "changeDimension", at = @At("RETURN"))
-	private void changeDimension(ServerLevel destination, CallbackInfoReturnable<Entity> cir) {
+	@Inject(method = "changeDimension", at = @At("RETURN"), remap = false)
+	private void changeDimension(ServerLevel destination, ITeleporter teleporter, CallbackInfoReturnable<Entity> cir) {
 		BeeModule.changeDimension(destination, (ServerPlayer) (Object) this, cir.getReturnValue());
 	}
 

@@ -70,11 +70,14 @@ import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.ritual.RitualModule;
+import snownee.fruits.ritual.TransformBeesRenderer;
 import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
 import snownee.fruits.vacuum.client.ItemProjectileColor;
 import snownee.fruits.vacuum.client.ItemProjectileRenderer;
 import snownee.kiwi.util.ColorProviderUtil;
+import snownee.lychee.client.core.post.PostActionRenderer;
 
 public class ClientProxy {
 	public static void init() {
@@ -235,6 +238,10 @@ public class ClientProxy {
 			eventBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
 				event.registerEntityRenderer(VacModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
 			});
+		}
+
+		if (Hooks.ritual) {
+			PostActionRenderer.register(RitualModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
 		}
 	}
 

@@ -3,14 +3,18 @@ package snownee.fruits.compat;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,10 +35,22 @@ import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeHasTrait;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipe;
+import snownee.fruits.food.FoodModule;
+import snownee.fruits.food.PieBlock;
 import snownee.lychee.client.gui.ILightingSettings;
 import snownee.lychee.core.contextual.ContextualCondition;
 
 public class FFJEIREI {
+	public static final Supplier<ItemStack> pieItem = Suppliers.memoize(FoodModule.CHORUS_FRUIT_PIE::itemStack);
+	public static final Supplier<BlockPredicate> pieBlockPredicate = Suppliers.memoize(() -> {
+		PieBlock pieBlock = FoodModule.CHORUS_FRUIT_PIE.get();
+		return BlockPredicate.Builder.block()
+				.of(pieBlock)
+				.setProperties(StatePropertiesPredicate.Builder.properties()
+						.hasProperty(pieBlock.getServingsProperty(), pieBlock.getMaxServings())
+						.build())
+				.build();
+	});
 
 	public static void renderBee(GuiGraphics graphics, HybridizingRecipe recipe, Bee bee) {
 		Minecraft mc = Minecraft.getInstance();
