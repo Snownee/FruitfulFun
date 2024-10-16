@@ -1,4 +1,4 @@
-package snownee.fruits.mixin.vac;
+package snownee.fruits.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import snownee.fruits.vacuum.ContainerOpenerFakePlayer;
+import snownee.fruits.util.FFFakePlayer;
 
 @Mixin(ServerEntity.class)
 public class ServerEntityMixin {
@@ -20,7 +20,7 @@ public class ServerEntityMixin {
 
 	@Inject(method = {"addPairing", "removePairing"}, at = @At("HEAD"), cancellable = true)
 	private void addPairing(ServerPlayer serverPlayer, CallbackInfo ci) {
-		if (serverPlayer.getClass() == ContainerOpenerFakePlayer.class || entity.getClass() == ContainerOpenerFakePlayer.class) {
+		if (serverPlayer instanceof FFFakePlayer || entity instanceof FFFakePlayer) {
 			ci.cancel();
 		}
 	}

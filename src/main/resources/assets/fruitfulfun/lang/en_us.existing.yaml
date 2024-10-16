@@ -161,6 +161,9 @@ advancements.fruitfulfun.all_fruit_and_food.description: Eat every food and drin
 stat.fruitfulfun.bee_one_cm: Distance by Bee
 stat.fruitfulfun.bees_bred: Bees Bred
 effect.fruitfulfun.mutagen_effect: Mutagen-Induced
+effect.fruitfulfun.mutagen_effect.description: Increases the chance of mutation of its baby
+effect.fruitfulfun.fragility: Fragility
+effect.fruitfulfun.fragility.description: Takes 20% more damage per level
 subtitles.fruitfulfun.crown.equip: Flower crown equips
 subtitles.fruitfulfun.gun.shoot: V.C.D. shoots
 subtitles.fruitfulfun.gun.working: V.C.D. working

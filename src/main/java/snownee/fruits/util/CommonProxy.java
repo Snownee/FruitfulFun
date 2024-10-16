@@ -3,11 +3,8 @@ package snownee.fruits.util;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
-
-import com.mojang.authlib.GameProfile;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -28,7 +25,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.StatFormatter;
@@ -63,7 +59,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -97,8 +92,6 @@ import snownee.kiwi.util.Util;
 
 @Mod(FruitfulFun.ID)
 public class CommonProxy {
-	public static final UUID FAKE_PLAYER_UUID = UUID.fromString("ae5efe90-eef0-4899-94fc-de4786c242e8");
-	private static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(FAKE_PLAYER_UUID, "[FruitfulFun]");
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("farmersdelight", "tools/knives");
 
 	public CommonProxy() {
@@ -375,10 +368,6 @@ public class CommonProxy {
 			level.playSound(null, blockPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
 			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
 		}
-	}
-
-	public static ServerPlayer getFakePlayer(Level level) {
-		return FakePlayerFactory.get((ServerLevel) level, FAKE_PLAYER_PROFILE);
 	}
 
 	public static boolean isKnife(ItemStack itemStack) {

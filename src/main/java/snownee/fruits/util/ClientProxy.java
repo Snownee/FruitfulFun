@@ -65,6 +65,7 @@ import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
+import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
@@ -186,14 +187,18 @@ public class ClientProxy {
 			});
 
 			MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
-				if (event.phase != TickEvent.Phase.START) {
-					return;
+				Minecraft mc = Minecraft.getInstance();
+				if (event.phase == TickEvent.Phase.START) {
+					if (mc.player != null && mc.player.isSpectator()) {
+						return;
+					}
+					InspectorClientHandler.tick(mc);
+				} else {
+					if (mc.player instanceof FFPlayer player && player.fruits$isHaunting() && mc.options.keyJump.isDown()) {
+						mc.player.setXRot(0);
+						mc.player.setYRot(0);
+					}
 				}
-				Minecraft client = Minecraft.getInstance();
-				if (client.player != null && client.player.isSpectator()) {
-					return;
-				}
-				InspectorClientHandler.tick(client);
 			});
 
 			MinecraftForge.EVENT_BUS.addListener((ItemTooltipEvent event) -> {

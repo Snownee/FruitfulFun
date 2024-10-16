@@ -10,13 +10,12 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
+import snownee.fruits.util.FFFakePlayer;
 
-public class ContainerOpenerFakePlayer extends FakePlayer {
+public class ContainerOpenerFakePlayer extends FFFakePlayer {
 	private long openContainerSince;
 
 	public static ContainerOpenerFakePlayer getOrCreate(ServerLevel level, BlockPos pos) {
@@ -64,35 +63,5 @@ public class ContainerOpenerFakePlayer extends FakePlayer {
 			closeContainer();
 			discard();
 		}
-	}
-
-	@Override
-	public boolean isInvisible() {
-		return true;
-	}
-
-	@Override
-	public boolean isInvisibleTo(Player player) {
-		return true;
-	}
-
-	@Override
-	public boolean isAttackable() {
-		return false;
-	}
-
-	@Override
-	public boolean isNoGravity() {
-		return true;
-	}
-
-	@Override
-	public boolean canBeSeenByAnyone() {
-		return false;
-	}
-
-	@Override
-	public boolean canBeHitByProjectile() {
-		return false;
 	}
 }
