@@ -222,6 +222,7 @@ public abstract class PlayerMixin implements FFPlayer {
 			Entity target = fruits$hauntingTarget();
 			if (target == null) {
 				target = player;
+				hauntingManager = null;
 			}
 			player.connection.send(new ClientboundSetCameraPacket(target));
 			player.connection.resetPosition();

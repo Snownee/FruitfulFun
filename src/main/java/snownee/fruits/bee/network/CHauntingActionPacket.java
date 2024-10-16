@@ -15,6 +15,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFCommonConfig;
@@ -60,11 +61,15 @@ public class CHauntingActionPacket extends PacketHandler {
 			}
 			if (manager.hasTrait(Trait.PINK)) {
 				Vec3 start = target.getEyePosition();
-				Vec3 end = target.getEyePosition().add(Hooks.calculateViewVector(target, player, 1).scale(8));
+				Vec3 end = start.add(Hooks.calculateViewVector(target, player, 1).scale(8));
+//				Snowball snowball = new Snowball(target.level(), target);
+//				snowball.setDeltaMovement(Hooks.calculateViewVector(target, player, 1).scale(1));
+//				snowball.setPos(start.x, start.y, start.z);
+//				target.level().addFreshEntity(snowball);
 				List<LivingEntity> entities = target.level().getEntitiesOfClass(
 						LivingEntity.class,
 						new AABB(start, end),
-						$ -> $ != player && $ != target && $.isAlive() && !$.isSpectator() && $ instanceof LivingEntity);
+						$ -> $ != player && $ != target && $.isAlive() && !$.isSpectator());
 				double distance = Double.MAX_VALUE;
 				LivingEntity closest = null;
 				for (LivingEntity entity : entities) {
@@ -83,15 +88,20 @@ public class CHauntingActionPacket extends PacketHandler {
 					}
 				}
 				if (closest != null) {
+					boolean _success = false;
 					if (target instanceof Mob mob) {
 						mob.setAggressive(true);
 						mob.setTarget(closest);
-						success = true;
+						_success = true;
 					}
 					if (closest instanceof Mob mob) {
 						mob.setAggressive(true);
 						mob.setTarget(target);
+						_success = true;
+					}
+					if (_success) {
 						success = true;
+						manager.performPinkSkill();
 					}
 				}
 			}

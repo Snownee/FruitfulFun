@@ -12,8 +12,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.player.Player;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.duck.FFPlayer;
 
 public class HauntingManager {
 	@Nullable
@@ -24,6 +27,7 @@ public class HauntingManager {
 	private int fireCounter;
 	private long lastDamage;
 	private long ticks;
+	private int advancementCounter;
 
 	public HauntingManager(@Nullable Entity target) {
 		this.target = target;
@@ -46,8 +50,12 @@ public class HauntingManager {
 
 	public void getExorcised(ServerPlayer player) {
 		player.setCamera(null);
+		if (isGhostBee) {
+			addNegativeEffects((LivingEntity) target);
+		}
 		respawnStoredBee(player);
 		addNegativeEffects(player);
+		player.level().playSound(null, player, BeeModule.STOP_HAUNTING.get(), player.getSoundSource(), 1, 1);
 	}
 
 	private static void addNegativeEffects(LivingEntity entity) {
@@ -62,6 +70,7 @@ public class HauntingManager {
 	public void tick(ServerPlayer player) {
 		if (target == null) {
 			getExorcised(player);
+			((FFPlayer) player).fruits$ensureCamera();
 			return;
 		}
 		if (++ticks > FFCommonConfig.hauntingGhostBeeTimeLimitTicks && FFCommonConfig.hauntingGhostBeeTimeLimitTicks > 0 && isGhostBee) {
@@ -95,5 +104,17 @@ public class HauntingManager {
 
 	public boolean hasTrait(Trait trait) {
 		return traits.contains(trait);
+	}
+
+	public void performPinkSkill() {
+		if (advancementCounter == 0 && target != null && target.getType() == EntityType.RAVAGER) {
+			advancementCounter = 1;
+		}
+	}
+
+	public void onRavagerKill(Player player) {
+		if (advancementCounter > 0 && ++advancementCounter == 6) {
+			Hooks.awardSimpleAdvancement(player, "haunting_skill");
+		}
 	}
 }
