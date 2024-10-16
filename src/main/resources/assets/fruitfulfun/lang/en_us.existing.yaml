@@ -120,13 +120,15 @@ text.fruitfulfun.trait.faster.desc: Flys faster.
 text.fruitfulfun.trait.lazy: Lazy
 text.fruitfulfun.trait.lazy.desc: Tends to stay in the hive, but has more health.
 text.fruitfulfun.trait.mild: Mild
-text.fruitfulfun.trait.mild.desc: Not easily angered
+text.fruitfulfun.trait.mild.desc: Not easily angered.
 text.fruitfulfun.trait.warrior: Warrior
 text.fruitfulfun.trait.warrior.desc: Won't die after stinging. More health & attack damage.
 text.fruitfulfun.trait.advanced_pollination: Advanced Pollination
 text.fruitfulfun.trait.advanced_pollination.desc: Can hybridize some special trees.
 text.fruitfulfun.trait.pink: Pink
 text.fruitfulfun.trait.pink.desc: Pink color.
+text.fruitfulfun.trait.ghost: Ghost
+text.fruitfulfun.trait.ghost.desc: Can haunt the living. Cannot breed or pollinate.
 text.fruitfulfun.pollen: Pollens
 text.fruitfulfun.pollen.none: This bee doesn't have any pollens.
 text.fruitfulfun.gene: Genes

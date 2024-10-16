@@ -22,7 +22,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -199,10 +198,7 @@ public class CommonProxy {
 	}
 
 	private static void addBuiltinPack(ModContainer modContainer, String id) {
-		ResourceManagerHelper.registerBuiltinResourcePack(
-				new ResourceLocation(FruitfulFun.ID, id),
-				modContainer,
-				ResourcePackActivationType.ALWAYS_ENABLED);
+		ResourceManagerHelper.registerBuiltinResourcePack(FruitfulFun.id(id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
 	}
 
 	public static boolean isShears(ItemStack stack) {

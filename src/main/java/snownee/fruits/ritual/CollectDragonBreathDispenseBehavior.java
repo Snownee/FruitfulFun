@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.BeehiveBlock;
@@ -71,6 +70,6 @@ public class CollectDragonBreathDispenseBehavior extends DefaultDispenseItemBeha
 		if (FFCommonConfig.fixDragonBreathExploit && cloud.getRadius() <= 0) {
 			return false;
 		}
-		return RitualModule.DUMMY_UUID.equals(cloud.ownerUUID) || cloud.getOwner() instanceof EnderDragon;
+		return RitualModule.isDragonBreath(cloud);
 	}
 }

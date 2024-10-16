@@ -20,7 +20,7 @@ import snownee.jade.api.config.IPluginConfig;
 
 public class BeeDebugProvider implements IEntityComponentProvider, IServerDataProvider<EntityAccessor> {
 
-	public static final ResourceLocation UID = new ResourceLocation(FruitfulFun.ID, "bee_debug");
+	public static final ResourceLocation UID = FruitfulFun.id("bee_debug");
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {

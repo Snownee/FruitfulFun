@@ -240,12 +240,10 @@ public final class CoreModule extends AbstractModule {
 	public static final KiwiGO<Item> SNOWFLAKE_BANNER_PATTERN = go(() -> new BannerPatternItem(
 			SNOWFLAKE_TAG,
 			itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
-	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(
-			FruitfulFun.ID,
-			"block.wooden_door.open")));
-	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(
-			FruitfulFun.ID,
-			"block.wooden_door.close")));
+	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(
+			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.wooden_door.open")));
+	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(
+			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.wooden_door.close")));
 	/* off */
 	public static final KiwiGO<EntityType<SlidingDoorEntity>> SLIDING_DOOR = go(() -> KiwiEntityTypeBuilder.<SlidingDoorEntity>create()
 			.entityFactory(SlidingDoorEntity::new)

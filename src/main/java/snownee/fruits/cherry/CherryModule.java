@@ -2,7 +2,6 @@ package snownee.fruits.cherry;
 
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
@@ -171,9 +170,8 @@ public class CherryModule extends AbstractModule {
 	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
 	public static final KiwiGO<Item> CHERRY_CROWN = go(() -> new FlowerCrownItem(itemProp(), PETAL_CHERRY.getOrCreate()));
 	public static final KiwiGO<Item> REDLOVE_CROWN = go(() -> new FlowerCrownItem(itemProp(), PETAL_REDLOVE.getOrCreate()));
-	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(
-			FruitfulFun.ID,
-			"item.armor.equip_crown")));
+	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(
+			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("item.armor.equip_crown")));
 
 	@Override
 	protected void preInit() {

@@ -13,7 +13,6 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.block.Blocks;
@@ -40,9 +39,9 @@ public class HybridizingCategory extends BaseJEICategory<LycheeContext, Hybridiz
 		bee.setLevel(null);
 		infoRect = new Rect2i(80, 38, 8, 8);
 
-		line = JEICompat.GUI.drawableBuilder(new ResourceLocation(FruitfulFun.ID, "textures/gui/jei.png"), 12, 0, 31, 11).setTextureSize(
-				64,
-				64).build();
+		line = JEICompat.GUI.drawableBuilder(FruitfulFun.id("textures/gui/jei.png"), 12, 0, 31, 11)
+				.setTextureSize(64, 64)
+				.build();
 	}
 
 	@Override

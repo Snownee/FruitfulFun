@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -28,8 +27,8 @@ public class FFRegistries {
 			String defaultKey,
 			NewRegistryEvent event,
 			Consumer<DefaultedRegistry<T>> consumer) {
-		RegistryBuilder<T> builder = new RegistryBuilder<T>().setName(new ResourceLocation(FruitfulFun.ID, name))
-				.setDefaultKey(new ResourceLocation(FruitfulFun.ID, defaultKey))
+		RegistryBuilder<T> builder = new RegistryBuilder<T>().setName(FruitfulFun.id(name))
+				.setDefaultKey(FruitfulFun.id(defaultKey))
 				.hasTags(); // call hasWrapper()
 		event.create(builder, v -> {
 			Registry<?> registry = BuiltInRegistries.REGISTRY.get(v.getRegistryKey().location());

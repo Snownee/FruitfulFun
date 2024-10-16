@@ -28,10 +28,10 @@ import snownee.kiwi.loader.Platform;
 @WailaPlugin
 public class JadeCompat implements IWailaPlugin {
 
-	public static final ResourceLocation INSPECTOR = new ResourceLocation(FruitfulFun.ID, "inspector");
-	public static final ResourceLocation INSPECTOR_BLOCK = new ResourceLocation(FruitfulFun.ID, "inspector_block");
-	public static final ResourceLocation CROP_PROGRESS = new ResourceLocation(FruitfulFun.ID, "crop_progress");
-	public static final ResourceLocation WAXED = new ResourceLocation(FruitfulFun.ID, "waxed");
+	public static final ResourceLocation INSPECTOR = FruitfulFun.id("inspector");
+	public static final ResourceLocation INSPECTOR_BLOCK = FruitfulFun.id("inspector_block");
+	public static final ResourceLocation CROP_PROGRESS = FruitfulFun.id("crop_progress");
+	public static final ResourceLocation WAXED = FruitfulFun.id("waxed");
 
 	public static void ensureVisibility(boolean fromEntity) {
 		IWailaConfig.IConfigGeneral config = IWailaConfig.get().getGeneral();

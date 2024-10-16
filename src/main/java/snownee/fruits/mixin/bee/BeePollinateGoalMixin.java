@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
@@ -48,8 +49,15 @@ public abstract class BeePollinateGoalMixin {
 	}
 
 	@ModifyExpressionValue(method = "canBeeUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
-	private boolean canBeeUse(boolean original) {
+	private boolean canBeeUseRainCapable(boolean original) {
 		return original && !BeeAttributes.of(this$0).hasTrait(Trait.RAIN_CAPABLE);
+	}
+
+	@Inject(method = "canBeeUse", at = @At("HEAD"), cancellable = true)
+	private void canBeeUse(CallbackInfoReturnable<Boolean> cir) {
+		if (BeeAttributes.of(this$0).hasTrait(Trait.GHOST)) {
+			cir.setReturnValue(false);
+		}
 	}
 
 	@ModifyExpressionValue(

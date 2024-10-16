@@ -25,7 +25,7 @@ import snownee.lychee.compat.jei.JEICompat;
 @REIPluginCompatIgnore
 public class FFJEICompat implements IModPlugin {
 
-	public static final ResourceLocation UID = new ResourceLocation(FruitfulFun.ID, "main");
+	public static final ResourceLocation UID = FruitfulFun.id("main");
 
 	public FFJEICompat() {
 		JEICompat.addCategoryFactoryProvider($ -> {

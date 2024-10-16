@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -52,3 +53,4 @@ public class Donk {
 		particle.render(buffers.getBuffer(renderType), entityRenderDispatcher.camera, mc.getFrameTime());
 	}
 }
+*/

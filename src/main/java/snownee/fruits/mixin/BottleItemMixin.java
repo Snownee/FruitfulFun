@@ -29,7 +29,6 @@ public class BottleItemMixin {
 			cancellable = true)
 	private static void fixDragonBreathExploit(AreaEffectCloud cloud, CallbackInfoReturnable<Boolean> ci) {
 		if (FFCommonConfig.fixDragonBreathExploit && cloud.getRadius() <= 0) {
-			// fix MC-114618
 			ci.setReturnValue(false);
 		}
 	}

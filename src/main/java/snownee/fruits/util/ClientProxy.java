@@ -171,8 +171,8 @@ public class ClientProxy {
 		});
 
 		eventBus.addListener((ModelEvent.RegisterAdditional event) -> {
-			event.register(new ResourceLocation(FruitfulFun.ID, "block/cherry_crown"));
-			event.register(new ResourceLocation(FruitfulFun.ID, "block/redlove_crown"));
+			event.register(FruitfulFun.id("block/cherry_crown"));
+			event.register(FruitfulFun.id("block/redlove_crown"));
 		});
 
 		if (Hooks.bee) {

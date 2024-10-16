@@ -34,7 +34,7 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeModel<Bee>> {
 		this.addLayer((RenderLayer<Bee, BeeModel<Bee>>) new SaddleLayer(
 				(BeeRenderer) (Object) this,
 				new BeeModel(context.bakeLayer(ModelLayers.BEE)),
-				new ResourceLocation(FruitfulFun.ID, "textures/entity/bee/bee_saddle.png")));
+				FruitfulFun.id("textures/entity/bee/bee_saddle.png")));
 	}
 
 	@Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)

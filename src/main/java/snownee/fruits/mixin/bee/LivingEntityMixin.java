@@ -15,12 +15,20 @@ import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.level.Level;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+public abstract class LivingEntityMixin extends Entity {
+	public LivingEntityMixin(EntityType<?> entityType, Level level) {
+		super(entityType, level);
+	}
+
 	@Shadow
 	public abstract boolean hasEffect(MobEffect effect);
 
@@ -39,4 +47,23 @@ public abstract class LivingEntityMixin {
 					damageAmountRef.get() * (1.2F + Objects.requireNonNull(getEffect(BeeModule.FRAGILITY.get())).getAmplifier() * 0.2F));
 		}
 	}
+
+//	@Inject(
+//			method = "die", at = @At(
+//			value = "INVOKE",
+//			target = "Lnet/minecraft/world/damagesource/DamageSource;getEntity()Lnet/minecraft/world/entity/Entity;"), cancellable = true)
+//	private void die(DamageSource damageSource, CallbackInfo ci) {
+//		if (!Hooks.bee || getType() != EntityType.BEE || !damageSource.is(DamageTypes.DRAGON_BREATH)) {
+//			return;
+//		}
+//		Bee bee = (Bee) (Object) this;
+//		bee.heal(bee.getMaxHealth());
+//		bee.stopBeingAngry();
+//		bee.setHasNectar(false);
+//		BeeAttributes attributes = BeeAttributes.of(bee);
+//		attributes.dropSaddle(bee);
+//		attributes.getGenes().addExtraTrait(Trait.GHOST);
+//		attributes.updateTraits(bee);
+//		ci.cancel();
+//	}
 }
