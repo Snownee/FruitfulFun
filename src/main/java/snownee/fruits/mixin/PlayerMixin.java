@@ -22,7 +22,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.FFCommonConfig;
-import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.Allele;
@@ -156,16 +155,31 @@ public abstract class PlayerMixin implements FFPlayer {
 	@Override
 	public void fruits$setHauntingTarget(Entity target) {
 //		FruitfulFun.LOGGER.info("Player {} haunting target set to {}", this.getName(), target.getName());
-		if (target == fruits$hauntingTarget()) {
+		Player player = (Player) (Object) this;
+		Entity former = fruits$hauntingTarget();
+		if (former == null) {
+			former = player;
+		}
+		if (target == former) {
 			return;
 		}
-		if (fruits$hauntingTarget() instanceof FFLivingEntity former) {
-			former.fruits$setHauntedBy(null);
+		// you can't haunt a player who is already haunted
+		if (target instanceof FFLivingEntity entity && entity.fruits$getHauntedBy() != null) {
+			return;
 		}
-		Player player = (Player) (Object) this;
-		if (target == player && player instanceof ServerPlayer serverPlayer) {
-			if (hauntingManager != null) {
+		if (former instanceof FFLivingEntity formerEntity) {
+			formerEntity.fruits$setHauntedBy(null);
+		}
+//		Hooks.debugInChat(player, "Haunting target set to %s".formatted(target.getName().getString()));
+		if (target == player) {
+			// haunting interrupted
+			if (hauntingManager != null && player instanceof ServerPlayer serverPlayer) {
 				hauntingManager.getExorcised(serverPlayer);
+			}
+		} else {
+			// you can't haunt a player who is haunting
+			if (!player.level().isClientSide && ((FFLivingEntity) player).fruits$getHauntedBy() instanceof FFPlayer ffPlayer) {
+				ffPlayer.fruits$setHauntingTarget(target);
 			}
 		}
 		hauntingManager = target == player ? null : new HauntingManager(target);
@@ -177,8 +191,9 @@ public abstract class PlayerMixin implements FFPlayer {
 			player.setXRot(0);
 			player.setYRot(0);
 			serverPlayer.setCamera(target);
+//			Hooks.debugInChat(player, target.toString());
 			if (target instanceof FFLivingEntity entity) {
-				entity.fruits$setHauntedBy(player.getUUID());
+				entity.fruits$setHauntedBy(target == player ? null : player.getUUID());
 			}
 		}
 	}

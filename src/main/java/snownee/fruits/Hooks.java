@@ -6,8 +6,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Unique;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -19,7 +19,10 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.VibrationParticleOption;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -368,10 +371,20 @@ public final class Hooks {
 		return food && (!farmersdelight || !Platform.isProduction()) && FoodModule.HONEY_POMELO_TEA.get().asItem() == item;
 	}
 
-	@Unique
 	public static Vec3 calculateViewVector(Entity entity1, Entity entity2, float partialTicks) {
 		return ((EntityAccess) entity1).callCalculateViewVector(
-				entity1.getViewXRot(partialTicks) + entity2.getViewXRot(partialTicks),
+				Mth.clamp(entity1.getViewXRot(partialTicks) + entity2.getViewXRot(partialTicks), -90F, 90F),
 				entity1.getViewYRot(partialTicks) + entity2.getViewYRot(partialTicks));
+	}
+
+	public static void debugInChat(Player player, String msg) {
+		if (Platform.isProduction()) {
+			return;
+		}
+		String stackTrace = ExceptionUtils.getStackTrace(new Throwable());
+		player.displayClientMessage(Component.literal(msg)
+				.withStyle(Style.EMPTY
+						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(stackTrace)))
+						.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stackTrace))), false);
 	}
 }

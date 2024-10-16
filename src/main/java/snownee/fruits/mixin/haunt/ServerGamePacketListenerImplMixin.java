@@ -94,7 +94,7 @@ public class ServerGamePacketListenerImplMixin {
 				fakePlayer = GhostFakePlayer.getOrCreate(player);
 				fakePlayer.connection.handleInteract(packet);
 			} catch (Exception e) {
-				FruitfulFun.LOGGER.trace("Failed to handle Interact packet", e);
+				FruitfulFun.LOGGER.error("Failed to handle Interact packet", e);
 			} finally {
 				if (fakePlayer != null) {
 					fakePlayer.getInventory().dropAll();
@@ -137,7 +137,7 @@ public class ServerGamePacketListenerImplMixin {
 			fakePlayer = GhostFakePlayer.getOrCreate(player);
 			fakePlayer.connection.handleUseItemOn(packet);
 		} catch (Exception e) {
-			FruitfulFun.LOGGER.trace("Failed to handle UseItemOn packet", e);
+			FruitfulFun.LOGGER.error("Failed to handle UseItemOn packet", e);
 		} finally {
 			if (fakePlayer != null) {
 				fakePlayer.getInventory().dropAll();

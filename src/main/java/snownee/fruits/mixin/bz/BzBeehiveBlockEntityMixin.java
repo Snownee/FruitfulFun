@@ -45,7 +45,7 @@ public abstract class BzBeehiveBlockEntityMixin extends BlockEntity {
 			Method method = clazz.getDeclaredMethod("runGenericTeleport", Player.class, BlockPos.class);
 			method.invoke(null, player, getBlockPos());
 		} catch (Exception e) {
-			FruitfulFun.LOGGER.trace("Failed to teleport player to the Bumblezone", e);
+			FruitfulFun.LOGGER.error("Failed to teleport player to the Bumblezone", e);
 		}
 	}
 }

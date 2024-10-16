@@ -82,15 +82,21 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 			}
 			return null;
 		}
-		if (level() instanceof ServerLevel level && level.getEntity(hauntedBy) instanceof Player player && player.isAlive()) {
-			return player;
+		if (level() instanceof ServerLevel level) {
+			ServerPlayer player = level.getServer().getPlayerList().getPlayer(hauntedBy);
+			if (player != null && player.isAlive()) {
+				return player;
+			}
 		}
-		hauntedBy = null;
+		fruits$setHauntedBy(null);
 		return null;
 	}
 
 	@Override
 	public void fruits$setHauntedBy(@Nullable UUID uuid) {
+//		if ((Object) this instanceof Player player) {
+//			Hooks.debugInChat(player, "setHauntedBy %s".formatted(uuid));
+//		}
 		hauntedBy = uuid;
 	}
 
