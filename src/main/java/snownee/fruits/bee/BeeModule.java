@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ParticleUtils;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -38,6 +39,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -177,6 +179,18 @@ public class BeeModule extends AbstractModule {
 			return false;
 		}
 		return target == null || target == manager.target;
+	}
+
+	public static void spawnEntityParticles(Entity entity) {
+		RandomSource random = entity.random;
+		if (random.nextInt(10) != 0) {
+			return;
+		}
+		AABB box = entity.getBoundingBox();
+		double x = box.minX + (box.maxX - box.minX) * random.nextDouble();
+		double y = box.minY + 0.1;
+		double z = box.minZ + (box.maxZ - box.minZ) * random.nextDouble();
+		entity.level().addParticle(GHOST.get(), x, y, z, 0, 0, 0);
 	}
 
 	@Override

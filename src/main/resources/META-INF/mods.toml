@@ -29,6 +29,6 @@ side = "BOTH"
 [[dependencies.fruitfulfun]]
 modId = "jade"
 mandatory = false
-versionRange = "[11.11, 12)"
+versionRange = "[11.12, 12)"
 ordering = "NONE"
 side = "BOTH"
