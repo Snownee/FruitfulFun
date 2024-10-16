@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
@@ -30,12 +31,14 @@ import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -75,13 +78,17 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.GeneticSavedData;
+import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.curios.CuriosCompat;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.duck.FFPlayer;
+import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.fruits.vacuum.VacGunItem;
 import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
@@ -157,6 +164,8 @@ public class CommonProxy {
 		if (Hooks.curios) {
 			CuriosCompat.init();
 		}
+
+		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
 	}
 
 	public static boolean isCurativeItem(MobEffectInstance effectInstance, ItemStack stack) {
@@ -301,6 +310,25 @@ public class CommonProxy {
 			Player newPlayer = event.getEntity();
 			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
 			FFPlayer.of(newPlayer).fruits$setGeneNames(map);
+		});
+
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.EntityInteract event) -> {
+			Entity target = event.getTarget();
+			Level level = event.getLevel();
+			FFPlayer ffPlayer = (FFPlayer) event.getEntity();
+			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
+					ffPlayer.fruits$hauntingTarget() instanceof Bee bee &&
+					BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+				if (!level.isClientSide) {
+					ffPlayer.fruits$setHauntingTarget(target);
+					HauntingManager manager = ffPlayer.fruits$hauntingManager();
+					if (manager != null) {
+						manager.storeBee(bee);
+					}
+				}
+				event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide));
+				event.setCanceled(true);
+			}
 		});
 	}
 

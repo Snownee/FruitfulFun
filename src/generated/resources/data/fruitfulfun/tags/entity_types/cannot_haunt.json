@@ -1,6 +1,14 @@
 {
   "replace": false,
   "values": [
-    "minecraft:armor_stand"
+    "minecraft:armor_stand",
+    {
+      "id": "supplementaries:hat_stand",
+      "required": false
+    },
+    {
+      "id": "dummmmmmy:target_dummy",
+      "required": false
+    }
   ]
 }

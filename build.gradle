@@ -230,7 +230,7 @@ dependencies {
     implementation fg.deobf("maven.modrinth:suggestion-tweaker:1.20-1.5.1+forge")
 
 //    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}"
-    compileOnly(jarJar("dev.su5ed.sinytra:fabric-loader:2.6.0+0.15.0+1.20.1")) {
+    compileOnly(jarJar("dev.su5ed.sinytra:fabric-loader:2.7.4+0.15.3+1.20.1")) {
         jarJar.ranged(it, "[2,)")
         transitive(false)
     }
@@ -244,6 +244,10 @@ dependencies {
     }
     compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-convention-tags-v1:1.5.5+fa3d1c0177")) {
         jarJar.ranged(it, "[1.5.5,)")
+        transitive(false)
+    }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-recipe-api-v1:1.0.21+514a076577")) {
+        jarJar.ranged(it, "[1.0.21,)")
         transitive(false)
     }
     runtimeOnly fg.deobf("dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}")

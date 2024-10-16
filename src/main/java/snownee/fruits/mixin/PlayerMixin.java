@@ -48,6 +48,9 @@ public abstract class PlayerMixin implements FFPlayer {
 			compoundTag.put("FruitfulFun:GeneNames", list);
 			compoundTag.putString("FruitfulFun:GeneticsDifficulty", FFCommonConfig.geneticsDifficulty.name());
 		}
+		if (hauntingManager != null && hauntingManager.storedBee != null) {
+			compoundTag.put("FruitfulFun:StoredBee", hauntingManager.storedBee);
+		}
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
@@ -78,6 +81,10 @@ public abstract class PlayerMixin implements FFPlayer {
 					}
 				}
 			}
+		}
+		if (compoundTag.contains("FruitfulFun:StoredBee")) {
+			hauntingManager = new HauntingManager(null);
+			hauntingManager.storedBee = compoundTag.getCompound("FruitfulFun:StoredBee");
 		}
 	}
 
@@ -149,7 +156,11 @@ public abstract class PlayerMixin implements FFPlayer {
 			if (!serverPlayer.isChangingDimension()) {
 				SHauntPacket.send(serverPlayer, target);
 			}
-			if (target != player) {
+			if (target == player) {
+				if (hauntingManager != null) {
+					hauntingManager.respawnStoredBee(serverPlayer);
+				}
+			} else {
 				player.setXRot(0);
 				player.setYRot(0);
 				serverPlayer.setCamera(target);
@@ -161,6 +172,7 @@ public abstract class PlayerMixin implements FFPlayer {
 				former.fruits$setHauntedBy(null);
 			}
 		}
+//		FruitfulFun.LOGGER.info("Haunting target set to {}", target);
 		hauntingManager = target == player ? null : new HauntingManager(target);
 	}
 
@@ -178,7 +190,7 @@ public abstract class PlayerMixin implements FFPlayer {
 
 	@Override
 	public boolean fruits$isHaunting() {
-		return hauntingManager != null;
+		return fruits$hauntingTarget() != null;
 	}
 
 	@Override

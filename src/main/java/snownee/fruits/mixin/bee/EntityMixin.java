@@ -8,12 +8,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.network.SSyncBeePacket;
+import snownee.fruits.duck.FFLivingEntity;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
@@ -29,9 +31,13 @@ public abstract class EntityMixin {
 	@Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
 	private void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
 		Entity entity = (Entity) (Object) this;
-		if (entity instanceof Bee && source == entity.damageSources().wither() &&
-				BeeAttributes.of(entity).hasTrait(Trait.WITHER_TOLERANT)) {
-			ci.setReturnValue(true);
+		if (source.is(DamageTypes.WITHER)) {
+			if (entity instanceof Bee && BeeAttributes.of(entity).hasTrait(Trait.WITHER_TOLERANT)) {
+				ci.setReturnValue(true);
+			}
+			if (entity instanceof FFLivingEntity living && living.fruit$hasHauntedTrait(Trait.WITHER_TOLERANT)) {
+				ci.setReturnValue(true);
+			}
 		}
 	}
 

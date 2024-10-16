@@ -1,5 +1,7 @@
 package snownee.fruits.mixin.client;
 
+import java.util.Objects;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -8,26 +10,28 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
-import snownee.fruits.Hooks;
-import snownee.fruits.duck.FFPlayer;
+import snownee.fruits.bee.BeeModule;
 
 @Mixin(Camera.class)
 public class CameraMixin {
 	@WrapOperation(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getViewXRot(F)F"))
-	private float getViewXRot(Entity instance, float partialTicks, Operation<Float> original) {
-		float value = original.call(instance, partialTicks);
-		if (Hooks.bee && Minecraft.getInstance().player instanceof FFPlayer player && player.fruits$hauntingTarget() == instance) {
-			value += Minecraft.getInstance().player.getViewXRot(partialTicks);
+	private float getViewXRot(Entity entity, float partialTicks, Operation<Float> original) {
+		float value = original.call(entity, partialTicks);
+		LocalPlayer localPlayer = Minecraft.getInstance().player;
+		if (BeeModule.isHauntingNormalEntity(localPlayer, entity)) {
+			value += Objects.requireNonNull(localPlayer).getViewXRot(partialTicks);
 		}
 		return value;
 	}
 
 	@WrapOperation(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getViewYRot(F)F"))
-	private float getViewYRot(Entity instance, float partialTicks, Operation<Float> original) {
-		float value = original.call(instance, partialTicks);
-		if (Hooks.bee && Minecraft.getInstance().player instanceof FFPlayer player && player.fruits$hauntingTarget() == instance) {
-			value += Minecraft.getInstance().player.getViewYRot(partialTicks);
+	private float getViewYRot(Entity entity, float partialTicks, Operation<Float> original) {
+		float value = original.call(entity, partialTicks);
+		LocalPlayer localPlayer = Minecraft.getInstance().player;
+		if (BeeModule.isHauntingNormalEntity(localPlayer, entity)) {
+			value += Objects.requireNonNull(localPlayer).getViewYRot(partialTicks);
 		}
 		return value;
 	}

@@ -162,6 +162,17 @@ public class BeeModule extends AbstractModule {
 		return cost.is(Items.BEEHIVE) && cost.getTag() != null && cost.getTag().getBoolean("FFTrade");
 	}
 
+	public static boolean isHauntingNormalEntity(@Nullable Player player, @Nullable Entity target) {
+		if (!Hooks.bee || player == null) {
+			return false;
+		}
+		HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
+		if (manager == null || manager.isGhostBee || manager.target == null) {
+			return false;
+		}
+		return target == null || target == manager.target;
+	}
+
 	@Override
 	protected void preInit() {
 		CommonProxy.initBeeModule();

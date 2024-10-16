@@ -21,8 +21,8 @@ public class RideableBeeLivingEntityMixin {
 	@Inject(method = "getRiddenInput", at = @At("HEAD"), cancellable = true)
 	private void getRiddenInput(Player player, Vec3 vec3, CallbackInfoReturnable<Vec3> ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
-		if (Hooks.bee && entity instanceof Bee) {
-			ci.setReturnValue(Hooks.getRiddenInput((Bee) entity, player, vec3));
+		if (Hooks.bee && entity instanceof Bee bee) {
+			ci.setReturnValue(Hooks.getRiddenInput(bee, player, vec3));
 		}
 	}
 

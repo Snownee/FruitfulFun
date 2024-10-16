@@ -79,6 +79,17 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		}
 	}
 
+/*	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Animal;tick()V"))
+	private void ghostTick(Bee bee, Operation<Void> original) {
+		if (!bee.noPhysics && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+			bee.noPhysics = true;
+			original.call(bee);
+			bee.noPhysics = false;
+		} else {
+			original.call(bee);
+		}
+	}*/
+
 	@Inject(method = "customServerAiStep", at = @At("HEAD"))
 	private void customServerAiStep(CallbackInfo ci) {
 		if (!Hooks.bee) {

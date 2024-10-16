@@ -1,17 +1,32 @@
 package snownee.fruits.bee;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.google.common.collect.ImmutableSet;
+
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Bee;
+import snownee.fruits.bee.genetics.Trait;
 
 public class HauntingManager {
+	@Nullable
 	public final Entity target;
+	public final boolean isGhostBee;
+	public CompoundTag storedBee;
+	private ImmutableSet<Trait> traits = ImmutableSet.of();
 	private int fireCounter;
 	private long lastDamage;
+	private long ticks;
 
-	public HauntingManager(Entity target) {
+	public HauntingManager(@Nullable Entity target) {
 		this.target = target;
+		isGhostBee = target instanceof Bee && BeeAttributes.of(target).hasTrait(Trait.GHOST);
 	}
 
 	public void hurtInFire(ServerPlayer player) {
@@ -27,7 +42,50 @@ public class HauntingManager {
 
 	public void getExorcised(ServerPlayer player) {
 		player.setCamera(null);
-		player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 400, 1));
-		player.addEffect(new MobEffectInstance(BeeModule.FRAGILITY.get(), 400, 1));
+		respawnStoredBee(player);
+		addNegativeEffects(player);
+	}
+
+	private static void addNegativeEffects(LivingEntity entity) {
+		entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
+		entity.addEffect(new MobEffectInstance(BeeModule.FRAGILITY.get(), 200, 1));
+	}
+
+	public void tick(ServerPlayer player) {
+		if (target == null) {
+			getExorcised(player);
+			return;
+		}
+		if (++ticks > 120 && isGhostBee) {
+			getExorcised(player);
+		}
+	}
+
+	public void respawnStoredBee(ServerPlayer player) {
+		if (player.level().isClientSide || storedBee == null) {
+			return;
+		}
+		EntityType.create(storedBee, player.level()).ifPresent(entity -> {
+			entity.setPos(player.getX(), player.getY() + 0.7, player.getZ());
+			addNegativeEffects((LivingEntity) entity);
+			player.serverLevel().addWithUUID(entity);
+		});
+		storedBee = null;
+		traits = ImmutableSet.of();
+	}
+
+	public void storeBee(Bee bee) {
+		if (bee.level().isClientSide) {
+			return;
+		}
+		traits = ImmutableSet.copyOf(BeeAttributes.of(bee).getGenes().getTraits());
+		storedBee = new CompoundTag();
+		storedBee.putString("id", bee.getEncodeId());
+		bee.saveWithoutId(storedBee);
+		bee.discard();
+	}
+
+	public boolean hasTrait(Trait trait) {
+		return traits.contains(trait);
 	}
 }

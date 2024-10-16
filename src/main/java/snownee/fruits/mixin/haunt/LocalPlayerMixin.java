@@ -5,7 +5,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
 import snownee.fruits.Hooks;
 import snownee.fruits.duck.FFPlayer;
 
@@ -16,5 +20,35 @@ public class LocalPlayerMixin {
 		if (Hooks.bee && this instanceof FFPlayer player && player.fruits$isHaunting()) {
 			cir.setReturnValue(false);
 		}
+	}
+
+	@WrapOperation(
+			method = {"sendPosition", "serverAiStep"},
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isControlledCamera()Z"))
+	private boolean isControlledCamera(LocalPlayer player, Operation<Boolean> original) {
+		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+			return true;
+		}
+		return original.call(player);
+	}
+
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isPassenger()Z"))
+	private boolean isPassenger(LocalPlayer player, Operation<Boolean> original) {
+		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+			return true;
+		}
+		return original.call(player);
+	}
+
+	@WrapOperation(
+			method = "tick",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/player/LocalPlayer;getRootVehicle()Lnet/minecraft/world/entity/Entity;"))
+	private Entity getRootVehicle(LocalPlayer player, Operation<Entity> original) {
+		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+			return ((FFPlayer) player).fruits$hauntingTarget();
+		}
+		return original.call(player);
 	}
 }

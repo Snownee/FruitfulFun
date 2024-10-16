@@ -3,6 +3,7 @@ package snownee.fruits.util;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -38,6 +39,11 @@ public class FFFakePlayer extends FakePlayer {
 
 	@Override
 	public boolean canBeHitByProjectile() {
+		return false;
+	}
+
+	@Override
+	protected boolean canRide(Entity vehicle) {
 		return false;
 	}
 }

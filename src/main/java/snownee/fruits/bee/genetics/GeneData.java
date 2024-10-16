@@ -124,6 +124,12 @@ public class GeneData {
 		traits.add(trait);
 	}
 
+	public void removeExtraTrait(Trait trait) {
+		if (!extraTraits.isEmpty()) {
+			extraTraits.remove(trait);
+		}
+	}
+
 	public void toNBT(CompoundTag lociTag) {
 		for (Map.Entry<Allele, Locus> entry : loci.entrySet()) {
 			lociTag.putByte(entry.getKey().name, entry.getValue().getData());

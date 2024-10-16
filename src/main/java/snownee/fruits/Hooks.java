@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Unique;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -59,7 +60,9 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.duck.FFBee;
+import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.mixin.EntityAccess;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
 
@@ -84,7 +87,7 @@ public final class Hooks {
 			}
 			if (state.getBlock() instanceof FruitLeavesBlock block) {
 				if (block instanceof CherryLeavesBlock) {
-					return block.notPlacedByPlayer(state); // not placed by player
+					return block.notPlacedByPlayer(state);
 				}
 				if (!block.canGrow(state)) {
 					return false;
@@ -182,8 +185,9 @@ public final class Hooks {
 		if (BeeModule.INSPECTOR.is(held)) {
 			return InteractionResult.PASS;
 		}
+		boolean isClientSide = player.level().isClientSide;
 		if (held.is(Items.DEBUG_STICK)) {
-			if (!player.level().isClientSide) {
+			if (!isClientSide) {
 				// add debug code here
 //				attributes.setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
 				attributes.getLocus(Allele.FANCY).setData((byte) 0x11);
@@ -203,40 +207,47 @@ public final class Hooks {
 					((FFBee) bee).fruits$roll();
 					return InteractionResult.FAIL;
 				}
-				if (!player.level().isClientSide) {
+				if (!isClientSide) {
 					held.hurtAndBreak(1, player, $ -> $.broadcastBreakEvent(hand));
 					attributes.dropSaddle(bee);
 					bee.gameEvent(GameEvent.SHEAR, player);
 					bee.level().playSound(null, bee, BeeModule.BEE_SHEAR.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 				}
-				return InteractionResult.sidedSuccess(player.level().isClientSide);
+				return InteractionResult.sidedSuccess(isClientSide);
 			} else if (!bee.isVehicle() && !player.isSecondaryUseActive()) {
 				if (!trusted) {
 					((FFBee) bee).fruits$roll();
 					return InteractionResult.FAIL;
 				}
-				if (!player.level().isClientSide) {
+				if (!isClientSide) {
 					player.startRiding(bee);
 				}
-				return InteractionResult.sidedSuccess(player.level().isClientSide);
+				return InteractionResult.sidedSuccess(isClientSide);
 			}
 		} else if (held.is(Items.SADDLE) && saddleable.isSaddleable()) {
-			if (!player.level().isClientSide) {
+			if (!isClientSide) {
 				saddleable.equipSaddle(SoundSource.NEUTRAL);
 				attributes.setSaddle(held.split(1));
 				player.level().gameEvent(bee, GameEvent.EQUIP, bee.position());
 			}
-			return InteractionResult.sidedSuccess(player.level().isClientSide);
+			return InteractionResult.sidedSuccess(isClientSide);
+		}
+		if (attributes.hasTrait(Trait.GHOST) && !CommonProxy.isFakePlayer(player)) {
+			if (!isClientSide && !bee.hasEffect(BeeModule.FRAGILITY.get())) {
+				((FFPlayer) player).fruits$setHauntingTarget(bee);
+			}
+			return InteractionResult.sidedSuccess(isClientSide);
 		}
 		return InteractionResult.PASS;
 	}
 
 	public static Vec3 getRiddenInput(Bee bee, Player player, Vec3 vec3) {
 		Level level = bee.level();
-		if (level.dimensionType().ultraWarm()) {
+		BeeAttributes attributes = BeeAttributes.of(bee);
+		boolean ghost = attributes.hasTrait(Trait.GHOST);
+		if (!ghost && level.dimensionType().ultraWarm()) {
 			return new Vec3(0, -0.07, 0);
 		}
-		BeeAttributes attributes = BeeAttributes.of(bee);
 		if (!attributes.hasTrait(Trait.RAIN_CAPABLE) && level.isRainingAt(bee.blockPosition())) {
 			return new Vec3(0, -0.07, 0);
 		}
@@ -247,7 +258,7 @@ public final class Hooks {
 			z *= 0.25f;
 		}
 		double y = 0;
-		if (tooFarFromSurface(level, bee.blockPosition())) {
+		if (!ghost && tooFarFromSurface(level, bee.blockPosition())) {
 			y = -0.07;
 		} else if (player.isLocalPlayer() && ((LocalPlayer) player).input.jumping) {
 			y = 0.1;
@@ -355,5 +366,12 @@ public final class Hooks {
 
 	public static boolean shouldClearHarmfulEffects(Item item) {
 		return food && (!farmersdelight || !Platform.isProduction()) && FoodModule.HONEY_POMELO_TEA.get().asItem() == item;
+	}
+
+	@Unique
+	public static Vec3 calculateViewVector(Entity entity1, Entity entity2, float partialTicks) {
+		return ((EntityAccess) entity1).callCalculateViewVector(
+				entity1.getViewXRot(partialTicks) + entity2.getViewXRot(partialTicks),
+				entity1.getViewYRot(partialTicks) + entity2.getViewYRot(partialTicks));
 	}
 }
