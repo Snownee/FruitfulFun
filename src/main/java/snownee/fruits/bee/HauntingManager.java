@@ -28,6 +28,9 @@ public class HauntingManager {
 	public HauntingManager(@Nullable Entity target) {
 		this.target = target;
 		isGhostBee = target instanceof Bee && BeeAttributes.of(target).hasTrait(Trait.GHOST);
+		if (isGhostBee) {
+			target.stopRiding();
+		}
 	}
 
 	public void hurtInFire(ServerPlayer player) {

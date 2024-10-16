@@ -55,4 +55,13 @@ public abstract class EntityMixin {
 			ci.setReturnValue(entity.getBbHeight() * 0.6);
 		}
 	}
+
+	@Inject(method = "canRide", at = @At("HEAD"), cancellable = true)
+	private void canRide(Entity vehicle, CallbackInfoReturnable<Boolean> ci) {
+		Entity entity = (Entity) (Object) this;
+		if (Hooks.bee && entity instanceof Bee && BeeAttributes.of(entity).hasTrait(Trait.GHOST) &&
+				((FFLivingEntity) entity).fruits$getHauntedBy() != null) {
+			ci.setReturnValue(false);
+		}
+	}
 }

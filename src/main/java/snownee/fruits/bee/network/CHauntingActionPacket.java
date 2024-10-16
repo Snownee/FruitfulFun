@@ -58,10 +58,10 @@ public class CHauntingActionPacket extends PacketHandler {
 				player.addEffect(new MobEffectInstance(effectInstance));
 				success = true;
 			}
-			if (manager.hasTrait(Trait.PINK) && target instanceof Mob mob) {
-				Vec3 start = mob.getEyePosition();
-				Vec3 end = mob.getEyePosition().add(Hooks.calculateViewVector(mob, player, 1).scale(8));
-				List<LivingEntity> entities = mob.level().getEntitiesOfClass(
+			if (manager.hasTrait(Trait.PINK)) {
+				Vec3 start = target.getEyePosition();
+				Vec3 end = target.getEyePosition().add(Hooks.calculateViewVector(target, player, 1).scale(8));
+				List<LivingEntity> entities = target.level().getEntitiesOfClass(
 						LivingEntity.class,
 						new AABB(start, end),
 						$ -> $ != player && $ != target && $.isAlive() && !$.isSpectator() && $ instanceof LivingEntity);
@@ -83,9 +83,16 @@ public class CHauntingActionPacket extends PacketHandler {
 					}
 				}
 				if (closest != null) {
-					mob.setAggressive(true);
-					mob.setTarget(closest);
-					success = true;
+					if (target instanceof Mob mob) {
+						mob.setAggressive(true);
+						mob.setTarget(closest);
+						success = true;
+					}
+					if (closest instanceof Mob mob) {
+						mob.setAggressive(true);
+						mob.setTarget(target);
+						success = true;
+					}
 				}
 			}
 

@@ -7,7 +7,6 @@
 	"item.fruitfulfun.orange": "Laranja",
 	"item.fruitfulfun.lemon": "Limão",
 	"item.fruitfulfun.grapefruit": "Toranja",
-	"item.fruitfulfun.empowered_citron": "Cidra Empoderado",
 	"item.fruitfulfun.cherry": "Cereja",
 	"item.fruitfulfun.redlove": "Maça Redlove",
 	"item.fruitfulfun.heart_banner_pattern": "Desenho Para Estandarte",
@@ -89,14 +88,9 @@
 	"block.fruitfulfun.citrus_pressure_plate": "Placa de presão de Citrino",
 	"block.fruitfulfun.citrus_door": "Porta de Citrino",
 	"block.fruitfulfun.citrus_trapdoor": "Alçapão de Citrino",
-	"gui.fruitfulfun.hybridizing": "Polinização de Abelhas",
-	"gui.fruitfulfun.tip.flowering": "%s (Floração)",
+	"recipeType.fruitfulfun.hybridizing": "Polinização de Abelhas",
 	"advancements.fruitfulfun.grapefruit.title": "Fragrância cítrica",
 	"advancements.fruitfulfun.grapefruit.description": "Hibridizar uma Toranjeira",
 	"advancements.fruitfulfun.redlove.title": "Bem-vindo ao salão Sakura",
-	"advancements.fruitfulfun.redlove.description": "Hibridizar uma Macieira Redlove",
-	"advancements.fruitfulfun.forestbat.title": "Aceleracionista",
-	"advancements.fruitfulfun.forestbat.description": "Conheça o Morcego da Floresta",
-	"fruitfulfun.forestbat": "Morcego da Floresta",
-	"config.jade.plugin_fruitfulfun.bee": "Abelhas"
+	"advancements.fruitfulfun.redlove.description": "Hibridizar uma Macieira Redlove"
 }

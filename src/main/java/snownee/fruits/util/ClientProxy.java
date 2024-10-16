@@ -27,7 +27,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.particle.SoulParticle;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.resources.model.BakedModel;
@@ -66,6 +65,7 @@ import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.EditGeneNameScreen;
 import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.FoodSmokeParticle;
+import snownee.fruits.client.particle.GhostParticle;
 import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.duck.FFPlayer;
@@ -190,7 +190,7 @@ public class ClientProxy {
 			});
 
 			eventBus.addListener((RegisterParticleProvidersEvent event) -> {
-				event.registerSpriteSet(BeeModule.GHOST.getOrCreate(), SoulParticle.EmissiveProvider::new);
+				event.registerSpriteSet(BeeModule.GHOST.getOrCreate(), GhostParticle.EmissiveProvider::new);
 			});
 
 			MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
