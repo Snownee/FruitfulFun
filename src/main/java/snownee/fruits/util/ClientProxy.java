@@ -27,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.particle.SoulParticle;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.resources.model.BakedModel;
@@ -186,6 +187,10 @@ public class ClientProxy {
 					}
 					return -1;
 				}, BeeModule.MUTAGEN.getOrCreate());
+			});
+
+			eventBus.addListener((RegisterParticleProvidersEvent event) -> {
+				event.registerSpriteSet(BeeModule.GHOST.getOrCreate(), SoulParticle.EmissiveProvider::new);
 			});
 
 			MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
