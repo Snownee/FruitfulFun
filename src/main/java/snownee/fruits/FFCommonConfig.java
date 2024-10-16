@@ -68,6 +68,21 @@ public final class FFCommonConfig {
 	@KiwiConfig.Range(min = 0, max = 1)
 	public static float mutagenMutationRate = 0.8f;
 
+	@KiwiConfig.Path("haunting.enabled")
+	public static boolean hauntingEnabled = true;
+	@KiwiConfig.Path("haunting.cooldownSeconds")
+	public static int hauntingCooldownSeconds = 10;
+	@KiwiConfig.Path("haunting.crossDimensional")
+	public static boolean hauntingCrossDimensional = true;
+	@KiwiConfig.Path("haunting.interaction")
+	public static boolean hauntingInteraction = true;
+	@KiwiConfig.Path("haunting.initiativeSkill")
+	public static boolean hauntingInitiativeSkill = true;
+	@KiwiConfig.Path("haunting.initiativeSkillCooldownTicks")
+	public static int hauntingInitiativeSkillCooldownTicks = 90;
+	@KiwiConfig.Path("haunting.ghostBeeTimeLimitTicks")
+	public static int hauntingGhostBeeTimeLimitTicks = 120;
+
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();
 		return (server != null && server.isDedicatedServer()) ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;

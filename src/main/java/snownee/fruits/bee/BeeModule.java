@@ -223,7 +223,7 @@ public class BeeModule extends AbstractModule {
 	}
 
 	public static void changeDimension(ServerLevel destination, Entity entity, @Nullable Entity newEntity) {
-		if (!Hooks.bee || newEntity == null) {
+		if (!Hooks.bee || !FFCommonConfig.hauntingCrossDimensional || newEntity == null) {
 			return;
 		}
 		if (!(entity instanceof FFLivingEntity)) {

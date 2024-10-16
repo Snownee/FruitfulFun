@@ -1,6 +1,8 @@
 package snownee.fruits.bee.network;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -11,11 +13,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import snownee.fruits.FFCommonConfig;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFPlayer;
-import snownee.fruits.mixin.LivingEntityAccess;
 import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PacketHandler;
 
@@ -29,7 +36,7 @@ public class CHauntingActionPacket extends PacketHandler {
 			FriendlyByteBuf buf,
 			@Nullable ServerPlayer player) {
 		return executor.apply(() -> {
-			if (Objects.requireNonNull(player).hasEffect(MobEffects.WEAKNESS) || !BeeModule.isHauntingNormalEntity(player, null)) {
+			if (!canDoAction(Objects.requireNonNull(player))) {
 				return;
 			}
 			HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
@@ -37,31 +44,65 @@ public class CHauntingActionPacket extends PacketHandler {
 				return;
 			}
 			boolean success = false;
+			if (manager.hasTrait(Trait.FASTER)) {
+				target.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20));
+				target.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 1));
+				success = true;
+			} else if (manager.hasTrait(Trait.FAST)) {
+				target.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20));
+				success = true;
+			}
 			if (manager.hasTrait(Trait.LAZY)) {
 				MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10, 3);
 				target.addEffect(effectInstance);
 				player.addEffect(new MobEffectInstance(effectInstance));
 				success = true;
 			}
-			if (manager.hasTrait(Trait.FASTER)) {
-				MobEffectInstance effect = target.getEffect(MobEffects.JUMP);
-				if (effect == null || effect.getAmplifier() == 0) {
-					target.forceAddEffect(new MobEffectInstance(MobEffects.JUMP, 100, 1, false, false, false), player);
+			if (manager.hasTrait(Trait.PINK) && target instanceof Mob mob) {
+				Vec3 start = mob.getEyePosition();
+				Vec3 end = mob.getEyePosition().add(Hooks.calculateViewVector(mob, player, 1).scale(8));
+				List<LivingEntity> entities = mob.level().getEntitiesOfClass(
+						LivingEntity.class,
+						new AABB(start, end),
+						$ -> $ != player && $ != target && $.isAlive() && !$.isSpectator() && $ instanceof LivingEntity);
+				double distance = Double.MAX_VALUE;
+				LivingEntity closest = null;
+				for (LivingEntity entity : entities) {
+					AABB box = entity.getBoundingBox();
+					if (box.contains(start)) {
+						closest = entity;
+						break;
+					}
+					Optional<Vec3> clip = box.clip(start, end);
+					if (clip.isPresent()) {
+						double d = start.distanceToSqr(clip.get());
+						if (d < distance) {
+							distance = d;
+							closest = entity;
+						}
+					}
 				}
-				((LivingEntityAccess) target).callJumpFromGround();
-				if (effect == null) {
-					target.removeEffect(MobEffects.JUMP);
-				} else {
-					target.forceAddEffect(effect, null);
+				if (closest != null) {
+					mob.setAggressive(true);
+					mob.setTarget(closest);
+					success = true;
 				}
-				success = true;
-			} else if (manager.hasTrait(Trait.FAST)) {
-				((LivingEntityAccess) target).callJumpFromGround();
-				success = true;
 			}
-			if (success) {
-				player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 90, 0, false, false, true));
+
+			if (success && FFCommonConfig.hauntingInitiativeSkillCooldownTicks > 0) {
+				player.addEffect(new MobEffectInstance(
+						MobEffects.WEAKNESS,
+						FFCommonConfig.hauntingInitiativeSkillCooldownTicks,
+						0,
+						false,
+						false,
+						true));
 			}
 		});
+	}
+
+	public static boolean canDoAction(Player player) {
+		return FFCommonConfig.hauntingInitiativeSkill && BeeModule.isHauntingNormalEntity(player, null) &&
+				(FFCommonConfig.hauntingInitiativeSkillCooldownTicks <= 0 || !player.hasEffect(MobEffects.WEAKNESS));
 	}
 }

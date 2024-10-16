@@ -25,6 +25,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import snownee.fruits.FFClientConfig;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
@@ -81,6 +83,10 @@ public class ServerGamePacketListenerImplMixin {
 		if (!Hooks.bee || !((FFPlayer) player).fruits$isHaunting()) {
 			return;
 		}
+		if (!FFCommonConfig.hauntingInteraction) {
+			ci.cancel();
+			return;
+		}
 		ServerboundInteractPacket.ActionType actionType = ((ServerboundInteractPacketActionAccess) packet.action).callGetType();
 		if (actionType == ServerboundInteractPacket.ActionType.INTERACT_AT && !BeeModule.isHauntingNormalEntity(player, null)) {
 			return;
@@ -124,6 +130,10 @@ public class ServerGamePacketListenerImplMixin {
 		if (!Hooks.bee || !((FFPlayer) player).fruits$isHaunting()) {
 			return;
 		}
+		if (!FFCommonConfig.hauntingInteraction) {
+			ci.cancel();
+			return;
+		}
 		GhostFakePlayer fakePlayer = null;
 		try {
 			fakePlayer = GhostFakePlayer.getOrCreate(player);
@@ -152,7 +162,7 @@ public class ServerGamePacketListenerImplMixin {
 			BlockHitResult hitResult,
 			Operation<InteractionResult> original) {
 		InteractionResult result = original.call(instance, player, level, stack, hand, hitResult);
-		if (result.consumesAction() && player.getClass() == GhostFakePlayer.class) {
+		if (FFClientConfig.hauntingInteractionParticles && result.consumesAction() && player.getClass() == GhostFakePlayer.class) {
 			SHauntingParticles.send(player.serverLevel(), hitResult.getLocation());
 		}
 		return result;
