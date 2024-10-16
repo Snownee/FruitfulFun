@@ -255,6 +255,10 @@ dependencies {
 
 processResources {
     exclude "/assets/${project.mod_id}/lang/en_us.existing.yaml"
+    exclude "/assets/${project.mod_id}/textures/entity/bee/bee.png"
+    exclude "/assets/${project.mod_id}/textures/entity/bee/bee_angry.png"
+    exclude "/assets/${project.mod_id}/textures/entity/bee/bee_nectar.png"
+    exclude "/assets/${project.mod_id}/textures/entity/bee/bee_angry_nectar.png"
     exclude "/snownee/fruits/command"
     exclude '**/*.bat'
     exclude '**/*.psd'

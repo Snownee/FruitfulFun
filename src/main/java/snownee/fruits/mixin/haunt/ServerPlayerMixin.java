@@ -37,7 +37,7 @@ public class ServerPlayerMixin {
 		}
 	}
 
-	@Inject(method = "setCamera", at = @At("HEAD"))
+	@Inject(method = "setCamera", at = @At("TAIL"))
 	private void setCamera(Entity target, CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
 		if (Hooks.bee && (target == null || target == player) && ((FFPlayer) player).fruits$isHaunting()) {

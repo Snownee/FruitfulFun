@@ -242,6 +242,8 @@
   "subtitles.fruitfulfun.crown.equip": "Flower crown equips",
   "subtitles.fruitfulfun.gun.shoot": "V.C.D. shoots",
   "subtitles.fruitfulfun.gun.working": "V.C.D. working",
+  "subtitles.fruitfulfun.start_haunting": "Haunting starts",
+  "subtitles.fruitfulfun.stop_haunting": "Haunting stopped",
   "text.fruitfulfun.gene": "Genes",
   "text.fruitfulfun.gene.pair": "- %s / %s",
   "text.fruitfulfun.gene.pairWithDesc": "%s - %s / %s",
