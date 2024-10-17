@@ -25,6 +25,7 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FFEntityTypeTagsProvider::new);
 		FabricTagProvider.BlockTagProvider seasonalBlockTagsProvider = pack.addProvider(SeasonalBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new SeasonalItemTagsProvider(output, registriesFuture, seasonalBlockTagsProvider));
+		pack.addProvider(FFBiomeTagsProvider::new);
 		pack.addProvider(FFModelProvider::new);
 		pack.addProvider(FFRecipeProvider::new);
 		pack.addProvider(FFDynamicRegistryProvider::new);

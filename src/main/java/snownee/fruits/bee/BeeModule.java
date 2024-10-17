@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
@@ -37,6 +38,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
@@ -94,6 +96,7 @@ public class BeeModule extends AbstractModule {
 	public static final int WAXED_TICKS = 1200;
 	public static Set<VillagerProfession> BEEKEEPER_PROFESSIONS;
 	public static final TagKey<EntityType<?>> CANNOT_HAUNT = entityTag(FruitfulFun.ID, "cannot_haunt");
+	public static final TagKey<Biome> UNLIMITED_BEE_RIDING = tag(Registries.BIOME, FruitfulFun.ID, "unlimited_bee_riding");
 
 	public BeeModule() {
 		Hooks.bee = true;

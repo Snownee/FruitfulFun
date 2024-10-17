@@ -280,6 +280,12 @@ public final class Hooks {
 	private static final int[] SURFACE_CHECKS = {15, 11, 7, 3, 14, 10, 6, 2, 13, 9, 5, 1, 12, 8, 4, 0};
 
 	public static boolean tooFarFromSurface(Level level, BlockPos pos) {
+		if (!FFCommonConfig.beeRidingHeightLimit) {
+			return false;
+		}
+		if (level.getBiome(pos).is(BeeModule.UNLIMITED_BEE_RIDING)) {
+			return false;
+		}
 		int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
 		if (pos.getY() > height) {
 			return pos.getY() - height > 15;
