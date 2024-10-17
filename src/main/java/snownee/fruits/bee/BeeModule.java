@@ -48,6 +48,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.bee.genetics.TransformBees;
 import snownee.fruits.duck.FFLivingEntity;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.CommonProxy;
@@ -61,6 +62,7 @@ import snownee.kiwi.loader.event.InitEvent;
 import snownee.lychee.LycheeLootContextParams;
 import snownee.lychee.LycheeRegistries;
 import snownee.lychee.core.contextual.ContextualConditionType;
+import snownee.lychee.core.post.PostActionType;
 import snownee.lychee.core.recipe.LycheeRecipe;
 import snownee.lychee.mixin.LootContextParamSetsAccess;
 
@@ -78,6 +80,9 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(
 			BeeHasTrait.Type::new,
 			() -> LycheeRegistries.CONTEXTUAL.registry());
+	public static final KiwiGO<PostActionType<TransformBees>> TRANSFORM_BEES = go(
+			TransformBees.Type::new,
+			() -> LycheeRegistries.POST_ACTION.registry());
 	public static ResourceLocation BEE_ONE_CM = FruitfulFun.id("bee_one_cm");
 	public static ResourceLocation BEES_BRED = FruitfulFun.id("bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("entity.bee.shear")));

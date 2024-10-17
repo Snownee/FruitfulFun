@@ -55,8 +55,6 @@ import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.lychee.LycheeLootContextParams;
-import snownee.lychee.LycheeRegistries;
-import snownee.lychee.core.post.PostActionType;
 import snownee.lychee.core.recipe.LycheeRecipe;
 import snownee.lychee.core.recipe.type.LycheeRecipeType;
 import snownee.lychee.mixin.LootContextParamSetsAccess;
@@ -71,9 +69,6 @@ public class RitualModule extends AbstractModule {
 			null));
 	@KiwiModule.Name("dragon_ritual")
 	public static final KiwiGO<LycheeRecipe.Serializer<DragonRitualRecipe>> SERIALIZER = go(DragonRitualRecipe.Serializer::new);
-	public static final KiwiGO<PostActionType<TransformBees>> TRANSFORM_BEES = go(
-			TransformBees.Type::new,
-			() -> LycheeRegistries.POST_ACTION.registry());
 	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(
 			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.ritual.finish")));
 	public static final Supplier<BlockPattern> RITUAL = Suppliers.memoize(() -> BlockPatternBuilder.start()
