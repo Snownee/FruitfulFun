@@ -13,8 +13,6 @@ import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
-import java.util.function.Supplier;
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -76,6 +74,7 @@ import snownee.fruits.vacuum.VacModule;
 import snownee.fruits.vacuum.client.AirVortexParticle;
 import snownee.fruits.vacuum.client.ItemProjectileColor;
 import snownee.fruits.vacuum.client.ItemProjectileRenderer;
+import snownee.kiwi.util.ColorProviderUtil;
 import snownee.lychee.client.core.post.PostActionRenderer;
 
 public class ClientProxy implements ClientModInitializer {
@@ -152,11 +151,11 @@ public class ClientProxy implements ClientModInitializer {
 	public void onInitializeClient() {
 		EntityRendererRegistry.register(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
 
-		Supplier<BlockColor> oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
+		BlockColor oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
 		ColorProviderRegistry.BLOCK.register(
 				(state, world, pos, i) -> {
 					if (i == 0) {
-						return oakBlockColor.get().getColor(Blocks.OAK_LEAVES.defaultBlockState(), world, pos, i);
+						return oakBlockColor.getColor(Blocks.OAK_LEAVES.defaultBlockState(), world, pos, i);
 					}
 					if (i == 1) {
 						if (CITRON_LEAVES.is(state)) {
@@ -196,9 +195,9 @@ public class ClientProxy implements ClientModInitializer {
 				APPLE_LEAVES.getOrCreate());
 
 		ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
-		Supplier<ItemColor> oakItemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
+		ItemColor oakItemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
 		ColorProviderRegistry.ITEM.register(
-				(stack, i) -> oakItemColor.get().getColor(oakLeaves, i),
+				(stack, i) -> oakItemColor.getColor(oakLeaves, i),
 				TANGERINE_LEAVES.get(),
 				LIME_LEAVES.get(),
 				CITRON_LEAVES.get(),
@@ -211,13 +210,13 @@ public class ClientProxy implements ClientModInitializer {
 		ParticleFactoryRegistry.getInstance().register(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
 
-		Supplier<BlockColor> birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
+		BlockColor birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
 		ColorProviderRegistry.BLOCK.register((state, world, pos, i) -> {
 			if (i == 1) {
 				return 0xC22626;
 			}
 			if (i == 2) {
-				return birchBlockColor.get().getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
+				return birchBlockColor.getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
 			}
 			return -1;
 		}, REDLOVE_LEAVES.getOrCreate());
