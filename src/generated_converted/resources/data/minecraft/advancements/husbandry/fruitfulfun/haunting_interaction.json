@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/ritual",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.fruitfulfun.haunting_interaction.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:bell"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.fruitfulfun.haunting_interaction.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "conditions": [
+    {
+      "module": "fruitfulfun:ritual",
+      "type": "kiwi:is_loaded"
+    }
+  ]
+}

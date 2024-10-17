@@ -12,6 +12,10 @@
     {
       "id": "#supplementaries:candle_holders",
       "required": false
+    },
+    {
+      "id": "#the_bumblezone:candles",
+      "required": false
     }
   ]
 }

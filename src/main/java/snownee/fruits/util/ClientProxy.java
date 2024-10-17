@@ -39,7 +39,6 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -272,9 +271,9 @@ public class ClientProxy {
 		Minecraft.getInstance().setScreen(new EditGeneNameScreen());
 	}
 
-	public static ItemProjectileColor getItemProjectileColor(Item item) {
+	public static ItemProjectileColor getItemProjectileColor(ItemStack itemStack) {
 		ItemProjectileColor color;
-		if (Hooks.supplementaries && (color = SupplementariesCompat.getItemProjectileColor(item)) != null) {
+		if (Hooks.supplementaries && (color = SupplementariesCompat.getItemProjectileColor(itemStack)) != null) {
 			return color;
 		}
 		return null;

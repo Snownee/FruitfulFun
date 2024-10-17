@@ -38,7 +38,7 @@ public class PomegranateItem extends BlockItem {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
 		ItemStack itemStack = player.getItemInHand(interactionHand);
-		player.getCooldowns().addCooldown(this, 10);
+		player.getCooldowns().addCooldown(itemStack.getItem(), 10);
 		if (!level.isClientSide) {
 			Vec3 eye = player.getEyePosition();
 			ItemEntity fruit = new ItemEntity(level, eye.x, eye.y, eye.z, itemStack.copyWithCount(1));
@@ -47,7 +47,7 @@ public class PomegranateItem extends BlockItem {
 			shootFromRotation(player, fruit, player.getXRot(), player.getYRot(), 0.0f, 1.5f, 0.5f);
 			level.addFreshEntity(fruit);
 		}
-		player.awardStat(Stats.ITEM_USED.get(this));
+		player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
 		if (!player.getAbilities().instabuild) {
 			itemStack.shrink(1);
 		}
