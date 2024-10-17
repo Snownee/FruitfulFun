@@ -272,7 +272,7 @@ public class CommonProxy implements ModInitializer {
 		});
 
 		UseEntityCallback.EVENT.register((player, level, hand, target, hitResult) -> {
-			FFPlayer ffPlayer = (FFPlayer) player;
+			FFPlayer ffPlayer = FFPlayer.of(player);
 			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
 					ffPlayer.fruits$hauntingTarget() instanceof Bee bee &&
 					BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
