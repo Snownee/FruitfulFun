@@ -1,19 +1,19 @@
 {
-	"type": "fruitfulfun:dragon_ritual",
-	"fabric:load_conditions": [
-		{
-			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:ritual"
-		}
-	],
-	"item_in": {
-		"item": "fruitfulfun:pomegranate"
-	},
-	"post": [
-		{
-			"type": "drop_item",
-			"item": "fruitfulfun:enchanted_pomegranate"
-		}
-	],
-	"max_repeats": 1
+  "type": "fruitfulfun:dragon_ritual",
+  "item_in": {
+    "item": "fruitfulfun:pomegranate"
+  },
+  "post": [
+    {
+      "type": "drop_item",
+      "item": "fruitfulfun:enchanted_pomegranate"
+    }
+  ],
+  "max_repeats": 1,
+  "conditions": [
+    {
+      "module": "fruitfulfun:ritual",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

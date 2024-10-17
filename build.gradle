@@ -250,6 +250,10 @@ dependencies {
         jarJar.ranged(it, "[1.0.21,)")
         transitive(false)
     }
+//    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-events-interaction-v0:0.6.2+0d0bd5a777")) {
+//        jarJar.ranged(it, "[0.6.2,)")
+//        transitive(false)
+//    }
     runtimeOnly fg.deobf("dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}")
 }
 

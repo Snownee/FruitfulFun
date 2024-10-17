@@ -73,7 +73,7 @@ public class RitualModule extends AbstractModule {
 	public static final KiwiGO<LycheeRecipe.Serializer<DragonRitualRecipe>> SERIALIZER = go(DragonRitualRecipe.Serializer::new);
 	public static final KiwiGO<PostActionType<TransformBees>> TRANSFORM_BEES = go(
 			TransformBees.Type::new,
-			() -> LycheeRegistries.POST_ACTION);
+			() -> LycheeRegistries.POST_ACTION.registry());
 	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(
 			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.ritual.finish")));
 	public static final Supplier<BlockPattern> RITUAL = Suppliers.memoize(() -> BlockPatternBuilder.start()

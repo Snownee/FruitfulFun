@@ -312,24 +312,28 @@ public class CommonProxy {
 			FFPlayer.of(newPlayer).fruits$setGeneNames(map);
 		});
 
-		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.EntityInteract event) -> {
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.EntityInteractSpecific event) -> {
+			Player player = event.getEntity();
 			Entity target = event.getTarget();
-			Level level = event.getLevel();
-			FFPlayer ffPlayer = (FFPlayer) event.getEntity();
+			FFPlayer ffPlayer = FFPlayer.of(player);
 			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
-					ffPlayer.fruits$hauntingTarget() instanceof Bee bee &&
-					BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
-				if (!level.isClientSide) {
+					ffPlayer.fruits$hauntingTarget() instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+				if (!player.level().isClientSide) {
 					ffPlayer.fruits$setHauntingTarget(target);
 					HauntingManager manager = ffPlayer.fruits$hauntingManager();
 					if (manager != null) {
 						manager.storeBee(bee);
 					}
 				}
-				event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide));
+				event.setCancellationResult(InteractionResult.SUCCESS);
 				event.setCanceled(true);
 			}
 		});
+	}
+
+	public static InteractionResult lowPriorityInteract(Player player, Entity target) {
+
+		return InteractionResult.PASS;
 	}
 
 	public static void initVacModule() {

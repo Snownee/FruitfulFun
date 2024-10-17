@@ -1,27 +1,27 @@
 {
-	"type": "fruitfulfun:dragon_ritual",
-	"fabric:load_conditions": [
-		{
-			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:ritual"
-		},
-		{
-			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:bee"
-		}
-	],
-	"item_in": {
-		"fabric:type": "fruitfulfun:beehive"
-	},
-	"post": [
-		{
-			"type": "prevent_default"
-		},
-		{
-			"type": "fruitfulfun:transform_bees",
-			"traits": [
-				"ghost"
-			]
-		}
-	]
+  "type": "fruitfulfun:dragon_ritual",
+  "item_in": {
+    "type": "fruitfulfun:beehive"
+  },
+  "post": [
+    {
+      "type": "prevent_default"
+    },
+    {
+      "type": "fruitfulfun:transform_bees",
+      "traits": [
+        "ghost"
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "module": "fruitfulfun:ritual",
+      "type": "kiwi:is_loaded"
+    },
+    {
+      "module": "fruitfulfun:bee",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }
