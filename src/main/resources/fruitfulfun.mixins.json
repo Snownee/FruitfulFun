@@ -73,7 +73,7 @@
 		"client.ItemInHandRendererMixin",
 		"client.MinecraftMixin",
 		"client.MultiPlayerGameModeMixin",
-		"forge.ForgeGuiMixin",
+		"forge.GuiMixin",
 		"haunt.AbstractClientPlayerMixin",
 		"haunt.LocalPlayerMixin",
 		"haunt.PlayerRendererMixin",
