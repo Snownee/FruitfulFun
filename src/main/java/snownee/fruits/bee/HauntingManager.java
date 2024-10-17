@@ -70,7 +70,7 @@ public class HauntingManager {
 	public void tick(ServerPlayer player) {
 		if (target == null) {
 			getExorcised(player);
-			((FFPlayer) player).fruits$ensureCamera();
+			FFPlayer.of(player).fruits$ensureCamera();
 			return;
 		}
 		if (++ticks > FFCommonConfig.hauntingGhostBeeTimeLimitTicks && FFCommonConfig.hauntingGhostBeeTimeLimitTicks > 0 && isGhostBee) {

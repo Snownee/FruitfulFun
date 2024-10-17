@@ -25,7 +25,7 @@ public class BaseFireBlockMixin {
 		Player hauntedBy;
 		if (Hooks.bee && !level.isClientSide && state.is(Blocks.SOUL_FIRE) && entity instanceof FFLivingEntity living &&
 				(hauntedBy = living.fruits$getHauntedBy()) != null) {
-			HauntingManager hauntingManager = ((FFPlayer) hauntedBy).fruits$hauntingManager();
+			HauntingManager hauntingManager = FFPlayer.of(hauntedBy).fruits$hauntingManager();
 			if (hauntingManager != null) {
 				hauntingManager.getExorcised((ServerPlayer) hauntedBy);
 			}

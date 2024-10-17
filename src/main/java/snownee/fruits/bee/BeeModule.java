@@ -186,7 +186,7 @@ public class BeeModule extends AbstractModule {
 		if (!Hooks.bee || player == null) {
 			return false;
 		}
-		HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
+		HauntingManager manager = FFPlayer.of(player).fruits$hauntingManager();
 		if (manager == null || manager.isGhostBee || manager.target == null) {
 			return false;
 		}
@@ -264,8 +264,8 @@ public class BeeModule extends AbstractModule {
 			hauntedBy.portalEntrancePos = entity.portalEntrancePos;
 		}
 		Entity newSpectator = hauntedBy.changeDimension(destination);
-		if (newSpectator instanceof FFPlayer) {
-			((FFPlayer) newSpectator).fruits$setHauntingTarget(newEntity);
+		if (newSpectator instanceof FFPlayer ffPlayer) {
+			ffPlayer.fruits$setHauntingTarget(newEntity);
 		}
 	}
 }

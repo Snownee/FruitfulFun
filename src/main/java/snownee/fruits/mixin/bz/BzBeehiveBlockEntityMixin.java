@@ -35,7 +35,7 @@ public abstract class BzBeehiveBlockEntityMixin extends BlockEntity {
 		if (!Hooks.bee || !(((FFLivingEntity) occupant).fruits$getHauntedBy() instanceof ServerPlayer player)) {
 			return;
 		}
-		HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
+		HauntingManager manager = FFPlayer.of(player).fruits$hauntingManager();
 		if (manager == null) {
 			return;
 		}

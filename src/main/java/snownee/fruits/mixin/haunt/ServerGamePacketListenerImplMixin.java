@@ -41,28 +41,28 @@ public class ServerGamePacketListenerImplMixin {
 
 	@Inject(method = "handlePlayerAction", at = @At("HEAD"), cancellable = true)
 	private void handlePlayerAction(ServerboundPlayerActionPacket packet, CallbackInfo ci) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			ci.cancel();
 		}
 	}
 
 	@Inject(method = "handleSetCarriedItem", at = @At("HEAD"), cancellable = true)
 	private void handleSetCarriedItem(ServerboundSetCarriedItemPacket packet, CallbackInfo ci) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			ci.cancel();
 		}
 	}
 
 	@Inject(method = "handleUseItem", at = @At("HEAD"), cancellable = true)
 	private void handleUseItem(ServerboundUseItemPacket packet, CallbackInfo ci) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			ci.cancel();
 		}
 	}
 
 	@Inject(method = "handleContainerClick", at = @At("HEAD"), cancellable = true)
 	private void handleContainerClick(ServerboundContainerClickPacket packet, CallbackInfo ci) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			ci.cancel();
 		}
 	}
@@ -70,7 +70,7 @@ public class ServerGamePacketListenerImplMixin {
 	@Inject(method = "handlePlayerCommand", at = @At("HEAD"), cancellable = true)
 	private void handlePlayerCommand(ServerboundPlayerCommandPacket packet, CallbackInfo ci) {
 		if (Hooks.bee && packet.getAction() == ServerboundPlayerCommandPacket.Action.OPEN_INVENTORY &&
-				((FFPlayer) player).fruits$isHaunting()) {
+				FFPlayer.of(player).fruits$isHaunting()) {
 			ci.cancel();
 		}
 	}
@@ -80,7 +80,7 @@ public class ServerGamePacketListenerImplMixin {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;setShiftKeyDown(Z)V"),
 			cancellable = true)
 	private void handleInteract(ServerboundInteractPacket packet, CallbackInfo ci) {
-		if (!Hooks.bee || !((FFPlayer) player).fruits$isHaunting()) {
+		if (!Hooks.bee || !FFPlayer.of(player).fruits$isHaunting()) {
 			return;
 		}
 		ServerboundInteractPacket.ActionType actionType = ((ServerboundInteractPacketActionAccess) packet.action).callGetType();
@@ -125,7 +125,7 @@ public class ServerGamePacketListenerImplMixin {
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;ackBlockChangesUpTo(I)V"), cancellable = true)
 	private void handleUseItemOn(ServerboundUseItemOnPacket packet, CallbackInfo ci) {
-		if (!Hooks.bee || !((FFPlayer) player).fruits$isHaunting()) {
+		if (!Hooks.bee || !FFPlayer.of(player).fruits$isHaunting()) {
 			return;
 		}
 		if (!FFCommonConfig.hauntingInteraction || !BeeModule.isHauntingNormalEntity(player, null)) {
@@ -177,8 +177,8 @@ public class ServerGamePacketListenerImplMixin {
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/level/ServerPlayer;getRootVehicle()Lnet/minecraft/world/entity/Entity;"))
 	private Entity getRootVehicle(ServerPlayer player, Operation<Entity> original) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
-			return ((FFPlayer) player).fruits$hauntingTarget();
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
+			return FFPlayer.of(player).fruits$hauntingTarget();
 		}
 		return original.call(player);
 	}
@@ -195,7 +195,7 @@ public class ServerGamePacketListenerImplMixin {
 			float yRot,
 			float xRot,
 			Operation<Void> original) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			player.absMoveTo(x, y, z, yRot, xRot);
 		}
 		original.call(entity, x, y, z, yRot, xRot);

@@ -12,7 +12,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import snownee.fruits.FruitfulFun;
 import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.network.KPacketTarget;
 import snownee.kiwi.network.KiwiPacket;
@@ -36,7 +35,7 @@ public class SHauntPacket extends PacketHandler {
 			if (player == null || target == null) {
 				return;
 			}
-			((FFPlayer) player).fruits$setHauntingTarget(target);
+			FFPlayer.of(player).fruits$setHauntingTarget(target);
 		});
 	}
 
@@ -53,7 +52,7 @@ public class SHauntPacket extends PacketHandler {
 	private static Consumer<FriendlyByteBuf> putData(ServerPlayer player) {
 		return buf -> {
 			buf.writeVarInt(player.getId());
-			Entity target = ((FFPlayer) player).fruits$hauntingTarget();
+			Entity target = FFPlayer.of(player).fruits$hauntingTarget();
 			if (target == null) {
 				target = player;
 			}

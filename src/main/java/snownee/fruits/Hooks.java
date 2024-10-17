@@ -237,7 +237,7 @@ public final class Hooks {
 		}
 		if (FFCommonConfig.hauntingEnabled && attributes.hasTrait(Trait.GHOST) && !CommonProxy.isFakePlayer(player)) {
 			if (!isClientSide && (FFCommonConfig.hauntingCooldownSeconds <= 0 || !bee.hasEffect(BeeModule.FRAGILITY.get()))) {
-				((FFPlayer) player).fruits$setHauntingTarget(bee);
+				FFPlayer.of(player).fruits$setHauntingTarget(bee);
 			}
 			return InteractionResult.sidedSuccess(isClientSide);
 		}
