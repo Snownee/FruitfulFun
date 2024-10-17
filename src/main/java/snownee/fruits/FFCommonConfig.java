@@ -35,6 +35,7 @@ public final class FFCommonConfig {
 	public static boolean beehiveTrade = true;
 	@KiwiConfig.Range(min = 0)
 	public static int beeNaturalHealingInterval = 900;
+	public static boolean beeRidingHeightLimit = true;
 	public static boolean mutagenRecipe = true;
 	public static boolean redloveFruitUse = true;
 	@KiwiConfig.Path("dragonBreath.fixExploit") // fix MC-114618

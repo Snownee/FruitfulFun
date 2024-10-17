@@ -145,6 +145,8 @@
   "fruitfulfun.config.appleSaplingFromHeroOfTheVillage.desc": "",
   "fruitfulfun.config.beeNaturalHealingInterval": "Bee Natural Healing Interval",
   "fruitfulfun.config.beeNaturalHealingInterval.desc": "",
+  "fruitfulfun.config.beeRidingHeightLimit": "Bee Riding Height Limit",
+  "fruitfulfun.config.beeRidingHeightLimit.desc": "",
   "fruitfulfun.config.beehiveTooltipDisplayBees": "Beehive Tooltip Display Bees",
   "fruitfulfun.config.beehiveTooltipDisplayBees.desc": "",
   "fruitfulfun.config.beehiveTrade": "Beehive Trade",
