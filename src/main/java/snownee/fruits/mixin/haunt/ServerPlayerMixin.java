@@ -32,7 +32,7 @@ public class ServerPlayerMixin {
 		if (Hooks.bee && target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
 				CoreModule.ORANGE.is(player.getMainHandItem())) {
 			if (!Platform.isProduction()) {
-				((FFPlayer) player).fruits$setHauntingTarget(target);
+				FFPlayer.of(player).fruits$setHauntingTarget(target);
 				ci.cancel();
 			}
 		}
@@ -42,9 +42,9 @@ public class ServerPlayerMixin {
 	private void setCamera(Entity target, CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
 //		Hooks.debugInChat(player, "setCamera to %s".formatted(target == null ? "null" : target.getName().getString()));
-		if (Hooks.bee && (target == null || target == player) && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && (target == null || target == player) && FFPlayer.of(player).fruits$isHaunting()) {
 //			Hooks.debugInChat(player, "setCamera 2 to %s".formatted(target == null ? "null" : target.getName().getString()));
-			((FFPlayer) this).fruits$setHauntingTarget(player);
+			FFPlayer.of(this).fruits$setHauntingTarget(player);
 		}
 	}
 
@@ -56,8 +56,8 @@ public class ServerPlayerMixin {
 	@Inject(method = "hasChangedDimension", at = @At("HEAD"))
 	private void hasChangedDimension(CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
-			((FFPlayer) player).fruits$ensureCamera();
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
+			FFPlayer.of(player).fruits$ensureCamera();
 		}
 	}
 
@@ -65,7 +65,7 @@ public class ServerPlayerMixin {
 			method = "setPlayerInput",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isPassenger()Z"))
 	private boolean setPlayerInput(ServerPlayer player, Operation<Boolean> original) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			return true;
 		}
 		return original.call(player);
@@ -74,7 +74,7 @@ public class ServerPlayerMixin {
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void tick(CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
-		HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
+		HauntingManager manager = FFPlayer.of(player).fruits$hauntingManager();
 		if (Hooks.bee && manager != null) {
 			manager.tick(player);
 		}
@@ -82,7 +82,7 @@ public class ServerPlayerMixin {
 
 	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;absMoveTo(DDDFF)V"))
 	private void tick(ServerPlayer player, double x, double y, double z, float yRot, float xRot, Operation<Void> original) {
-		if (Hooks.bee && ((FFPlayer) player).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			yRot = player.getYRot();
 			xRot = player.getXRot();
 		}

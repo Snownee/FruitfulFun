@@ -30,7 +30,7 @@ public abstract class EntityMixin {
 		Entity entity = (Entity) (Object) this;
 		if (entity instanceof Bee bee) {
 			SSyncBeePacket.send(bee, player);
-		} else if (entity instanceof ServerPlayer target && ((FFPlayer) target).fruits$isHaunting()) {
+		} else if (entity instanceof ServerPlayer target && FFPlayer.of(target).fruits$isHaunting()) {
 			SHauntPacket.send(target, player);
 		}
 	}

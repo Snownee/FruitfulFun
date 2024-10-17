@@ -23,14 +23,14 @@ public abstract class PlayerMixin extends LivingEntity {
 
 	@Inject(method = "blockActionRestricted", at = @At("HEAD"), cancellable = true)
 	private void blockActionRestricted(Level level, BlockPos pos, GameType gameMode, CallbackInfoReturnable<Boolean> cir) {
-		if (Hooks.bee && ((FFPlayer) this).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(this).fruits$isHaunting()) {
 			cir.setReturnValue(true);
 		}
 	}
 
 	@Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
 	private void aiStep(CallbackInfo ci) {
-		if (Hooks.bee && ((FFPlayer) this).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(this).fruits$isHaunting()) {
 			super.aiStep();
 			ci.cancel();
 		}

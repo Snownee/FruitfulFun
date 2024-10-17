@@ -107,7 +107,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 		if (player == null) {
 			return false;
 		}
-		HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
+		HauntingManager manager = FFPlayer.of(player).fruits$hauntingManager();
 		return manager != null && manager.hasTrait(trait);
 	}
 
@@ -118,7 +118,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	private void actuallyHurt(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
 		if (Hooks.bee && !level().isClientSide && hauntedBy != null && damageAmount > 0 && damageSource.is(DamageTypes.IN_FIRE) &&
 				fruits$getHauntedBy() instanceof ServerPlayer player) {
-			HauntingManager hauntingManager = ((FFPlayer) player).fruits$hauntingManager();
+			HauntingManager hauntingManager = FFPlayer.of(player).fruits$hauntingManager();
 			if (hauntingManager != null) {
 				hauntingManager.hurtInFire(player);
 			}
@@ -138,7 +138,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 			if (player.getHealth() > 2) {
 				player.hurt(player.damageSources().genericKill(), player.getHealth() - 2);
 			}
-			HauntingManager hauntingManager = ((FFPlayer) player).fruits$hauntingManager();
+			HauntingManager hauntingManager = FFPlayer.of(player).fruits$hauntingManager();
 			if (hauntingManager != null) {
 				hauntingManager.getExorcised(player);
 			}
@@ -146,7 +146,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 		if (source.getEntity() != null && source.getEntity().getType() == EntityType.RAVAGER && getType().is(EntityTypeTags.RAIDERS)) {
 			Player player = ((FFLivingEntity) source.getEntity()).fruits$getHauntedBy();
 			if (player != null) {
-				HauntingManager hauntingManager = ((FFPlayer) player).fruits$hauntingManager();
+				HauntingManager hauntingManager = FFPlayer.of(player).fruits$hauntingManager();
 				if (hauntingManager != null) {
 					hauntingManager.onRavagerKill(player);
 				}

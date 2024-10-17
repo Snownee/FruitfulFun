@@ -27,7 +27,7 @@ public class PlayerRendererMixin {
 			MultiBufferSource buffer,
 			int packedLight,
 			CallbackInfo ci) {
-		if (Hooks.bee && ((FFPlayer) entity).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(entity).fruits$isHaunting()) {
 			ci.cancel();
 		}
 	}

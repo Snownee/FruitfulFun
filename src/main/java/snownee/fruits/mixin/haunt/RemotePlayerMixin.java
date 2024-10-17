@@ -13,7 +13,7 @@ import snownee.fruits.duck.FFPlayer;
 public class RemotePlayerMixin {
 	@Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
 	private void aiStep(CallbackInfo ci) {
-		if (Hooks.bee && ((FFPlayer) this).fruits$isHaunting()) {
+		if (Hooks.bee && FFPlayer.of(this).fruits$isHaunting()) {
 			ci.cancel();
 		}
 	}

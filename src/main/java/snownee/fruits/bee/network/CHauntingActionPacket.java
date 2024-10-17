@@ -15,7 +15,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFCommonConfig;
@@ -40,8 +39,8 @@ public class CHauntingActionPacket extends PacketHandler {
 			if (!canDoAction(Objects.requireNonNull(player))) {
 				return;
 			}
-			HauntingManager manager = ((FFPlayer) player).fruits$hauntingManager();
-			if (manager == null || !(((FFPlayer) player).fruits$hauntingTarget() instanceof LivingEntity target)) {
+			HauntingManager manager = FFPlayer.of(player).fruits$hauntingManager();
+			if (manager == null || !(FFPlayer.of(player).fruits$hauntingTarget() instanceof LivingEntity target)) {
 				return;
 			}
 			boolean success = false;
