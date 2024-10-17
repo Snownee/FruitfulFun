@@ -174,7 +174,9 @@ public abstract class PlayerMixin implements FFPlayer {
 		if (target == player) {
 			// haunting interrupted
 			if (hauntingManager != null && player instanceof ServerPlayer serverPlayer) {
-				hauntingManager.getExorcised(serverPlayer);
+				HauntingManager localManager = hauntingManager;
+				hauntingManager = null;
+				localManager.getExorcised(serverPlayer);
 			}
 		} else {
 			// you can't haunt a player who is haunting
