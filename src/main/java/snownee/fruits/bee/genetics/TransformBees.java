@@ -1,4 +1,4 @@
-package snownee.fruits.ritual;
+package snownee.fruits.bee.genetics;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,8 +21,7 @@ import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
-import snownee.fruits.bee.genetics.GeneData;
-import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.bee.BeeModule;
 import snownee.lychee.core.LycheeContext;
 import snownee.lychee.core.Reference;
 import snownee.lychee.core.post.PostAction;
@@ -42,7 +41,7 @@ public class TransformBees extends PostAction {
 
 	@Override
 	public PostActionType<?> getType() {
-		return RitualModule.TRANSFORM_BEES.get();
+		return BeeModule.TRANSFORM_BEES.get();
 	}
 
 	@Override

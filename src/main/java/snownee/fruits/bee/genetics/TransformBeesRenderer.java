@@ -1,4 +1,4 @@
-package snownee.fruits.ritual;
+package snownee.fruits.bee.genetics;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import snownee.fruits.bee.genetics.Trait;
 import snownee.lychee.client.core.post.ItemBasedPostActionRenderer;
 
 public class TransformBeesRenderer implements ItemBasedPostActionRenderer<TransformBees> {

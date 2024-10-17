@@ -59,6 +59,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.EditGeneNameScreen;
+import snownee.fruits.bee.genetics.TransformBeesRenderer;
 import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.GhostParticle;
@@ -67,8 +68,6 @@ import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
-import snownee.fruits.ritual.RitualModule;
-import snownee.fruits.ritual.TransformBeesRenderer;
 import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
 import snownee.fruits.vacuum.client.AirVortexParticle;
@@ -291,7 +290,7 @@ public class ClientProxy implements ClientModInitializer {
 		}
 
 		if (Hooks.ritual) {
-			PostActionRenderer.register(RitualModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
+			PostActionRenderer.register(BeeModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
 		}
 	}
 }
