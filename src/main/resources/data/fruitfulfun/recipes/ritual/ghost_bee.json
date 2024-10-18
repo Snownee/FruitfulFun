@@ -1,6 +1,7 @@
 {
   "type": "fruitfulfun:dragon_ritual",
   "item_in": {
+    "require_bees": true,
     "type": "fruitfulfun:beehive"
   },
   "post": [
@@ -12,6 +13,38 @@
       "traits": [
         "ghost"
       ]
+    },
+    {
+      "type": "execute",
+      "command": "particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 12",
+      "hide": true
+    },
+    {
+      "type": "delay",
+      "s": 0.5
+    },
+    {
+      "type": "execute",
+      "command": "particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 8",
+      "hide": true
+    },
+    {
+      "type": "delay",
+      "s": 0.5
+    },
+    {
+      "type": "execute",
+      "command": "particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 4",
+      "hide": true
+    },
+    {
+      "type": "delay",
+      "s": 0.5
+    },
+    {
+      "type": "execute",
+      "command": "particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 4",
+      "hide": true
     }
   ],
   "conditions": [

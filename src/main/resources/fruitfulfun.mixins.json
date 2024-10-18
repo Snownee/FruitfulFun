@@ -41,6 +41,7 @@
 		"food.PandaMixin",
 		"food.SkullBlockEntityMixin",
 		"forge.AxeItemMixin",
+		"forge.CraftingHelperAccess",
 		"forge.FakePlayerNetHandlerMixin",
 		"forge.FoliagePlacerAccess",
 		"gene_data.BeeMixin",
