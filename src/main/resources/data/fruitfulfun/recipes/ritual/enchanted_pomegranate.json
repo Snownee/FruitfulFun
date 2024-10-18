@@ -13,6 +13,11 @@
 		{
 			"type": "drop_item",
 			"item": "fruitfulfun:enchanted_pomegranate"
+		},
+		{
+			"type": "execute",
+			"command": "particle minecraft:enchanted_hit ~ ~ ~ 0.25 0.25 0.25 0 10",
+			"hide": true
 		}
 	],
 	"max_repeats": 1

@@ -42,15 +42,17 @@ public class ItemProjectileColors {
 	}
 
 	public static ItemProjectileColor get(ItemStack itemStack) {
-		if (!COLORS.containsKey(itemStack.getItem())) {
-			guessColor(itemStack.getItem());
+		ItemProjectileColor color = COLORS.get(itemStack.getItem());
+		if (color == null) {
+			guessColor(itemStack);
 		}
-		return COLORS.get(itemStack.getItem());
+		return color;
 	}
 
-	private static void guessColor(Item item) {
-		ItemProjectileColor color = ClientProxy.getItemProjectileColor(item);
-		if (color != null) {
+	private static void guessColor(ItemStack itemStack) {
+		Item item = itemStack.getItem();
+		ItemProjectileColor color = ClientProxy.getItemProjectileColor(itemStack);
+		if (color != null && !itemStack.hasTag()) {
 			register(item, color);
 			return;
 		}
