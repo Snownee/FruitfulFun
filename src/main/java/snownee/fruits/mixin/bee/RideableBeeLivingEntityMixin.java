@@ -1,7 +1,6 @@
 package snownee.fruits.mixin.bee;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -42,7 +41,7 @@ public class RideableBeeLivingEntityMixin {
 	private void tickRidden(Player player, Vec3 vec3, CallbackInfo ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
 		if (Hooks.bee && entity instanceof Bee) {
-			Vec2 vec2 = this.getRiddenRotation(player);
+			Vec2 vec2 = new Vec2(player.getXRot(), player.getYRot());
 			entity.setYRot(vec2.y % 360.0f);
 			entity.setXRot(vec2.x % 360.0f);
 			entity.yBodyRot = entity.yHeadRot = entity.getYRot();
@@ -56,10 +55,5 @@ public class RideableBeeLivingEntityMixin {
 		if ((Object) this instanceof Bee bee) {
 			BeeAttributes.of(bee).dropSaddle(bee);
 		}
-	}
-
-	@Unique
-	private Vec2 getRiddenRotation(LivingEntity livingEntity) {
-		return new Vec2(livingEntity.getXRot() * 0.5f, livingEntity.getYRot());
 	}
 }
