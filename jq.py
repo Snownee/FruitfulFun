@@ -14,7 +14,7 @@ def process_json_file(input_file, output_file, jq_file):
             stdout=subprocess.PIPE,
             encoding="utf-8",
         )
-        with open(output_file, "w") as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Error processing {input_file}: {e}")

@@ -14,6 +14,15 @@
 		"fabric:type": "fruitfulfun:beehive",
 		"require_bees": true
 	},
+	"contextual": [
+		{
+			"type": "fruitfulfun:sky_darken",
+			"value": {
+				"min": 7
+			},
+			"description": "tip.fruitfulfun.onlyAtNight"
+		}
+	],
 	"post": [
 		{
 			"type": "prevent_default"

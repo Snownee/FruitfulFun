@@ -62,6 +62,7 @@ import snownee.lychee.mixin.LootContextParamSetsAccess;
 @KiwiModule("ritual")
 @KiwiModule.Optional
 public class RitualModule extends AbstractModule {
+	public static final KiwiGO<SkyDarken.Type> SKY_DARKEN = go(SkyDarken.Type::new);
 	@KiwiModule.Name("dragon_ritual")
 	public static final KiwiGO<LycheeRecipeType<DragonRitualContext, DragonRitualRecipe>> RECIPE_TYPE = go(() -> new LycheeRecipeType<>(
 			"fruitfulfun:dragon_ritual",
