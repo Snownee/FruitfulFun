@@ -45,16 +45,16 @@ public class CHauntingActionPacket extends PacketHandler {
 			}
 			boolean success = false;
 			if (manager.hasTrait(Trait.FASTER)) {
-				target.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20));
-				target.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 1));
+				buffTargetAndVehicle(target, new MobEffectInstance(MobEffects.SLOW_FALLING, 20));
+				buffTargetAndVehicle(target, new MobEffectInstance(MobEffects.SLOW_FALLING, 40, 1));
 				success = true;
 			} else if (manager.hasTrait(Trait.FAST)) {
-				target.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20));
+				buffTargetAndVehicle(target, new MobEffectInstance(MobEffects.SLOW_FALLING, 20));
 				success = true;
 			}
 			if (manager.hasTrait(Trait.LAZY)) {
 				MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10, 3);
-				target.addEffect(effectInstance);
+				buffTargetAndVehicle(target, effectInstance);
 				player.addEffect(new MobEffectInstance(effectInstance));
 				success = true;
 			}
@@ -120,5 +120,12 @@ public class CHauntingActionPacket extends PacketHandler {
 	public static boolean canDoAction(Player player) {
 		return FFCommonConfig.hauntingInitiativeSkill && BeeModule.isHauntingNormalEntity(player, null) &&
 				(FFCommonConfig.hauntingInitiativeSkillCooldownTicks <= 0 || !player.hasEffect(MobEffects.WEAKNESS));
+	}
+
+	public static void buffTargetAndVehicle(LivingEntity target, MobEffectInstance effect) {
+		target.addEffect(effect);
+		if (target.getRootVehicle() instanceof LivingEntity vehicle) {
+			vehicle.addEffect(new MobEffectInstance(effect));
+		}
 	}
 }
