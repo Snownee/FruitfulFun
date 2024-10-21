@@ -4,6 +4,8 @@ modmenu.nameTranslation.fruitfulfun: Fruitful Fun
 modmenu.descriptionTranslation.fruitfulfun: Introduces insightful content featuring fruits and beekeeping
 
 item.fruitfulfun.redlove: Redlove Fruit
+block.fruitfulfun.pomegranate.tip: §4⚠ Explosive!
+item.fruitfulfun.enchanted_pomegranate.tip: §4⚠ Explosive!
 
 item.fruitfulfun.inspector: Bee Inspector
 item.fruitfulfun.mutagen: Random Bee Mutagen
