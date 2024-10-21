@@ -8,7 +8,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -16,8 +15,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.pomegranate.PomegranateModule;
+import snownee.kiwi.item.ModBlockItem;
 
-public class PomegranateItem extends BlockItem {
+public class PomegranateItem extends ModBlockItem {
 
 	public PomegranateItem(Block block, Properties properties) {
 		super(block, properties);
