@@ -9,8 +9,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
@@ -140,5 +143,15 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		if (ticksWithoutNectarSinceExitingHive > 1800 && BeeAttributes.of(this).hasTrait(Trait.LAZY)) {
 			cir.setReturnValue(true);
 		}
+	}
+
+	@WrapOperation(method = "doHurtTarget", at = @At(value = "NEW", args = "class=net/minecraft/world/effect/MobEffectInstance"))
+	private MobEffectInstance doHurtTarget(MobEffect effect, int duration, int amplifier, Operation<MobEffectInstance> original) {
+		if (BeeAttributes.of(this).hasTrait(Trait.GHOST)) {
+			effect = BeeModule.FRAGILITY.get();
+			duration *= 2;
+			amplifier = 2;
+		}
+		return original.call(effect, duration, amplifier);
 	}
 }
