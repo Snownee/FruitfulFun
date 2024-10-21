@@ -107,6 +107,7 @@ tip.fruitfulfun.beehiveWaxing: You can then mine this block as if you're holding
 tip.fruitfulfun.beehiveTradeInputName: Beehive with Bees
 tip.fruitfulfun.beehiveTradeInputHint: Bee traits can affect the purchase price. 3 bees with the same traits can increase the price significantly.
 tip.fruitfulfun.bees: 'Bees: %s'
+tip.fruitfulfun.onlyAtNight: Only works at night.
 text.fruitfulfun.time: '%s/%s %s:%s:%s'
 text.fruitfulfun.trait: Traits
 text.fruitfulfun.trait.none: This bee doesn't have any traits.

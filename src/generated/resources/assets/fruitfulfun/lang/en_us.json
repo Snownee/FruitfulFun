@@ -312,6 +312,7 @@
   "tip.fruitfulfun.bees": "Bees: %s",
   "tip.fruitfulfun.bookIsFull": "This book has no enough pages...",
   "tip.fruitfulfun.clearHarmfulEffects": "Clears Harmful Effects",
+  "tip.fruitfulfun.duringNight": "Only works during night.",
   "tip.fruitfulfun.invalidMutagen": "This mutagen is not usable for some reason.",
   "tip.fruitfulfun.leavesUsInPeace": "Fruitful Fun detected that you have Leaves Us In Peace installed, which will cause the new leaves to disappear immediately after the bees have finished pollinating them. For a better experience, it is recommended to set the \"Unknown leaves only match self\" option in the Leaves Us In Peace's configuration to \"No\". This message will be displayed only once.",
   "tip.fruitfulfun.noGeneNames": "You haven't found any gene yet.",
