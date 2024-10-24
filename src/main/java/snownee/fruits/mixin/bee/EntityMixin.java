@@ -43,7 +43,7 @@ public abstract class EntityMixin {
 		Entity entity = (Entity) (Object) this;
 		if (entity instanceof Bee && BeeAttributes.of(entity).hasTrait(Trait.WITHER_TOLERANT)) {
 			ci.setReturnValue(true);
-		} else if (entity instanceof FFLivingEntity living && living.fruit$hasHauntedTrait(Trait.WITHER_TOLERANT)) {
+		} else if (entity instanceof FFLivingEntity living && living.fruits$hasHauntedTrait(Trait.WITHER_TOLERANT)) {
 			ci.setReturnValue(true);
 		}
 	}

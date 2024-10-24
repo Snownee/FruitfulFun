@@ -42,6 +42,8 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	@Unique
 	@Nullable
 	private UUID hauntedBy;
+	@Unique
+	private int pinkGlowing;
 
 	public LivingEntityMixin(EntityType<?> entityType, Level level) {
 		super(entityType, level);
@@ -58,6 +60,9 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	private void aiStep(CallbackInfo ci) {
 		if (!Hooks.bee) {
 			return;
+		}
+		if (pinkGlowing > 0) {
+			pinkGlowing--;
 		}
 		fruits$getHauntedBy(); // remove invalid spectatedBy
 		if (this instanceof FFPlayer player && player.fruits$isHaunting()) {
@@ -102,13 +107,23 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	}
 
 	@Override
-	public boolean fruit$hasHauntedTrait(Trait trait) {
+	public boolean fruits$hasHauntedTrait(Trait trait) {
 		Player player = fruits$getHauntedBy();
 		if (player == null) {
 			return false;
 		}
 		HauntingManager manager = FFPlayer.of(player).fruits$hauntingManager();
 		return manager != null && manager.hasTrait(trait);
+	}
+
+	@Override
+	public void fruits$setPinkGlowing() {
+		pinkGlowing = 20;
+	}
+
+	@Override
+	public boolean fruits$isPinkGlowing() {
+		return pinkGlowing > 0;
 	}
 
 	@Inject(
@@ -151,6 +166,13 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 					hauntingManager.onRavagerKill(player);
 				}
 			}
+		}
+	}
+
+	@Inject(method = "isCurrentlyGlowing", at = @At("HEAD"), cancellable = true)
+	private void isCurrentlyGlowing(CallbackInfoReturnable<Boolean> cir) {
+		if (Hooks.bee && fruits$isPinkGlowing()) {
+			cir.setReturnValue(true);
 		}
 	}
 }

@@ -1,158 +1,165 @@
 {
-	"KiwiConfig": [
-		{
-			"target": "snownee.fruits.FFClientConfig",
-			"data": {
-				"type": "CLIENT"
-			}
-		},
-		{
-			"target": "snownee.fruits.FFCommonConfig"
-		}
-	],
-	"KiwiModule": [
-		{
-			"target": "snownee.fruits.bee.BeeModule",
-			"data": {
-				"value": "bee"
-			}
-		},
-		{
-			"target": "snownee.fruits.cherry.CherryFruitTypes",
-			"data": {
-				"value": "cherry_fruits"
-			}
-		},
-		{
-			"target": "snownee.fruits.cherry.CherryModule",
-			"data": {
-				"value": "cherry"
-			}
-		},
-		{
-			"target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule",
-			"data": {
-				"value": "farmersdelight",
-				"dependencies": "farmersdelight"
-			}
-		},
-		{
-			"target": "snownee.fruits.CoreFruitTypes",
-			"data": {
-				"value": "core_fruits"
-			}
-		},
-		{
-			"target": "snownee.fruits.CoreModule"
-		},
-		{
-			"target": "snownee.fruits.food.FoodModule",
-			"data": {
-				"value": "food"
-			}
-		},
-		{
-			"target": "snownee.fruits.pomegranate.PomegranateFruitTypes",
-			"data": {
-				"value": "pomegranate_fruits"
-			}
-		},
-		{
-			"target": "snownee.fruits.pomegranate.PomegranateModule",
-			"data": {
-				"value": "pomegranate"
-			}
-		},
-		{
-			"target": "snownee.fruits.ritual.RitualModule",
-			"data": {
-				"value": "ritual"
-			}
-		},
-		{
-			"target": "snownee.fruits.vacuum.VacModule",
-			"data": {
-				"value": "vacuum"
-			}
-		}
-	],
-	"KiwiPacket": [
-		{
-			"target": "snownee.fruits.bee.network.CHauntingActionPacket",
-			"data": {
-				"value": "haunting_action"
-			}
-		},
-		{
-			"target": "snownee.fruits.bee.network.CInspectBeePacket",
-			"data": {
-				"dir": "PLAY_TO_SERVER",
-				"value": "inspect_bee"
-			}
-		},
-		{
-			"target": "snownee.fruits.bee.network.CSetGeneNamePacket",
-			"data": {
-				"value": "set_gene_name"
-			}
-		},
-		{
-			"target": "snownee.fruits.bee.network.SHauntingParticles",
-			"data": {
-				"dir": "PLAY_TO_CLIENT",
-				"value": "haunting_particles"
-			}
-		},
-		{
-			"target": "snownee.fruits.bee.network.SHauntPacket",
-			"data": {
-				"dir": "PLAY_TO_CLIENT",
-				"value": "haunt"
-			}
-		},
-		{
-			"target": "snownee.fruits.bee.network.SInspectBeeReplyPacket",
-			"data": {
-				"dir": "PLAY_TO_CLIENT",
-				"value": "inspect_bee_reply"
-			}
-		},
-		{
-			"target": "snownee.fruits.bee.network.SSyncBeePacket",
-			"data": {
-				"dir": "PLAY_TO_CLIENT",
-				"value": "sync_bee"
-			}
-		},
-		{
-			"target": "snownee.fruits.bee.network.SSyncPlayerPacket",
-			"data": {
-				"dir": "PLAY_TO_CLIENT",
-				"value": "sync_player"
-			}
-		},
-		{
-			"target": "snownee.fruits.vacuum.network.CGunShotPacket",
-			"data": {
-				"value": "gun_shot"
-			}
-		}
-	],
-	"Optional": [
-		{
-			"target": "snownee.fruits.bee.BeeModule"
-		},
-		{
-			"target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule"
-		},
-		{
-			"target": "snownee.fruits.food.FoodModule"
-		},
-		{
-			"target": "snownee.fruits.ritual.RitualModule"
-		},
-		{
-			"target": "snownee.fruits.vacuum.VacModule"
-		}
-	]
+  "KiwiConfig": [
+    {
+      "target": "snownee.fruits.FFClientConfig",
+      "data": {
+        "type": "CLIENT"
+      }
+    },
+    {
+      "target": "snownee.fruits.FFCommonConfig"
+    }
+  ],
+  "KiwiModule": [
+    {
+      "target": "snownee.fruits.bee.BeeModule",
+      "data": {
+        "value": "bee"
+      }
+    },
+    {
+      "target": "snownee.fruits.cherry.CherryFruitTypes",
+      "data": {
+        "value": "cherry_fruits"
+      }
+    },
+    {
+      "target": "snownee.fruits.cherry.CherryModule",
+      "data": {
+        "value": "cherry"
+      }
+    },
+    {
+      "target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule",
+      "data": {
+        "value": "farmersdelight",
+        "dependencies": "farmersdelight"
+      }
+    },
+    {
+      "target": "snownee.fruits.CoreFruitTypes",
+      "data": {
+        "value": "core_fruits"
+      }
+    },
+    {
+      "target": "snownee.fruits.CoreModule"
+    },
+    {
+      "target": "snownee.fruits.food.FoodModule",
+      "data": {
+        "value": "food"
+      }
+    },
+    {
+      "target": "snownee.fruits.pomegranate.PomegranateFruitTypes",
+      "data": {
+        "value": "pomegranate_fruits"
+      }
+    },
+    {
+      "target": "snownee.fruits.pomegranate.PomegranateModule",
+      "data": {
+        "value": "pomegranate"
+      }
+    },
+    {
+      "target": "snownee.fruits.ritual.RitualModule",
+      "data": {
+        "value": "ritual"
+      }
+    },
+    {
+      "target": "snownee.fruits.vacuum.VacModule",
+      "data": {
+        "value": "vacuum"
+      }
+    }
+  ],
+  "KiwiPacket": [
+    {
+      "target": "snownee.fruits.bee.network.CHauntingActionPacket",
+      "data": {
+        "value": "haunting_action"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.CInspectBeePacket",
+      "data": {
+        "dir": "PLAY_TO_SERVER",
+        "value": "inspect_bee"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.CSetGeneNamePacket",
+      "data": {
+        "value": "set_gene_name"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.SHauntingParticlesPacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "haunting_particles"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.SHauntPacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "haunt"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.SInspectBeeReplyPacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "inspect_bee_reply"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.SSetPinkGlowPacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "set_pink_glow"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.SSyncBeePacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "sync_bee"
+      }
+    },
+    {
+      "target": "snownee.fruits.bee.network.SSyncPlayerPacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "sync_player"
+      }
+    },
+    {
+      "target": "snownee.fruits.vacuum.network.CGunShotPacket",
+      "data": {
+        "value": "gun_shot"
+      }
+    }
+  ],
+  "Optional": [
+    {
+      "target": "snownee.fruits.bee.BeeModule"
+    },
+    {
+      "target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule"
+    },
+    {
+      "target": "snownee.fruits.food.FoodModule"
+    },
+    {
+      "target": "snownee.fruits.ritual.RitualModule"
+    },
+    {
+      "target": "snownee.fruits.vacuum.VacModule"
+    }
+  ]
 }

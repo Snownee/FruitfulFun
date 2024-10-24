@@ -13,5 +13,9 @@ public interface FFLivingEntity {
 
 	void fruits$setHauntedBy(@Nullable UUID uuid);
 
-	boolean fruit$hasHauntedTrait(Trait trait);
+	boolean fruits$hasHauntedTrait(Trait trait);
+
+	boolean fruits$isPinkGlowing();
+
+	void fruits$setPinkGlowing();
 }

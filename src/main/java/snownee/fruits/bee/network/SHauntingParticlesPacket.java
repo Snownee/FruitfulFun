@@ -13,7 +13,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
-import snownee.fruits.FFClientConfig;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeModule;
 import snownee.kiwi.network.KPacketTarget;
@@ -21,8 +20,8 @@ import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PacketHandler;
 
 @KiwiPacket(value = "haunting_particles", dir = KiwiPacket.Direction.PLAY_TO_CLIENT)
-public class SHauntingParticles extends PacketHandler {
-	public static SHauntingParticles I;
+public class SHauntingParticlesPacket extends PacketHandler {
+	public static SHauntingParticlesPacket I;
 
 	@Override
 	public CompletableFuture<FriendlyByteBuf> receive(

@@ -31,7 +31,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.GhostFakePlayer;
-import snownee.fruits.bee.network.SHauntingParticles;
+import snownee.fruits.bee.network.SHauntingParticlesPacket;
 import snownee.fruits.duck.FFPlayer;
 
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -167,7 +167,7 @@ public class ServerGamePacketListenerImplMixin {
 					Hooks.awardSimpleAdvancement(owner, "haunting_interaction");
 				}
 			}
-			SHauntingParticles.send(player.serverLevel(), hitResult.getLocation());
+			SHauntingParticlesPacket.send(player.serverLevel(), hitResult.getLocation());
 		}
 		return result;
 	}

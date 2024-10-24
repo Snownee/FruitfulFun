@@ -58,7 +58,7 @@ public abstract class LivingEntityMixin extends Entity {
 	@Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setHealth(F)V"))
 	private void addPoisonEffect(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
 		if (Hooks.bee && !damageSource.isIndirect() && damageSource.getEntity() instanceof FFLivingEntity living &&
-				!(damageSource.getEntity() instanceof Creeper) && living.fruit$hasHauntedTrait(Trait.WARRIOR)) {
+				!(damageSource.getEntity() instanceof Creeper) && living.fruits$hasHauntedTrait(Trait.WARRIOR)) {
 			addEffect(new MobEffectInstance(MobEffects.POISON, 200), damageSource.getEntity());
 		}
 	}
