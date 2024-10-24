@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -22,7 +24,9 @@ import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
@@ -46,10 +50,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFCommonConfig.DropMode;
 import snownee.fruits.FruitType;
+import snownee.fruits.Hooks;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.KiwiModule;
@@ -112,7 +118,16 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			BlockState state,
 			@Nullable FruitTreeBlockEntity core,
 			int consumeLifespan) {
-		return createItemEntity(level, pos, type.get().fruit.get().getDefaultInstance());
+		FruitType fruitType = type.get();
+		Item item = Items.AIR;
+		if (Hooks.hauntedHarvest && FFCommonConfig.rottenAppleChance > 0 && CoreFruitTypes.APPLE.is(fruitType) &&
+				level.getRandom().nextFloat() < FFCommonConfig.rottenAppleChance) {
+			item = BuiltInRegistries.ITEM.get(new ResourceLocation("hauntedharvest", "rotten_apple"));
+		}
+		if (item == Items.AIR) {
+			item = fruitType.fruit.get();
+		}
+		return createItemEntity(level, pos, item.getDefaultInstance());
 	}
 
 	public static ItemEntity createItemEntity(ServerLevel level, BlockPos pos, ItemStack stack) {
