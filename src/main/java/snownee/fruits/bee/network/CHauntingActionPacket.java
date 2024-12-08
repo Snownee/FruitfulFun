@@ -8,6 +8,8 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -87,20 +89,21 @@ public class CHauntingActionPacket extends PacketHandler {
 					}
 				}
 				if (closest != null) {
-					boolean _success = false;
+					IntList affectedEntities = new IntArrayList(2);
 					if (target instanceof Mob mob) {
 						mob.setAggressive(true);
 						mob.setTarget(closest);
-						_success = true;
+						affectedEntities.add(mob.getId());
 					}
 					if (closest instanceof Mob mob) {
 						mob.setAggressive(true);
 						mob.setTarget(target);
-						_success = true;
+						affectedEntities.add(mob.getId());
 					}
-					if (_success) {
+					if (!affectedEntities.isEmpty()) {
 						success = true;
 						manager.performPinkSkill();
+						SSetPinkGlowPacket.send(player, affectedEntities);
 					}
 				}
 			}

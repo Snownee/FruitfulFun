@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.duck.FFLivingEntity;
 import snownee.fruits.duck.FFPlayer;
 
 @Mixin(Entity.class)
@@ -33,6 +34,13 @@ public class EntityMixin {
 	private void isInvisible(CallbackInfoReturnable<Boolean> cir) {
 		if (Hooks.bee && this instanceof FFPlayer player && player.fruits$isHaunting()) {
 			cir.setReturnValue(true);
+		}
+	}
+
+	@Inject(method = "getTeamColor", at = @At("HEAD"), cancellable = true)
+	private void getTeamColor(CallbackInfoReturnable<Integer> cir) {
+		if (Hooks.bee && this instanceof FFLivingEntity entity && entity.fruits$isPinkGlowing()) {
+			cir.setReturnValue(0xEC95A9);
 		}
 	}
 }
