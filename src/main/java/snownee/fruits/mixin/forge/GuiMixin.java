@@ -24,7 +24,8 @@ public class GuiMixin {
 			method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;I)V",
 			at = @At("HEAD"),
 			cancellable = true,
-			remap = false)
+			remap = false,
+			require = 0)
 	private void renderSelectedItemName(GuiGraphics guiGraphics, int yShift, CallbackInfo ci) {
 		if (Hooks.bee && minecraft.player instanceof FFPlayer player && player.fruits$isHaunting()) {
 			ci.cancel();
