@@ -86,6 +86,12 @@ public final class FFCommonConfig {
 	@KiwiConfig.Path("haunting.interactionParticles")
 	public static boolean hauntingInteractionParticles = true;
 
+	// vanilla apple drop: 0.005
+	// rotten apple drop:  0.0008
+	// poisonous potato drop: 0.02
+	@KiwiConfig.Path("integration.hauntedHarvestRottenAppleChance")
+	public static float rottenAppleChance = 0.03f;
+
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();
 		return (server != null && server.isDedicatedServer()) ? fruitDropModeMultiplayer : fruitDropModeSingleplayer;

@@ -79,6 +79,7 @@ public final class Hooks {
 	public static boolean curios = Platform.isModLoaded("curios"); //TODO move to CommonProxy
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
 	public static boolean jade = Platform.isModLoaded("jade");
+	public static boolean hauntedHarvest = Platform.isModLoaded("hauntedharvest");
 
 	private Hooks() {
 	}
