@@ -276,8 +276,10 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 				return false;
 			}
 			AABB box = e.getBoundingBox();
-			if (box.getXsize() > 0.5 || box.getYsize() > 0.9 || box.getZsize() > 0.5) {
-				return false;
+			if (!e.getType().is(VacModule.VCD_MOVABLE)) {
+				if (box.getXsize() > 0.5 || box.getYsize() > 0.9 || box.getZsize() > 0.5) {
+					return false;
+				}
 			}
 			Vec3 center = box.getCenter();
 			return center.subtract(start).dot(lookAngle) > 0.866;
@@ -302,19 +304,16 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 				entity.hasImpulse = true;
 				continue;
 			}
-			if (lengthSqr < 4) {
-				Vec3 power = dist.normalize().scale(Math.max(0.2, lengthSqr / 16));
-				entity.setDeltaMovement(power);
-				entity.resetFallDistance();
-			} else {
-				Vec3 power = dist.normalize().scale(0.2);
-				power = power.scale(Math.max(0.1, 1 - lengthSqr / 64));
-				Vec3 deltaMovement = entity.getDeltaMovement().add(power);
-				if (deltaMovement.lengthSqr() > 0.5) {
-					deltaMovement = deltaMovement.normalize().scale(0.5);
-				}
-				entity.setDeltaMovement(deltaMovement);
+			Vec3 deltaMovement = entity.getDeltaMovement();
+			if (deltaMovement.y > LivingEntity.DEFAULT_BASE_GRAVITY) {
+				deltaMovement = deltaMovement.multiply(0.9, 0.9, 0.9);
 			}
+			Vec3 power = dist.normalize();
+			entity.setDeltaMovement(power);
+			entity.resetFallDistance();
+			entity.setDeltaMovement(deltaMovement);
+//			if (lengthSqr < 4) {
+//			}
 			entity.hasImpulse = true;
 			if (entity instanceof Mob mob) {
 				mob.getNavigation().stop();

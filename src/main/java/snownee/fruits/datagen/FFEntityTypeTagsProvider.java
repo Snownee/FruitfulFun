@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.vacuum.VacModule;
 
 public class FFEntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagProvider {
 	public FFEntityTypeTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
@@ -21,6 +22,7 @@ public class FFEntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagPro
 				.add(EntityType.ARMOR_STAND)
 				.addOptional(new ResourceLocation("supplementaries:hat_stand"))
 				.addOptional(new ResourceLocation("dummmmmmy:target_dummy"));
+		getOrCreateTagBuilder(VacModule.VCD_MOVABLE);
 		getOrCreateTagBuilder(EntityTypeTags.DISMOUNTS_UNDERWATER).add(EntityType.BEE);
 	}
 }

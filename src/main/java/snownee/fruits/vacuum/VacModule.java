@@ -32,6 +32,7 @@ public class VacModule extends AbstractModule {
 			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("item.gun.stop")));
 	public static final TagKey<Block> VCD_PERFORM_USING = blockTag(FruitfulFun.ID, "vcd_perform_using");
 	public static final TagKey<Block> VCD_PERFORM_BREAKING = blockTag(FruitfulFun.ID, "vcd_perform_breaking");
+	public static final TagKey<EntityType<?>> VCD_MOVABLE = entityTag(FruitfulFun.ID, "vcd_movable");
 	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = go(() -> KiwiEntityTypeBuilder.<VacItemProjectile>create()
 			.dimensions(EntityDimensions.scalable(0.25f, 0.25f))
 			.trackRangeChunks(4)
