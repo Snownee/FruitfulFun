@@ -1,6 +1,6 @@
 {
 	"parent": "block/fence_post",
 	"textures": {
-		"texture": "fruitfulfun:block/planks"
+		"texture": "fruitfulfun:block/citrus_planks"
 	}
 }
