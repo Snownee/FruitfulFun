@@ -1,8 +1,8 @@
 {
 	"parent": "block/stairs",
 	"textures": {
-		"bottom": "fruitfulfun:block/planks",
-		"top": "fruitfulfun:block/planks",
-		"side": "fruitfulfun:block/planks"
+		"bottom": "fruitfulfun:block/citrus_planks",
+		"top": "fruitfulfun:block/citrus_planks",
+		"side": "fruitfulfun:block/citrus_planks"
 	}
 }
