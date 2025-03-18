@@ -131,7 +131,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 		if (waxedTicks > 0) {
 			return true;
 		}
-		if (Objects.requireNonNull(level).isClientSide) {
+		if (level != null && level.isClientSide) {
 			return !fruits$findWaxedMarkers().isEmpty();
 		}
 		return false;
