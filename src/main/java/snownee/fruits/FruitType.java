@@ -23,6 +23,7 @@ public abstract class FruitType {
 	public final Supplier<? extends Block> sapling;
 	public final Supplier<Item> fruit;
 	public Holder<PoiType> poiType;
+	public boolean allogamous;
 
 	public FruitType(
 			int tier,
@@ -44,6 +45,11 @@ public abstract class FruitType {
 		} else {
 			return block.asItem();
 		}
+	}
+
+	public FruitType allogamous() {
+		allogamous = true;
+		return this;
 	}
 
 	public abstract void receiveKey(ResourceLocation id);

@@ -43,6 +43,8 @@ import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.FFRegistries;
+import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.GeneData;
@@ -102,16 +104,18 @@ public class BeeModule extends AbstractModule {
 	public static Set<VillagerProfession> BEEKEEPER_PROFESSIONS;
 	public static final TagKey<EntityType<?>> CANNOT_HAUNT = entityTag(FruitfulFun.ID, "cannot_haunt");
 	public static final TagKey<Biome> UNLIMITED_BEE_RIDING = tag(Registries.BIOME, FruitfulFun.ID, "unlimited_bee_riding");
+	private static Set<Item> ALLOGAMOUS_ITEMS = Set.of();
 
 	public BeeModule() {
 		Hooks.bee = true;
-		LootContextParamSetsAccess.callRegister("fruitfulfun:hybridizing", $ -> {
-			$.required(LootContextParams.ORIGIN)
-					.required(LootContextParams.THIS_ENTITY)
-					.required(LootContextParams.BLOCK_STATE)
-					.required(LycheeLootContextParams.BLOCK_POS)
-					.optional(LootContextParams.BLOCK_ENTITY);
-		});
+		LootContextParamSetsAccess.callRegister(
+				"fruitfulfun:hybridizing", $ -> {
+					$.required(LootContextParams.ORIGIN)
+							.required(LootContextParams.THIS_ENTITY)
+							.required(LootContextParams.BLOCK_STATE)
+							.required(LycheeLootContextParams.BLOCK_POS)
+							.optional(LootContextParams.BLOCK_ENTITY);
+				});
 	}
 
 	public static boolean isWaxedMarker(Display display) {
@@ -205,6 +209,10 @@ public class BeeModule extends AbstractModule {
 		entity.level().addParticle(GHOST.get(), x, y, z, 0, 0, 0);
 	}
 
+	public static boolean isAllogamous(ItemStack stack) {
+		return ALLOGAMOUS_ITEMS.contains(stack.getItem());
+	}
+
 	@Override
 	protected void preInit() {
 		CommonProxy.initBeeModule();
@@ -215,6 +223,15 @@ public class BeeModule extends AbstractModule {
 		event.enqueueWork(() -> {
 			RecipeTypes.ALL.add(RECIPE_TYPE.get());
 			PotionBrewing.ALLOWED_CONTAINERS.add(Ingredient.of(BeeModule.MUTAGEN.get()));
+
+			ImmutableSet.Builder<Item> allogamousItems = ImmutableSet.builder();
+			for (FruitType fruitType : FFRegistries.FRUIT_TYPE) {
+				if (fruitType.allogamous) {
+					allogamousItems.add(fruitType.leaves.get().asItem());
+					allogamousItems.add(fruitType.sapling.get().asItem());
+				}
+			}
+			ALLOGAMOUS_ITEMS = allogamousItems.build();
 		});
 	}
 

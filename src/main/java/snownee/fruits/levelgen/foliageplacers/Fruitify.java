@@ -99,10 +99,10 @@ public class Fruitify extends FoliagePlacer {
 			if (blockState.hasProperty(FruitLeavesBlock.AGE)) {
 				int i = random.nextInt(4);
 				if (i < (worldgen ? 3 : 2)) {
-					blockState = blockState.setValue(FruitLeavesBlock.AGE, 0);
+					blockState = blockState.setValue(FruitLeavesBlock.AGE, FruitLeavesBlock.DEAD);
 					active = false;
-				} else if (worldgen && i < 4) {
-					blockState = blockState.setValue(FruitLeavesBlock.AGE, 2);
+				} else if (worldgen) {
+					blockState = blockState.setValue(FruitLeavesBlock.AGE, FruitLeavesBlock.BLOOMING);
 				}
 			}
 			if (active) {

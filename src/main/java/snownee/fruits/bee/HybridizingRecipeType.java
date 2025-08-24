@@ -16,6 +16,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
@@ -56,7 +57,6 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 	public void buildCache() {
 		super.buildCache();
 		this.recipesByBlock.clear();
-		this.anyBlockRecipes.clear();
 		Stream<HybridizingRecipe> stream = CommonProxy.recipes(this).stream().filter($ -> !$.ghost);
 		if (clazz.isAssignableFrom(Comparable.class)) {
 			stream = stream.sorted();
@@ -126,7 +126,14 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 			if (isBigFlowerUpper) {
 				level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos.above(), 0);
 			}
-			pollens.clear();
+			if (result.getSecond().resetPollens) {
+				pollens.clear();
+			}
+			return;
+		}
+		if (block instanceof FruitLeavesBlock leaves && leaves.canGrow(state) &&
+				state.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING && level instanceof ServerLevel serverLevel) {
+			leaves.performBonemeal(serverLevel, bee.getRandom(), flowerPos, state);
 		}
 	}
 

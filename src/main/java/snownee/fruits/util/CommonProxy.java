@@ -326,6 +326,7 @@ public class CommonProxy implements ModInitializer {
 		}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
 	}
 
+	@Nullable
 	public static FlowerCrownItem getFlowerCrown(LivingEntity entity) {
 		ItemStack stack = entity.getItemBySlot(EquipmentSlot.HEAD);
 		if (stack.getItem() instanceof FlowerCrownItem item) {

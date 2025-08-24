@@ -64,6 +64,10 @@ import snownee.kiwi.KiwiModule;
 public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, EntityBlock {
 
 	public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
+	public static final int DEAD = 0;
+	public static final int YOUNG = 1;
+	public static final int BLOOMING = 2;
+	public static final int FRUITING = 3;
 
 	public final Supplier<FruitType> type;
 
@@ -75,7 +79,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				.isRedstoneConductor(Blocks::never));
 		this.type = type;
 		registerDefaultState(
-				stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1).setValue(WATERLOGGED, false));
+				stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, YOUNG).setValue(WATERLOGGED, false));
 	}
 
 	@Nullable
@@ -85,7 +89,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			BlockState state,
 			@Nullable FruitTreeBlockEntity core,
 			int consumeLifespan) {
-		if (state.getValue(AGE) != 3) {
+		if (state.getValue(AGE) != FRUITING) {
 			return null;
 		}
 		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
@@ -99,7 +103,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				core.removeActiveLeaves(pos);
 			}
 		}
-		state = state.setValue(AGE, die ? 0 : 1);
+		state = state.setValue(AGE, die ? DEAD : YOUNG);
 		if (die && state.hasBlockEntity()) {
 			state = state.setValue(PERSISTENT, false);
 		}
@@ -147,10 +151,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-		if (state.getValue(AGE) == 1) {
+		if (state.getValue(AGE) == YOUNG) {
 			return true;
 		}
-		return canGrow(state) && state.getValue(AGE) < 3;
+		if (state.getValue(AGE) == BLOOMING && type.get().allogamous) {
+			return false;
+		}
+		return canGrow(state) && state.getValue(AGE) < FRUITING;
 	}
 
 	@Override
@@ -196,7 +203,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	public boolean hasFruit(BlockState state, Level level, BlockPos pos) {
-		return state.getValue(AGE) == 3;
+		return state.getValue(AGE) == FRUITING;
 	}
 
 	@Override
@@ -210,11 +217,14 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public boolean isRandomlyTicking(BlockState state) {
+		if (state.getValue(AGE) == BLOOMING && type.get().allogamous && !shouldDecay(state)) {
+			return false;
+		}
 		return notPlacedByPlayer(state);
 	}
 
 	public boolean notPlacedByPlayer(BlockState state) {
-		return shouldDecay(state) || canGrow(state) || state.getValue(AGE) == 0;
+		return shouldDecay(state) || canGrow(state) || state.getValue(AGE) == DEAD;
 	}
 
 	public boolean shouldDecay(BlockState state) {
@@ -222,7 +232,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	public boolean canGrow(BlockState state) {
-		return state.getValue(AGE) > 0 && (!state.getValue(PERSISTENT) || state.getValue(DISTANCE) == 1);
+		return state.getValue(AGE) != DEAD && (!state.getValue(PERSISTENT) || state.getValue(DISTANCE) == 1);
 	}
 
 	@Override
@@ -233,7 +243,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			LevelAccessor worldIn,
 			BlockPos currentPos,
 			BlockPos facingPos) {
-		if (canGrow(state) || state.getValue(AGE) == 0) {
+		if (canGrow(state) || state.getValue(AGE) == DEAD) {
 			return super.updateShape(state, facing, facingState, worldIn, currentPos, facingPos);
 		}
 		return state;
@@ -278,7 +288,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 			@Nullable Consumer<ItemEntity> consumer) {
 		for (BlockPos blockpos : posList) {
 			BlockState state = level.getBlockState(blockpos);
-			if (state.getBlock() instanceof FruitLeavesBlock leavesBlock && state.getValue(AGE) == 3) {
+			if (state.getBlock() instanceof FruitLeavesBlock leavesBlock && state.getValue(AGE) == FRUITING) {
 				ItemEntity itemEntity = dropFruit(
 						level, blockpos, state, core == null ? leavesBlock.findCore(level, blockpos) : core, consumeLifespan);
 				if (consumer != null && itemEntity != null) {
@@ -290,7 +300,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult ray) {
-		if (hasFruit(state, worldIn, pos) && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 1))) {
+		if (hasFruit(state, worldIn, pos) && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, YOUNG))) {
 			giveItemTo(playerIn, ray, type.get().fruit.get().getDefaultInstance());
 			return InteractionResult.sidedSuccess(worldIn.isClientSide);
 		}

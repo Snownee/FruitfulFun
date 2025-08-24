@@ -209,25 +209,27 @@ public class ClientProxy implements ClientModInitializer {
 		ParticleFactoryRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
 
 		BlockColor birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
-		ColorProviderRegistry.BLOCK.register((state, world, pos, i) -> {
-			if (i == 1) {
-				return 0xC22626;
-			}
-			if (i == 2) {
-				return birchBlockColor.getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
-			}
-			return -1;
-		}, REDLOVE_LEAVES.getOrCreate());
+		ColorProviderRegistry.BLOCK.register(
+				(state, world, pos, i) -> {
+					if (i == 1) {
+						return 0xC22626;
+					}
+					if (i == 2) {
+						return birchBlockColor.getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
+					}
+					return -1;
+				}, REDLOVE_LEAVES.getOrCreate());
 
-		ColorProviderRegistry.BLOCK.register((state, world, pos, i) -> {
-			if (i != 0) {
-				if (world == null || pos == null) {
-					return GrassColor.getDefaultColor();
-				}
-				return BiomeColors.getAverageGrassColor(world, pos);
-			}
-			return -1;
-		}, PEACH_PINK_PETALS.getOrCreate());
+		ColorProviderRegistry.BLOCK.register(
+				(state, world, pos, i) -> {
+					if (i != 0) {
+						if (world == null || pos == null) {
+							return GrassColor.getDefaultColor();
+						}
+						return BiomeColors.getAverageGrassColor(world, pos);
+					}
+					return -1;
+				}, PEACH_PINK_PETALS.getOrCreate());
 
 		ModelLoadingPlugin.register(ctx -> {
 			ctx.addModels(
@@ -236,13 +238,14 @@ public class ClientProxy implements ClientModInitializer {
 		});
 
 		if (Hooks.bee) {
-			ColorProviderRegistry.ITEM.register((stack, i) -> {
-				if (i == 0) {
-					CompoundTag tag = stack.getTag();
-					return tag != null && tag.contains("Color") ? tag.getInt("Color") : 0xF3DCEB;
-				}
-				return -1;
-			}, BeeModule.MUTAGEN.getOrCreate());
+			ColorProviderRegistry.ITEM.register(
+					(stack, i) -> {
+						if (i == 0) {
+							CompoundTag tag = stack.getTag();
+							return tag != null && tag.contains("Color") ? tag.getInt("Color") : 0xF3DCEB;
+						}
+						return -1;
+					}, BeeModule.MUTAGEN.getOrCreate());
 
 			ClientTickEvents.START_CLIENT_TICK.register(client -> {
 				if (client.player != null && client.player.isSpectator()) {
@@ -259,6 +262,9 @@ public class ClientProxy implements ClientModInitializer {
 					}
 					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
 					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
+				}
+				if (Hooks.bee && BeeModule.isAllogamous(stack)) {
+					lines.add(Component.translatable("tip.fruitfulfun.allogamy").withStyle(ChatFormatting.GRAY));
 				}
 			});
 

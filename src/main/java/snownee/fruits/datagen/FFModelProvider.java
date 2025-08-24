@@ -94,7 +94,7 @@ public class FFModelProvider extends FabricModelProvider {
 				.with(Variant.variant()
 						.with(VariantProperties.MODEL, model01)
 						.with(VariantProperties.UV_LOCK, true))
-				.with(Condition.condition().term(FruitLeavesBlock.AGE, 2), Variant.variant()
+				.with(Condition.condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.BLOOMING), Variant.variant()
 						.with(VariantProperties.MODEL, model2));
 		if (scale != FruitScale.NONE) {
 			List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, scale.model));
@@ -106,7 +106,7 @@ public class FFModelProvider extends FabricModelProvider {
 						.with(VariantProperties.MODEL, scale.model)
 						.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180));
 			}
-			generator.with(Condition.condition().term(FruitLeavesBlock.AGE, 3), variants);
+			generator.with(Condition.condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.FRUITING), variants);
 		}
 		generators.blockStateOutput.accept(generator);
 		ResourceLocation baseTexture = TextureMapping.getBlockTexture(CoreModule.APPLE_LEAVES.is(block) ? Blocks.OAK_LEAVES : block);

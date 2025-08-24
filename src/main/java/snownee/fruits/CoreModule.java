@@ -93,7 +93,8 @@ public final class CoreModule extends AbstractModule {
 			() -> new WallHangingSignBlock(blockProp(Blocks.OAK_WALL_HANGING_SIGN), CITRUS_WOOD_TYPE));
 	@Name("citrus_hanging_sign")
 	public static final KiwiGO<Item> CITRUS_HANGING_SIGN_ITEM = go(
-			() -> new HangingSignItem(CITRUS_HANGING_SIGN.get(), CITRUS_WALL_HANGING_SIGN.get(),
+			() -> new HangingSignItem(
+					CITRUS_HANGING_SIGN.get(), CITRUS_WALL_HANGING_SIGN.get(),
 					itemProp().stacksTo(Items.OAK_HANGING_SIGN.getMaxStackSize())));
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final KiwiGO<Item> TANGERINE = go(() -> new ModItem(itemProp().food(Foods.TANGERINE)));
@@ -218,7 +219,7 @@ public final class CoreModule extends AbstractModule {
 			.build()
 	);
 	/* on */
-	public static final TagKey<PoiType> POI_TYPE = AbstractModule.tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
+	public static final TagKey<PoiType> POI_TYPE = tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
 	public static final TagKey<Block> CANDLES = blockTag(FruitfulFun.ID, "candles");
 
 	@Override
@@ -235,9 +236,11 @@ public final class CoreModule extends AbstractModule {
 					Preconditions.checkArgument($.name.getPath().endsWith("_leaves"));
 					ResourceLocation id = $.name.withPath($.name.getPath().substring(0, $.name.getPath().length() - 7));
 					FruitLeavesBlock block = (FruitLeavesBlock) $.entry;
-					info.register(new PoiType(block.getStateDefinition().getPossibleStates().stream()
-									.filter(BlockBehaviour.BlockStateBase::hasBlockEntity)
-									.collect(Collectors.toSet()), 40, 10),
+					info.register(
+							new PoiType(
+									block.getStateDefinition().getPossibleStates().stream()
+											.filter(BlockBehaviour.BlockStateBase::hasBlockEntity)
+											.collect(Collectors.toSet()), 40, 10),
 							id, BuiltInRegistries.POINT_OF_INTEREST_TYPE, null);
 				});
 	}
