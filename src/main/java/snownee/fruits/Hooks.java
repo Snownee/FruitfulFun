@@ -249,14 +249,14 @@ public final class Hooks {
 		Level level = bee.level();
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		boolean ghost = attributes.hasTrait(Trait.GHOST);
-		if (!ghost && level.dimensionType().ultraWarm()) {
+		if (FFCommonConfig.beeRidingUltraWarmDimensionLimit && !ghost && level.dimensionType().ultraWarm()) {
 			return new Vec3(0, -0.07, 0);
 		}
-		if (!attributes.hasTrait(Trait.RAIN_CAPABLE) && level.isRainingAt(bee.blockPosition())) {
+		if (FFCommonConfig.beeRidingRainingLimit && !attributes.hasTrait(Trait.RAIN_CAPABLE) && level.isRainingAt(bee.blockPosition())) {
 			return new Vec3(0, -0.07, 0);
 		}
-		float x = player.xxa * 0.5f;
-		float z = player.zza;
+		float x = player.xxa * 0.7f * FFCommonConfig.beeRidingHorizontalSpeedMultiplier;
+		float z = player.zza * 1.4f * FFCommonConfig.beeRidingHorizontalSpeedMultiplier;
 		z *= bee.onGround() ? 0.3f : 0.6f;
 		if (z <= 0.0f) {
 			z *= 0.25f;
@@ -275,6 +275,7 @@ public final class Hooks {
 				y = -0.07;
 			}
 		}
+		y *= FFCommonConfig.beeRidingVerticalSpeedMultiplier;
 		return new Vec3(x, y, z);
 	}
 

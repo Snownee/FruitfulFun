@@ -35,7 +35,16 @@ public final class FFCommonConfig {
 	public static boolean beehiveTrade = true;
 	@KiwiConfig.Range(min = 0)
 	public static int beeNaturalHealingInterval = 900;
+	@KiwiConfig.Path("beeRiding.heightLimit")
 	public static boolean beeRidingHeightLimit = true;
+	@KiwiConfig.Path("beeRiding.ultraWarmDimensionLimit")
+	public static boolean beeRidingUltraWarmDimensionLimit = true;
+	@KiwiConfig.Path("beeRiding.rainingLimit")
+	public static boolean beeRidingRainingLimit = true;
+	@KiwiConfig.Path("beeRiding.horizontalSpeedMultiplier")
+	public static float beeRidingHorizontalSpeedMultiplier = 1.0f;
+	@KiwiConfig.Path("beeRiding.verticalSpeedMultiplier")
+	public static float beeRidingVerticalSpeedMultiplier = 1.0f;
 	public static boolean mutagenRecipe = true;
 	public static boolean redloveFruitUse = true;
 	@KiwiConfig.Path("dragonBreath.fixExploit") // fix MC-114618
