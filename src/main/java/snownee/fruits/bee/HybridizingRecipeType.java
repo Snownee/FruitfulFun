@@ -134,6 +134,7 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 		if (block instanceof FruitLeavesBlock leaves && leaves.canGrow(state) &&
 				state.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING && level instanceof ServerLevel serverLevel) {
 			leaves.performBonemeal(serverLevel, bee.getRandom(), flowerPos, state);
+			level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos, 0);
 		}
 	}
 
