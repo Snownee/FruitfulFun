@@ -18,7 +18,7 @@ public abstract class ItemEntityMixin {
 			return;
 		}
 		ItemEntity self = (ItemEntity) (Object) this;
-		if (self.level().isClientSide) {
+		if (self.level().isClientSide()) {
 			return;
 		}
 		if (player.getUseItem().getItem() instanceof VacGunItem) {

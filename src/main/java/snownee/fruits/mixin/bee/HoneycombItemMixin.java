@@ -37,7 +37,7 @@ public class HoneycombItemMixin {
 		if (!(level.getBlockEntity(pos) instanceof FFBeehiveBlockEntity be) || be.fruits$isWaxed()) {
 			return original.call(blockState);
 		}
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			be.fruits$setWaxed(true);
 		}
 		return Optional.of(blockState);

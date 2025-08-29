@@ -53,6 +53,7 @@ import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFClientConfig;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
@@ -263,7 +264,7 @@ public class ClientProxy implements ClientModInitializer {
 					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
 					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
 				}
-				if (Hooks.bee && BeeModule.isAllogamous(stack)) {
+				if (Hooks.bee && FFCommonConfig.allogamousTrees && BeeModule.isAllogamous(stack)) {
 					lines.add(Component.translatable("tip.fruitfulfun.allogamy").withStyle(ChatFormatting.GRAY));
 				}
 			});

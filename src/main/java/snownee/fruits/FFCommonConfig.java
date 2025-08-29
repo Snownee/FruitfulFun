@@ -18,6 +18,7 @@ public final class FFCommonConfig {
 
 	@KiwiConfig.Range(min = 0, max = 100)
 	public static int treeGrowingSpeed = 5;
+	public static boolean allogamousTrees = true;
 	@KiwiConfig.Path("fruitDropMode.singleplayer")
 	public static DropMode fruitDropModeSingleplayer = DropMode.Independent;
 	@KiwiConfig.Path("fruitDropMode.multiplayer")

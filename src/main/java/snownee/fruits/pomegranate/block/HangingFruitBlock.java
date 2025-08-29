@@ -1,6 +1,7 @@
 package snownee.fruits.pomegranate.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
@@ -36,15 +37,15 @@ public class HangingFruitBlock extends HangingRootsBlock {
 			BlockHitResult blockHitResult) {
 		FruitLeavesBlock.giveItemTo(player, blockHitResult, asItem().getDefaultInstance());
 		level.removeBlock(blockPos, false);
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			BlockPos up = blockPos.above();
 			BlockState upState = level.getBlockState(up);
 			if (upState.getBlock() instanceof FruitLeavesBlock leavesBlock && leavesBlock.type.get().fruit.get() == asItem() &&
 					upState.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.FRUITING) {
-				level.setBlockAndUpdate(up, upState.setValue(FruitLeavesBlock.AGE, FruitLeavesBlock.YOUNG));
+				leavesBlock.gotoDeadOrYoung((ServerLevel) level, up, upState, null);
 			}
 		}
-		return InteractionResult.sidedSuccess(level.isClientSide);
+		return InteractionResult.sidedSuccess(level.isClientSide());
 	}
 
 	@Override
@@ -65,7 +66,8 @@ public class HangingFruitBlock extends HangingRootsBlock {
 	public void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
 		//TODO(1.21): gamerule projectilesCanBreakBlocks
 		BlockPos blockPos = blockHitResult.getBlockPos();
-		if (!level.isClientSide && projectile.mayInteract(level, blockPos) && projectile.getType().is(EntityTypeTags.IMPACT_PROJECTILES)) {
+		if (!level.isClientSide() && projectile.mayInteract(level, blockPos) &&
+				projectile.getType().is(EntityTypeTags.IMPACT_PROJECTILES)) {
 			level.destroyBlock(blockPos, true, projectile);
 		}
 	}

@@ -154,7 +154,7 @@ public class SlidingDoorBlock extends DoorBlock {
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		if (type().canOpenByHand()) {
 			setOpen(player, worldIn, state, pos, !state.getValue(OPEN));
-			return InteractionResult.sidedSuccess(worldIn.isClientSide);
+			return InteractionResult.sidedSuccess(worldIn.isClientSide());
 		}
 		return InteractionResult.PASS;
 	}
@@ -191,7 +191,7 @@ public class SlidingDoorBlock extends DoorBlock {
 
 	@Override
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (worldIn.isClientSide) {
+		if (worldIn.isClientSide()) {
 			return;
 		}
 		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER) {
@@ -209,7 +209,7 @@ public class SlidingDoorBlock extends DoorBlock {
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, worldIn, pos, newState, isMoving);
-		if (worldIn.isClientSide) {
+		if (worldIn.isClientSide()) {
 			return;
 		}
 		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER) {

@@ -276,14 +276,14 @@ public class CommonProxy implements ModInitializer {
 			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
 					ffPlayer.fruits$hauntingTarget() instanceof Bee bee &&
 					BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
-				if (!level.isClientSide) {
+				if (!level.isClientSide()) {
 					ffPlayer.fruits$setHauntingTarget(target);
 					HauntingManager manager = ffPlayer.fruits$hauntingManager();
 					if (manager != null) {
 						manager.storeBee(bee);
 					}
 				}
-				return InteractionResult.sidedSuccess(level.isClientSide);
+				return InteractionResult.sidedSuccess(level.isClientSide());
 			}
 			return InteractionResult.PASS;
 		});

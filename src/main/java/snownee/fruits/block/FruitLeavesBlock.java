@@ -83,32 +83,20 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Nullable
-	public static ItemEntity dropFruit(
+	public ItemEntity dropFruit(
 			ServerLevel level,
 			BlockPos pos,
 			BlockState state,
-			@Nullable FruitTreeBlockEntity core,
-			int consumeLifespan) {
+			@Nullable FruitTreeBlockEntity core) {
 		if (state.getValue(AGE) != FRUITING) {
 			return null;
 		}
 		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
 			return null;
 		}
-		boolean die = true;
-		if (core != null) {
-			core.consumeLifespan(consumeLifespan);
-			die = core.isDead();
-			if (die) {
-				core.removeActiveLeaves(pos);
-			}
-		}
-		state = state.setValue(AGE, die ? DEAD : YOUNG);
-		if (die && state.hasBlockEntity()) {
-			state = state.setValue(PERSISTENT, false);
-		}
+		gotoDeadOrYoung(level, pos, state, core);
 		level.setBlockAndUpdate(pos, state);
-		ItemEntity itemEntity = ((FruitLeavesBlock) state.getBlock()).doDropFruit(level, pos, state, core, consumeLifespan);
+		ItemEntity itemEntity = ((FruitLeavesBlock) state.getBlock()).doDropFruit(level, pos, state);
 		if (itemEntity != null && !level.addFreshEntity(itemEntity)) {
 			return null;
 		}
@@ -116,12 +104,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Nullable
-	public ItemEntity doDropFruit(
-			ServerLevel level,
-			BlockPos pos,
-			BlockState state,
-			@Nullable FruitTreeBlockEntity core,
-			int consumeLifespan) {
+	public ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state) {
 		FruitType fruitType = type.get();
 		Item item = Items.AIR;
 		if (Hooks.hauntedHarvest && FFCommonConfig.rottenAppleChance > 0 && CoreFruitTypes.APPLE.is(fruitType) &&
@@ -141,6 +124,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		double d2 = pos.getZ() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
 		ItemEntity itemEntity = new ItemEntity(level, d0, d1, d2, stack);
 		itemEntity.setDefaultPickUpDelay();
+		itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().x, 0, itemEntity.getDeltaMovement().z);
 		return itemEntity;
 	}
 
@@ -154,7 +138,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (state.getValue(AGE) == YOUNG) {
 			return true;
 		}
-		if (state.getValue(AGE) == BLOOMING && type.get().allogamous) {
+		if (FFCommonConfig.allogamousTrees && type.get().allogamous && state.getValue(AGE) == BLOOMING) {
 			return false;
 		}
 		return canGrow(state) && state.getValue(AGE) < FRUITING;
@@ -168,6 +152,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	@Override
 	public void performBonemeal(ServerLevel world, RandomSource rand, BlockPos pos, BlockState state) {
 		world.setBlockAndUpdate(pos, state.cycle(AGE));
+		if (state.getValue(AGE) == FruitLeavesBlock.BLOOMING) {
+			FruitTreeBlockEntity core = findCore(world, pos);
+			if (core != null) {
+				core.consumeLifespan(1);
+				core.increaseFruitProduced();
+			}
+		}
 	}
 
 	@Nullable
@@ -178,37 +169,56 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
-		FruitTreeBlockEntity core = null;
-		if (hasBlockEntity(state)) {
-			core = findCore(world, pos);
-			if (core != null) {
-				//TODO decay blooming leaves
-			}
-		}
 		if (shouldDecay(state)) {
 			dropResources(state, world, pos);
 			world.removeBlock(pos, false);
-		} else if (canGrow(state) && world.getMaxLocalRawBrightness(pos.above()) >= 9) {
+		} else if (canGrowWithContext(state, world, pos)) {
 			if (hasFruit(state, world, pos)) {
 				DropMode mode = FFCommonConfig.getDropMode(world);
 				if (mode == DropMode.NoDrop) {
 					return;
 				}
-				if (core == null) {
-					core = findCore(world, pos);
-				}
+				FruitTreeBlockEntity core = findCore(world, pos);
 				if (mode == DropMode.OneByOne && core != null && !core.canDrop()) {
 					return;
 				}
-				ItemEntity itemEntity = dropFruit(world, pos, state, core, 1);
+				ItemEntity itemEntity = dropFruit(world, pos, state, core);
 				if (mode == DropMode.OneByOne && core != null && itemEntity != null) {
 					core.setOnlyItem(itemEntity);
 				}
-			} else if (!(state.getValue(AGE) == BLOOMING && type.get().allogamous)) {
+				gotoDeadOrYoung(world, pos, state, core);
+			} else if (FFCommonConfig.allogamousTrees && type.get().allogamous && state.getValue(AGE) == BLOOMING) {
+				boolean def = rand.nextInt(100) > (99 - FFCommonConfig.treeGrowingSpeed);
+				if (def) {
+					FruitTreeBlockEntity core = findCore(world, pos);
+					if (core != null) {
+						core.consumeLifespan(1);
+					}
+					gotoDeadOrYoung(world, pos, state, core);
+				}
+			} else {
 				boolean def = rand.nextInt(100) > (99 - FFCommonConfig.treeGrowingSpeed);
 				CommonProxy.maybeGrowCrops(world, pos, state, def, () -> performBonemeal(world, rand, pos, state));
 			}
 		}
+	}
+
+	public void gotoDeadOrYoung(ServerLevel level, BlockPos pos, BlockState blockState, @Nullable FruitTreeBlockEntity core) {
+		if (core == null) {
+			core = findCore(level, pos);
+		}
+		boolean die = true;
+		if (core != null) {
+			die = core.isDead();
+			if (die) {
+				core.removeLeaves(pos);
+			}
+		}
+		blockState = blockState.setValue(AGE, die ? DEAD : YOUNG);
+		if (die && blockState.hasBlockEntity()) {
+			blockState = blockState.setValue(PERSISTENT, false);
+		}
+		level.setBlockAndUpdate(pos, blockState);
 	}
 
 	public boolean hasFruit(BlockState state, Level level, BlockPos pos) {
@@ -229,9 +239,6 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (hasBlockEntity(state)) {
 			return true;
 		}
-		if (state.getValue(AGE) == BLOOMING && type.get().allogamous && !shouldDecay(state)) {
-			return false;
-		}
 		return notPlacedByPlayer(state);
 	}
 
@@ -243,8 +250,12 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		return state.getValue(DISTANCE) == 7 && !state.getValue(PERSISTENT);
 	}
 
-	public boolean canGrow(BlockState state) {
-		return state.getValue(AGE) != DEAD && (!state.getValue(PERSISTENT) || state.getValue(DISTANCE) == 1);
+	public boolean canGrowWithContext(BlockState blockState, LevelReader level, BlockPos pos) {
+		return canGrow(blockState) && level.getMaxLocalRawBrightness(pos.above()) >= 9;
+	}
+
+	public boolean canGrow(BlockState blockState) {
+		return blockState.getValue(AGE) != DEAD && (!blockState.getValue(PERSISTENT) || blockState.getValue(DISTANCE) == 1);
 	}
 
 	@Override
@@ -285,7 +296,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				(entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
 			Iterable<BlockPos> posList = BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1));
 			MutableBoolean success = new MutableBoolean(false);
-			rangeDrop(serverLevel, posList, 2, null, itemEntity -> success.setTrue());
+			rangeDrop(serverLevel, posList, null, itemEntity -> success.setTrue());
 			if (success.booleanValue()) {
 				//FIXME sound
 			}
@@ -295,14 +306,12 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public static void rangeDrop(
 			ServerLevel level,
 			Iterable<BlockPos> posList,
-			int consumeLifespan,
 			@Nullable FruitTreeBlockEntity core,
 			@Nullable Consumer<ItemEntity> consumer) {
 		for (BlockPos blockpos : posList) {
 			BlockState state = level.getBlockState(blockpos);
 			if (state.getBlock() instanceof FruitLeavesBlock leavesBlock && state.getValue(AGE) == FRUITING) {
-				ItemEntity itemEntity = dropFruit(
-						level, blockpos, state, core == null ? leavesBlock.findCore(level, blockpos) : core, consumeLifespan);
+				ItemEntity itemEntity = leavesBlock.dropFruit(level, blockpos, state, core);
 				if (consumer != null && itemEntity != null) {
 					consumer.accept(itemEntity);
 				}
@@ -312,16 +321,19 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult ray) {
-		if (hasFruit(state, worldIn, pos) && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, YOUNG))) {
+		if (hasFruit(state, worldIn, pos)) {
 			giveItemTo(playerIn, ray, type.get().fruit.get().getDefaultInstance());
-			return InteractionResult.sidedSuccess(worldIn.isClientSide);
+			if (!worldIn.isClientSide()) {
+				gotoDeadOrYoung((ServerLevel) worldIn, pos, state, null);
+			}
+			return InteractionResult.sidedSuccess(worldIn.isClientSide());
 		}
 		return InteractionResult.PASS;
 	}
 
 	public static void giveItemTo(Player player, BlockHitResult hit, ItemStack stack) {
 		Level level = player.level();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return;
 		}
 		if (!CommonProxy.isFakePlayer(player) && player.addItem(stack)) {

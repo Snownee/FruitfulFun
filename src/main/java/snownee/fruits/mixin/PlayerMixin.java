@@ -180,7 +180,7 @@ public abstract class PlayerMixin implements FFPlayer {
 			}
 		} else {
 			// you can't haunt a player who is haunting
-			if (!player.level().isClientSide && ((FFLivingEntity) player).fruits$getHauntedBy() instanceof FFPlayer ffPlayer) {
+			if (!player.level().isClientSide() && ((FFLivingEntity) player).fruits$getHauntedBy() instanceof FFPlayer ffPlayer) {
 				ffPlayer.fruits$setHauntingTarget(target);
 			}
 		}

@@ -31,7 +31,7 @@ public class RedloveItem extends ModItem {
 			// age > 0 means it's on breeding cooldown
 			return InteractionResult.PASS;
 		}
-		if (player.level().isClientSide) {
+		if (player.level().isClientSide()) {
 			// we can't check age on client side
 			return InteractionResult.CONSUME;
 		}
@@ -44,7 +44,7 @@ public class RedloveItem extends ModItem {
 		animal.setAge(Math.max(0, age - skip));
 		animal.eat(animal.level(), stack);
 		player.awardStat(Stats.ITEM_USED.get(this));
-		return InteractionResult.sidedSuccess(player.level().isClientSide);
+		return InteractionResult.sidedSuccess(player.level().isClientSide());
 	}
 
 	@Override

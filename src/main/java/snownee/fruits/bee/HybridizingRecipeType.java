@@ -30,6 +30,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.kiwi.util.Util;
 import snownee.lychee.LycheeLootContextParams;
 import snownee.lychee.core.LycheeContext;
@@ -89,38 +90,50 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 	}
 
 	public void onPollinateComplete(Bee bee) {
-		if (isEmpty()) {
-			return;
-		}
 		BlockPos flowerPos = bee.getSavedFlowerPos();
-		if (flowerPos == null) {
+		ServerLevel level = (ServerLevel) bee.level();
+		BlockState blockState = level.getBlockState(flowerPos);
+		if (blockState.isAir()) {
 			return;
 		}
-		Level level = bee.level();
-		BlockState state = level.getBlockState(flowerPos);
-		if (state.isAir()) {
-			return;
+		Pair<LycheeContext, HybridizingRecipe> result = process(bee, flowerPos, blockState);
+		if (result == null && blockState.getBlock() instanceof FruitLeavesBlock leaves
+				&& blockState.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING
+				&& leaves.canGrowWithContext(blockState, level, flowerPos)) {
+			FruitTreeBlockEntity core = leaves.findCore(level, flowerPos);
+			if (core != null) {
+				core.consumeLifespan(-2);
+			}
+			leaves.performBonemeal(level, bee.getRandom(), flowerPos, blockState);
+			level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos, 0);
 		}
-		Block block = state.getBlock();
+	}
+
+	public Pair<LycheeContext, HybridizingRecipe> process(Bee bee, BlockPos flowerPos, BlockState blockState) {
+		if (isEmpty()) {
+			return null;
+		}
+		Block block = blockState.getBlock();
 		String newPollen = Util.trimRL(BuiltInRegistries.BLOCK.getKey(block));
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		List<String> pollens = attributes.getPollens();
 		pollens.remove(newPollen);
 		pollens.add(newPollen);
-		if (!has(state)) {
-			return;
+		if (!has(blockState)) {
+			return null;
 		}
 		boolean isBigFlowerUpper = false;
-		if (block instanceof DoublePlantBlock && state.hasProperty(DoublePlantBlock.HALF) &&
-				state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+		Level level = bee.level();
+		if (block instanceof DoublePlantBlock && blockState.hasProperty(DoublePlantBlock.HALF) &&
+				blockState.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
 			flowerPos = flowerPos.below();
-			state = level.getBlockState(flowerPos);
-			if (block != state.getBlock()) {
-				return;
+			blockState = level.getBlockState(flowerPos);
+			if (block != blockState.getBlock()) {
+				return null;
 			}
 			isBigFlowerUpper = true;
 		}
-		Pair<LycheeContext, HybridizingRecipe> result = process(bee.level(), state, buildContext(bee, flowerPos, state));
+		Pair<LycheeContext, HybridizingRecipe> result = process(bee.level(), blockState, buildContext(bee, flowerPos, blockState));
 		if (result != null) {
 			level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos, 0);
 			if (isBigFlowerUpper) {
@@ -129,13 +142,8 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 			if (result.getSecond().resetPollens) {
 				pollens.clear();
 			}
-			return;
 		}
-		if (block instanceof FruitLeavesBlock leaves && leaves.canGrow(state) &&
-				state.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING && level instanceof ServerLevel serverLevel) {
-			leaves.performBonemeal(serverLevel, bee.getRandom(), flowerPos, state);
-			level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos, 0);
-		}
+		return result;
 	}
 
 	public Supplier<LycheeContext> buildContext(Bee bee, BlockPos flowerPos, BlockState state) {

@@ -180,7 +180,7 @@ public class RitualModule extends AbstractModule {
 		Interaction interaction = entities.get(0);
 		skullBlockEntity.isAnimating = false; // cancel the tick lerping
 		skullBlockEntity.animationTickCount = interaction.tickCount >= LIFETIME - 1 ? 0 : 2;
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			return true;
 		}
 		if (interaction.tickCount % 2 != 0) {
@@ -214,7 +214,7 @@ public class RitualModule extends AbstractModule {
 
 	public static void tickInteraction(Interaction interaction) {
 		Level level = interaction.level();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			if (interaction.tickCount == 55) {
 				level.playLocalSound(interaction.blockPosition(), RITUAL_FINISH.get(), SoundSource.AMBIENT, 1.0F, 1.0F, false);
 			}
@@ -261,7 +261,7 @@ public class RitualModule extends AbstractModule {
 				skullBlockEntity.animationTickCount = 0;
 			}
 		}
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			VoxelShape shape = state.getCollisionShape(level, pos);
 			level.removeBlock(pos, false);
 			if (shape.isEmpty()) {
@@ -304,7 +304,7 @@ public class RitualModule extends AbstractModule {
 
 	public static void rightClickInteraction(Interaction interaction, Player player, InteractionHand interactionHand) {
 		Level level = interaction.level();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return;
 		}
 		ItemStack itemStack = player.getItemInHand(interactionHand);

@@ -24,7 +24,7 @@ public class InstrumentItemMixin {
 
 	@Inject(at = @At("HEAD"), method = "play")
 	private static void play(Level level, Player player, Instrument instrument, CallbackInfo ci) {
-		if (level.isClientSide || Strings.isNullOrEmpty(FFCommonConfig.hornHarvestingInstrument)) {
+		if (level.isClientSide() || Strings.isNullOrEmpty(FFCommonConfig.hornHarvestingInstrument)) {
 			return;
 		}
 		if (FFCommonConfig.hornHarvestingInstrument.equals(Objects.toString(BuiltInRegistries.INSTRUMENT.getKey(instrument)))) {

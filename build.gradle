@@ -101,6 +101,8 @@ dependencies {
     modImplementation "maven.modrinth:debugutils:woRp83Qc"
     modImplementation "maven.modrinth:suggestion-tweaker:1.20-1.5.1+fabric"
     modImplementation "maven.modrinth:advancementinfo:gfcbMV82"
+    // in order to change tick rate
+    modImplementation "maven.modrinth:carpet:1.4.112"
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.0"))
 }

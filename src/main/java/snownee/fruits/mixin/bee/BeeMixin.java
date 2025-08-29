@@ -65,7 +65,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Bee;updateRollAmount()V"))
 	private void tick(CallbackInfo ci) {
-		if (!Hooks.bee || level().isClientSide) {
+		if (!Hooks.bee || level().isClientSide()) {
 			return;
 		}
 		Bee bee = (Bee) (Object) this;

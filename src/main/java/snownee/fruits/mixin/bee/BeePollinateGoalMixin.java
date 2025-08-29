@@ -41,7 +41,7 @@ public abstract class BeePollinateGoalMixin {
 
 	@Inject(method = "stop", at = @At("HEAD"))
 	private void stop(CallbackInfo cir) {
-		if (!Hooks.bee || this$0.getSavedFlowerPos() == null) {
+		if (!Hooks.bee || this$0.getSavedFlowerPos() == null || this$0.level().isClientSide()) {
 			return;
 		}
 		BeeModule.RECIPE_TYPE.get().onPollinateComplete(this$0);

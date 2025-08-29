@@ -66,7 +66,7 @@ public class FeastBlock extends FoodBlock {
 			player.eat(level, servingItem);
 		} else if (ItemStack.isSameItem(held, remainder)) {
 			// has container. give serving item
-			if (!level.isClientSide) {
+			if (!level.isClientSide()) {
 				consumeServing(level, pos, state, player);
 				if (!player.getAbilities().instabuild) {
 					held.shrink(1);
@@ -76,7 +76,7 @@ public class FeastBlock extends FoodBlock {
 				}
 			}
 		} else if (serves == getMaxServings() && held.isEmpty()) {
-			if (!level.isClientSide) {
+			if (!level.isClientSide()) {
 				level.removeBlock(pos, false);
 				ItemStack blockItem = new ItemStack(this);
 				if (!player.addItem(blockItem)) {
@@ -84,16 +84,16 @@ public class FeastBlock extends FoodBlock {
 				}
 			}
 		} else {
-			if (level.isClientSide) {
+			if (level.isClientSide()) {
 				player.displayClientMessage(Component.translatable("tip.fruitfulfun.useContainer", remainder.getHoverName()), true);
 			}
 			return InteractionResult.PASS;
 		}
-		return InteractionResult.sidedSuccess(level.isClientSide);
+		return InteractionResult.sidedSuccess(level.isClientSide());
 	}
 
 	public void consumeServing(Level level, BlockPos pos, BlockState state, @Nullable Player player) {
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			int serves = getServings(state);
 			if (serves > 1 || hasLeftover()) {
 				level.setBlockAndUpdate(pos, state.setValue(getServingsProperty(), serves - 1));

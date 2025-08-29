@@ -23,7 +23,7 @@ public class BaseFireBlockMixin {
 	@Inject(method = "entityInside", at = @At("HEAD"))
 	private void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
 		Player hauntedBy;
-		if (Hooks.bee && !level.isClientSide && state.is(Blocks.SOUL_FIRE) && entity instanceof FFLivingEntity living &&
+		if (Hooks.bee && !level.isClientSide() && state.is(Blocks.SOUL_FIRE) && entity instanceof FFLivingEntity living &&
 				(hauntedBy = living.fruits$getHauntedBy()) != null) {
 			HauntingManager hauntingManager = FFPlayer.of(hauntedBy).fruits$hauntingManager();
 			if (hauntingManager != null) {

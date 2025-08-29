@@ -99,7 +99,7 @@ public class BeehiveBlockMixin {
 			if (bee.getLeashHolder() != player) {
 				continue;
 			}
-			if (!level.isClientSide && !be.isFull()) {
+			if (!level.isClientSide() && !be.isFull()) {
 				bee.dropLeash(true, true);
 				be.addOccupant(bee, bee.hasNectar());
 			}
@@ -108,9 +108,9 @@ public class BeehiveBlockMixin {
 		if (!bl) {
 			return;
 		}
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			level.playSound(null, pos, SoundEvents.LEASH_KNOT_PLACE, player.getSoundSource(), 1, 1);
 		}
-		cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
+		cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
 	}
 }

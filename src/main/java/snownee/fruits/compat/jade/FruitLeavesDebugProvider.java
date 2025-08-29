@@ -17,13 +17,13 @@ public class FruitLeavesDebugProvider implements IBlockComponentProvider, IServe
 	public static final ResourceLocation UID = FruitfulFun.id("fruit_leaves");
 
 	@Override
-	public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
-		CompoundTag data = blockAccessor.getServerData();
+	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+		CompoundTag data = accessor.getServerData();
 		if (!data.contains("Type")) {
 			return;
 		}
-		iTooltip.add(Component.literal("Type: " + data.getString("Type")));
-		iTooltip.add(Component.literal("Lifespan: " + data.getInt("Lifespan")));
+		tooltip.add(Component.literal("%s: %s produced".formatted(data.getString("Type"), data.getInt("Produced"))));
+		tooltip.add(Component.literal("Lifespan: %s/%s".formatted(data.getInt("Lifespan"), data.getInt("MaxLifespan"))));
 	}
 
 	@Override
@@ -31,6 +31,8 @@ public class FruitLeavesDebugProvider implements IBlockComponentProvider, IServe
 		FruitTreeBlockEntity tree = (FruitTreeBlockEntity) accessor.getBlockEntity();
 		data.putString("Type", FFRegistries.FRUIT_TYPE.getKey(tree.type).toString());
 		data.putInt("Lifespan", tree.getLifespan());
+		data.putInt("MaxLifespan", tree.getMaxLifespan());
+		data.putInt("Produced", tree.getFruitProduced());
 	}
 
 	@Override

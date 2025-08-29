@@ -1,8 +1,8 @@
 package snownee.fruits;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -127,12 +127,15 @@ public final class Hooks {
 	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
 		Vec3 eye = player.getEyePosition();
 		BlockPos eyePos = BlockPos.containing(eye);
-		long count = level.getPoiManager()
+		AtomicInteger count = new AtomicInteger();
+		level.getPoiManager()
 				.findAll($ -> $.is(CoreModule.POI_TYPE), Predicates.alwaysTrue(), eyePos, 24, PoiManager.Occupancy.ANY)
 				.flatMap($ -> level.getBlockEntity($, CoreModule.FRUIT_TREE.get()).stream())
-				.peek($ -> hornHarvest(level, player, $, eyePos, null))
-				.count();
-		if (count > 0) {
+				.forEach($ -> {
+					hornHarvest(level, player, $, eyePos, null);
+					count.incrementAndGet();
+				});
+		if (count.get() > 0) {
 			awardSimpleAdvancement(player, "horn");
 		}
 	}
@@ -153,23 +156,26 @@ public final class Hooks {
 	}
 
 	private static void hornHarvest(
-			ServerLevel level, ServerPlayer player, FruitTreeBlockEntity core, BlockPos eyePos, Consumer<ItemEntity> consumer) {
-		Set<BlockPos> leaves = core.getActiveLeaves();
+			ServerLevel level,
+			ServerPlayer player,
+			FruitTreeBlockEntity core,
+			BlockPos eyePos,
+			Consumer<ItemEntity> consumer) {
+		List<BlockPos> leaves = core.getLeaves();
 		BlockPos corePos = core.getBlockPos();
 		if (leaves.isEmpty()) {
 			BlockState blockState = level.getBlockState(eyePos);
 			if (blockState.getBlock() instanceof FruitLeavesBlock) {
 				Iterable<BlockPos> posList = BlockPos.betweenClosed(corePos.offset(-3, -1, -3), corePos.offset(3, 2, 3));
-				FruitLeavesBlock.rangeDrop(level, posList, 0, core, consumer);
+				FruitLeavesBlock.rangeDrop(level, posList, core, consumer);
 			}
 		} else {
 			for (BlockPos pos : leaves) {
-				pos = corePos.offset(pos);
 				BlockState blockState = level.getBlockState(pos);
-				if (!(blockState.getBlock() instanceof FruitLeavesBlock)) {
+				if (!(blockState.getBlock() instanceof FruitLeavesBlock leavesBlock)) {
 					continue;
 				}
-				ItemEntity itemEntity = FruitLeavesBlock.dropFruit(level, pos, blockState, core, 0);
+				ItemEntity itemEntity = leavesBlock.dropFruit(level, pos, blockState, core);
 				if (itemEntity != null && consumer != null) {
 					consumer.accept(itemEntity);
 				}
@@ -189,7 +195,7 @@ public final class Hooks {
 		if (BeeModule.INSPECTOR.is(held)) {
 			return InteractionResult.PASS;
 		}
-		boolean isClientSide = player.level().isClientSide;
+		boolean isClientSide = player.level().isClientSide();
 		if (held.is(Items.DEBUG_STICK)) {
 			if (!isClientSide) {
 				// add debug code here
@@ -390,9 +396,10 @@ public final class Hooks {
 			return;
 		}
 		String stackTrace = ExceptionUtils.getStackTrace(new Throwable());
-		player.displayClientMessage(Component.literal(msg)
-				.withStyle(Style.EMPTY
-						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(stackTrace)))
-						.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stackTrace))), false);
+		player.displayClientMessage(
+				Component.literal(msg)
+						.withStyle(Style.EMPTY
+								.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(stackTrace)))
+								.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stackTrace))), false);
 	}
 }

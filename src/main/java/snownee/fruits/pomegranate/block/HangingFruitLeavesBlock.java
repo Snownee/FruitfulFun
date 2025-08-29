@@ -13,6 +13,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -38,12 +39,7 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
-	public @Nullable ItemEntity doDropFruit(
-			ServerLevel level,
-			BlockPos pos,
-			BlockState state,
-			@Nullable FruitTreeBlockEntity core,
-			int consumeLifespan) {
+	public @Nullable ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state) {
 		BlockPos below = pos.below();
 		level.removeBlock(below, false);
 		return createItemEntity(level, below, type.get().fruit.get().getDefaultInstance());
@@ -59,23 +55,27 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
+	public boolean canGrowWithContext(BlockState blockState, LevelReader level, BlockPos pos) {
+		if (!super.canGrowWithContext(blockState, level, pos)) {
+			return false;
+		}
+		return blockState.getValue(AGE) != BLOOMING || level.getBlockState(pos.below()).canBeReplaced();
+	}
+
+	@Override
 	public void performBonemeal(ServerLevel world, RandomSource rand, BlockPos pos, BlockState state) {
 		int age = state.getValue(AGE);
 		if (age == FruitLeavesBlock.FRUITING) {
-			age = FruitLeavesBlock.YOUNG;
-		} else if (age == FruitLeavesBlock.BLOOMING) {
-			FruitTreeBlockEntity core = findCore(world, pos);
-			if (core == null || core.isDead()) {
-				age = FruitLeavesBlock.DEAD;
-				state = state.setValue(PERSISTENT, false);
-			} else {
-				age++;
-			}
-		} else {
-			age++;
+			gotoDeadOrYoung(world, pos, state, null);
+			return;
 		}
+		age++;
 		world.setBlockAndUpdate(pos, state.setValue(AGE, age));
 		if (age == FruitLeavesBlock.FRUITING) {
+			FruitTreeBlockEntity core = findCore(world, pos);
+			if (core != null) {
+				core.consumeLifespan(1);
+			}
 			BlockPos below = pos.below();
 			if (world.getBlockState(below).canBeReplaced()) {
 				Block block = Block.byItem(type.get().fruit.get());

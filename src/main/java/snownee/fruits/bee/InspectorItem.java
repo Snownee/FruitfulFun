@@ -40,7 +40,7 @@ public class InspectorItem extends ModItem {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-		if (player.level().isClientSide) {
+		if (player.level().isClientSide()) {
 			ItemStack offhandItem = player.getOffhandItem();
 			if (!InspectorClientHandler.startUsing()
 					&& hand == InteractionHand.MAIN_HAND
@@ -58,7 +58,7 @@ public class InspectorItem extends ModItem {
 	public InteractionResult useOn(UseOnContext useOnContext) {
 		BlockState blockState = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
 		if (CommonProxy.isBookshelf(blockState)) {
-			if (useOnContext.getLevel().isClientSide) {
+			if (useOnContext.getLevel().isClientSide()) {
 				Player player = useOnContext.getPlayer();
 				if (player == null) {
 					return InteractionResult.FAIL;

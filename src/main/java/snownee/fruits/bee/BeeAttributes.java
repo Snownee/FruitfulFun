@@ -140,7 +140,7 @@ public class BeeAttributes {
 	public void updateTraits(Bee bee) {
 		genes.updateTraits();
 		updateTexture();
-		if (bee.level().isClientSide) {
+		if (bee.level().isClientSide()) {
 			return;
 		}
 
