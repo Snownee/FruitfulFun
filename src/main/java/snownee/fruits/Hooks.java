@@ -1,6 +1,7 @@
 package snownee.fruits;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
@@ -30,6 +32,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Saddleable;
@@ -75,11 +78,12 @@ public final class Hooks {
 	public static boolean food;
 	public static boolean farmersdelight;
 	public static boolean ritual;
-	public static boolean vac;
+	public static boolean gadget;
 	public static boolean trinkets = Platform.isModLoaded("trinkets");
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
 	public static boolean jade = Platform.isModLoaded("jade");
 	public static boolean hauntedHarvest = Platform.isModLoaded("hauntedharvest");
+	public static final Set<MobEffect> hiddenEffects = Sets.newHashSet();
 
 	private Hooks() {
 	}
@@ -243,7 +247,7 @@ public final class Hooks {
 			return InteractionResult.sidedSuccess(isClientSide);
 		}
 		if (FFCommonConfig.hauntingEnabled && attributes.hasTrait(Trait.GHOST) && !CommonProxy.isFakePlayer(player)) {
-			if (!isClientSide && (FFCommonConfig.hauntingCooldownSeconds <= 0 || !bee.hasEffect(BeeModule.FRAGILITY.get()))) {
+			if (!isClientSide && (FFCommonConfig.hauntingCooldownSeconds <= 0 || !bee.hasEffect(CoreModule.FRAGILITY.get()))) {
 				FFPlayer.of(player).fruits$setHauntingTarget(bee);
 			}
 			return InteractionResult.sidedSuccess(isClientSide);

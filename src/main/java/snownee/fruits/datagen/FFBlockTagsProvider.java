@@ -71,7 +71,8 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
-import snownee.fruits.vacuum.VacModule;
+import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.gadget.ScentedCandleBlock;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModules;
 
@@ -141,20 +142,30 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				PEACH_PINK_PETALS.get(),
 				Blocks.SPORE_BLOSSOM);
 		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).add(PEACH_PINK_PETALS.get());
-		getOrCreateTagBuilder(CoreModule.CANDLES)
-				.addOptionalTag(BlockTags.CANDLES.location())
-				.addOptionalTag(BlockTags.CANDLE_CAKES.location())
-				.addOptionalTag(new ResourceLocation("supplementaries:candle_holders"))
-				.addOptionalTag(new ResourceLocation("the_bumblezone:candles"));
-		getOrCreateTagBuilder(VacModule.VCD_PERFORM_USING)
+
+		{
+			FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(CoreModule.CANDLES);
+			for (Block block : BuiltInRegistries.BLOCK) {
+				if (block instanceof ScentedCandleBlock) {
+					builder.add(block);
+				}
+			}
+			builder
+					.addOptionalTag(BlockTags.CANDLES.location())
+					.addOptionalTag(BlockTags.CANDLE_CAKES.location())
+					.addOptionalTag(new ResourceLocation("supplementaries:candle_holders"))
+					.addOptionalTag(new ResourceLocation("the_bumblezone:candles"));
+		}
+		getOrCreateTagBuilder(GadgetModule.VCD_PERFORM_USING)
 				.addTag(ALL_LEAVES)
 				.addOptionalTag(BlockTags.CAVE_VINES.location())
 				.add(Blocks.SWEET_BERRY_BUSH);
-		getOrCreateTagBuilder(VacModule.VCD_PERFORM_BREAKING)
+		getOrCreateTagBuilder(GadgetModule.VCD_PERFORM_BREAKING)
 				.add(Blocks.COCOA)
 				.add(POMEGRANATE.get());
 		getOrCreateTagBuilder(TREE_TYPES_OAK_LOG).add(APPLE_LEAVES.get());
 		getOrCreateTagBuilder(TREE_TYPES_JUNGLE_LOG).add(POMEGRANATE_LEAVES.get());
+		getOrCreateTagBuilder(BlockTags.BEEHIVES).add(GadgetModule.BUZZY_CRAFTER.get());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)

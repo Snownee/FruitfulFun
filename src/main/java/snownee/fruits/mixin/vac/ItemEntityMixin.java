@@ -8,13 +8,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.Hooks;
-import snownee.fruits.vacuum.VacGunItem;
+import snownee.fruits.gadget.VacGunItem;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
 	@Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
 	private void playerTouch(Player player, CallbackInfo ci) {
-		if (!Hooks.vac) {
+		if (!Hooks.gadget) {
 			return;
 		}
 		ItemEntity self = (ItemEntity) (Object) this;

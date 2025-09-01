@@ -20,6 +20,7 @@ import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.data.models.model.TexturedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
@@ -27,6 +28,8 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.gadget.ScentedCandleBlock;
 import snownee.fruits.pomegranate.PomegranateModule;
 
 public class FFModelProvider extends FabricModelProvider {
@@ -75,6 +78,85 @@ public class FFModelProvider extends FabricModelProvider {
 		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE.get().asItem());
 		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE_SLICE.get());
 		generators.createSimpleFlatItemModel(PomegranateModule.POMEGRANATE_ITEM.get());
+
+		createCandle(generators, GadgetModule.PHANTOM_CANDLE.get());
+		createCandle(generators, GadgetModule.WANDERING_TRADER_CANDLE.get());
+		createCandle(generators, GadgetModule.ENDER_CANDLE.get());
+		createCandle(generators, GadgetModule.WEAK_CANDLE.get());
+	}
+
+	public static void createCandle(BlockModelGenerators generators, ScentedCandleBlock block) {
+		generators.createSimpleFlatItemModel(block.asItem());
+		TextureMapping textureMapping = TextureMapping.cube(TextureMapping.getBlockTexture(block));
+		TextureMapping textureMapping2 = TextureMapping.cube(TextureMapping.getBlockTexture(block, "_lit"));
+		ResourceLocation resourceLocation = ModelTemplates.CANDLE.createWithSuffix(
+				block,
+				"_one_candle",
+				textureMapping,
+				generators.modelOutput);
+		ResourceLocation resourceLocation2 = ModelTemplates.TWO_CANDLES.createWithSuffix(
+				block,
+				"_two_candles",
+				textureMapping,
+				generators.modelOutput);
+		ResourceLocation resourceLocation3 = ModelTemplates.THREE_CANDLES.createWithSuffix(
+				block,
+				"_three_candles",
+				textureMapping,
+				generators.modelOutput);
+		ResourceLocation resourceLocation4 = ModelTemplates.FOUR_CANDLES.createWithSuffix(
+				block,
+				"_four_candles",
+				textureMapping,
+				generators.modelOutput);
+		ResourceLocation resourceLocation5 = ModelTemplates.CANDLE.createWithSuffix(
+				block,
+				"_one_candle_lit",
+				textureMapping2,
+				generators.modelOutput);
+		ResourceLocation resourceLocation6 = ModelTemplates.TWO_CANDLES.createWithSuffix(
+				block,
+				"_two_candles_lit",
+				textureMapping2,
+				generators.modelOutput);
+		ResourceLocation resourceLocation7 = ModelTemplates.THREE_CANDLES.createWithSuffix(
+				block,
+				"_three_candles_lit",
+				textureMapping2,
+				generators.modelOutput);
+		ResourceLocation resourceLocation8 = ModelTemplates.FOUR_CANDLES.createWithSuffix(
+				block,
+				"_four_candles_lit",
+				textureMapping2,
+				generators.modelOutput);
+		generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+				.with(PropertyDispatch.properties(BlockStateProperties.CANDLES, BlockStateProperties.LIT)
+						.select(
+								1,
+								false,
+								Variant.variant().with(VariantProperties.MODEL, resourceLocation))
+						.select(
+								2,
+								false,
+								Variant.variant().with(VariantProperties.MODEL, resourceLocation2))
+						.select(
+								3,
+								false,
+								Variant.variant().with(VariantProperties.MODEL, resourceLocation3))
+						.select(
+								4,
+								false,
+								Variant.variant().with(VariantProperties.MODEL, resourceLocation4))
+						.select(
+								1,
+								true,
+								Variant.variant().with(VariantProperties.MODEL, resourceLocation5))
+						.select(
+								2,
+								true,
+								Variant.variant().with(VariantProperties.MODEL, resourceLocation6))
+						.select(3, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation7))
+						.select(4, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation8))));
 	}
 
 	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {
@@ -87,15 +169,17 @@ public class FFModelProvider extends FabricModelProvider {
 			model01 = TexturedModel.LEAVES.create(block, generators.modelOutput);
 		}
 		ResourceLocation flowersTexture = tex("%s_flowers".formatted(typeId.getPath()));
-		ResourceLocation model2 = FFModelTemplates.FLOWERING_LEAVES.create(block, new TextureMapping()
+		ResourceLocation model2 = FFModelTemplates.FLOWERING_LEAVES.create(
+				block, new TextureMapping()
 						.put(FFModelTemplates.FLOWERS, flowersTexture),
 				generators.modelOutput);
 		MultiPartGenerator generator = MultiPartGenerator.multiPart(block)
 				.with(Variant.variant()
 						.with(VariantProperties.MODEL, model01)
 						.with(VariantProperties.UV_LOCK, true))
-				.with(Condition.condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.BLOOMING), Variant.variant()
-						.with(VariantProperties.MODEL, model2));
+				.with(
+						Condition.condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.BLOOMING), Variant.variant()
+								.with(VariantProperties.MODEL, model2));
 		if (scale != FruitScale.NONE) {
 			List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, scale.model));
 			if (scale.randomRotation) {

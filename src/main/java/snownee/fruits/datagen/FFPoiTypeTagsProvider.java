@@ -8,9 +8,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.PoiTypeTags;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
+import snownee.fruits.gadget.GadgetModule;
 
 public class FFPoiTypeTagsProvider extends FabricTagProvider<PoiType> {
 	public FFPoiTypeTagsProvider(
@@ -26,5 +28,6 @@ public class FFPoiTypeTagsProvider extends FabricTagProvider<PoiType> {
 		for (ResourceLocation id : FFRegistries.FRUIT_TYPE.keySet()) {
 			builder.add(id);
 		}
+		getOrCreateTagBuilder(PoiTypeTags.BEE_HOME).add(GadgetModule.BUZZY_CRAFTER_POI.get());
 	}
 }

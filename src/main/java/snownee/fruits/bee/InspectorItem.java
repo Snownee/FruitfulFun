@@ -18,6 +18,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.Hooks;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.ClientProxy;
 import snownee.fruits.util.CommonProxy;
@@ -79,6 +80,10 @@ public class InspectorItem extends ModItem {
 		tooltip.add(Component.empty());
 		tooltip.add(Component.translatable("tip.fruitfulfun.whenUseOnBookshelf").withStyle(ChatFormatting.GRAY));
 		tooltip.add(Component.translatable("tip.fruitfulfun.renameGenes").withStyle(ChatFormatting.BLUE));
+		if (Hooks.gadget) {
+			tooltip.add(Component.translatable("tip.fruitfulfun.whenUseOnBlock").withStyle(ChatFormatting.GRAY));
+			tooltip.add(Component.translatable("tip.fruitfulfun.viewScents").withStyle(ChatFormatting.BLUE));
+		}
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 }

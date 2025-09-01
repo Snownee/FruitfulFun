@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_candle",
+  "textures": {
+    "all": "fruitfulfun:block/ender_candle",
+    "particle": "fruitfulfun:block/ender_candle"
+  }
+}

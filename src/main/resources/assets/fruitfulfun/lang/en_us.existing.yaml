@@ -7,7 +7,7 @@ item.fruitfulfun.redlove: Redlove Fruit
 block.fruitfulfun.pomegranate.tip: §4⚠ Explosive!
 item.fruitfulfun.enchanted_pomegranate.tip: §4⚠ Explosive!
 
-item.fruitfulfun.inspector: Bee Inspector
+item.fruitfulfun.inspector: Buzzy Inspector
 item.fruitfulfun.mutagen: Random Bee Mutagen
 item.fruitfulfun.mutagen.imperfect: Imperfect Bee Mutagen
 item.fruitfulfun.mutagen.stable: Bee Mutagen %s
@@ -95,6 +95,8 @@ tip.fruitfulfun.pressAlt: Press Alt for next page
 tip.fruitfulfun.noGeneNames: You haven't found any gene yet.
 tip.fruitfulfun.whenUseOnBookshelf: 'Use on Bookshelf:'
 tip.fruitfulfun.renameGenes: ' Rename genes'
+tip.fruitfulfun.whenUseOnBlock: 'Use on Block:'
+tip.fruitfulfun.viewScents: ' View current scents'
 tip.fruitfulfun.whenUseOnAnimal: 'Use on Animal:'
 tip.fruitfulfun.redloveFruitUse: ' Reduce breeding cooldown'
 tip.fruitfulfun.leavesUsInPeace: >-
@@ -110,6 +112,7 @@ tip.fruitfulfun.bees: 'Bees: %s'
 tip.fruitfulfun.onlyAtNight: Only works at night.
 tip.fruitfulfun.allogamy: Requires pollination to bear fruit.
 tip.fruitfulfun.cropNeedsPollination: '%s (needs pollination)'
+tip.fruitfulfun.candleNoLife: Burned out. Place it on the Buzzy Crafter to recharge it.
 text.fruitfulfun.time: '%s/%s %s:%s:%s'
 text.fruitfulfun.trait: Traits
 text.fruitfulfun.trait.none: This bee doesn't have any traits.
@@ -160,7 +163,7 @@ advancements.fruitfulfun.bee_jockey.description: Breed a rideable Bee
 advancements.fruitfulfun.apiarist.title: Master Apiarist
 advancements.fruitfulfun.apiarist.description: Exchange a beehive for at least 50 emeralds in a single trade
 advancements.fruitfulfun.inspector.title: Science Mania
-advancements.fruitfulfun.inspector.description: Use Bee Inspector on a Bee
+advancements.fruitfulfun.inspector.description: Use Buzzy Inspector on a Bee
 advancements.fruitfulfun.ritual.title: Listen to the Dragon Roar
 advancements.fruitfulfun.ritual.description: Start a Dragon Ritual
 advancements.fruitfulfun.haunting_interaction.title: Spirit Possession

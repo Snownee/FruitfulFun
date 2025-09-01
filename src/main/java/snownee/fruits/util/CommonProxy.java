@@ -6,7 +6,12 @@ import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.collect.Maps;
+import com.mojang.serialization.Codec;
+
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.FakePlayer;
@@ -42,6 +47,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -66,6 +72,8 @@ import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.EmptyLevelChunk;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -84,18 +92,23 @@ import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
+import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.gadget.ScentType;
+import snownee.fruits.gadget.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
-import snownee.fruits.vacuum.VacGunItem;
-import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiModules;
 import snownee.kiwi.Mod;
+import snownee.kiwi.ModuleInfo;
 import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
+@SuppressWarnings("UnstableApiUsage")
 @Mod(FruitfulFun.ID)
 public class CommonProxy implements ModInitializer {
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("c", "tools/knives");
+	private static final Map<ScentType, AttachmentType<Long>> SCENT_ATTACHMENT_TYPES = Maps.newHashMap();
 
 	public static boolean isCurativeItem(MobEffectInstance effectInstance, ItemStack stack) {
 		return stack.is(Items.MILK_BUCKET);
@@ -134,8 +147,7 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	private static void addBuiltinPack(ModContainer modContainer, String id) {
-		ResourceManagerHelper.registerBuiltinResourcePack(
-				FruitfulFun.id(id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
+		ResourceManagerHelper.registerBuiltinResourcePack(FruitfulFun.id(id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
 	}
 
 	public static boolean isShears(ItemStack stack) {
@@ -207,30 +219,67 @@ public class CommonProxy implements ModInitializer {
 				BlockTags.BEEHIVES);
 	}
 
+	public static void setScentTime(ChunkAccess chunk, ScentType type, long time) {
+		if (chunk instanceof EmptyLevelChunk) {
+			return;
+		}
+		AttachmentType<Long> attachmentType = SCENT_ATTACHMENT_TYPES.get(type);
+		if (attachmentType == null) {
+			return;
+		}
+		if (time <= 0) {
+			chunk.removeAttached(attachmentType);
+		} else {
+			Long attached = chunk.getAttached(attachmentType);
+			if (attached != null && attached > time) {
+				return;
+			}
+			chunk.setAttached(attachmentType, time);
+		}
+	}
+
+	public static long getScentTime(ChunkAccess chunk, ScentType type) {
+		AttachmentType<Long> attachmentType = SCENT_ATTACHMENT_TYPES.get(type);
+		if (attachmentType == null) {
+			return -1;
+		}
+		Long timeUntil = chunk.getAttached(attachmentType);
+		if (timeUntil == null) {
+			return -1;
+		}
+		return timeUntil;
+	}
+
 	@Override
 	public void onInitialize() {
 		addFeature("citron");
 		addFeature("tangerine");
 		addFeature("lime");
-		TradeOfferHelper.registerWanderingTraderOffers(1, trades -> {
-			if (FFCommonConfig.wanderingTraderSaplingPrice == 0) {
-				return;
-			}
-			trades.add((entity, random) -> {
-				ItemStack sapling = net.minecraft.Util.getRandom(
-								FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(), random)
-						.asItem()
-						.getDefaultInstance();
-				ItemStack emeralds = new ItemStack(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice);
-				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
-			});
-		});
+		TradeOfferHelper.registerWanderingTraderOffers(
+				1, trades -> {
+					if (FFCommonConfig.wanderingTraderSaplingPrice == 0) {
+						return;
+					}
+					trades.add((entity, random) -> {
+						ItemStack sapling = net.minecraft.Util.getRandom(
+										FFRegistries.FRUIT_TYPE.stream()
+												.filter($ -> $.tier == 0)
+												.map($ -> $.sapling.get())
+												.toList(), random)
+								.asItem()
+								.getDefaultInstance();
+						ItemStack emeralds = new ItemStack(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice);
+						return new MerchantOffer(emeralds, sapling, 5, 1, 1);
+					});
+				});
 
 		ServerWorldEvents.LOAD.register((server, world) -> {
 			if (world == server.overworld()) {
 				long seed = world.getSeed();
-				GeneticSavedData data = world.getDataStorage()
-						.computeIfAbsent(GeneticSavedData::load, GeneticSavedData::new, "fruitfulfun_genetics");
+				GeneticSavedData data = world.getDataStorage().computeIfAbsent(
+						GeneticSavedData::load,
+						GeneticSavedData::new,
+						"fruitfulfun_genetics");
 				data.initAlleles(seed);
 			}
 		});
@@ -248,11 +297,11 @@ public class CommonProxy implements ModInitializer {
 			});
 		}
 
-		if (!Platform.isProduction()) {
-			CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			if (Hooks.gadget) {
 				dispatcher.register(FFCommands.register());
-			});
-		}
+			}
+		});
 
 		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
 	}
@@ -274,8 +323,7 @@ public class CommonProxy implements ModInitializer {
 		UseEntityCallback.EVENT.register((player, level, hand, target, hitResult) -> {
 			FFPlayer ffPlayer = FFPlayer.of(player);
 			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
-					ffPlayer.fruits$hauntingTarget() instanceof Bee bee &&
-					BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+					ffPlayer.fruits$hauntingTarget() instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
 				if (!level.isClientSide()) {
 					ffPlayer.fruits$setHauntingTarget(target);
 					HauntingManager manager = ffPlayer.fruits$hauntingManager();
@@ -289,41 +337,53 @@ public class CommonProxy implements ModInitializer {
 		});
 	}
 
-	public static void initVacModule() {
+	public static void initGadgetModule() {
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+			if (GadgetModule.VAC_GUN.is(player.getItemInHand(hand))) {
 				player.startUsingItem(hand);
 				return InteractionResult.SUCCESS;
 			}
 			return InteractionResult.PASS;
 		});
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
-			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+			if (GadgetModule.VAC_GUN.is(player.getItemInHand(hand))) {
 				return InteractionResult.FAIL;
 			}
 			return InteractionResult.PASS;
 		});
 		UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+			if (GadgetModule.VAC_GUN.is(player.getItemInHand(hand))) {
 				player.startUsingItem(hand);
 				return InteractionResult.CONSUME;
 			}
 			return InteractionResult.PASS;
 		});
 		AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-			if (VacModule.VAC_GUN.is(player.getItemInHand(hand))) {
+			if (GadgetModule.VAC_GUN.is(player.getItemInHand(hand))) {
 				return InteractionResult.FAIL;
 			}
 			return InteractionResult.PASS;
 		});
+
+		for (ModuleInfo module : KiwiModules.get()) {
+			module.getRegistryEntries(FFRegistries.SCENT_TYPE).forEach($ -> {
+				onScentTypeAdded($.name, $.entry);
+			});
+		}
+	}
+
+	public static void onScentTypeAdded(ResourceLocation id, ScentType scentType) {
+		AttachmentType<Long> type = AttachmentRegistry.<Long>builder().persistent(Codec.LONG).buildAndRegister(id.withSuffix("_scent"));
+		SCENT_ATTACHMENT_TYPES.put(scentType, type);
 	}
 
 	public static void addFeature(String id) {
 		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(Util.RL(id, FruitfulFun.ID)).toString());
-		BiomeModifications.addFeature(context -> {
-			return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) ||
-					context.hasFeature(VegetationFeatures.TREES_PLAINS);
-		}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
+		BiomeModifications.addFeature(
+				context -> {
+					return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) ||
+							context.hasFeature(VegetationFeatures.TREES_PLAINS);
+				}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
 	}
 
 	@Nullable
@@ -339,9 +399,8 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	public static boolean isLitCandle(BlockState blockState) {
-		return blockState.hasProperty(AbstractCandleBlock.LIT)
-				&& blockState.getValue(AbstractCandleBlock.LIT)
-				&& blockState.is(CoreModule.CANDLES);
+		return blockState.hasProperty(AbstractCandleBlock.LIT) && blockState.getValue(AbstractCandleBlock.LIT) &&
+				blockState.is(CoreModule.CANDLES);
 	}
 
 	public static void extinguishCandle(@Nullable Player player, BlockState blockState, LevelAccessor level, BlockPos blockPos) {

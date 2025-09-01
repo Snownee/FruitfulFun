@@ -10,18 +10,18 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.Hooks;
-import snownee.fruits.vacuum.VacModule;
-import snownee.fruits.vacuum.client.VacGunSoundInstance;
+import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.gadget.client.VacGunSoundInstance;
 
 @Mixin(LivingEntity.class)
 public class LivingEntitySoundMixin {
 	@Inject(method = "startUsingItem", at = @At("TAIL"))
 	private void startUsingItem(InteractionHand interactionHand, CallbackInfo ci) {
-		if (!Hooks.vac) {
+		if (!Hooks.gadget) {
 			return;
 		}
 		LivingEntity entity = (LivingEntity) (Object) this;
-		if (!entity.level().isClientSide() || !(entity instanceof Player player) || !VacModule.VAC_GUN.is(player.getUseItem())) {
+		if (!entity.level().isClientSide() || !(entity instanceof Player player) || !GadgetModule.VAC_GUN.is(player.getUseItem())) {
 			return;
 		}
 		Minecraft.getInstance().getSoundManager().play(new VacGunSoundInstance(player));

@@ -16,8 +16,8 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFFruitTypes;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
@@ -26,7 +26,7 @@ import snownee.kiwi.util.Util;
 
 public class FruitTreeBlockEntity extends ModBlockEntity {
 
-	public FruitType type = CoreFruitTypes.CITRON.get();
+	public FruitType type = FFFruitTypes.CITRON.get();
 	private int lifespan = 20;
 	private int maxLifespan = 30;
 	private int fruitProduced = 0;

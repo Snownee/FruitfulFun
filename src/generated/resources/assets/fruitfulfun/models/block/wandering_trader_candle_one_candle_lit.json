@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_candle",
+  "textures": {
+    "all": "fruitfulfun:block/wandering_trader_candle_lit",
+    "particle": "fruitfulfun:block/wandering_trader_candle_lit"
+  }
+}

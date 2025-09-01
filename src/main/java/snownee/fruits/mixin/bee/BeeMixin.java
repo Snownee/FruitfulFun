@@ -20,6 +20,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
@@ -148,7 +149,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	@WrapOperation(method = "doHurtTarget", at = @At(value = "NEW", args = "class=net/minecraft/world/effect/MobEffectInstance"))
 	private MobEffectInstance doHurtTarget(MobEffect effect, int duration, int amplifier, Operation<MobEffectInstance> original) {
 		if (BeeAttributes.of(this).hasTrait(Trait.GHOST)) {
-			effect = BeeModule.FRAGILITY.get();
+			effect = CoreModule.FRAGILITY.get();
 			duration *= 2;
 			amplifier = 2;
 		}

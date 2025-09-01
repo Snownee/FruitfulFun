@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFFruitTypes;
 import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.pomegranate.block.HangingFruitBlock;
 import snownee.fruits.pomegranate.block.HangingFruitLeavesBlock;
@@ -24,8 +25,9 @@ import snownee.lychee.LycheeRegistries;
 public class PomegranateModule extends AbstractModule {
 	public static final KiwiGO<FFExplodeAction.Type> EXPLODE = go(FFExplodeAction.Type::new, () -> LycheeRegistries.POST_ACTION);
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
-	public static final KiwiGO<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = go(
-			() -> new HangingFruitLeavesBlock(PomegranateFruitTypes.POMEGRANATE, blockProp(Blocks.JUNGLE_LEAVES)));
+	public static final KiwiGO<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = go(() -> new HangingFruitLeavesBlock(
+			FFFruitTypes.POMEGRANATE,
+			blockProp(Blocks.JUNGLE_LEAVES)));
 	@KiwiModule.NoItem
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	public static final KiwiGO<HangingFruitBlock> POMEGRANATE = go(() -> new HangingFruitBlock(blockProp()
@@ -42,12 +44,14 @@ public class PomegranateModule extends AbstractModule {
 			Rarity.UNCOMMON)));
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> POMEGRANATE_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(PomegranateFruitTypes.POMEGRANATE.getOrCreate()), blockProp(Blocks.JUNGLE_SAPLING)));
+	public static final KiwiGO<SaplingBlock> POMEGRANATE_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.POMEGRANATE.getOrCreate()),
+			blockProp(Blocks.JUNGLE_SAPLING)));
 	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 	@KiwiModule.NoItem
-	public static final KiwiGO<Block> POTTED_POMEGRANATE = go(
-			() -> new FlowerPotBlock(POMEGRANATE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
+	public static final KiwiGO<Block> POTTED_POMEGRANATE = go(() -> new FlowerPotBlock(
+			POMEGRANATE_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_JUNGLE_SAPLING)));
 
 	@Override
 	protected void preInit() {

@@ -16,6 +16,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.compat.supplementaries.SupplementariesJadeCompat;
+import snownee.fruits.gadget.BuzzyCrafterBlock;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IWailaClientRegistration;
@@ -32,6 +33,7 @@ public class JadeCompat implements IWailaPlugin {
 	public static final ResourceLocation INSPECTOR_BLOCK = FruitfulFun.id("inspector_block");
 	public static final ResourceLocation CROP_PROGRESS = FruitfulFun.id("crop_progress");
 	public static final ResourceLocation WAXED = FruitfulFun.id("waxed");
+	public static final ResourceLocation CRAFTER = FruitfulFun.id("crafter");
 
 	public static void ensureVisibility(boolean fromEntity) {
 		IWailaConfig.IConfigGeneral config = IWailaConfig.get().getGeneral();
@@ -50,8 +52,8 @@ public class JadeCompat implements IWailaPlugin {
 			registration.registerEntityDataProvider(new BeeDebugProvider(), Bee.class);
 		}
 		if (Hooks.bee) {
+			registration.registerBlockDataProvider(new BeehiveWaxProvider(), BeehiveBlockEntity.class);
 			registration.registerEntityDataProvider(new InspectorProvider(), Bee.class);
-			registration.registerBlockDataProvider(new BeehiveProvider(), BeehiveBlockEntity.class);
 			if (Hooks.supplementaries) {
 				SupplementariesJadeCompat.register(registration);
 			}
@@ -68,10 +70,13 @@ public class JadeCompat implements IWailaPlugin {
 		registration.addRayTraceCallback((hit, accessor, original) -> override(original, registration));
 		if (Hooks.bee) {
 			registration.registerEntityComponent(new InspectorProvider(), Bee.class);
-			registration.registerBlockIcon(new BeehiveProvider(), BeehiveBlock.class);
+			registration.registerBlockIcon(new BeehiveWaxProvider(), BeehiveBlock.class);
 			if (Hooks.supplementaries) {
 				SupplementariesJadeCompat.registerClient(registration);
 			}
+		}
+		if (Hooks.gadget) {
+			registration.registerBlockComponent(new CrafterProvider(), BuzzyCrafterBlock.class);
 		}
 	}
 

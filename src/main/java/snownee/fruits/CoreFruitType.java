@@ -23,7 +23,6 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlac
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
-import snownee.fruits.pomegranate.PomegranateFruitTypes;
 
 public class CoreFruitType extends FruitType {
 
@@ -62,7 +61,7 @@ public class CoreFruitType extends FruitType {
 			foliagePlacer = new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3);
 		}
 		TrunkPlacer trunkPlacer;
-		if (PomegranateFruitTypes.POMEGRANATE.is(this)) {
+		if (FFFruitTypes.POMEGRANATE.is(this)) {
 			trunkPlacer = new StraightTrunkPlacer(5, 2, 0);
 		} else {
 			trunkPlacer = new StraightTrunkPlacer(4, 2, 0);

@@ -34,6 +34,8 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
@@ -68,11 +70,12 @@ import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
-import snownee.fruits.vacuum.AirVortexParticleOption;
-import snownee.fruits.vacuum.VacModule;
-import snownee.fruits.vacuum.client.AirVortexParticle;
-import snownee.fruits.vacuum.client.ItemProjectileColor;
-import snownee.fruits.vacuum.client.ItemProjectileRenderer;
+import snownee.fruits.gadget.AirVortexParticleOption;
+import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.gadget.client.AirVortexParticle;
+import snownee.fruits.gadget.client.BeeSwarmRenderer;
+import snownee.fruits.gadget.client.ItemProjectileColor;
+import snownee.fruits.gadget.client.ItemProjectileRenderer;
 import snownee.kiwi.util.ColorProviderUtil;
 import snownee.lychee.client.core.post.PostActionRenderer;
 
@@ -82,7 +85,7 @@ public class ClientProxy implements ClientModInitializer {
 	}
 
 	public static boolean poseArm(LivingEntity entity, ModelPart arm, ModelPart head, boolean rightArm) {
-		if (!Hooks.bee && !Hooks.vac) {
+		if (!Hooks.bee && !Hooks.gadget) {
 			return false;
 		}
 		HumanoidArm mainArm = entity.getMainArm();
@@ -92,7 +95,7 @@ public class ClientProxy implements ClientModInitializer {
 			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
 			arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
 			return true;
-		} else if (Hooks.vac && VacModule.VAC_GUN.is(stack)) {
+		} else if (Hooks.gadget && GadgetModule.VAC_GUN.is(stack)) {
 			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
 			arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
 			return true;
@@ -290,9 +293,18 @@ public class ClientProxy implements ClientModInitializer {
 			TrinketsCompat.init();
 		}
 
-		if (Hooks.vac) {
-			EntityRendererRegistry.register(VacModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
-			ParticleFactoryRegistry.getInstance().register(VacModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
+		if (Hooks.gadget) {
+			EntityRendererRegistry.register(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
+			ParticleFactoryRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
+
+			EntityRendererRegistry.register(GadgetModule.BEE_SWARM.getOrCreate(), BeeSwarmRenderer::new);
+
+			ResourceLocation blocking = new ResourceLocation("blocking");
+			if (ItemProperties.getProperty(Items.SHIELD, blocking) instanceof ClampedItemPropertyFunction function) {
+				ItemProperties.register(GadgetModule.BUZZY_SHIELD.getOrCreate(), blocking, function);
+			} else {
+				FruitfulFun.LOGGER.warn("Failed to register shield blocking property");
+			}
 		}
 
 		if (Hooks.ritual) {

@@ -64,6 +64,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
@@ -281,29 +282,47 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 
 		Consumer<FinishedRecipe> noBeeExporter = withConditions(
 				exporter, DefaultResourceConditions.not(ModuleLoadedCondition.provider(FruitfulFun.id("bee"))));
-		sapling(noBeeExporter, CoreModule.GRAPEFRUIT_SAPLING,
+		sapling(
+				noBeeExporter, CoreModule.GRAPEFRUIT_SAPLING,
 				CoreModule.LEMON_SAPLING.get(),
 				CoreModule.POMELO_SAPLING.get(),
 				CoreModule.ORANGE_SAPLING.get());
-		sapling(noBeeExporter, CoreModule.LEMON_SAPLING,
+		sapling(
+				noBeeExporter, CoreModule.LEMON_SAPLING,
 				CoreModule.LIME_SAPLING.get(),
 				CoreModule.CITRON_SAPLING.get());
-		sapling(noBeeExporter, CoreModule.POMELO_SAPLING,
+		sapling(
+				noBeeExporter, CoreModule.POMELO_SAPLING,
 				CoreModule.TANGERINE_SAPLING.get(),
 				CoreModule.CITRON_SAPLING.get());
-		sapling(noBeeExporter, CoreModule.ORANGE_SAPLING,
+		sapling(
+				noBeeExporter, CoreModule.ORANGE_SAPLING,
 				CoreModule.TANGERINE_SAPLING.get(),
 				CoreModule.LIME_SAPLING.get());
-		sapling(noBeeExporter, CherryModule.REDLOVE_SAPLING,
+		sapling(
+				noBeeExporter, CherryModule.REDLOVE_SAPLING,
 				CoreModule.APPLE_SAPLING.get(),
 				CherryModule.CHERRY_SAPLING.get(),
 				Items.WITHER_ROSE);
-		sapling(noBeeExporter, CherryModule.CHERRY_SAPLING,
+		sapling(
+				noBeeExporter, CherryModule.CHERRY_SAPLING,
 				Items.CHERRY_SAPLING,
 				Items.PINK_PETALS);
-		sapling(noBeeExporter, PomegranateModule.POMEGRANATE_SAPLING,
+		sapling(
+				noBeeExporter, PomegranateModule.POMEGRANATE_SAPLING,
 				CoreModule.APPLE_SAPLING.get(),
 				Items.SPORE_BLOSSOM);
+
+/*		Consumer<FinishedRecipe> gadgetExporter = withConditions(exporter, ModuleLoadedCondition.provider(FruitfulFun.id("gadget")));
+		ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GadgetModule.BUZZY_CRAFTER.get())
+				.pattern("THT")
+				.pattern("CCC")
+				.pattern("THT")
+				.define('T', Items.CRAFTING_TABLE)
+				.define('H', Items.HOPPER)
+				.define('C', Items.HONEYCOMB)
+				.unlockedBy("has_item", has(Items.HONEYCOMB))
+				.save(gadgetExporter);*/
 	}
 
 	public static void sapling(Consumer<FinishedRecipe> exporter, KiwiGO<? extends ItemLike> result, ItemLike... inputs) {
