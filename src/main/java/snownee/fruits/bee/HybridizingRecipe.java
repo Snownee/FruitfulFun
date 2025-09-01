@@ -6,8 +6,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
@@ -66,7 +64,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 	}
 
 	@Override
-	public int compareTo(@NotNull HybridizingRecipe o) {
+	public int compareTo(HybridizingRecipe o) {
 		return Integer.compare(pollens.size(), o.pollens.size());
 	}
 
@@ -83,7 +81,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 	}
 
 	@Override
-	public @NotNull NonNullList<Ingredient> getIngredients() {
+	public NonNullList<Ingredient> getIngredients() {
 		refreshIngredients();
 		return ingredients;
 	}

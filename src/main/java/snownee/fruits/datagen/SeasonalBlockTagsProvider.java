@@ -8,8 +8,6 @@ import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE_LEAVES;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.NotNull;
-
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -54,7 +52,7 @@ public class SeasonalBlockTagsProvider extends FabricTagProvider.BlockTagProvide
 	}
 
 	@Override
-	public @NotNull String getName() {
+	public String getName() {
 		return "[Seasonal] " + super.getName();
 	}
 }

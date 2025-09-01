@@ -165,6 +165,7 @@ jar {
     exclude "/snownee/fruits/command"
     exclude '**/*.bat'
     exclude '**/*.psd'
+    exclude '**/*.py'
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }

@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
@@ -132,12 +131,12 @@ public class FFJEIREI {
 		@Nullable
 		public final Block block;
 
-		public Input(@NotNull Ingredient itemIngredient) {
+		public Input(Ingredient itemIngredient) {
 			this.itemIngredient = Objects.requireNonNull(itemIngredient);
 			this.block = null;
 		}
 
-		public Input(@NotNull Block block) {
+		public Input(Block block) {
 			this.itemIngredient = null;
 			this.block = Objects.requireNonNull(block);
 		}

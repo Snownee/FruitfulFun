@@ -3,7 +3,6 @@ package snownee.fruits.mixin.bee;
 import java.util.List;
 import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -76,7 +75,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 			Level level,
 			BlockPos blockPos,
 			BlockState blockState,
-			@NotNull BeehiveBlockEntity beehiveBlockEntity,
+			BeehiveBlockEntity beehiveBlockEntity,
 			CallbackInfo ci) {
 		BeehiveBlockEntityMixin self = (BeehiveBlockEntityMixin) (Object) beehiveBlockEntity;
 		if (self.waxedTicks > 0) {
@@ -95,7 +94,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 			List<BeehiveBlockEntity.BeeData> list,
 			@Nullable BlockPos blockPos2,
 			Operation<Void> original,
-			@Local(argsOnly = true) @NotNull BeehiveBlockEntity beehive) {
+			@Local(argsOnly = true) BeehiveBlockEntity beehive) {
 		FFBeehiveBlockEntity self = (FFBeehiveBlockEntity) beehive;
 		if (!self.fruits$isWaxed()) {
 			original.call(level, blockPos, blockState, list, blockPos2);
@@ -106,7 +105,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 	private static boolean serverTick_playWorkingSound(
 			List<BeehiveBlockEntity.BeeData> list,
 			Operation<Boolean> original,
-			@Local(argsOnly = true) @NotNull BeehiveBlockEntity beehive) {
+			@Local(argsOnly = true) BeehiveBlockEntity beehive) {
 		FFBeehiveBlockEntity self = (FFBeehiveBlockEntity) beehive;
 		if (!self.fruits$isWaxed()) {
 			return original.call(list);

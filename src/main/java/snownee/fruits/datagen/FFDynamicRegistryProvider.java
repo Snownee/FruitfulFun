@@ -3,8 +3,6 @@ package snownee.fruits.datagen;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.google.common.collect.Lists;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -47,12 +45,13 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 			type.makeFeatures(
 					id, false, (location, config) -> entries.add(FeatureUtils.createKey(location.toString()), cf(Feature.TREE, config)));
 			List<WeightedPlacedFeature> features = Lists.newArrayList();
-			type.makeFeatures(id, true, (location, config) -> {
-				ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(location.withSuffix("_wg").toString());
-				ConfiguredFeature<TreeConfiguration, ?> cf = cf(Feature.TREE, config);
-				entries.add(key, cf);
-				features.add(new WeightedPlacedFeature(PlacementUtils.inlinePlaced(entries.ref(key)), 0.333f));
-			});
+			type.makeFeatures(
+					id, true, (location, config) -> {
+						ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(location.withSuffix("_wg").toString());
+						ConfiguredFeature<TreeConfiguration, ?> cf = cf(Feature.TREE, config);
+						entries.add(key, cf);
+						features.add(new WeightedPlacedFeature(PlacementUtils.inlinePlaced(entries.ref(key)), 0.333f));
+					});
 			if (type.tier == 0) {
 				ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(id.withSuffix("_random").toString());
 				ConfiguredFeature<?, ?> cf = cf(
@@ -86,7 +85,7 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 	}
 
 	@Override
-	public @NotNull String getName() {
+	public String getName() {
 		return "FFDynamicRegistryProvider";
 	}
 }

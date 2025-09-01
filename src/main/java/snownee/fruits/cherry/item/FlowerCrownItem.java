@@ -1,7 +1,5 @@
 package snownee.fruits.cherry.item;
 
-import org.jetbrains.annotations.NotNull;
-
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -59,12 +57,12 @@ public class FlowerCrownItem extends ModItem implements Equipable {
 	}
 
 	@Override
-	public @NotNull EquipmentSlot getEquipmentSlot() {
+	public EquipmentSlot getEquipmentSlot() {
 		return EquipmentSlot.HEAD;
 	}
 
 	@Override
-	public @NotNull SoundEvent getEquipSound() {
+	public SoundEvent getEquipSound() {
 		return CherryModule.EQUIP_CROWN.get();
 	}
 

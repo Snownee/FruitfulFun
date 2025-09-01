@@ -7,7 +7,6 @@ import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE_ITEM;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -58,7 +57,7 @@ public class SeasonalItemTagsProvider extends FabricTagProvider.ItemTagProvider 
 	}
 
 	@Override
-	public @NotNull String getName() {
+	public String getName() {
 		return "[Seasonal] " + super.getName();
 	}
 }

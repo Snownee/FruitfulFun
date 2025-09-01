@@ -1,7 +1,5 @@
 package snownee.fruits.food;
 
-import org.jetbrains.annotations.NotNull;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -15,7 +13,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 
 public class FoodDispenseBehavior extends DefaultDispenseItemBehavior {
 	@Override
-	protected @NotNull ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+	protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
 		ServerLevel level = blockSource.getLevel();
 		Direction facing = blockSource.getBlockState().getValue(DispenserBlock.FACING);
 		BlockPos blockPos = blockSource.getPos().relative(facing);
