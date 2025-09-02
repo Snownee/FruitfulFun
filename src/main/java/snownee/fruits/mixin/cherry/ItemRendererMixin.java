@@ -42,7 +42,10 @@ public class ItemRendererMixin {
 			@Local(argsOnly = true) LocalRef<BakedModel> modelSetter) {
 		if (itemDisplayContext == ItemDisplayContext.HEAD && itemStack.getItem() instanceof FlowerCrownItem) {
 			ResourceLocation id = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
-			modelSetter.set(ClientProxy.getModel(itemModelShaper.getModelManager(), id.withPrefix("block/")));
+			BakedModel model = ClientProxy.getModel(itemModelShaper.getModelManager(), id.withPrefix("block/"));
+			if (model != null) {
+				modelSetter.set(model);
+			}
 		}
 	}
 }

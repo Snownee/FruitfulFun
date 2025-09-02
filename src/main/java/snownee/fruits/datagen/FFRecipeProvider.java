@@ -53,7 +53,9 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -313,7 +315,7 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				CoreModule.APPLE_SAPLING.get(),
 				Items.SPORE_BLOSSOM);
 
-/*		Consumer<FinishedRecipe> gadgetExporter = withConditions(exporter, ModuleLoadedCondition.provider(FruitfulFun.id("gadget")));
+		Consumer<FinishedRecipe> gadgetExporter = withConditions(exporter, ModuleLoadedCondition.provider(FruitfulFun.id("gadget")));
 		ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GadgetModule.BUZZY_CRAFTER.get())
 				.pattern("THT")
 				.pattern("CCC")
@@ -322,7 +324,22 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				.define('H', Items.HOPPER)
 				.define('C', Items.HONEYCOMB)
 				.unlockedBy("has_item", has(Items.HONEYCOMB))
-				.save(gadgetExporter);*/
+				.save(gadgetExporter);
+		scentedCandle(gadgetExporter, Ingredient.of(Items.TINTED_GLASS), GadgetModule.WEAK_CANDLE);
+		scentedCandle(gadgetExporter, Ingredient.of(Items.ROTTEN_FLESH), GadgetModule.WANDERING_TRADER_CANDLE);
+		scentedCandle(gadgetExporter, Ingredient.of(Items.SUNFLOWER), GadgetModule.PHANTOM_CANDLE);
+		scentedCandle(gadgetExporter, Ingredient.of(Items.CHORUS_FRUIT), GadgetModule.ENDER_CANDLE);
+	}
+
+	public static void scentedCandle(Consumer<FinishedRecipe> exporter, Ingredient addition, KiwiGO<? extends ItemLike> result) {
+		SmithingTransformRecipeBuilder.smithing(
+						Ingredient.of(FFItemTagsProvider.GADGET_TOKEN),
+						Ingredient.of(ItemTags.CANDLES),
+						addition,
+						RecipeCategory.DECORATIONS,
+						result.get().asItem())
+				.unlocks("has_crafter", has(GadgetModule.BUZZY_CRAFTER.get()))
+				.save(exporter, BuiltInRegistries.ITEM.getKey(result.get().asItem()));
 	}
 
 	public static void sapling(Consumer<FinishedRecipe> exporter, KiwiGO<? extends ItemLike> result, ItemLike... inputs) {

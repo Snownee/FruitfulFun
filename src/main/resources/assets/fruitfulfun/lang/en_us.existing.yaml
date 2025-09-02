@@ -113,6 +113,9 @@ tip.fruitfulfun.onlyAtNight: Only works at night.
 tip.fruitfulfun.allogamy: Requires pollination to bear fruit.
 tip.fruitfulfun.cropNeedsPollination: '%s (needs pollination)'
 tip.fruitfulfun.candleNoLife: Burned out. Place it on the Buzzy Crafter to recharge it.
+tip.fruitfulfun.analyzeScents.none: There is no scent at this location.
+tip.fruitfulfun.analyzeScents.singular: One scent is active here and will end in %ss.
+tip.fruitfulfun.analyzeScents.plural: '%s scents are active here and the shortest one will end in %ss.'
 text.fruitfulfun.time: '%s/%s %s:%s:%s'
 text.fruitfulfun.trait: Traits
 text.fruitfulfun.trait.none: This bee doesn't have any traits.

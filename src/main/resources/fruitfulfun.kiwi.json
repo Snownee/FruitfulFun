@@ -72,10 +72,10 @@
 			}
 		},
 		{
-			"target": "snownee.fruits.bee.network.CInspectBeePacket",
+			"target": "snownee.fruits.bee.network.CInspectTargetPacket",
 			"data": {
 				"dir": "PLAY_TO_SERVER",
-				"value": "inspect_bee"
+				"value": "inspect_target"
 			}
 		},
 		{
@@ -124,6 +124,13 @@
 			"data": {
 				"dir": "PLAY_TO_CLIENT",
 				"value": "sync_player"
+			}
+		},
+		{
+			"target": "snownee.fruits.gadget.network.CClickCrafterPacket",
+			"data": {
+				"dir": "PLAY_TO_SERVER",
+				"value": "click_crafter"
 			}
 		},
 		{

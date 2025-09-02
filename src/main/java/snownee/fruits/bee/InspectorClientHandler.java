@@ -28,7 +28,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.Trait;
-import snownee.fruits.bee.network.CInspectBeePacket;
+import snownee.fruits.bee.network.CInspectTargetPacket;
+import snownee.fruits.bee.network.InspectAction;
 import snownee.fruits.bee.network.InspectTarget;
 import snownee.fruits.bee.network.SInspectBeeReplyPacket;
 import snownee.fruits.compat.jade.JadeCompat;
@@ -37,7 +38,7 @@ import snownee.fruits.duck.FFPlayer;
 public class InspectorClientHandler {
 	public static final int ANALYZE_TICKS = 12;
 	@Nullable
-	public static InspectTarget inspectingBee;
+	public static InspectTarget inspectingTarget;
 	private static int hoverTicks;
 	private static boolean jadeHint = true;
 	private static boolean holdAlt;
@@ -64,19 +65,14 @@ public class InspectorClientHandler {
 		}
 		holdAlt = alt;
 		InspectTarget target = InspectTarget.find(mc.level, mc.hitResult);
-		if (target != null) {
-			if (!(target.getEntity(mc.level) instanceof Bee bee) || bee.isDeadOrDying()) {
-				target = null;
-			}
-		}
-		if (target == null) {
+		InspectAction action = InspectAction.get(target, mc.level);
+		if (target == null || action == null) {
 			reset();
 			return;
 		}
-		if (!Objects.equals(target, inspectingBee)) {
-			inspectingBee = target;
+		if (!Objects.equals(target, inspectingTarget)) {
 			hoverTicks = 0;
-			if (!Hooks.jade) {
+			if (action.recommendJade && !Hooks.jade) {
 				mc.player.displayClientMessage(Component.translatable("tip.fruitfulfun.analyzing"), true);
 				if (jadeHint && !mc.player.getOffhandItem().is(Items.WRITABLE_BOOK)) {
 					jadeHint = false;
@@ -84,8 +80,9 @@ public class InspectorClientHandler {
 				}
 			}
 		}
+		inspectingTarget = target;
 		if (++hoverTicks == ANALYZE_TICKS) {
-			CInspectBeePacket.I.sendToServer(inspectingBee::toNetwork);
+			CInspectTargetPacket.I.sendToServer(inspectingTarget::toNetwork);
 			if (Hooks.jade) {
 				JadeCompat.ensureVisibility(target.getClass() == InspectTarget.EntityTarget.class);
 			}
@@ -93,7 +90,7 @@ public class InspectorClientHandler {
 	}
 
 	public static void reset() {
-		inspectingBee = null;
+		inspectingTarget = null;
 		hoverTicks = 0;
 	}
 
@@ -186,7 +183,7 @@ public class InspectorClientHandler {
 		lines.clear();
 	}
 
-	public static boolean startUsing() {
+	public static boolean canUse() {
 		Level level = Minecraft.getInstance().level;
 		InspectTarget target = InspectTarget.find(level, Minecraft.getInstance().hitResult);
 		return target != null && target.getEntity(level) instanceof Bee;
@@ -201,7 +198,7 @@ public class InspectorClientHandler {
 	}
 
 	public static boolean isAnalyzing() {
-		return inspectingBee != null && hoverTicks < ANALYZE_TICKS;
+		return inspectingTarget != null && hoverTicks < ANALYZE_TICKS;
 	}
 
 	public static int getHoverTicks() {

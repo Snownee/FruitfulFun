@@ -1,5 +1,7 @@
 package snownee.fruits.datagen;
 
+import net.minecraft.world.item.Items;
+
 import static net.minecraft.world.item.Items.APPLE;
 import static net.minecraft.world.item.Items.CHORUS_FRUIT;
 import static net.minecraft.world.item.Items.GLOW_BERRIES;
@@ -43,6 +45,7 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 	static final TagKey<Item> WOODEN_CABINETS = AbstractModule.itemTag("farmersdelight", "cabinets/wooden");
 	static final TagKey<Item> HYDRATING_DRINKS = AbstractModule.itemTag("dehydration", "hydrating_drinks");
 	static final TagKey<Item> UPRIGHT_ON_BELT = AbstractModule.itemTag("create", "upright_on_belt");
+	static final TagKey<Item> GADGET_TOKEN = AbstractModule.itemTag(FruitfulFun.ID, "gadget_token");
 
 	public FFItemTagsProvider(
 			FabricDataOutput output,
@@ -90,6 +93,7 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		tagAppender.addOptional(BeeModule.MUTAGEN.key());
 		getOrCreateTagBuilder(HYDRATING_DRINKS).addOptional(HONEY_POMELO_TEA.key());
 		getOrCreateTagBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
+		getOrCreateTagBuilder(GADGET_TOKEN).add(Items.EMERALD_BLOCK);
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(WOODEN_CABINETS)

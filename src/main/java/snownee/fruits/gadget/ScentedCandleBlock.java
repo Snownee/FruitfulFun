@@ -58,6 +58,14 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock {
 				be.getLife() == 0) {
 			player.displayClientMessage(Component.translatable("tip.fruitfulfun.candleNoLife"), true);
 		}
+//		if (!level.isClientSide() && player.isHolding(Items.DIAMOND)) {
+//			ScentedCandleBlockEntity.getChunksAtExactChessboardDistance(level, pos, state.getValue(CANDLES) - 1).forEach(chunk -> {
+//				int x = chunk.getPos().getMiddleBlockX();
+//				int y = pos.getY() + 1;
+//				int z = chunk.getPos().getMiddleBlockZ();
+//				level.setBlockAndUpdate(new BlockPos(x, y, z), Blocks.DIAMOND_BLOCK.defaultBlockState());
+//			});
+//		}
 		return super.use(state, level, pos, player, hand, hit);
 	}
 }

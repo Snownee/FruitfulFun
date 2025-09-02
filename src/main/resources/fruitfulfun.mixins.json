@@ -41,6 +41,7 @@
 		"bee.RideableBeePlayerMixin",
 		"bee.TemptGoalMixin",
 		"bz.BzBeehiveBlockEntityMixin",
+		"crafter.BeehiveBlockEntityMixin",
 		"food.InteractionEntityMixin",
 		"food.PandaMixin",
 		"food.SkullBlockEntityMixin",

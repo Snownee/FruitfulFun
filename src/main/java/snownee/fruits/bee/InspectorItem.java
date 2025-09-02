@@ -43,7 +43,7 @@ public class InspectorItem extends ModItem {
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 		if (player.level().isClientSide()) {
 			ItemStack offhandItem = player.getOffhandItem();
-			if (!InspectorClientHandler.startUsing()
+			if (!InspectorClientHandler.canUse()
 					&& hand == InteractionHand.MAIN_HAND
 					&& offhandItem.is(Items.WRITABLE_BOOK)
 					&& offhandItem.getTag() != null

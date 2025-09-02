@@ -156,6 +156,8 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 					.addOptionalTag(new ResourceLocation("supplementaries:candle_holders"))
 					.addOptionalTag(new ResourceLocation("the_bumblezone:candles"));
 		}
+		getOrCreateTagBuilder(GadgetModule.SUSTAIN_CRAFTER_ITEM)
+				.addTag(CoreModule.CANDLES);
 		getOrCreateTagBuilder(GadgetModule.VCD_PERFORM_USING)
 				.addTag(ALL_LEAVES)
 				.addOptionalTag(BlockTags.CAVE_VINES.location())

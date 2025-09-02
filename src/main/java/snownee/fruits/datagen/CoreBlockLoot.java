@@ -13,15 +13,15 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import snownee.fruits.FruitType;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
 import snownee.kiwi.datagen.KiwiBlockLoot;
-import snownee.kiwi.util.Util;
 
 public class CoreBlockLoot extends KiwiBlockLoot {
 
 	public CoreBlockLoot(FabricDataOutput dataOutput) {
-		this(Util.RL("fruitfulfun:core"), dataOutput);
+		this(FruitfulFun.id("core"), dataOutput);
 	}
 
 	public CoreBlockLoot(ResourceLocation moduleId, FabricDataOutput dataOutput) {

@@ -13,6 +13,7 @@ import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -34,6 +35,7 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
@@ -74,12 +76,14 @@ import snownee.fruits.gadget.AirVortexParticleOption;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.client.AirVortexParticle;
 import snownee.fruits.gadget.client.BeeSwarmRenderer;
+import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileRenderer;
 import snownee.kiwi.util.ColorProviderUtil;
 import snownee.lychee.client.core.post.PostActionRenderer;
 
 public class ClientProxy implements ClientModInitializer {
+	@Nullable
 	public static BakedModel getModel(ModelManager modelManager, ResourceLocation id) {
 		return modelManager.getModel(id);
 	}
@@ -145,6 +149,7 @@ public class ClientProxy implements ClientModInitializer {
 		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), mainArm), vec.x(), vec.y(), vec.z(), 0, 0, 0);
 	}
 
+	@Nullable
 	public static Player getPlayer() {
 		return Minecraft.getInstance().player;
 	}
@@ -298,6 +303,7 @@ public class ClientProxy implements ClientModInitializer {
 			ParticleFactoryRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
 
 			EntityRendererRegistry.register(GadgetModule.BEE_SWARM.getOrCreate(), BeeSwarmRenderer::new);
+			BlockEntityRenderers.register(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
 
 			ResourceLocation blocking = new ResourceLocation("blocking");
 			if (ItemProperties.getProperty(Items.SHIELD, blocking) instanceof ClampedItemPropertyFunction function) {

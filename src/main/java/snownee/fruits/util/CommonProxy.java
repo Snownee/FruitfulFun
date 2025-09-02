@@ -133,6 +133,9 @@ public class CommonProxy implements ModInitializer {
 		if (Hooks.food) {
 			addBuiltinPack(modContainer, "food");
 		}
+		if (Hooks.gadget) {
+			addBuiltinPack(modContainer, "gadget");
+		}
 		if (Hooks.farmersdelight) {
 			String mode = FarmersDelightModule.getMode();
 			if ("vectorwing".equals(mode)) {
@@ -159,7 +162,7 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	@SuppressWarnings("UnstableApiUsage")
-	public static boolean insertItem(
+	public static long insertItem(
 			Level level,
 			BlockPos blockPos,
 			BlockState blockState,
@@ -168,18 +171,17 @@ public class CommonProxy implements ModInitializer {
 			ItemStack item) {
 		Storage<ItemVariant> storage = ItemStorage.SIDED.find(level, blockPos, blockState, blockEntity, direction);
 		if (storage == null || !storage.supportsInsertion()) {
-			return false;
+			return 0;
 		}
-		boolean success = false;
+		long inserted;
 		try (Transaction tx = Transaction.openOuter()) {
-			long inserted = storage.insert(ItemVariant.of(item), item.getCount(), tx);
+			inserted = storage.insert(ItemVariant.of(item), item.getCount(), tx);
 			if (inserted > 0) {
 				tx.commit();
 				item.shrink((int) inserted);
-				success = true;
 			}
 		}
-		return success;
+		return inserted;
 	}
 
 	@SuppressWarnings("UnstableApiUsage")

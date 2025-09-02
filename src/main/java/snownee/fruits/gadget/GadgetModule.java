@@ -53,6 +53,7 @@ public class GadgetModule extends AbstractModule {
 			Set.copyOf(BUZZY_CRAFTER.getOrCreate()
 					.getStateDefinition()
 					.getPossibleStates()), 0, 1));
+	public static final TagKey<Block> SUSTAIN_CRAFTER_ITEM = blockTag(FruitfulFun.ID, "sustain_crafter_item");
 
 	public static final KiwiGO<Item> VAC_GUN_CASING = go(() -> new ModItem(itemProp().stacksTo(1).rarity(Rarity.RARE)));
 	public static final KiwiGO<VacGunItem> VAC_GUN = go(VacGunItem::new);
