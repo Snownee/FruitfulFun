@@ -345,6 +345,7 @@
   "tip.fruitfulfun.beehiveWaxing": "You can then mine this block as if you're holding a silk touching tool.",
   "tip.fruitfulfun.bees": "Bees: %s",
   "tip.fruitfulfun.bookIsFull": "This book has no enough pages...",
+  "tip.fruitfulfun.brainierBees": "Fruitful Fun detected that you have Brainier Bees installed, which replaces the bee AI system. This will prevent new bee features added by Fruitful Fun from functioning. You can uninstall the mod or disable the bee module in the configuration. This message will be displayed only once.",
   "tip.fruitfulfun.candleNoLife": "Burned out. Place it on the Buzzy Crafter to recharge it.",
   "tip.fruitfulfun.clearHarmfulEffects": "Clears Harmful Effects",
   "tip.fruitfulfun.cropNeedsPollination": "%s (needs pollination)",

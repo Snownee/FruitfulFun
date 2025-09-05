@@ -114,6 +114,11 @@ tip.fruitfulfun.leavesUsInPeace: >-
   pollinating them. For a better experience, it is recommended to set the
   "Unknown leaves only match self" option in the Leaves Us In Peace's
   configuration to "No". This message will be displayed only once.
+tip.fruitfulfun.brainierBees: >-
+  Fruitful Fun detected that you have Brainier Bees installed, which replaces the
+  bee AI system. This will prevent new bee features added by Fruitful Fun from functioning.
+  You can uninstall the mod or disable the bee module in the configuration.
+  This message will be displayed only once.
 tip.fruitfulfun.beehiveWaxing: You can then mine this block as if you're holding a silk touching tool.
 tip.fruitfulfun.beehiveTradeInputName: Beehive with Bees
 tip.fruitfulfun.beehiveTradeInputHint: Bee traits can affect the purchase price. 3 bees with the same traits can increase the price significantly.

@@ -286,16 +286,27 @@ public class CommonProxy implements ModInitializer {
 			}
 		});
 
-		if (Platform.isModLoaded("leaves_us_in_peace")) {
+		if (Platform.isModLoaded("brainierbees") || Platform.isModLoaded("leaves_us_in_peace")) {
 			ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-				if (FFCommonConfig.leavesUsInPeaceIncompatibilityNotified || isFakePlayer(handler.getPlayer())) {
+				if (isFakePlayer(handler.getPlayer())) {
 					return;
 				}
-				MutableComponent msg = Component.translatable("tip.fruitfulfun.leavesUsInPeace");
-				server.sendSystemMessage(msg);
-				handler.getPlayer().sendSystemMessage(msg);
-				FFCommonConfig.leavesUsInPeaceIncompatibilityNotified = true;
-				KiwiConfigManager.getHandler(FFCommonConfig.class).save();
+				boolean save = false;
+				if (Hooks.bee && Platform.isModLoaded("brainierbees") && !FFCommonConfig.leavesUsInPeaceIncompatibilityNotified) {
+					MutableComponent msg = Component.translatable("tip.fruitfulfun.brainierBees");
+					server.sendSystemMessage(msg);
+					handler.getPlayer().sendSystemMessage(msg);
+					save = FFCommonConfig.brainierBeesIncompatibilityNotified = true;
+				}
+				if (Platform.isModLoaded("leaves_us_in_peace") && !FFCommonConfig.leavesUsInPeaceIncompatibilityNotified) {
+					MutableComponent msg = Component.translatable("tip.fruitfulfun.leavesUsInPeace");
+					server.sendSystemMessage(msg);
+					handler.getPlayer().sendSystemMessage(msg);
+					save = FFCommonConfig.leavesUsInPeaceIncompatibilityNotified = true;
+				}
+				if (save) {
+					KiwiConfigManager.getHandler(FFCommonConfig.class).save();
+				}
 			});
 		}
 

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -95,7 +97,7 @@ public class GeneData {
 		traits.addAll(list);
 	}
 
-	public void breedFrom(GeneData parent1, Allele allele1, GeneData parent2, Allele allele2, RandomSource random) {
+	public void breedFrom(GeneData parent1, @Nullable Allele allele1, GeneData parent2, @Nullable Allele allele2, RandomSource random) {
 		for (Allele allele : Allele.values()) {
 			byte gene1 = parent1.pickAllele(allele, random, allele == allele1);
 			byte gene2 = parent2.pickAllele(allele, random, allele == allele2);
