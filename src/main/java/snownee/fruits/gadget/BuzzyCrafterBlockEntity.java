@@ -1,7 +1,12 @@
 package snownee.fruits.gadget;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.core.BlockPos;
@@ -19,15 +24,23 @@ import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.util.CommonProxy;
 
 public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements BuzzyCrafterContainer {
+	public static final Map<Class<?>, Function<BuzzyCrafterBlockEntity, BuzzyPowerReceiver>> BLOCK_RECEIVER_FACTORIES = Map.of(
+			ScentedCandleBlock.class, ScentedCandleBlock::getPowerReceiver
+	);
 	private static final String ITEM_STACK_KEY = "item";
 	protected ItemStack item = ItemStack.EMPTY;
 	protected TriState blocked = TriState.DEFAULT;
+	private boolean blockPowerReceiverUpdated;
+	private @Nullable BuzzyPowerReceiver blockPowerReceiver;
+	private @Nullable BuzzyPowerReceiver itemPowerReceiver;
 
 	public BuzzyCrafterBlockEntity(BlockPos pos, BlockState state) {
 		super(pos, state);
@@ -41,7 +54,22 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		}
 		BeeAttributes attributes = BeeAttributes.of(occupant);
 		List<String> pollens = attributes.getPollens();
-		pollens.clear();
+		if (!pollens.isEmpty()) {
+			if (!blockPowerReceiverUpdated) {
+				updateBlockPowerReceiver();
+			}
+			List<BuzzyPowerReceiver> receivers = Stream.of(blockPowerReceiver, itemPowerReceiver).filter(Objects::nonNull).toList();
+			if (!receivers.isEmpty()) {
+				float amount = 1f;
+				for (BuzzyPowerReceiver receiver : receivers) {
+					amount = receiver.addPower(BuzzyPowerType.RED, amount);
+				}
+				if (amount < 1f) {
+					Objects.requireNonNull(level).levelEvent(LevelEvent.PARTICLES_WAX_OFF, worldPosition.above(), 0);
+				}
+				pollens.clear();
+			}
+		}
 		super.addOccupantWithPresetTicks(occupant, hasNectar, ticksInHive);
 	}
 
@@ -71,6 +99,9 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		item = ItemStack.EMPTY;
 		if (pTag.contains(ITEM_STACK_KEY)) {
 			item = ItemStack.of(pTag.getCompound(ITEM_STACK_KEY));
+			if (level != null && !level.isClientSide()) {
+				updateItemPowerReceiver();
+			}
 		}
 	}
 
@@ -135,6 +166,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		if (pStack.getCount() > getMaxStackSize()) {
 			pStack.setCount(getMaxStackSize());
 		}
+		updateItemPowerReceiver();
 		refresh();
 		if (level != null && !level.isClientSide) {
 			if (empty && !item.isEmpty()) {
@@ -147,7 +179,12 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 
 	@Override
 	public ItemStack getItem(int slot) {
+		updateItemStats();
 		return item;
+	}
+
+	private void updateItemStats() {
+
 	}
 
 	@Override
@@ -160,5 +197,20 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	@Override
 	public boolean stillValid(Player pPlayer) {
 		return Container.stillValidBlockEntity(this, pPlayer);
+	}
+
+	public void updateBlockPowerReceiver() {
+		Block block = Objects.requireNonNull(level).getBlockState(worldPosition.above()).getBlock();
+		Function<BuzzyCrafterBlockEntity, BuzzyPowerReceiver> function = BLOCK_RECEIVER_FACTORIES.get(block.getClass());
+		if (function != null) {
+			blockPowerReceiver = function.apply(this);
+		} else {
+			blockPowerReceiver = null;
+		}
+		blockPowerReceiverUpdated = true;
+	}
+
+	public void updateItemPowerReceiver() {
+
 	}
 }

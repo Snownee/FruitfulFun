@@ -1,6 +1,6 @@
-// 1.20.1	2025-09-03T02:35:56.9151894	fruitfulfun:gadget/Block Loot Tables - fruitfulfun:gadget
-c5d98b3dc148d2dad5dedc8b2187dec9ddd2b3c5 resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\weak_candle.json
-833a233c91490d152cce5d4696d9809ccc9e5daf resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\phantom_candle.json
+// 1.20.1	2025-09-05T16:49:55.2182039	fruitfulfun:gadget/Block Loot Tables - fruitfulfun:gadget
+85eca538b0a484159d162de0251b27efd42d0e5b resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\weak_candle.json
+d4aa8661069810bdf0fe1345bae69c739eb6a11d resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\phantom_candle.json
 93b9b244c9ff99c1f4bc8daac31083b09a696c4f resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\buzzy_crafter.json
-aedd078552afb5b20fd1488c998f576bde6188cd resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\wandering_trader_candle.json
-1bc29df3e94d5853c30a9bcb2e79e250668a5cdf resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\ender_candle.json
+b6e47f534d9888d0bbf0257e35baa2939631ef6e resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\wandering_trader_candle.json
+b40ce4b0fea7edf737de3a1c7b4b61d089bec8a7 resourcepacks\gadget\data\fruitfulfun\loot_tables\blocks\ender_candle.json

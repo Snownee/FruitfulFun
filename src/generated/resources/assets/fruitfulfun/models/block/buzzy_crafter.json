@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "fruitfulfun:block/buzzy_crafter_bottom",
+    "front": "fruitfulfun:block/buzzy_crafter_front",
+    "side": "fruitfulfun:block/buzzy_crafter_side",
+    "top": "fruitfulfun:block/buzzy_crafter_top"
+  }
+}

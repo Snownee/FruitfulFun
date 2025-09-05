@@ -72,6 +72,15 @@ block.fruitfulfun.potted_pomegranate: Potted Pomegranate Sapling
 block.fruitfulfun.apple_leaves: Apple Oak Leaves
 block.fruitfulfun.cherry_leaves: Cherry Fruit Leaves
 
+block.fruitfulfun.weak_candle: Tulip Scented Candle
+block.fruitfulfun.weak_candle.tip.shift: Gives the mob the Weakness and Fragility effects, and doubles the duration when gaining effects.
+block.fruitfulfun.wandering_trader_candle: Cherry Scented Candle
+block.fruitfulfun.wandering_trader_candle.tip.shift: Prevent wandering merchants from spawning nearby.
+block.fruitfulfun.phantom_candle: Sunflower Scented Candle
+block.fruitfulfun.phantom_candle.tip.shift: Prevent phantoms from spawning nearby.
+block.fruitfulfun.ender_candle: Pitcher Plant Scented Candle
+block.fruitfulfun.ender_candle.tip.shift: Prevent teleportation and Endermen from moving blocks.
+
 item.fruitfulfun.vac_gun: V.C.D.
 item.fruitfulfun.vac_gun_casing: V.C.D. Casing
 recipeType.fruitfulfun.hybridizing: Bee Pollinating

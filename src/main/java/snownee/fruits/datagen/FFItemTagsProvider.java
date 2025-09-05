@@ -1,7 +1,5 @@
 package snownee.fruits.datagen;
 
-import net.minecraft.world.item.Items;
-
 import static net.minecraft.world.item.Items.APPLE;
 import static net.minecraft.world.item.Items.CHORUS_FRUIT;
 import static net.minecraft.world.item.Items.GLOW_BERRIES;
@@ -28,6 +26,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
@@ -41,6 +40,7 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 	static final TagKey<Item> CITRUS_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "citrus_logs");
 	static final TagKey<Item> REDLOVE_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "redlove_logs");
 	static final TagKey<Item> FRUITS = AbstractModule.itemTag("c", "fruits");
+	static final TagKey<Item> TULIPS = AbstractModule.itemTag("c", "tulips");
 	static final TagKey<Item> HAT = AbstractModule.itemTag("trinkets", "head/hat");
 	static final TagKey<Item> WOODEN_CABINETS = AbstractModule.itemTag("farmersdelight", "cabinets/wooden");
 	static final TagKey<Item> HYDRATING_DRINKS = AbstractModule.itemTag("dehydration", "hydrating_drinks");
@@ -94,6 +94,12 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		getOrCreateTagBuilder(HYDRATING_DRINKS).addOptional(HONEY_POMELO_TEA.key());
 		getOrCreateTagBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
 		getOrCreateTagBuilder(GADGET_TOKEN).add(Items.EMERALD_BLOCK);
+		getOrCreateTagBuilder(TULIPS)
+				.add(Items.ORANGE_TULIP)
+				.add(Items.PINK_TULIP)
+				.add(Items.RED_TULIP)
+				.add(Items.WHITE_TULIP)
+				.addOptionalTag(new ResourceLocation("biomeswevegone", "flowers/tulips"));
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(WOODEN_CABINETS)

@@ -48,10 +48,10 @@ public abstract class LivingEntityMixin extends Entity {
 			Operation<Boolean> original,
 			@Local(argsOnly = true) MobEffectInstance effect) {
 		boolean result = original.call(entity, effectInstance);
-		if (result && Hooks.gadget && !GadgetModule.WEAK_SCENT.is(effect.getEffect()) && !effect.isInfiniteDuration() &&
+		if (result && Hooks.gadget && !Hooks.scentEffects.contains(effect.getEffect()) && !effect.isInfiniteDuration() &&
 				!effect.getEffect().isInstantenous()) {
 			//noinspection UnstableApiUsage
-			effect.duration = IntMath.saturatedMultiply(effect.getDuration(), 2);
+			effect.duration = IntMath.saturatedAdd(effect.getDuration(), effect.getDuration());
 		}
 		return result;
 	}

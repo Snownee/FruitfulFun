@@ -19,7 +19,7 @@ public class ServerGamePacketListenerImplMixin {
 			at = @At("HEAD"),
 			cancellable = true)
 	private void fruits$cancelPacketSending(Packet<?> packet, @Nullable PacketSendListener listener, CallbackInfo ci) {
-		if (packet instanceof ClientboundUpdateMobEffectPacket p && Hooks.hiddenEffects.contains(p.getEffect())) {
+		if (packet instanceof ClientboundUpdateMobEffectPacket p && Hooks.scentEffects.contains(p.getEffect())) {
 			ci.cancel();
 		}
 	}

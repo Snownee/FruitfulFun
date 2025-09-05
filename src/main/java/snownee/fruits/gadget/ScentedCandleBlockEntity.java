@@ -10,6 +10,7 @@ import java.util.stream.StreamSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,22 +19,34 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import snownee.fruits.util.CommonProxy;
 
+// 每只蜜蜂平均每天可以采4次蜜，每次采蜜获得10000能量
+// 期望一般情况下3只蜜蜂可以驱动4根蜡烛
+// 每天1只蜜蜂采集4次，获得40000能量，驱动1.3333根蜡烛
+// 所以1根蜡烛1天可获得的能量为：30000
+// 所以1根蜡烛1天消耗的能量为：24000 * 1.2 = 28800
 public class ScentedCandleBlockEntity extends BlockEntity {
-	private int life;
+	public static final float BASE_POWER_RATE = 1.2f;
+	private BuzzyPowerStorage power = new BuzzyPowerStorage(50000f);
+	private boolean creative;
 
 	public ScentedCandleBlockEntity(BlockPos pos, BlockState state) {
 		super(GadgetModule.SCENTED_CANDLE_ENTITY.getOrCreate(), pos, state);
-		life = 100;
 	}
 
 	@Override
 	public void load(CompoundTag tag) {
-		life = tag.getInt("Life");
+		if (tag.contains("power")) {
+			power = BuzzyPowerStorage.read(tag.getCompound("power")).result().orElse(power);
+		}
+		creative = tag.getBoolean("creative");
 	}
 
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
-		tag.putInt("Life", life);
+		tag.put("power", power.save());
+		if (creative) {
+			tag.putBoolean("creative", true);
+		}
 	}
 
 	public void updateChunks() {
@@ -94,20 +107,41 @@ public class ScentedCandleBlockEntity extends BlockEntity {
 	}
 
 	public static void serverTick(Level level, BlockPos pos, BlockState state, ScentedCandleBlockEntity be) {
-		if (be.life <= 0) {
-			be.life = 0;
+		if (!be.power().hasLife()) {
 			CommonProxy.extinguishCandle(null, state, level, pos);
 			return;
 		}
-		be.life--;
+		be.power().useLife(BASE_POWER_RATE * state.getValue(CandleBlock.CANDLES));
 		be.updateChunks();
-		//temp
-		if (level.getGameTime() % 50 == 0 && GadgetModule.BUZZY_CRAFTER.is(level.getBlockState(pos.below()))) {
-			be.life = 1000;
+	}
+
+	public void addCandle(ItemStack stack) {
+		BuzzyPowerStorage.read(stack).ifPresentOrElse(
+				$ -> {
+					if (getBlockState().getValue(CandleBlock.CANDLES) == 1) {
+						power = $;
+					} else {
+						power.merge($);
+					}
+				}, () -> {
+					if (getBlockState().getValue(CandleBlock.CANDLES) != 1) {
+						power.addMaxLife(50000f);
+					}
+				});
+	}
+
+	public void setCreative(boolean creative) {
+		this.creative = creative;
+		if (creative && !power.hasLife()) {
+			power.addLife(100000);
 		}
 	}
 
-	public int getLife() {
-		return life;
+	public boolean isCreative() {
+		return creative;
+	}
+
+	public BuzzyPowerStorage power() {
+		return power;
 	}
 }

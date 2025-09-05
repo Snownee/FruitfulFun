@@ -7,6 +7,7 @@ import com.mojang.serialization.Dynamic;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
@@ -91,5 +92,10 @@ public class BeeSwarm extends PathfinderMob {
 	@Override
 	public boolean canFreeze() {
 		return false;
+	}
+
+	@Override
+	public MobType getMobType() {
+		return MobType.ARTHROPOD;
 	}
 }

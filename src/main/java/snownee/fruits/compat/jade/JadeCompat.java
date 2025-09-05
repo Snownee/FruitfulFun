@@ -17,6 +17,8 @@ import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.compat.supplementaries.SupplementariesJadeCompat;
 import snownee.fruits.gadget.BuzzyCrafterBlock;
+import snownee.fruits.gadget.ScentedCandleBlock;
+import snownee.fruits.gadget.ScentedCandleBlockEntity;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IWailaClientRegistration;
@@ -50,6 +52,7 @@ public class JadeCompat implements IWailaPlugin {
 		if (!Platform.isProduction()) {
 			registration.registerBlockDataProvider(new FruitLeavesDebugProvider(), FruitTreeBlockEntity.class);
 			registration.registerEntityDataProvider(new BeeDebugProvider(), Bee.class);
+			registration.registerBlockDataProvider(new ScentedCandleDebugProvider(), ScentedCandleBlockEntity.class);
 		}
 		if (Hooks.bee) {
 			registration.registerBlockDataProvider(new BeehiveWaxProvider(), BeehiveBlockEntity.class);
@@ -65,6 +68,7 @@ public class JadeCompat implements IWailaPlugin {
 		if (!Platform.isProduction()) {
 			registration.registerBlockComponent(new FruitLeavesDebugProvider(), FruitLeavesBlock.class);
 			registration.registerEntityComponent(new BeeDebugProvider(), Bee.class);
+			registration.registerBlockComponent(new ScentedCandleDebugProvider(), ScentedCandleBlock.class);
 		}
 		registration.registerBlockComponent(new CropProgressProvider(), FruitLeavesBlock.class);
 		registration.addRayTraceCallback((hit, accessor, original) -> override(original, registration));

@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.network.CHauntingActionPacket;
 import snownee.fruits.gadget.BuzzyCrafterBlock;
@@ -55,7 +56,7 @@ public class MinecraftMixin {
 					target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;startDestroyBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z"),
 			cancellable = true)
 	private void startAttackGadget(CallbackInfoReturnable<Boolean> cir) {
-		if (player == null || player.isSpectator()) {
+		if (!Hooks.gadget || player == null || player.isSpectator()) {
 			return;
 		}
 		Objects.requireNonNull(hitResult);

@@ -7,7 +7,7 @@
   ],
   "type": "minecraft:smithing_transform",
   "addition": {
-    "item": "minecraft:tinted_glass"
+    "tag": "c:tulips"
   },
   "base": {
     "tag": "minecraft:candles"

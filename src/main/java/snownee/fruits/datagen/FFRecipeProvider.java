@@ -325,10 +325,11 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				.define('C', Items.HONEYCOMB)
 				.unlockedBy("has_item", has(Items.HONEYCOMB))
 				.save(gadgetExporter);
-		scentedCandle(gadgetExporter, Ingredient.of(Items.TINTED_GLASS), GadgetModule.WEAK_CANDLE);
-		scentedCandle(gadgetExporter, Ingredient.of(Items.ROTTEN_FLESH), GadgetModule.WANDERING_TRADER_CANDLE);
+		scentedCandle(gadgetExporter, Ingredient.of(FFItemTagsProvider.TULIPS), GadgetModule.WEAK_CANDLE);
+		scentedCandle(gadgetExporter, Ingredient.of(CherryModule.CHERRY.get()), GadgetModule.WANDERING_TRADER_CANDLE);
 		scentedCandle(gadgetExporter, Ingredient.of(Items.SUNFLOWER), GadgetModule.PHANTOM_CANDLE);
-		scentedCandle(gadgetExporter, Ingredient.of(Items.CHORUS_FRUIT), GadgetModule.ENDER_CANDLE);
+		scentedCandle(gadgetExporter, Ingredient.of(Items.PITCHER_PLANT), GadgetModule.ENDER_CANDLE);
+//		scentedCandle(gadgetExporter, Ingredient.of(Items.SCUTE), GadgetModule.HEAVY_CANDLE);
 	}
 
 	public static void scentedCandle(Consumer<FinishedRecipe> exporter, Ingredient addition, KiwiGO<? extends ItemLike> result) {

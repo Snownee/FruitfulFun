@@ -27,9 +27,11 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.gadget.datagen.SetBuzzyPowerFunction;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
@@ -86,6 +88,7 @@ public class GadgetModule extends AbstractModule {
 	public static final KiwiGO<MobEffect> PHANTOM_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xAAAAFF));
 	public static final KiwiGO<MobEffect> WANDERING_TRADER_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xFFAA00));
 	public static final KiwiGO<MobEffect> WEAK_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xAAAAAA));
+	//	public static final KiwiGO<MobEffect> HEAVY_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0x555555));
 	public static final KiwiGO<ScentType> PHANTOM = go(() -> new ScentType(List.of(new MobEffectInstance(
 			PHANTOM_SCENT.getOrCreate(),
 			600,
@@ -105,6 +108,13 @@ public class GadgetModule extends AbstractModule {
 			new MobEffectInstance(WEAK_SCENT.getOrCreate(), 600, 0, true, false, false),
 			new MobEffectInstance(MobEffects.WEAKNESS, 600),
 			new MobEffectInstance(CoreModule.FRAGILITY.getOrCreate(), 600))));
+	//	public static final KiwiGO<ScentType> HEAVY = go(() -> new ScentType(List.of(new MobEffectInstance(
+//			HEAVY_SCENT.getOrCreate(),
+//			600,
+//			0,
+//			true,
+//			false,
+//			false))));
 	public static final KiwiGO<ScentedCandleBlock> PHANTOM_CANDLE = go(() -> new ScentedCandleBlock(
 			blockProp(Blocks.CANDLE),
 			PHANTOM.getOrCreate()));
@@ -117,6 +127,10 @@ public class GadgetModule extends AbstractModule {
 	public static final KiwiGO<ScentedCandleBlock> WEAK_CANDLE = go(() -> new ScentedCandleBlock(
 			blockProp(Blocks.CANDLE),
 			WEAK.getOrCreate()));
+	//	public static final KiwiGO<ScentedCandleBlock> HEAVY_CANDLE = go(() -> new ScentedCandleBlock(
+//			blockProp(Blocks.CANDLE),
+//			HEAVY.getOrCreate()));
+	public static final KiwiGO<LootItemFunctionType> SET_BUZZY_POWER = go(() -> new LootItemFunctionType(new SetBuzzyPowerFunction.Serializer()));
 
 	@KiwiModule.Name("scented_candle")
 	public static final KiwiGO<BlockEntityType<ScentedCandleBlockEntity>> SCENTED_CANDLE_ENTITY = blockEntity(
@@ -142,7 +156,7 @@ public class GadgetModule extends AbstractModule {
 	@Override
 	protected void preInit() {
 		CommonProxy.initGadgetModule();
-		Hooks.hiddenEffects.addAll(KiwiModules.get(uid).getRegistries(BuiltInRegistries.MOB_EFFECT));
+		Hooks.scentEffects.addAll(KiwiModules.get(uid).getRegistries(BuiltInRegistries.MOB_EFFECT));
 	}
 
 	@Override
