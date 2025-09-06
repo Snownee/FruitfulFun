@@ -1,5 +1,6 @@
 package snownee.fruits.mixin.haunt;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,7 +39,7 @@ public class ServerPlayerMixin {
 	}
 
 	@Inject(method = "setCamera", at = @At("TAIL"))
-	private void setCamera(Entity target, CallbackInfo ci) {
+	private void setCamera(@Nullable Entity target, CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
 //		Hooks.debugInChat(player, "setCamera to %s".formatted(target == null ? "null" : target.getName().getString()));
 		if (Hooks.bee && (target == null || target == player) && FFPlayer.of(player).fruits$isHaunting()) {

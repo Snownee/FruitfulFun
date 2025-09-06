@@ -1,5 +1,6 @@
 package snownee.fruits.mixin.haunt;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -45,7 +46,7 @@ public class LocalPlayerMixin {
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/client/player/LocalPlayer;getRootVehicle()Lnet/minecraft/world/entity/Entity;"))
-	private Entity getRootVehicle(LocalPlayer player, Operation<Entity> original) {
+	private @Nullable Entity getRootVehicle(LocalPlayer player, Operation<Entity> original) {
 		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			return FFPlayer.of(player).fruits$hauntingTarget();
 		}
