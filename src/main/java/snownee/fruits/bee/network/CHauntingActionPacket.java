@@ -16,6 +16,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -90,15 +93,11 @@ public class CHauntingActionPacket extends PacketHandler {
 				}
 				if (closest != null) {
 					IntList affectedEntities = new IntArrayList(2);
-					if (target instanceof Mob mob) {
-						mob.setAggressive(true);
-						mob.setTarget(closest);
-						affectedEntities.add(mob.getId());
+					if (setAttackTarget(target, closest)) {
+						affectedEntities.add(target.getId());
 					}
-					if (closest instanceof Mob mob) {
-						mob.setAggressive(true);
-						mob.setTarget(target);
-						affectedEntities.add(mob.getId());
+					if (setAttackTarget(closest, target)) {
+						affectedEntities.add(closest.getId());
 					}
 					if (!affectedEntities.isEmpty()) {
 						success = true;
@@ -118,6 +117,25 @@ public class CHauntingActionPacket extends PacketHandler {
 						true));
 			}
 		});
+	}
+
+	public static boolean setAttackTarget(LivingEntity entity, LivingEntity target) {
+		Brain<?> brain = entity.getBrain();
+		if (brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
+			brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
+		}
+		if (brain.hasMemoryValue(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE)) {
+			brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
+		}
+		if (entity instanceof Mob mob) {
+			mob.setAggressive(true);
+			mob.setTarget(target);
+			if (mob instanceof Warden warden) {
+				warden.setAttackTarget(target);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public static boolean canDoAction(Player player) {

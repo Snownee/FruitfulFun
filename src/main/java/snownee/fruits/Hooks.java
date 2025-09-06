@@ -61,6 +61,7 @@ import net.minecraft.world.phys.Vec3;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.Allele;
+import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
@@ -202,6 +203,8 @@ public final class Hooks {
 		boolean isClientSide = player.level().isClientSide();
 		if (held.is(Items.DEBUG_STICK)) {
 			if (!isClientSide) {
+				boolean hasPink = attributes.hasTrait(Trait.PINK);
+				boolean hasGhost = attributes.hasTrait(Trait.GHOST);
 				// add debug code here
 //				attributes.setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
 				attributes.getLocus(Allele.FANCY).setData((byte) 0x11);
@@ -210,6 +213,14 @@ public final class Hooks {
 				attributes.getLocus(Allele.RAINC).setData((byte) 0x11);
 				attributes.getPollens().add("fruitfulfun:apple_leaves");
 				attributes.getPollens().add("wither_rose");
+				if (hasPink) {
+					GeneData genes = attributes.getGenes();
+					if (hasGhost) {
+						genes.removeExtraTrait(Trait.GHOST);
+					} else {
+						genes.addExtraTrait(Trait.GHOST);
+					}
+				}
 				attributes.updateTraits(bee);
 			}
 			return InteractionResult.CONSUME;
