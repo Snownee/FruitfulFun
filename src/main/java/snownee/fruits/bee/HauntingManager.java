@@ -77,6 +77,10 @@ public class HauntingManager {
 		if (++ticks > FFCommonConfig.hauntingGhostBeeTimeLimitTicks && FFCommonConfig.hauntingGhostBeeTimeLimitTicks > 0 && isGhostBee) {
 			getExorcised(player);
 		}
+		if (ticks % 20 == 0) {
+			// let the client know the new location so the chunks can render normally
+			player.connection.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
+		}
 	}
 
 	public void respawnStoredBee(ServerPlayer player) {
