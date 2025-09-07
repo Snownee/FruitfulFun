@@ -16,6 +16,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import snownee.fruits.CoreModule;
 
@@ -38,6 +39,14 @@ public abstract class LivingEntityMixin extends Entity {
 		MobEffectInstance effect = getEffect(CoreModule.FRAGILITY.get());
 		if (effect != null) {
 			damageAmountRef.set(damageAmountRef.get() * (1.2F + effect.getAmplifier() * 0.2F));
+		}
+	}
+
+	@Inject(method = "eat", at = @At("HEAD"))
+	private void eat(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
+		if (food.isEdible() && food.is(CoreModule.CITRUS_FRUITS)) {
+			LivingEntity self = (LivingEntity) (Object) this;
+			self.extinguishFire();
 		}
 	}
 }

@@ -6,16 +6,10 @@
     "minecraft:sweet_berries",
     "minecraft:chorus_fruit",
     "minecraft:glow_berries",
-    "fruitfulfun:tangerine",
-    "fruitfulfun:lime",
-    "fruitfulfun:citron",
-    "fruitfulfun:pomelo",
-    "fruitfulfun:orange",
-    "fruitfulfun:lemon",
-    "fruitfulfun:grapefruit",
     "minecraft:apple",
     "fruitfulfun:cherry",
     "fruitfulfun:redlove",
-    "fruitfulfun:pomegranate"
+    "fruitfulfun:pomegranate",
+    "#c:fruits/citrus"
   ]
 }

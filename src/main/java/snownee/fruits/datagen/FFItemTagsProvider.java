@@ -5,6 +5,7 @@ import static net.minecraft.world.item.Items.CHORUS_FRUIT;
 import static net.minecraft.world.item.Items.GLOW_BERRIES;
 import static net.minecraft.world.item.Items.MELON_SLICE;
 import static net.minecraft.world.item.Items.SWEET_BERRIES;
+import static snownee.fruits.CoreModule.CITRUS_FRUITS;
 import static snownee.fruits.cherry.CherryModule.CHERRY_CROWN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_CROWN;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
@@ -75,9 +76,17 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		copy(FFBlockTagsProvider.REDLOVE_LOGS, REDLOVE_LOGS);
 		copy(BlockTags.FLOWERS, ItemTags.FLOWERS);
 
-		FabricTagProvider<Item>.FabricTagBuilder builder = getOrCreateTagBuilder(FRUITS)
+		FabricTagProvider<Item>.FabricTagBuilder fruits = getOrCreateTagBuilder(FRUITS)
 				.add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES);
-		FFRegistries.FRUIT_TYPE.forEach($ -> builder.add($.fruit.get()));
+		FabricTagProvider<Item>.FabricTagBuilder citrusFruits = getOrCreateTagBuilder(CITRUS_FRUITS);
+		FFRegistries.FRUIT_TYPE.forEach($ -> {
+			if (CoreModule.CITRUS_LOG.is($.log.get())) {
+				citrusFruits.add($.fruit.get());
+			} else {
+				fruits.add($.fruit.get());
+			}
+		});
+		fruits.addTag(CITRUS_FRUITS);
 		tag(ItemTags.FOX_FOOD).addTag(FRUITS);
 		tag(FoodModule.PANDA_FOOD).addOptional(RICE_WITH_FRUITS.key());
 
