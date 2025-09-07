@@ -34,6 +34,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.gadget.GadgetModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiModules;
 
@@ -44,6 +45,7 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 	static final TagKey<Item> TULIPS = AbstractModule.itemTag("c", "tulips");
 	static final TagKey<Item> HAT = AbstractModule.itemTag("trinkets", "head/hat");
 	static final TagKey<Item> WOODEN_CABINETS = AbstractModule.itemTag("farmersdelight", "cabinets/wooden");
+	static final TagKey<Item> OFFHAND_EQUIPMENT = AbstractModule.itemTag("farmersdelight", "offhand_equipment");
 	static final TagKey<Item> HYDRATING_DRINKS = AbstractModule.itemTag("dehydration", "hydrating_drinks");
 	static final TagKey<Item> UPRIGHT_ON_BELT = AbstractModule.itemTag("create", "upright_on_belt");
 	static final TagKey<Item> GADGET_TOKEN = AbstractModule.itemTag(FruitfulFun.ID, "gadget_token");
@@ -109,6 +111,8 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 				.add(Items.RED_TULIP)
 				.add(Items.WHITE_TULIP)
 				.addOptionalTag(new ResourceLocation("biomeswevegone", "flowers/tulips"));
+		getOrCreateTagBuilder(ConventionalItemTags.SHIELDS).add(GadgetModule.BUZZY_SHIELD.get());
+		getOrCreateTagBuilder(OFFHAND_EQUIPMENT).add(GadgetModule.BUZZY_SHIELD.get());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(WOODEN_CABINETS)

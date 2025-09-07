@@ -77,7 +77,7 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 			return InteractionResult.sidedSuccess(level.isClientSide());
 		}
 		if (!level.isClientSide() && !state.getValue(LIT) && !itemInHand.isEmpty() && !itemInHand.is(asItem()) && !be.power().hasLife()) {
-			player.displayClientMessage(Component.translatable("tip.fruitfulfun.candleNoLife"), true);
+			player.displayClientMessage(Component.translatable("tip.fruitfulfun.notEnoughPower"), true);
 		}
 //		if (!level.isClientSide() && player.isHolding(Items.DIAMOND)) {
 //			ScentedCandleBlockEntity.getChunksAtExactChessboardDistance(level, pos, state.getValue(CANDLES) - 1).forEach(chunk -> {

@@ -68,6 +68,7 @@
 		"shield.BindingCurseEnchantmentMixin",
 		"shield.LivingEntityMixin",
 		"shield.PlayerMixin",
+		"shield.SmithingTransformRecipeMixin",
 		"supp.SuppBeehiveBlockEntityMixin",
 		"vac.ItemEntityMixin"
 	],
@@ -92,7 +93,6 @@
 		"haunt.LocalPlayerMixin",
 		"haunt.PlayerRendererMixin",
 		"haunt.RemotePlayerMixin",
-		"shield.BlockEntityWithoutLevelRendererMixin",
 		"vac.LivingEntitySoundMixin",
 		"vac.MinecraftMixin"
 	],

@@ -329,7 +329,15 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 		scentedCandle(gadgetExporter, Ingredient.of(CherryModule.CHERRY.get()), GadgetModule.WANDERING_TRADER_CANDLE);
 		scentedCandle(gadgetExporter, Ingredient.of(Items.SUNFLOWER), GadgetModule.PHANTOM_CANDLE);
 		scentedCandle(gadgetExporter, Ingredient.of(Items.PITCHER_PLANT), GadgetModule.ENDER_CANDLE);
-//		scentedCandle(gadgetExporter, Ingredient.of(Items.SCUTE), GadgetModule.HEAVY_CANDLE);
+
+		SmithingTransformRecipeBuilder.smithing(
+						Ingredient.of(FFItemTagsProvider.GADGET_TOKEN),
+						Ingredient.of(Items.SHIELD),
+						Ingredient.of(Items.HONEYCOMB_BLOCK),
+						RecipeCategory.TOOLS,
+						GadgetModule.BUZZY_SHIELD.get())
+				.unlocks("has_crafter", has(GadgetModule.BUZZY_CRAFTER.get()))
+				.save(exporter, BuiltInRegistries.ITEM.getKey(GadgetModule.BUZZY_SHIELD.get()));
 	}
 
 	public static void scentedCandle(Consumer<FinishedRecipe> exporter, Ingredient addition, KiwiGO<? extends ItemLike> result) {

@@ -3,13 +3,12 @@ package snownee.fruits.gadget;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,7 +22,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -142,11 +143,24 @@ public class GadgetModule extends AbstractModule {
 		Hooks.gadget = true;
 	}
 
-	public static float buzzyShieldBlock(LivingEntity entity, DamageSource source, float damage) {
-		int ticksUsingItem = entity.getTicksUsingItem();
+	public static float buzzyShieldBlock(LivingEntity self, DamageSource source, float damage, ItemStack shield) {
+		BuzzyPowerStorage storage = BuzzyShieldItem.getPowerStorage(shield);
+		if (shield.getTag() == null || !shield.getTag().getBoolean("Unbreakable")) {
+			storage.useLife(200); // durability is 120000 / 200 = 600
+		}
+		int ticksUsingItem = self.getTicksUsingItem();
 		if (ticksUsingItem > 0 && ticksUsingItem <= 6) {
-			if (entity.level() instanceof ServerLevel serverLevel) {
-				serverLevel.getServer().sendSystemMessage(Component.literal("perfect block!"));
+			Set<LivingEntity> entities = Sets.newLinkedHashSet();
+			Level level = self.level();
+			entities.addAll(level.getEntitiesOfClass(LivingEntity.class, self.getBoundingBox().inflate(1)));
+			entities.addAll(level.getEntitiesOfClass(
+					LivingEntity.class,
+					self.getBoundingBox().inflate(1.5).move(self.getViewVector(0).scale(1.5))));
+			for (LivingEntity entity : entities) {
+				if (entity == self || entity.isAlliedTo(self) || !entity.attackable()) {
+					continue;
+				}
+				entity.knockback(1f, self.getX() - entity.getX(), self.getZ() - entity.getZ());
 			}
 			return 0;
 		}

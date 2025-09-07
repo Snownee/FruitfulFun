@@ -24,8 +24,8 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.compat.FFJEIREI;
-import snownee.fruits.ritual.RitualModule;
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.ritual.RitualModule;
 import snownee.lychee.compat.rei.REICompat;
 import snownee.lychee.compat.rei.category.BaseREICategory;
 import snownee.lychee.compat.rei.display.BaseREIDisplay;
@@ -58,9 +58,10 @@ public class FFREICompat implements REIClientPlugin {
 		if (Hooks.ritual) {
 			ItemStack dragonHead = Items.DRAGON_HEAD.getDefaultInstance();
 			ItemStack pie = FFJEIREI.pieItem.get();
-			forEachCategories(BeeModule.RECIPE_TYPE.get(), $ -> {
-				registry.addWorkstations($.getCategoryIdentifier(), EntryStacks.of(dragonHead), EntryStacks.of(pie));
-			});
+			forEachCategories(
+					BeeModule.RECIPE_TYPE.get(), $ -> {
+						registry.addWorkstations($.getCategoryIdentifier(), EntryStacks.of(dragonHead), EntryStacks.of(pie));
+					});
 		}
 	}
 
@@ -108,6 +109,12 @@ public class FFREICompat implements REIClientPlugin {
 		if (Hooks.gadget) {
 			rule.hide(EntryStacks.of(GadgetModule.VAC_GUN.get()));
 			rule.hide(EntryStacks.of(GadgetModule.VAC_GUN_CASING.get()));
+			rule.hide(EntryStacks.of(GadgetModule.BUZZY_SHIELD.get()));
+			rule.hide(EntryStacks.of(GadgetModule.BUZZY_CRAFTER.get()));
+			rule.hide(EntryStacks.of(GadgetModule.ENDER_CANDLE.get()));
+			rule.hide(EntryStacks.of(GadgetModule.WANDERING_TRADER_CANDLE.get()));
+			rule.hide(EntryStacks.of(GadgetModule.WEAK_CANDLE.get()));
+			rule.hide(EntryStacks.of(GadgetModule.PHANTOM_CANDLE.get()));
 		}
 	}
 }
