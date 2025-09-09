@@ -109,12 +109,6 @@ public class FFREICompat implements REIClientPlugin {
 		if (Hooks.gadget) {
 			rule.hide(EntryStacks.of(GadgetModule.VAC_GUN.get()));
 			rule.hide(EntryStacks.of(GadgetModule.VAC_GUN_CASING.get()));
-			rule.hide(EntryStacks.of(GadgetModule.BUZZY_SHIELD.get()));
-			rule.hide(EntryStacks.of(GadgetModule.BUZZY_CRAFTER.get()));
-			rule.hide(EntryStacks.of(GadgetModule.ENDER_CANDLE.get()));
-			rule.hide(EntryStacks.of(GadgetModule.WANDERING_TRADER_CANDLE.get()));
-			rule.hide(EntryStacks.of(GadgetModule.WEAK_CANDLE.get()));
-			rule.hide(EntryStacks.of(GadgetModule.PHANTOM_CANDLE.get()));
 		}
 	}
 }
