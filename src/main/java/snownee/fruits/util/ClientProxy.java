@@ -36,6 +36,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
@@ -75,7 +76,6 @@ import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.AirVortexParticleOption;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.client.AirVortexParticle;
-import snownee.fruits.gadget.client.BeeSwarmRenderer;
 import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileRenderer;
@@ -302,7 +302,7 @@ public class ClientProxy implements ClientModInitializer {
 			EntityRendererRegistry.register(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
 			ParticleFactoryRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
 
-			EntityRendererRegistry.register(GadgetModule.BEE_SWARM.getOrCreate(), BeeSwarmRenderer::new);
+			EntityRendererRegistry.register(GadgetModule.SUMMONED_BEE.getOrCreate(), BeeRenderer::new);
 			BlockEntityRenderers.register(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
 
 			ResourceLocation blocking = new ResourceLocation("blocking");

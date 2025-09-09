@@ -12,6 +12,9 @@ import snownee.jade.api.theme.IThemeHelper;
 public class CrafterProvider implements IBlockComponentProvider {
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+		if (!config.get(Identifiers.MC_BEEHIVE)) {
+			return;
+		}
 		tooltip.remove(Identifiers.MC_BEEHIVE);
 		IThemeHelper t = IThemeHelper.get();
 		if (accessor.getServerData().contains("Full")) {
@@ -24,5 +27,10 @@ public class CrafterProvider implements IBlockComponentProvider {
 	@Override
 	public ResourceLocation getUid() {
 		return JadeCompat.CRAFTER;
+	}
+
+	@Override
+	public boolean isRequired() {
+		return true;
 	}
 }

@@ -147,7 +147,7 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 			FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(CoreModule.CANDLES);
 			for (Block block : BuiltInRegistries.BLOCK) {
 				if (block instanceof ScentedCandleBlock) {
-					builder.add(block);
+					builder.addOptional(BuiltInRegistries.BLOCK.getKey(block));
 				}
 			}
 			builder
@@ -167,7 +167,7 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				.add(POMEGRANATE.get());
 		getOrCreateTagBuilder(TREE_TYPES_OAK_LOG).add(APPLE_LEAVES.get());
 		getOrCreateTagBuilder(TREE_TYPES_JUNGLE_LOG).add(POMEGRANATE_LEAVES.get());
-		getOrCreateTagBuilder(BlockTags.BEEHIVES).add(GadgetModule.BUZZY_CRAFTER.get());
+		getOrCreateTagBuilder(BlockTags.BEEHIVES).addOptional(GadgetModule.BUZZY_CRAFTER.key());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)

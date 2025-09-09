@@ -111,8 +111,8 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 				.add(Items.RED_TULIP)
 				.add(Items.WHITE_TULIP)
 				.addOptionalTag(new ResourceLocation("biomeswevegone", "flowers/tulips"));
-		getOrCreateTagBuilder(ConventionalItemTags.SHIELDS).add(GadgetModule.BUZZY_SHIELD.get());
-		getOrCreateTagBuilder(OFFHAND_EQUIPMENT).add(GadgetModule.BUZZY_SHIELD.get());
+		getOrCreateTagBuilder(ConventionalItemTags.SHIELDS).addOptional(GadgetModule.BUZZY_SHIELD.key());
+		getOrCreateTagBuilder(OFFHAND_EQUIPMENT).addOptional(GadgetModule.BUZZY_SHIELD.key());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateTagBuilder(WOODEN_CABINETS)

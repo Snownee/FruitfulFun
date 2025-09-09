@@ -3,7 +3,6 @@ package snownee.fruits.gadget;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.Holder;
@@ -11,20 +10,16 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -83,8 +78,12 @@ public class GadgetModule extends AbstractModule {
 	});
 
 	public static final KiwiGO<BuzzyShieldItem> BUZZY_SHIELD = go(() -> new BuzzyShieldItem(itemProp().stacksTo(1)));
-	public static final KiwiGO<EntityType<BeeSwarm>> BEE_SWARM = go(() -> KiwiEntityTypeBuilder.<BeeSwarm>create().dimensions(
-			EntityDimensions.scalable(0.5f, 0.5f)).trackRangeChunks(8).trackedUpdateRate(3).entityFactory(BeeSwarm::new).build());
+	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = go(() -> KiwiEntityTypeBuilder.<SummonedBee>createMob()
+			.dimensions(EntityDimensions.scalable(0.525f, 0.45f))
+			.trackRangeChunks(8)
+			.defaultAttributes(SummonedBee::createAttributes)
+			.entityFactory(SummonedBee::new)
+			.build());
 
 	public static final KiwiGO<MobEffect> PHANTOM_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xAAAAFF));
 	public static final KiwiGO<MobEffect> WANDERING_TRADER_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xFFAA00));
@@ -141,30 +140,6 @@ public class GadgetModule extends AbstractModule {
 
 	public GadgetModule() {
 		Hooks.gadget = true;
-	}
-
-	public static float buzzyShieldBlock(LivingEntity self, DamageSource source, float damage, ItemStack shield) {
-		BuzzyPowerStorage storage = BuzzyShieldItem.getPowerStorage(shield);
-		if (shield.getTag() == null || !shield.getTag().getBoolean("Unbreakable")) {
-			storage.useLife(200); // durability is 120000 / 200 = 600
-		}
-		int ticksUsingItem = self.getTicksUsingItem();
-		if (ticksUsingItem > 0 && ticksUsingItem <= 6) {
-			Set<LivingEntity> entities = Sets.newLinkedHashSet();
-			Level level = self.level();
-			entities.addAll(level.getEntitiesOfClass(LivingEntity.class, self.getBoundingBox().inflate(1)));
-			entities.addAll(level.getEntitiesOfClass(
-					LivingEntity.class,
-					self.getBoundingBox().inflate(1.5).move(self.getViewVector(0).scale(1.5))));
-			for (LivingEntity entity : entities) {
-				if (entity == self || entity.isAlliedTo(self) || !entity.attackable()) {
-					continue;
-				}
-				entity.knockback(1f, self.getX() - entity.getX(), self.getZ() - entity.getZ());
-			}
-			return 0;
-		}
-		return damage * 0.5f;
 	}
 
 	@Override

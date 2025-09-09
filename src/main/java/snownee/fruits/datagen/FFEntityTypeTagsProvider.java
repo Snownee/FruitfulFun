@@ -24,5 +24,6 @@ public class FFEntityTypeTagsProvider extends FabricTagProvider.EntityTypeTagPro
 				.addOptional(new ResourceLocation("dummmmmmy:target_dummy"));
 		getOrCreateTagBuilder(GadgetModule.VCD_MOVABLE);
 		getOrCreateTagBuilder(EntityTypeTags.DISMOUNTS_UNDERWATER).add(EntityType.BEE);
+		getOrCreateTagBuilder(EntityTypeTags.FALL_DAMAGE_IMMUNE).addOptional(GadgetModule.SUMMONED_BEE.key());
 	}
 }

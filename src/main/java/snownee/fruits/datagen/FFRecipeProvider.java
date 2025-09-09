@@ -337,7 +337,7 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						RecipeCategory.TOOLS,
 						GadgetModule.BUZZY_SHIELD.get())
 				.unlocks("has_crafter", has(GadgetModule.BUZZY_CRAFTER.get()))
-				.save(exporter, BuiltInRegistries.ITEM.getKey(GadgetModule.BUZZY_SHIELD.get()));
+				.save(gadgetExporter, BuiltInRegistries.ITEM.getKey(GadgetModule.BUZZY_SHIELD.get()));
 	}
 
 	public static void scentedCandle(Consumer<FinishedRecipe> exporter, Ingredient addition, KiwiGO<? extends ItemLike> result) {

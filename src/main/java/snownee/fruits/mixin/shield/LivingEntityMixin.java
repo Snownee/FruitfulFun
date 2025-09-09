@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.BuzzyShieldItem;
-import snownee.fruits.gadget.GadgetModule;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
@@ -61,7 +60,7 @@ public abstract class LivingEntityMixin {
 		if (!Hooks.gadget || !(useItem.getItem() instanceof BuzzyShieldItem)) {
 			return;
 		}
-		float newDamage = GadgetModule.buzzyShieldBlock((LivingEntity) (Object) this, source, damageRecord.get(), useItem);
+		float newDamage = BuzzyShieldItem.onBlock((LivingEntity) (Object) this, source, damageRecord.get(), useItem);
 		if (newDamage > 0) {
 			blockedRef.set(false);
 		}
