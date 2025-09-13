@@ -82,6 +82,7 @@
 		"cherry.ItemRendererMixin",
 		"cherry.LivingEntityFlowerCrownMixin",
 		"client.CameraMixin",
+		"client.EntityRenderDispatcherMixin",
 		"client.GameRendererMixin",
 		"client.GuiMixin",
 		"client.HumanoidModelMixin",
