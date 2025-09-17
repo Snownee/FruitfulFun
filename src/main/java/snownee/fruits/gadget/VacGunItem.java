@@ -209,13 +209,13 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 
 	@Override
 	public void onUseTick(Level level, LivingEntity living, ItemStack gun, int i) {
+		if (level.isClientSide()) {
+			return;
+		}
 		if (!(living instanceof Player player)) {
 			return;
 		}
 		Vec3 start = player.getEyePosition(1);
-		if (level.isClientSide()) {
-			return;
-		}
 		Vec3 lookAngle = player.getViewVector(1);
 		double reach = Math.min(i / 2 + 2, 8);
 		Vec3 end = start.add(lookAngle.x * reach, lookAngle.y * reach, lookAngle.z * reach);
@@ -317,7 +317,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 			Vec3 power = dist.normalize();
 			entity.setDeltaMovement(power);
 			entity.resetFallDistance();
-			entity.setDeltaMovement(deltaMovement);
+//			entity.setDeltaMovement(deltaMovement);
 //			if (lengthSqr < 4) {
 //			}
 			entity.hasImpulse = true;
