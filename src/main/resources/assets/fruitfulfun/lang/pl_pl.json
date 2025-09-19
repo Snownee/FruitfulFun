@@ -98,10 +98,5 @@
 	"advancements.fruitfulfun.grapefruit.title": "Zapach cytrusa",
 	"advancements.fruitfulfun.grapefruit.description": "Wyhoduj drzewo grejpfrutowa",
 	"advancements.fruitfulfun.redlove.title": "Witamy w krainie wiśni",
-	"advancements.fruitfulfun.redlove.description": "Wyhoduj jabłoń Redlove",
-	"advancements.fruitfulfun.forestbat.title": "Przyspieszenie",
-	"advancements.fruitfulfun.forestbat.description": "Spotkaj leśnego nietoperza",
-	"fruitfulfun.forestbat": "Leśny nietoperz",
-	"config.jade.plugin_fruitfulfun": "Drzewa owocowe",
-	"config.jade.plugin_fruitfulfun.bee": "Pszczoła"
+	"advancements.fruitfulfun.redlove.description": "Wyhoduj jabłoń Redlove"
 }
