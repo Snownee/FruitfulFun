@@ -122,6 +122,11 @@ public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 		return 0;
 	}
 
+	@Override
+	public BuzzyPowerStorage view() {
+		return this;
+	}
+
 	public void addLife(float amount) {
 		life = Mth.clamp(life + amount, 0, maxLife);
 	}

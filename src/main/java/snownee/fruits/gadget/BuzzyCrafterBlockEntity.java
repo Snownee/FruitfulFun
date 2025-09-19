@@ -18,6 +18,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -68,7 +69,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		if (!blockPowerReceiverUpdated) {
 			updateBlockPowerReceiver();
 		}
-		List<BuzzyPowerReceiver> receivers = Stream.of(blockPowerReceiver, itemPowerReceiver).filter(Objects::nonNull).toList();
+		List<BuzzyPowerReceiver> receivers = powerReceivers().toList();
 		if (!pollens.isEmpty() && !receivers.isEmpty()) {
 			for (Iterator<String> iterator = pollens.iterator(); iterator.hasNext(); ) {
 				String pollen = iterator.next();
@@ -91,6 +92,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 					iterator.remove();
 				}
 			}
+			setChanged();
 		}
 		super.addOccupantWithPresetTicks(occupant, hasNectar, ticksInHive);
 	}
@@ -109,6 +111,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			itemPowerReceiver.addPower(type, amount);
 			itemPowerReceiverUpdated = true;
 		}
+		setChanged();
 	}
 
 	@Override
@@ -273,5 +276,42 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	public static BuzzyPowerStorage getPowerStorage(ItemStack itemStack) {
 		Function<ItemStack, BuzzyPowerStorage> function = ITEM_STORAGE_FACTORIES.get(itemStack.getItem().getClass());
 		return function == null ? null : function.apply(itemStack);
+	}
+
+	public Stream<BuzzyPowerReceiver> powerReceivers() {
+		if (!blockPowerReceiverUpdated) {
+			updateBlockPowerReceiver();
+		}
+		if (itemPowerReceiver == null && blockPowerReceiver == null) {
+			return Stream.empty();
+		}
+		if (itemPowerReceiver == null) {
+			return Stream.of(blockPowerReceiver);
+		}
+		if (blockPowerReceiver == null) {
+			return Stream.of(itemPowerReceiver);
+		}
+		return Stream.of(blockPowerReceiver, itemPowerReceiver);
+	}
+
+	public int getAnalogOutput() {
+		List<BuzzyPowerReceiver> receivers = powerReceivers().toList();
+		if (receivers.isEmpty()) {
+			return 0;
+		}
+		float life = 0;
+		float maxLife = 0;
+		for (BuzzyPowerReceiver receiver : receivers) {
+			BuzzyPowerStorage view = receiver.view();
+			if (view == null) {
+				continue;
+			}
+			life += view.life();
+			maxLife += view.maxLife();
+		}
+		if (maxLife == 0) {
+			return 0;
+		}
+		return 1 + Mth.clamp((int) Math.ceil(14 * life / maxLife), 0, 14);
 	}
 }
