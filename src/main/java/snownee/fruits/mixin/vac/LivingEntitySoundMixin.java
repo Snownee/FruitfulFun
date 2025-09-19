@@ -21,7 +21,7 @@ public class LivingEntitySoundMixin {
 			return;
 		}
 		LivingEntity entity = (LivingEntity) (Object) this;
-		if (!entity.level().isClientSide || !(entity instanceof Player player) || !VacModule.VAC_GUN.is(player.getUseItem())) {
+		if (!entity.level().isClientSide() || !(entity instanceof Player player) || !VacModule.VAC_GUN.is(player.getUseItem())) {
 			return;
 		}
 		Minecraft.getInstance().getSoundManager().play(new VacGunSoundInstance(player));

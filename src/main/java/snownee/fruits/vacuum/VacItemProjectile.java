@@ -61,7 +61,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 	@Override
 	public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
 		super.onSyncedDataUpdated(entityDataAccessor);
-		if (level().isClientSide && DATA_ITEM_STACK.equals(entityDataAccessor)) {
+		if (level().isClientSide() && DATA_ITEM_STACK.equals(entityDataAccessor)) {
 			this.colorProvider = ItemProjectileColors.get(getItem());
 		}
 	}
@@ -69,7 +69,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 	@Override
 	protected void onHit(HitResult hitResult) {
 		super.onHit(hitResult);
-		if (!level().isClientSide && !getItem().isEmpty() && !isRemoved()) {
+		if (!level().isClientSide() && !getItem().isEmpty() && !isRemoved()) {
 			Vec3 location = hitResult.getLocation();
 			location = location.add(getDeltaMovement().normalize().scale(-0.25));
 			ItemEntity itemEntity = new ItemEntity(level(), location.x, location.y, location.z, getItem());
@@ -92,7 +92,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 	protected void onHitBlock(BlockHitResult blockHitResult) {
 		super.onHitBlock(blockHitResult);
 		ItemStack item = getItem();
-		if (!level().isClientSide && !item.isEmpty() && !isRemoved()) {
+		if (!level().isClientSide() && !item.isEmpty() && !isRemoved()) {
 			BlockPos pos = blockHitResult.getBlockPos();
 			BlockState blockState = level().getBlockState(pos);
 			if (blockState.getBlock() instanceof FarmBlock) {
@@ -156,7 +156,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 				dz = getDeltaMovement().z * 0.05;
 			}
 			livingEntity.push(dx, 0.1, dz);
-			if (!level().isClientSide && owner instanceof LivingEntity) {
+			if (!level().isClientSide() && owner instanceof LivingEntity) {
 				EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
 				EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingEntity);
 			}
@@ -170,7 +170,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 		if (isRemoved()) {
 			return;
 		}
-		if (level().isClientSide && colorProvider != null) {
+		if (level().isClientSide() && colorProvider != null) {
 			int color = colorProvider.getColor(getItem(), level(), position());
 			Vec3 deltaMovement = getDeltaMovement();
 			double x = deltaMovement.x;

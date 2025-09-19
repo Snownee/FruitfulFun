@@ -109,6 +109,7 @@ tip.fruitfulfun.beehiveTradeInputHint: Bee traits can affect the purchase price.
 tip.fruitfulfun.bees: 'Bees: %s'
 tip.fruitfulfun.onlyAtNight: Only works at night.
 tip.fruitfulfun.allogamy: Requires pollination to bear fruit.
+tip.fruitfulfun.cropNeedsPollination: '%s (needs pollination)'
 text.fruitfulfun.time: '%s/%s %s:%s:%s'
 text.fruitfulfun.trait: Traits
 text.fruitfulfun.trait.none: This bee doesn't have any traits.

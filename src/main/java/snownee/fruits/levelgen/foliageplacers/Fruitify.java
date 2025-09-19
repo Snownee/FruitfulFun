@@ -84,8 +84,9 @@ public class Fruitify extends FoliagePlacer {
 		}
 		foliageSetter.set(pAttachment.pos(), core);
 		level.getBlockEntity(pAttachment.pos(), CoreModule.FRUIT_TREE.get()).ifPresent(be -> {
-			be.addActiveLeaves(activeLeaves);
+			be.addLeaves(activeLeaves);
 			be.setLifespan(Mth.randomBetweenInclusive(pRandom, FFCommonConfig.fruitTreeLifespanMin, FFCommonConfig.fruitTreeLifespanMax));
+			be.setMaxLifespan(be.getLifespan() + 10);
 		});
 	}
 

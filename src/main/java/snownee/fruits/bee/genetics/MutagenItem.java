@@ -71,7 +71,7 @@ public class MutagenItem extends ModItem {
 		if (code == null) {
 			return InteractionResult.FAIL;
 		}
-		if (!player.level().isClientSide) {
+		if (!player.level().isClientSide()) {
 			Allele allele = Allele.byCode(code.charAt(0));
 			if (allele == null) {
 				player.displayClientMessage(Component.translatable("tip.fruitfulfun.invalidMutagen"), true);
@@ -88,7 +88,7 @@ public class MutagenItem extends ModItem {
 			player.awardStat(Stats.ITEM_USED.get(this));
 			return InteractionResult.SUCCESS;
 		}
-		return InteractionResult.sidedSuccess(player.level().isClientSide);
+		return InteractionResult.sidedSuccess(player.level().isClientSide());
 	}
 
 	public static Optional<String> getCodename(ItemStack stack) {

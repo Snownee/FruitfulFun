@@ -318,7 +318,7 @@ public class CommonProxy {
 			FFPlayer ffPlayer = FFPlayer.of(player);
 			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
 					ffPlayer.fruits$hauntingTarget() instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
-				if (!player.level().isClientSide) {
+				if (!player.level().isClientSide()) {
 					ffPlayer.fruits$setHauntingTarget(target);
 					HauntingManager manager = ffPlayer.fruits$hauntingManager();
 					if (manager != null) {

@@ -92,7 +92,7 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 
 	@Nullable
 	public static VacItemProjectile shootItem(Player player, ItemStack gun, VacGunContainer container) {
-		if (player.level().isClientSide) {
+		if (player.level().isClientSide()) {
 			return null;
 		}
 		ItemStack itemStack = container.getLastItem();
@@ -129,7 +129,7 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 	}
 
 	public static void collectItem(Player player, ItemEntity itemEntity, ItemStack gun, final @Nullable VacGunContainer container) {
-		if (player.level().isClientSide) {
+		if (player.level().isClientSide()) {
 			return;
 		}
 		String ammoType = getAmmoType(gun);
@@ -213,7 +213,7 @@ public class VacGunItem extends ModItem implements PreventUpdateAnimation {
 			return;
 		}
 		Vec3 start = player.getEyePosition(1);
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return;
 		}
 		Vec3 lookAngle = player.getViewVector(1);

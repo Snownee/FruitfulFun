@@ -44,7 +44,7 @@ public class FoodItem extends ModItem {
 				player.getFoodData().eat(stack.getItem(), stack);
 			}
 			entity.addEatEffect(stack, level, entity);
-			if (!level.isClientSide && Hooks.shouldClearHarmfulEffects(stack.getItem())) {
+			if (!level.isClientSide() && Hooks.shouldClearHarmfulEffects(stack.getItem())) {
 				ItemStack milk = Items.MILK_BUCKET.getDefaultInstance();
 				entity.getActiveEffectsMap().values().stream()
 						.filter($ -> !$.getEffect().isBeneficial() && CommonProxy.isCurativeItem($, milk))
@@ -57,7 +57,7 @@ public class FoodItem extends ModItem {
 			}
 		} else {
 			entity.eat(level, stack);
-//			if (FFCommonConfig.chorusFruitPieMaxTeleportDistance > 0 && !level.isClientSide && FoodModule.CHORUS_FRUIT_PIE.is(stack)) {
+//			if (FFCommonConfig.chorusFruitPieMaxTeleportDistance > 0 && !level.isClientSide() && FoodModule.CHORUS_FRUIT_PIE.is(stack)) {
 //				HitResult pick = entity.pick(FFCommonConfig.chorusFruitPieMaxTeleportDistance, 1.0F, false);
 //				if (pick instanceof BlockHitResult hit) {
 //					Direction direction = hit.getDirection();

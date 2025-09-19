@@ -79,7 +79,7 @@ public class HauntingManager {
 	}
 
 	public void respawnStoredBee(ServerPlayer player) {
-		if (player.level().isClientSide || storedBee == null) {
+		if (player.level().isClientSide() || storedBee == null) {
 			return;
 		}
 		EntityType.create(storedBee, player.level()).ifPresent(entity -> {
@@ -92,7 +92,7 @@ public class HauntingManager {
 	}
 
 	public void storeBee(Bee bee) {
-		if (bee.level().isClientSide) {
+		if (bee.level().isClientSide()) {
 			return;
 		}
 		traits = ImmutableSet.copyOf(BeeAttributes.of(bee).getGenes().getTraits());

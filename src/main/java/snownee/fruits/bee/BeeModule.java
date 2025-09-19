@@ -125,7 +125,7 @@ public class BeeModule extends AbstractModule {
 
 	public static void tickWaxedMarker(Display display) {
 		Level level = display.level();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			if (display.random.nextInt(50) == 0) {
 				ParticleUtils.spawnParticlesOnBlockFaces(
 						level,

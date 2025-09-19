@@ -61,14 +61,14 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 			Player player,
 			InteractionHand p_60507_,
 			BlockHitResult p_60508_) {
-		if (!level.isClientSide && !(this instanceof FeastBlock)) {
+		if (!level.isClientSide() && !(this instanceof FeastBlock)) {
 			level.removeBlock(pos, false);
 			ItemStack stack = new ItemStack(this);
 			if (!player.addItem(stack)) {
 				player.drop(stack, false);
 			}
 		}
-		return InteractionResult.sidedSuccess(level.isClientSide);
+		return InteractionResult.sidedSuccess(level.isClientSide());
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 
 	@Override
 	public void onPlace(BlockState blockState, Level level, BlockPos pos, BlockState blockState2, boolean bl) {
-		if (level.isClientSide || !Hooks.ritual
+		if (level.isClientSide() || !Hooks.ritual
 				|| !FoodModule.CHORUS_FRUIT_PIE.is(blockState)
 				|| blockState2.is(blockState.getBlock())) {
 			return;

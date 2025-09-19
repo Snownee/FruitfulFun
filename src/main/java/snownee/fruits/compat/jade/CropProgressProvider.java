@@ -1,8 +1,10 @@
 package snownee.fruits.compat.jade;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -18,17 +20,28 @@ public class CropProgressProvider implements IBlockComponentProvider {
 			return;
 		}
 		BlockState state = accessor.getBlockState();
-		if (!((FruitLeavesBlock) state.getBlock()).canGrow(state)) {
+		FruitLeavesBlock block = (FruitLeavesBlock) state.getBlock();
+		if (!block.canGrow(state)) {
 			return;
 		}
 		int age = state.getValue(FruitLeavesBlock.AGE);
-		addMaturityTooltip(tooltip, (age - 1) / 2.0F);
+		boolean needsPollination = false;
+		if (FFCommonConfig.allogamousTrees && block.type.get().allogamous) {
+			needsPollination = age == FruitLeavesBlock.BLOOMING;
+		}
+		addMaturityTooltip(tooltip, (age - 1) / 2.0F, needsPollination);
 	}
 
-	private static void addMaturityTooltip(ITooltip tooltip, float growthValue) {
+	private static void addMaturityTooltip(ITooltip tooltip, float growthValue, boolean needsPollination) {
 		growthValue *= 100.0F;
 		if (growthValue < 100.0F) {
-			tooltip.add(Component.translatable("tooltip.jade.crop_growth", IThemeHelper.get().info(String.format("%.0f%%", growthValue))));
+			MutableComponent component = Component.translatable(
+					"tooltip.jade.crop_growth",
+					IThemeHelper.get().info(String.format("%.0f%%", growthValue)));
+			if (needsPollination) {
+				component = Component.translatable("tip.fruitfulfun.cropNeedsPollination", component);
+			}
+			tooltip.add(component);
 		} else {
 			tooltip.add(Component.translatable(
 					"tooltip.jade.crop_growth",

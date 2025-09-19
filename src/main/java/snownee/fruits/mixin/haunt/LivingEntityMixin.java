@@ -83,7 +83,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	@Nullable
 	public Player fruits$getHauntedBy() {
 		if (hauntedBy == null) {
-			if (level().isClientSide && ClientProxy.getPlayer() instanceof FFPlayer player && player.fruits$hauntingTarget() == this) {
+			if (level().isClientSide() && ClientProxy.getPlayer() instanceof FFPlayer player && player.fruits$hauntingTarget() == this) {
 				return (Player) player;
 			}
 			return null;
@@ -131,7 +131,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/LivingEntity;getDamageAfterArmorAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F"))
 	private void actuallyHurt(DamageSource damageSource, float damageAmount, CallbackInfo ci) {
-		if (Hooks.bee && !level().isClientSide && hauntedBy != null && damageAmount > 0 && damageSource.is(DamageTypes.IN_FIRE) &&
+		if (Hooks.bee && !level().isClientSide() && hauntedBy != null && damageAmount > 0 && damageSource.is(DamageTypes.IN_FIRE) &&
 				fruits$getHauntedBy() instanceof ServerPlayer player) {
 			HauntingManager hauntingManager = FFPlayer.of(player).fruits$hauntingManager();
 			if (hauntingManager != null) {
@@ -146,7 +146,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 					value = "INVOKE",
 					target = "Lnet/minecraft/world/entity/LivingEntity;die(Lnet/minecraft/world/damagesource/DamageSource;)V"))
 	private void die(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-		if (!Hooks.bee || level().isClientSide) {
+		if (!Hooks.bee || level().isClientSide()) {
 			return;
 		}
 		if (fruits$getHauntedBy() instanceof ServerPlayer player) {

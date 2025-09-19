@@ -14,7 +14,7 @@ public class LivingEntityFlowerCrownMixin {
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;updatingUsingItem()V"))
 	private void tick(CallbackInfo ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
-		if (!entity.level().isClientSide) {
+		if (!entity.level().isClientSide()) {
 			return;
 		}
 		if (entity.getType() == EntityType.PLAYER || entity.getType() == EntityType.ARMOR_STAND) {

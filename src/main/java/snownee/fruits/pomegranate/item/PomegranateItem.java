@@ -39,7 +39,7 @@ public class PomegranateItem extends ModBlockItem {
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
 		ItemStack itemStack = player.getItemInHand(interactionHand);
 		player.getCooldowns().addCooldown(itemStack.getItem(), 10);
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			Vec3 eye = player.getEyePosition();
 			ItemEntity fruit = new ItemEntity(level, eye.x, eye.y, eye.z, itemStack.copyWithCount(1));
 			fruit.setThrower(player.getUUID());
