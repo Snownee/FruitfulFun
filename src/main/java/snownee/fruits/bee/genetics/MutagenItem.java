@@ -20,6 +20,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,10 +31,11 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.duck.FFPlayer;
+import snownee.kiwi.item.ItemCategoryFiller;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 
-public class MutagenItem extends ModItem {
+public class MutagenItem extends ModItem implements ItemCategoryFiller {
 	public static final Item BREWING_ITEM = Items.PITCHER_PLANT;
 	public static final RandomSource RANDOM = RandomSource.create();
 
@@ -134,5 +137,11 @@ public class MutagenItem extends ModItem {
 			stack.shrink(1);
 			player.addItem(randomMutagen(false, player.getRandom()));
 		}
+	}
+
+	@Override
+	public void fillItemCategory(CreativeModeTab creativeModeTab, FeatureFlagSet featureFlagSet, boolean b, List<ItemStack> list) {
+		list.add(new ItemStack(this));
+		list.add(getDefaultInstance());
 	}
 }
