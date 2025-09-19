@@ -258,6 +258,10 @@ dependencies {
         jarJar.ranged(it, "[1.0.2,)")
         transitive(false)
     }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.32+ef105b4977")) {
+        jarJar.ranged(it, "[0.4.32,)")
+        transitive(false)
+    }
     runtimeOnly fg.deobf("dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}")
 }
 

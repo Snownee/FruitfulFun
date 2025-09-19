@@ -2,6 +2,8 @@ package snownee.fruits;
 
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -26,7 +28,7 @@ public class FFRegistries {
 	private static <T> void register(
 			String name,
 			Class<?> clazz,
-			String defaultKey,
+			@Nullable String defaultKey,
 			NewRegistryEvent event,
 			Consumer<Registry<T>> consumer) {
 		RegistryBuilder<T> builder = new RegistryBuilder<T>().setName(FruitfulFun.id(name)).hasTags();

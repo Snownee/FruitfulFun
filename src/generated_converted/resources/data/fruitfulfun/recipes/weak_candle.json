@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "tag": "forge:tulips"
+  },
+  "base": {
+    "tag": "minecraft:candles"
+  },
+  "result": {
+    "item": "fruitfulfun:weak_candle"
+  },
+  "template": {
+    "tag": "fruitfulfun:gadget_token"
+  },
+  "conditions": [
+    {
+      "module": "fruitfulfun:gadget",
+      "type": "kiwi:is_loaded"
+    }
+  ]
+}

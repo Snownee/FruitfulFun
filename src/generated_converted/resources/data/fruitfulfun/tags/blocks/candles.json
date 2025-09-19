@@ -2,6 +2,22 @@
   "replace": false,
   "values": [
     {
+      "id": "fruitfulfun:phantom_candle",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:wandering_trader_candle",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:ender_candle",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:weak_candle",
+      "required": false
+    },
+    {
       "id": "#minecraft:candles",
       "required": false
     },

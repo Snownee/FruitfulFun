@@ -73,15 +73,19 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.RegistryManager;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFFruitTypes;
@@ -100,6 +104,7 @@ import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentType;
+import snownee.fruits.gadget.SummonedBee;
 import snownee.fruits.gadget.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.kiwi.AbstractModule;
@@ -117,6 +122,12 @@ public class CommonProxy {
 
 	public CommonProxy() {
 		FFFruitTypes.APPLE.getOrCreate();
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		eventBus.addListener((EntityAttributeCreationEvent event) -> {
+			if (Hooks.gadget) {
+				event.put(GadgetModule.SUMMONED_BEE.getOrCreate(), SummonedBee.createAttributes().build());
+			}
+		});
 	}
 
 	public static void init() {
@@ -362,11 +373,6 @@ public class CommonProxy {
 		});
 	}
 
-	public static InteractionResult lowPriorityInteract(Player player, Entity target) {
-
-		return InteractionResult.PASS;
-	}
-
 	public static void initGadgetModule() {
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
 			if (GadgetModule.VAC_GUN.is(event.getItemStack())) {
@@ -392,7 +398,7 @@ public class CommonProxy {
 		});
 
 		for (ModuleInfo module : KiwiModules.get()) {
-			module.<ScentType>getRegistryEntries(FFRegistries.SCENT_TYPE).forEach($ -> {
+			module.<ScentType>getRegistryEntries(RegistryManager.ACTIVE.getRegistry(FFRegistries.SCENT_TYPE.key())).forEach($ -> {
 				onScentTypeAdded($.name, $.entry);
 			});
 		}

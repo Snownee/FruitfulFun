@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraftforge.registries.ForgeRegistries;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -150,7 +151,7 @@ public class GadgetModule extends AbstractModule {
 	@Override
 	protected void preInit() {
 		CommonProxy.initGadgetModule();
-		Hooks.scentEffects.addAll(KiwiModules.get(uid).getRegistries(BuiltInRegistries.MOB_EFFECT));
+		Hooks.scentEffects.addAll(KiwiModules.get(uid).getRegistries(ForgeRegistries.MOB_EFFECTS));
 	}
 
 	@Override

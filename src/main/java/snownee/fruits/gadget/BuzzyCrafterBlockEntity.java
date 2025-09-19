@@ -36,12 +36,13 @@ import snownee.fruits.util.CommonProxy;
 
 public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements BuzzyCrafterContainer {
 	public static final Map<Class<?>, Function<BuzzyCrafterBlockEntity, BuzzyPowerReceiver>> BLOCK_RECEIVER_FACTORIES = Map.of(
-			ScentedCandleBlock.class, ScentedCandleBlock::getPowerReceiver
-	);
+			ScentedCandleBlock.class,
+			ScentedCandleBlock::getPowerReceiver);
 	public static final Map<Class<?>, Function<ItemStack, BuzzyPowerStorage>> ITEM_STORAGE_FACTORIES = Map.of(
-			BuzzyShieldItem.class, BuzzyShieldItem::getPowerStorage,
-			ScentedCandleItem.class, ScentedCandleItem::getPowerStorage
-	);
+			BuzzyShieldItem.class,
+			BuzzyShieldItem::getPowerStorage,
+			ScentedCandleItem.class,
+			ScentedCandleItem::getPowerStorage);
 	private static final String ITEM_STACK_KEY = "item";
 	protected ItemStack item = ItemStack.EMPTY;
 	protected TriState blocked = TriState.DEFAULT;
