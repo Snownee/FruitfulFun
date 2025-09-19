@@ -109,7 +109,7 @@ public final class Hooks {
 		};
 	}
 
-	public static void modifyRayTraceResult(HitResult hitResult, Consumer<HitResult> consumer) {
+	public static void modifyRayTraceResult(@Nullable HitResult hitResult, Consumer<HitResult> consumer) {
 		if (hitResult == null || hitResult.getType() != HitResult.Type.ENTITY) {
 			return;
 		}
@@ -164,7 +164,7 @@ public final class Hooks {
 			ServerPlayer player,
 			FruitTreeBlockEntity core,
 			BlockPos eyePos,
-			Consumer<ItemEntity> consumer) {
+			@Nullable Consumer<ItemEntity> consumer) {
 		List<BlockPos> leaves = core.getLeaves();
 		BlockPos corePos = core.getBlockPos();
 		if (leaves.isEmpty()) {
@@ -340,7 +340,7 @@ public final class Hooks {
 		}
 	}
 
-	private static Allele mutagenAffectedAllele(Bee bee) {
+	private static @Nullable Allele mutagenAffectedAllele(Bee bee) {
 		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.get());
 		if (effect == null) {
 			return null;

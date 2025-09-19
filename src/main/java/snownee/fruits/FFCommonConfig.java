@@ -55,6 +55,8 @@ public final class FFCommonConfig {
 	public static boolean dispenserCollectDragonBreath = true;
 	@ConfigUI.Hide
 	public static boolean leavesUsInPeaceIncompatibilityNotified;
+	@ConfigUI.Hide
+	public static boolean brainierBeesIncompatibilityNotified;
 
 	@KiwiConfig.GameRestart
 	public static GeneticsDifficulty geneticsDifficulty = GeneticsDifficulty.Normal;
