@@ -2,7 +2,6 @@ package snownee.fruits.client.particle;
 
 import java.util.Iterator;
 
-import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -78,7 +77,7 @@ public class PetalParticle extends TextureSheetParticle {
 	}
 
 	@Override
-	public @NotNull ParticleRenderType getRenderType() {
+	public ParticleRenderType getRenderType() {
 		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
 

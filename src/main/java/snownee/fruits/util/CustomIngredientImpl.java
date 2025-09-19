@@ -14,9 +14,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import snownee.fruits.mixin.forge.CraftingHelperAccess;
-import snownee.kiwi.util.NotNullByDefault;
 
-@NotNullByDefault
 public class CustomIngredientImpl extends AbstractIngredient {
 	public static IIngredientSerializer<?> getWrappedSerializer(ResourceLocation identifier) {
 		Objects.requireNonNull(identifier, "Identifier may not be null.");

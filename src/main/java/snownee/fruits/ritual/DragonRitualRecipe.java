@@ -2,8 +2,6 @@ package snownee.fruits.ritual;
 
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.BlockPos;
@@ -42,7 +40,7 @@ public class DragonRitualRecipe extends LycheeRecipe<DragonRitualContext> {
 	}
 
 	@Override
-	public @NotNull NonNullList<Ingredient> getIngredients() {
+	public NonNullList<Ingredient> getIngredients() {
 		return NonNullList.of(Ingredient.EMPTY, input);
 	}
 

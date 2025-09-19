@@ -8,9 +8,7 @@ import net.minecraft.client.particle.RisingParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import snownee.kiwi.util.NotNullByDefault;
 
-@NotNullByDefault
 public class GhostParticle extends RisingParticle {
 	private final SpriteSet sprites;
 	protected boolean isGlowing;

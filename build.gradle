@@ -269,6 +269,7 @@ processResources {
     exclude "/assets/${project.mod_id}/textures/entity/bee/bee_angry_nectar.png"
     exclude '**/*.bat'
     exclude '**/*.psd'
+    exclude '**/*.py'
 }
 
 tasks.jarJar.configure {

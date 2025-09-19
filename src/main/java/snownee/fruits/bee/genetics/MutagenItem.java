@@ -3,7 +3,6 @@ package snownee.fruits.bee.genetics;
 import java.util.List;
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.Util;
@@ -42,7 +41,7 @@ public class MutagenItem extends ModItem {
 	}
 
 	@Override
-	public @NotNull Component getName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		return getCodename(stack)
 				.map(MutagenItem::getClientName)
 				.map(s -> (Component) Component.translatable("item.fruitfulfun.mutagen.stable", s))
