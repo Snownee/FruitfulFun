@@ -30,6 +30,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.gadget.datagen.SetBuzzyPowerFunction;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.Categories;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModules;
@@ -40,6 +41,7 @@ import snownee.kiwi.util.KiwiEntityTypeBuilder;
 @KiwiModule("gadget")
 @KiwiModule.Optional
 public class GadgetModule extends AbstractModule {
+	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS, after = "beehive")
 	public static final KiwiGO<Block> BUZZY_CRAFTER = go(() -> new BuzzyCrafterBlock(blockProp(Blocks.BEEHIVE)));
 	@KiwiModule.Name("buzzy_crafter")
 	public static final KiwiGO<BlockEntityType<BuzzyCrafterBlockEntity>> BUZZY_CRAFTER_ENTITY = blockEntity(
@@ -53,6 +55,7 @@ public class GadgetModule extends AbstractModule {
 					.getPossibleStates()), 0, 1));
 	public static final TagKey<Block> SUSTAIN_CRAFTER_ITEM = blockTag(FruitfulFun.ID, "sustain_crafter_item");
 
+	@KiwiModule.Category
 	public static final KiwiGO<Item> VAC_GUN_CASING = go(() -> new ModItem(itemProp().stacksTo(1).rarity(Rarity.RARE)));
 	public static final KiwiGO<VacGunItem> VAC_GUN = go(VacGunItem::new);
 	public static final KiwiGO<SoundEvent> GUN_SHOOT_ITEM = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
@@ -77,6 +80,7 @@ public class GadgetModule extends AbstractModule {
 		}
 	});
 
+	@KiwiModule.Category(value = Categories.COMBAT, after = "shield")
 	public static final KiwiGO<BuzzyShieldItem> BUZZY_SHIELD = go(() -> new BuzzyShieldItem(itemProp().stacksTo(1)));
 	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = go(() -> KiwiEntityTypeBuilder.<SummonedBee>createMob()
 			.dimensions(EntityDimensions.scalable(0.525f, 0.45f))
@@ -115,6 +119,7 @@ public class GadgetModule extends AbstractModule {
 //			true,
 //			false,
 //			false))));
+	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS)
 	public static final KiwiGO<ScentedCandleBlock> PHANTOM_CANDLE = go(() -> new ScentedCandleBlock(
 			blockProp(Blocks.CANDLE),
 			PHANTOM.getOrCreate()));

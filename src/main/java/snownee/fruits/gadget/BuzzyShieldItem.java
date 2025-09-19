@@ -24,7 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 
-public class BuzzyShieldItem extends ShieldItem {
+public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFiller {
 	public static final String TAG_LAST_PERFECT_BLOCK = "last_perfect_block";
 
 	public BuzzyShieldItem(Properties properties) {

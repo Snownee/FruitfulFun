@@ -38,7 +38,8 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			ScentedCandleBlock.class, ScentedCandleBlock::getPowerReceiver
 	);
 	public static final Map<Class<?>, Function<ItemStack, BuzzyPowerStorage>> ITEM_STORAGE_FACTORIES = Map.of(
-			BuzzyShieldItem.class, BuzzyShieldItem::getPowerStorage
+			BuzzyShieldItem.class, BuzzyShieldItem::getPowerStorage,
+			ScentedCandleItem.class, ScentedCandleItem::getPowerStorage
 	);
 	private static final String ITEM_STACK_KEY = "item";
 	protected ItemStack item = ItemStack.EMPTY;
@@ -261,13 +262,16 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			return;
 		}
 		itemPowerReceiverUpdated = false;
-		if (!item.isEmpty()) {
-			Function<ItemStack, BuzzyPowerStorage> function = ITEM_STORAGE_FACTORIES.get(item.getItem().getClass());
-			if (function != null) {
-				itemPowerReceiver = function.apply(item);
-				return;
-			}
+		if (item.isEmpty()) {
+			itemPowerReceiver = null;
+			return;
 		}
-		itemPowerReceiver = null;
+		itemPowerReceiver = getPowerStorage(item);
+	}
+
+	@Nullable
+	public static BuzzyPowerStorage getPowerStorage(ItemStack itemStack) {
+		Function<ItemStack, BuzzyPowerStorage> function = ITEM_STORAGE_FACTORIES.get(itemStack.getItem().getClass());
+		return function == null ? null : function.apply(itemStack);
 	}
 }
