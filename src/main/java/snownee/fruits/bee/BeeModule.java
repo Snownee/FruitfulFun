@@ -97,7 +97,6 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
-	public static final KiwiGO<MobEffect> FRAGILITY = go(() -> new MobEffect(MobEffectCategory.HARMFUL, 0x875A49));
 	public static final KiwiGO<SimpleParticleType> GHOST = go(() -> new SimpleParticleType(false));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;

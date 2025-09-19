@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.util.ClientProxy;
-import snownee.fruits.vacuum.VacModule;
+import snownee.fruits.gadget.GadgetModule;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
@@ -66,7 +66,7 @@ public abstract class ItemInHandRendererMixin {
 			MultiBufferSource multiBufferSource,
 			int i,
 			CallbackInfo ci) {
-		if (Hooks.vac && VacModule.VAC_GUN.is(itemStack)) {
+		if (Hooks.gadget && GadgetModule.VAC_GUN.is(itemStack)) {
 			ClientProxy.renderVacGunInHand(livingEntity, itemStack, itemDisplayContext, leftHand, poseStack);
 		}
 		//Donk.donk(Minecraft.getInstance(), Minecraft.getInstance().getEntityRenderDispatcher(), livingEntity, multiBufferSource);

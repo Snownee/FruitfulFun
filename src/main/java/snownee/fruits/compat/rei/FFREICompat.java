@@ -25,7 +25,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.compat.FFJEIREI;
 import snownee.fruits.ritual.RitualModule;
-import snownee.fruits.vacuum.VacModule;
+import snownee.fruits.gadget.GadgetModule;
 import snownee.lychee.compat.rei.REICompat;
 import snownee.lychee.compat.rei.category.BaseREICategory;
 import snownee.lychee.compat.rei.display.BaseREIDisplay;
@@ -105,9 +105,9 @@ public class FFREICompat implements REIClientPlugin {
 	@SuppressWarnings("UnstableApiUsage")
 	@Override
 	public void registerBasicEntryFiltering(BasicFilteringRule<?> rule) {
-		if (Hooks.vac) {
-			rule.hide(EntryStacks.of(VacModule.VAC_GUN.get()));
-			rule.hide(EntryStacks.of(VacModule.VAC_GUN_CASING.get()));
+		if (Hooks.gadget) {
+			rule.hide(EntryStacks.of(GadgetModule.VAC_GUN.get()));
+			rule.hide(EntryStacks.of(GadgetModule.VAC_GUN_CASING.get()));
 		}
 	}
 }

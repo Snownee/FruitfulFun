@@ -6,6 +6,12 @@ import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.collect.Maps;
+import com.mojang.serialization.Codec;
+
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -22,6 +28,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -51,6 +58,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.EmptyLevelChunk;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -71,9 +80,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
-import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.FFFruitTypes;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -87,20 +96,25 @@ import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.curios.CuriosCompat;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.duck.FFPlayer;
+import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.gadget.ScentType;
+import snownee.fruits.gadget.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
-import snownee.fruits.vacuum.VacGunItem;
-import snownee.fruits.vacuum.VacModule;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiModules;
+import snownee.kiwi.ModuleInfo;
 import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.Util;
 
+@SuppressWarnings("UnstableApiUsage")
 @Mod(FruitfulFun.ID)
 public class CommonProxy {
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("farmersdelight", "tools/knives");
+	private static final Map<ScentType, AttachmentType<Long>> SCENT_ATTACHMENT_TYPES = Maps.newHashMap();
 
 	public CommonProxy() {
-		CoreFruitTypes.APPLE.getOrCreate();
+		FFFruitTypes.APPLE.getOrCreate();
 	}
 
 	public static void init() {
@@ -115,10 +129,12 @@ public class CommonProxy {
 			List<VillagerTrades.ItemListing> trades = event.getGenericTrades();
 			trades.add((entity, random) -> {
 				ItemStack sapling = net.minecraft.Util.getRandom(
-						FFRegistries.FRUIT_TYPE.stream()
-								.filter($ -> $.tier == 0)
-								.map($ -> $.sapling.get())
-								.toList(), random).asItem().getDefaultInstance();
+								FFRegistries.FRUIT_TYPE.stream()
+										.filter($ -> $.tier == 0)
+										.map($ -> $.sapling.get())
+										.toList(), random)
+						.asItem()
+						.getDefaultInstance();
 				ItemStack emeralds = new ItemStack(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice);
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});
@@ -151,11 +167,9 @@ public class CommonProxy {
 			});
 		}
 
-		if (!Platform.isProduction()) {
-			MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
-				event.getDispatcher().register(FFCommands.register());
-			});
-		}
+		MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
+			event.getDispatcher().register(FFCommands.register());
+		});
 
 		if (Platform.isPhysicalClient()) {
 			ClientProxy.init();
@@ -336,29 +350,40 @@ public class CommonProxy {
 		return InteractionResult.PASS;
 	}
 
-	public static void initVacModule() {
+	public static void initGadgetModule() {
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
-			if (VacModule.VAC_GUN.is(event.getItemStack())) {
+			if (GadgetModule.VAC_GUN.is(event.getItemStack())) {
 				event.getEntity().startUsingItem(event.getHand());
 				event.setCanceled(true);
 			}
 		});
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.LeftClickBlock event) -> {
-			if (VacModule.VAC_GUN.is(event.getItemStack())) {
+			if (GadgetModule.VAC_GUN.is(event.getItemStack())) {
 				event.setCanceled(true);
 			}
 		});
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.EntityInteract event) -> {
-			if (VacModule.VAC_GUN.is(event.getItemStack())) {
+			if (GadgetModule.VAC_GUN.is(event.getItemStack())) {
 				event.getEntity().startUsingItem(event.getHand());
 				event.setCanceled(true);
 			}
 		});
 		MinecraftForge.EVENT_BUS.addListener((AttackEntityEvent event) -> {
-			if (VacModule.VAC_GUN.is(event.getEntity().getMainHandItem())) {
+			if (GadgetModule.VAC_GUN.is(event.getEntity().getMainHandItem())) {
 				event.setCanceled(true);
 			}
 		});
+
+		for (ModuleInfo module : KiwiModules.get()) {
+			module.<ScentType>getRegistryEntries(FFRegistries.SCENT_TYPE).forEach($ -> {
+				onScentTypeAdded($.name, $.entry);
+			});
+		}
+	}
+
+	public static void onScentTypeAdded(ResourceLocation id, ScentType scentType) {
+		AttachmentType<Long> type = AttachmentRegistry.<Long>builder().persistent(Codec.LONG).buildAndRegister(id.withSuffix("_scent"));
+		SCENT_ATTACHMENT_TYPES.put(scentType, type);
 	}
 
 	public static void addFeature(String id) {
@@ -407,5 +432,36 @@ public class CommonProxy {
 	public static boolean isBeehive(ItemStack itemStack) {
 		return itemStack.is(Items.BEEHIVE) || itemStack.is(Items.BEE_NEST) || Block.byItem(itemStack.getItem()).defaultBlockState().is(
 				BlockTags.BEEHIVES);
+	}
+
+	public static void setScentTime(ChunkAccess chunk, ScentType type, long time) {
+		if (chunk instanceof EmptyLevelChunk) {
+			return;
+		}
+		AttachmentType<Long> attachmentType = SCENT_ATTACHMENT_TYPES.get(type);
+		if (attachmentType == null) {
+			return;
+		}
+		if (time <= 0) {
+			((AttachmentTarget) chunk).removeAttached(attachmentType);
+		} else {
+			Long attached = ((AttachmentTarget) chunk).getAttached(attachmentType);
+			if (attached != null && attached > time) {
+				return;
+			}
+			((AttachmentTarget) chunk).setAttached(attachmentType, time);
+		}
+	}
+
+	public static long getScentTime(ChunkAccess chunk, ScentType type) {
+		AttachmentType<Long> attachmentType = SCENT_ATTACHMENT_TYPES.get(type);
+		if (attachmentType == null) {
+			return -1;
+		}
+		Long timeUntil = ((AttachmentTarget) chunk).getAttached(attachmentType);
+		if (timeUntil == null) {
+			return -1;
+		}
+		return timeUntil;
 	}
 }

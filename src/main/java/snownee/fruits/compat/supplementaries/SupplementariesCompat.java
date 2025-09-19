@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainer
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import snownee.fruits.vacuum.client.ItemProjectileColor;
+import snownee.fruits.gadget.client.ItemProjectileColor;
 
 public class SupplementariesCompat {
 	public static Entity getTargetEntity(BlockEntity be) {

@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    "fruitfulfun:phantom_candle",
+    "fruitfulfun:wandering_trader_candle",
+    "fruitfulfun:ender_candle",
+    "fruitfulfun:weak_candle",
     {
       "id": "#minecraft:candles",
       "required": false

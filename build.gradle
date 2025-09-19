@@ -234,16 +234,28 @@ dependencies {
         jarJar.ranged(it, "[2,)")
         transitive(false)
     }
-    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-biome-api-v1:13.0.13+dc36698e77")) {
-        jarJar.ranged(it, "[13.0.13,)")
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-biome-api-v1:13.0.14+dc36698e77")) {
+        jarJar.ranged(it, "[13.0.14,)")
         transitive(false)
     }
-    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-resource-loader-v0:0.11.10+bcd08ed377")) {
-        jarJar.ranged(it, "[0.11.10,)")
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-resource-loader-v0:0.11.12+4b4151c077")) {
+        jarJar.ranged(it, "[0.11.12,)")
         transitive(false)
     }
-    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-convention-tags-v1:1.5.5+fa3d1c0177")) {
-        jarJar.ranged(it, "[1.5.5,)")
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-convention-tags-v1:1.5.6+fa3d1c0177")) {
+        jarJar.ranged(it, "[1.5.6,)")
+        transitive(false)
+    }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-entity-events-v1:1.6.1+4ca7515277")) {
+        jarJar.ranged(it, "[1.6.1,)")
+        transitive(false)
+    }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-object-builder-api-v1:11.1.5+f8c414ce77")) {
+        jarJar.ranged(it, "[11.1.5,)")
+        transitive(false)
+    }
+    compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-data-attachment-api-v1:1.0.2+30ef839e77")) {
+        jarJar.ranged(it, "[1.0.2,)")
         transitive(false)
     }
     runtimeOnly fg.deobf("dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}")
@@ -255,7 +267,6 @@ processResources {
     exclude "/assets/${project.mod_id}/textures/entity/bee/bee_angry.png"
     exclude "/assets/${project.mod_id}/textures/entity/bee/bee_nectar.png"
     exclude "/assets/${project.mod_id}/textures/entity/bee/bee_angry_nectar.png"
-    exclude "/snownee/fruits/command"
     exclude '**/*.bat'
     exclude '**/*.psd'
 }

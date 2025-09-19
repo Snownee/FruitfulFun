@@ -50,10 +50,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import snownee.fruits.CoreFruitTypes;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFCommonConfig.DropMode;
+import snownee.fruits.FFFruitTypes;
 import snownee.fruits.FruitType;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
@@ -107,7 +107,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state) {
 		FruitType fruitType = type.get();
 		Item item = Items.AIR;
-		if (Hooks.hauntedHarvest && FFCommonConfig.rottenAppleChance > 0 && CoreFruitTypes.APPLE.is(fruitType) &&
+		if (Hooks.hauntedHarvest && FFCommonConfig.rottenAppleChance > 0 && FFFruitTypes.APPLE.is(fruitType) &&
 				level.getRandom().nextFloat() < FFCommonConfig.rottenAppleChance) {
 			item = BuiltInRegistries.ITEM.get(new ResourceLocation("hauntedharvest", "rotten_apple"));
 		}

@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFFruitTypes;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.SlidingDoorBlock;
@@ -62,24 +63,16 @@ import snownee.kiwi.util.VanillaActions;
 public class CherryModule extends AbstractModule {
 
 	public static final BlockSetType REDLOVE_SET_TYPE = new BlockSetType(
-			"fruitfulfun:redlove",
-			true,
-			SoundType.CHERRY_WOOD,
-			SoundEvents.CHERRY_WOOD_DOOR_CLOSE,
-			SoundEvents.CHERRY_WOOD_DOOR_OPEN,
-			SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE,
-			SoundEvents.CHERRY_WOOD_TRAPDOOR_OPEN,
-			SoundEvents.CHERRY_WOOD_PRESSURE_PLATE_CLICK_OFF,
-			SoundEvents.CHERRY_WOOD_PRESSURE_PLATE_CLICK_ON,
-			SoundEvents.CHERRY_WOOD_BUTTON_CLICK_OFF,
+			"fruitfulfun:redlove", true, SoundType.CHERRY_WOOD, SoundEvents.CHERRY_WOOD_DOOR_CLOSE, SoundEvents.CHERRY_WOOD_DOOR_OPEN,
+			SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE, SoundEvents.CHERRY_WOOD_TRAPDOOR_OPEN, SoundEvents.CHERRY_WOOD_PRESSURE_PLATE_CLICK_OFF,
+			SoundEvents.CHERRY_WOOD_PRESSURE_PLATE_CLICK_ON, SoundEvents.CHERRY_WOOD_BUTTON_CLICK_OFF,
 			SoundEvents.CHERRY_WOOD_BUTTON_CLICK_ON);
 	public static final WoodType REDLOVE_WOOD_TYPE = new WoodType(REDLOVE_SET_TYPE.name(), REDLOVE_SET_TYPE);
 	@NoItem
 	public static final KiwiGO<Block> REDLOVE_SIGN = go(() -> new StandingSignBlock(blockProp(Blocks.CHERRY_SIGN), REDLOVE_WOOD_TYPE));
 	@NoItem
-	public static final KiwiGO<Block> REDLOVE_WALL_SIGN = go(() -> new WallSignBlock(
-			blockProp(Blocks.CHERRY_WALL_SIGN),
-			REDLOVE_WOOD_TYPE));
+	public static final KiwiGO<Block> REDLOVE_WALL_SIGN = go(
+			() -> new WallSignBlock(blockProp(Blocks.CHERRY_WALL_SIGN), REDLOVE_WOOD_TYPE));
 	@Name("redlove_sign")
 	@Category(value = Categories.FUNCTIONAL_BLOCKS, after = "cherry_hanging_sign")
 	public static final KiwiGO<Item> REDLOVE_SIGN_ITEM = go(() -> new SignItem(
@@ -128,36 +121,36 @@ public class CherryModule extends AbstractModule {
 	public static final KiwiGO<SimpleParticleType> PETAL_CHERRY = go(() -> new SimpleParticleType(false));
 	public static final KiwiGO<SimpleParticleType> PETAL_REDLOVE = go(() -> new SimpleParticleType(false));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
-	public static final KiwiGO<FruitLeavesBlock> CHERRY_LEAVES = go(() -> new CherryLeavesBlock(
-			CherryFruitTypes.CHERRY,
-			blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_PINK),
-			PETAL_CHERRY.getOrCreate()));
-	public static final KiwiGO<FruitLeavesBlock> REDLOVE_LEAVES = go(() -> new CherryLeavesBlock(
-			CherryFruitTypes.REDLOVE,
-			blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.CRIMSON_NYLIUM),
-			PETAL_REDLOVE.getOrCreate()));
+	public static final KiwiGO<FruitLeavesBlock> CHERRY_LEAVES = go(
+			() -> new CherryLeavesBlock(
+					FFFruitTypes.CHERRY, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_PINK),
+					PETAL_CHERRY.getOrCreate()));
+	public static final KiwiGO<FruitLeavesBlock> REDLOVE_LEAVES = go(
+			() -> new CherryLeavesBlock(
+					FFFruitTypes.REDLOVE, blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.CRIMSON_NYLIUM),
+					PETAL_REDLOVE.getOrCreate()));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "pink_petals")
 	@RenderLayer(Layer.CUTOUT)
 	public static final KiwiGO<PinkPetalsBlock> PEACH_PINK_PETALS = go(() -> new PinkPetalsBlock(blockProp(Blocks.PINK_PETALS)));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> CHERRY_SAPLING = go(() -> new SaplingBlock(
-			new FruitTreeGrower(CherryFruitTypes.CHERRY.getOrCreate()),
-			blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.COLOR_PINK)));
+	public static final KiwiGO<SaplingBlock> CHERRY_SAPLING = go(
+			() -> new SaplingBlock(
+					new FruitTreeGrower(FFFruitTypes.CHERRY.getOrCreate()),
+					blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.COLOR_PINK)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> REDLOVE_SAPLING = go(() -> new SaplingBlock(
-			new FruitTreeGrower(CherryFruitTypes.REDLOVE.getOrCreate()),
-			blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.CRIMSON_NYLIUM)));
-	@RenderLayer(Layer.CUTOUT)
-	@NoItem
-	public static final KiwiGO<Block> POTTED_CHERRY = go(() -> new FlowerPotBlock(
-			CHERRY_SAPLING.getOrCreate(),
-			blockProp(Blocks.POTTED_CHERRY_SAPLING)));
+	public static final KiwiGO<SaplingBlock> REDLOVE_SAPLING = go(
+			() -> new SaplingBlock(
+					new FruitTreeGrower(FFFruitTypes.REDLOVE.getOrCreate()),
+					blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.CRIMSON_NYLIUM)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_REDLOVE = go(() -> new FlowerPotBlock(
-			REDLOVE_SAPLING.getOrCreate(),
-			blockProp(Blocks.POTTED_CHERRY_SAPLING)));
+	public static final KiwiGO<Block> POTTED_CHERRY = go(
+			() -> new FlowerPotBlock(CHERRY_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_CHERRY_SAPLING)));
+	@RenderLayer(Layer.CUTOUT)
+	@NoItem
+	public static final KiwiGO<Block> POTTED_REDLOVE = go(
+			() -> new FlowerPotBlock(REDLOVE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_CHERRY_SAPLING)));
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final KiwiGO<Item> CHERRY = go(() -> new ModItem(itemProp().food(Foods.CHERRY)));
 	public static final KiwiGO<Item> REDLOVE = go(() -> new RedloveItem(itemProp().food(Foods.REDLOVE)));
@@ -170,8 +163,8 @@ public class CherryModule extends AbstractModule {
 	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
 	public static final KiwiGO<Item> CHERRY_CROWN = go(() -> new FlowerCrownItem(itemProp(), PETAL_CHERRY.getOrCreate()));
 	public static final KiwiGO<Item> REDLOVE_CROWN = go(() -> new FlowerCrownItem(itemProp(), PETAL_REDLOVE.getOrCreate()));
-	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(
-			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("item.armor.equip_crown")));
+	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
+			"item.armor.equip_crown")));
 
 	@Override
 	protected void preInit() {

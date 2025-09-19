@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.player.Player;
+import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.Trait;
@@ -64,7 +65,7 @@ public class HauntingManager {
 		}
 		int ticks = FFCommonConfig.hauntingCooldownSeconds * 20;
 		entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, ticks, 1));
-		entity.addEffect(new MobEffectInstance(BeeModule.FRAGILITY.get(), ticks, 1));
+		entity.addEffect(new MobEffectInstance(CoreModule.FRAGILITY.get(), ticks, 1));
 	}
 
 	public void tick(ServerPlayer player) {

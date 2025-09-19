@@ -12,6 +12,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -106,22 +108,30 @@ public final class CoreModule extends AbstractModule {
 	public static final KiwiGO<Item> LEMON = go(() -> new ModItem(itemProp().food(Foods.LEMON)));
 	public static final KiwiGO<Item> GRAPEFRUIT = go(() -> new ModItem(itemProp().food(Foods.GRAPEFRUIT)));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
-	public static final KiwiGO<FruitLeavesBlock> TANGERINE_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.TANGERINE, blockProp(Blocks.OAK_LEAVES)));
-	public static final KiwiGO<FruitLeavesBlock> LIME_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.LIME, blockProp(Blocks.OAK_LEAVES)));
-	public static final KiwiGO<FruitLeavesBlock> CITRON_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.CITRON, blockProp(Blocks.OAK_LEAVES)));
-	public static final KiwiGO<FruitLeavesBlock> POMELO_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.POMELO, blockProp(Blocks.OAK_LEAVES)));
-	public static final KiwiGO<FruitLeavesBlock> ORANGE_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.ORANGE, blockProp(Blocks.OAK_LEAVES)));
-	public static final KiwiGO<FruitLeavesBlock> LEMON_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.LEMON, blockProp(Blocks.OAK_LEAVES)));
-	public static final KiwiGO<FruitLeavesBlock> GRAPEFRUIT_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.GRAPEFRUIT, blockProp(Blocks.OAK_LEAVES)));
-	public static final KiwiGO<FruitLeavesBlock> APPLE_LEAVES = go(
-			() -> new FruitLeavesBlock(CoreFruitTypes.APPLE, blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> TANGERINE_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.TANGERINE,
+			blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> LIME_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.LIME,
+			blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> CITRON_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.CITRON,
+			blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> POMELO_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.POMELO,
+			blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> ORANGE_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.ORANGE,
+			blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> LEMON_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.LEMON,
+			blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> GRAPEFRUIT_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.GRAPEFRUIT,
+			blockProp(Blocks.OAK_LEAVES)));
+	public static final KiwiGO<FruitLeavesBlock> APPLE_LEAVES = go(() -> new FruitLeavesBlock(
+			FFFruitTypes.APPLE,
+			blockProp(Blocks.OAK_LEAVES)));
 	@Category(value = {Categories.BUILDING_BLOCKS, Categories.NATURAL_BLOCKS}, after = {"cherry_button", "cherry_log"})
 	public static final KiwiGO<Block> CITRUS_LOG = go(() -> new RotatedPillarBlock(blockProp(Blocks.OAK_LOG)));
 	@Category(value = Categories.BUILDING_BLOCKS, after = "fruitfulfun:citrus_log")
@@ -142,61 +152,77 @@ public final class CoreModule extends AbstractModule {
 	public static final KiwiGO<Block> CITRUS_BUTTON = go(() -> Blocks.woodenButton(CITRUS_SET_TYPE));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> TANGERINE_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.TANGERINE.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> TANGERINE_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.TANGERINE.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> LIME_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.LIME.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> LIME_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.LIME.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> CITRON_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.CITRON.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> CITRON_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.CITRON.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> POMELO_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.POMELO.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> POMELO_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.POMELO.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> ORANGE_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.ORANGE.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> ORANGE_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.ORANGE.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> LEMON_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.LEMON.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> LEMON_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.LEMON.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> GRAPEFRUIT_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.GRAPEFRUIT.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> GRAPEFRUIT_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.GRAPEFRUIT.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
-	public static final KiwiGO<SaplingBlock> APPLE_SAPLING = go(
-			() -> new SaplingBlock(new FruitTreeGrower(CoreFruitTypes.APPLE.getOrCreate()), blockProp(Blocks.OAK_SAPLING)));
-	@RenderLayer(Layer.CUTOUT)
-	@NoItem
-	public static final KiwiGO<Block> POTTED_TANGERINE = go(
-			() -> new FlowerPotBlock(TANGERINE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
-	@RenderLayer(Layer.CUTOUT)
-	@NoItem
-	public static final KiwiGO<Block> POTTED_LIME = go(
-			() -> new FlowerPotBlock(LIME_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
-	@RenderLayer(Layer.CUTOUT)
-	@NoItem
-	public static final KiwiGO<Block> POTTED_CITRON = go(
-			() -> new FlowerPotBlock(CITRON_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
+	public static final KiwiGO<SaplingBlock> APPLE_SAPLING = go(() -> new SaplingBlock(
+			new FruitTreeGrower(FFFruitTypes.APPLE.getOrCreate()),
+			blockProp(Blocks.OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_POMELO = go(
-			() -> new FlowerPotBlock(POMELO_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
+	public static final KiwiGO<Block> POTTED_TANGERINE = go(() -> new FlowerPotBlock(
+			TANGERINE_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_ORANGE = go(
-			() -> new FlowerPotBlock(ORANGE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
+	public static final KiwiGO<Block> POTTED_LIME = go(() -> new FlowerPotBlock(
+			LIME_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_LEMON = go(
-			() -> new FlowerPotBlock(LEMON_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
+	public static final KiwiGO<Block> POTTED_CITRON = go(() -> new FlowerPotBlock(
+			CITRON_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_GRAPEFRUIT = go(
-			() -> new FlowerPotBlock(GRAPEFRUIT_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
+	public static final KiwiGO<Block> POTTED_POMELO = go(() -> new FlowerPotBlock(
+			POMELO_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
 	@RenderLayer(Layer.CUTOUT)
 	@NoItem
-	public static final KiwiGO<Block> POTTED_APPLE = go(
-			() -> new FlowerPotBlock(APPLE_SAPLING.getOrCreate(), blockProp(Blocks.POTTED_OAK_SAPLING)));
+	public static final KiwiGO<Block> POTTED_ORANGE = go(() -> new FlowerPotBlock(
+			ORANGE_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
+	@RenderLayer(Layer.CUTOUT)
+	@NoItem
+	public static final KiwiGO<Block> POTTED_LEMON = go(() -> new FlowerPotBlock(
+			LEMON_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
+	@RenderLayer(Layer.CUTOUT)
+	@NoItem
+	public static final KiwiGO<Block> POTTED_GRAPEFRUIT = go(() -> new FlowerPotBlock(
+			GRAPEFRUIT_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
+	@RenderLayer(Layer.CUTOUT)
+	@NoItem
+	public static final KiwiGO<Block> POTTED_APPLE = go(() -> new FlowerPotBlock(
+			APPLE_SAPLING.getOrCreate(),
+			blockProp(Blocks.POTTED_OAK_SAPLING)));
 	public static final TagKey<Block> ALL_LEAVES = blockTag(FruitfulFun.ID, "leaves");
 	public static final KiwiGO<FoliagePlacerType<Fruitify>> FRUITIFY = go(() -> new FoliagePlacerType<>(Fruitify.CODEC));
 	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> new BannerPattern("sno"));
@@ -207,10 +233,9 @@ public final class CoreModule extends AbstractModule {
 	public static final KiwiGO<Item> SNOWFLAKE_BANNER_PATTERN = go(() -> new BannerPatternItem(
 			SNOWFLAKE_TAG,
 			itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getMaxStackSize()).rarity(Rarity.UNCOMMON)));
-	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(
-			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.wooden_door.open")));
-	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(
-			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.wooden_door.close")));
+	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.wooden_door.open")));
+	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
+			"block.wooden_door.close")));
 	/* off */
 	public static final KiwiGO<EntityType<SlidingDoorEntity>> SLIDING_DOOR = go(() -> KiwiEntityTypeBuilder.<SlidingDoorEntity>create()
 			.entityFactory(SlidingDoorEntity::new)
@@ -222,6 +247,7 @@ public final class CoreModule extends AbstractModule {
 	/* on */
 	public static final TagKey<PoiType> POI_TYPE = tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
 	public static final TagKey<Block> CANDLES = blockTag(FruitfulFun.ID, "candles");
+	public static final KiwiGO<MobEffect> FRAGILITY = go(() -> new MobEffect(MobEffectCategory.HARMFUL, 0x875A49));
 
 	@Override
 	protected void preInit() {
