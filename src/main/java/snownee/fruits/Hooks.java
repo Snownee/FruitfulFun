@@ -96,7 +96,7 @@ public final class Hooks {
 				if (!block.canGrow(state)) {
 					return false;
 				}
-				return state.getValue(FruitLeavesBlock.AGE) == 2;
+				return state.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING;
 			} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) &&
 					state.getValue(LeavesBlock.PERSISTENT)) {
 				return false;

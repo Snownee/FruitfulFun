@@ -43,6 +43,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 	public Collection<String> pollens = List.of();
 	public Collection<String> endingStep = List.of();
 	public NonNullList<Ingredient> ingredients;
+	public boolean resetPollens;
 
 	public HybridizingRecipe(ResourceLocation id) {
 		super(id);
@@ -66,7 +67,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 
 	@Override
 	public int compareTo(@NotNull HybridizingRecipe o) {
-		return 0;
+		return Integer.compare(pollens.size(), o.pollens.size());
 	}
 
 	@Override
@@ -156,18 +157,21 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 					recipe.endingStep.add(Util.trimRL(s));
 				}
 			}
+			recipe.resetPollens = GsonHelper.getAsBoolean(jsonObject, "reset", true);
 		}
 
 		@Override
 		public void fromNetwork(HybridizingRecipe recipe, FriendlyByteBuf buf) {
 			recipe.pollens = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
 			recipe.endingStep = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
+			recipe.resetPollens = buf.readBoolean();
 		}
 
 		@Override
 		public void toNetwork0(FriendlyByteBuf buf, HybridizingRecipe recipe) {
 			buf.writeCollection(recipe.pollens, FriendlyByteBuf::writeUtf);
 			buf.writeCollection(recipe.endingStep, FriendlyByteBuf::writeUtf);
+			buf.writeBoolean(recipe.resetPollens);
 		}
 	}
 

@@ -33,7 +33,8 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 
 	@Override
 	public boolean hasFruit(BlockState state, Level level, BlockPos pos) {
-		return state.getValue(AGE) == 3 && level.getBlockState(pos.below()).getBlock().asItem() == type.get().fruit.get();
+		return state.getValue(AGE) == FruitLeavesBlock.FRUITING &&
+				level.getBlockState(pos.below()).getBlock().asItem() == type.get().fruit.get();
 	}
 
 	@Override
@@ -60,12 +61,12 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 	@Override
 	public void performBonemeal(ServerLevel world, RandomSource rand, BlockPos pos, BlockState state) {
 		int age = state.getValue(AGE);
-		if (age == 3) {
-			age = 1;
-		} else if (age == 2) {
+		if (age == FruitLeavesBlock.FRUITING) {
+			age = FruitLeavesBlock.YOUNG;
+		} else if (age == FruitLeavesBlock.BLOOMING) {
 			FruitTreeBlockEntity core = findCore(world, pos);
 			if (core == null || core.isDead()) {
-				age = 0;
+				age = FruitLeavesBlock.DEAD;
 				state = state.setValue(PERSISTENT, false);
 			} else {
 				age++;
@@ -74,7 +75,7 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 			age++;
 		}
 		world.setBlockAndUpdate(pos, state.setValue(AGE, age));
-		if (age == 3) {
+		if (age == FruitLeavesBlock.FRUITING) {
 			BlockPos below = pos.below();
 			if (world.getBlockState(below).canBeReplaced()) {
 				Block block = Block.byItem(type.get().fruit.get());

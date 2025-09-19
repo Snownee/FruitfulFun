@@ -62,6 +62,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.EditGeneNameScreen;
+import snownee.fruits.bee.genetics.TransformBeesRenderer;
 import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.GhostParticle;
@@ -69,7 +70,6 @@ import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
-import snownee.fruits.bee.genetics.TransformBeesRenderer;
 import snownee.fruits.vacuum.AirVortexParticleOption;
 import snownee.fruits.vacuum.VacModule;
 import snownee.fruits.vacuum.client.ItemProjectileColor;
@@ -151,27 +151,29 @@ public class ClientProxy {
 
 		eventBus.addListener((RegisterColorHandlersEvent.Block event) -> {
 			BlockColor birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
-			event.register((state, world, pos, i) -> {
-				if (i == 1) {
-					return 0xC22626;
-				}
-				if (i == 2) {
-					return birchBlockColor.getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
-				}
-				return -1;
-			}, REDLOVE_LEAVES.getOrCreate());
+			event.register(
+					(state, world, pos, i) -> {
+						if (i == 1) {
+							return 0xC22626;
+						}
+						if (i == 2) {
+							return birchBlockColor.getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
+						}
+						return -1;
+					}, REDLOVE_LEAVES.getOrCreate());
 		});
 
 		eventBus.addListener((RegisterColorHandlersEvent.Block event) -> {
-			event.register((blockState, blockAndTintGetter, blockPos, i) -> {
-				if (i != 0) {
-					if (blockAndTintGetter == null || blockPos == null) {
-						return GrassColor.getDefaultColor();
-					}
-					return BiomeColors.getAverageGrassColor(blockAndTintGetter, blockPos);
-				}
-				return -1;
-			}, PEACH_PINK_PETALS.getOrCreate());
+			event.register(
+					(blockState, blockAndTintGetter, blockPos, i) -> {
+						if (i != 0) {
+							if (blockAndTintGetter == null || blockPos == null) {
+								return GrassColor.getDefaultColor();
+							}
+							return BiomeColors.getAverageGrassColor(blockAndTintGetter, blockPos);
+						}
+						return -1;
+					}, PEACH_PINK_PETALS.getOrCreate());
 		});
 
 		eventBus.addListener((ModelEvent.RegisterAdditional event) -> {
@@ -181,13 +183,14 @@ public class ClientProxy {
 
 		if (Hooks.bee) {
 			eventBus.addListener((RegisterColorHandlersEvent.Item event) -> {
-				event.register((stack, i) -> {
-					if (i == 0) {
-						CompoundTag tag = stack.getTag();
-						return tag != null && tag.contains("Color") ? tag.getInt("Color") : 0xF3DCEB;
-					}
-					return -1;
-				}, BeeModule.MUTAGEN.getOrCreate());
+				event.register(
+						(stack, i) -> {
+							if (i == 0) {
+								CompoundTag tag = stack.getTag();
+								return tag != null && tag.contains("Color") ? tag.getInt("Color") : 0xF3DCEB;
+							}
+							return -1;
+						}, BeeModule.MUTAGEN.getOrCreate());
 			});
 
 			eventBus.addListener((RegisterParticleProvidersEvent event) -> {
@@ -222,6 +225,9 @@ public class ClientProxy {
 					}
 					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
 					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
+				}
+				if (Hooks.bee && BeeModule.isAllogamous(stack)) {
+					lines.add(Component.translatable("tip.fruitfulfun.allogamy").withStyle(ChatFormatting.GRAY));
 				}
 			});
 		}

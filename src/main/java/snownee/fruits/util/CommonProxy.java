@@ -114,10 +114,11 @@ public class CommonProxy {
 			}
 			List<VillagerTrades.ItemListing> trades = event.getGenericTrades();
 			trades.add((entity, random) -> {
-				ItemStack sapling = net.minecraft.Util.getRandom(FFRegistries.FRUIT_TYPE.stream()
-						.filter($ -> $.tier == 0)
-						.map($ -> $.sapling.get())
-						.toList(), random).asItem().getDefaultInstance();
+				ItemStack sapling = net.minecraft.Util.getRandom(
+						FFRegistries.FRUIT_TYPE.stream()
+								.filter($ -> $.tier == 0)
+								.map($ -> $.sapling.get())
+								.toList(), random).asItem().getDefaultInstance();
 				ItemStack emeralds = new ItemStack(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice);
 				return new MerchantOffer(emeralds, sapling, 5, 1, 1);
 			});
@@ -362,12 +363,14 @@ public class CommonProxy {
 
 	public static void addFeature(String id) {
 		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(Util.RL(id, FruitfulFun.ID)).toString());
-		BiomeModifications.addFeature(context -> {
-			return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) ||
-					context.hasFeature(VegetationFeatures.TREES_PLAINS);
-		}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
+		BiomeModifications.addFeature(
+				context -> {
+					return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) ||
+							context.hasFeature(VegetationFeatures.TREES_PLAINS);
+				}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
 	}
 
+	@Nullable
 	public static FlowerCrownItem getFlowerCrown(LivingEntity entity) {
 		ItemStack stack = entity.getItemBySlot(EquipmentSlot.HEAD);
 		if (stack.getItem() instanceof FlowerCrownItem item) {

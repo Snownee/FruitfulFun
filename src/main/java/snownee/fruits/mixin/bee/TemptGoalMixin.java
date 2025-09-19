@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
@@ -17,6 +16,7 @@ import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.crafting.Ingredient;
 import snownee.fruits.Hooks;
 import snownee.fruits.cherry.item.FlowerCrownItem;
+import snownee.fruits.util.CommonProxy;
 
 @Mixin(TemptGoal.class)
 public class TemptGoalMixin {
@@ -30,7 +30,10 @@ public class TemptGoalMixin {
 
 	@Inject(method = "shouldFollow", at = @At("HEAD"), cancellable = true)
 	private void shouldFollow(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
-		if (isBee && Stream.of(entity.getMainHandItem(), entity.getOffhandItem(), entity.getItemBySlot(EquipmentSlot.HEAD))
+		if (!isBee) {
+			return;
+		}
+		if (CommonProxy.getFlowerCrown(entity) != null || Stream.of(entity.getMainHandItem(), entity.getOffhandItem())
 				.anyMatch(i -> i.getItem() instanceof FlowerCrownItem)) {
 			cir.setReturnValue(true);
 		}
