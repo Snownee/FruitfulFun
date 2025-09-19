@@ -43,9 +43,10 @@ public class SummonedBee extends Bee implements TraceableEntity {
 			MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 5f)
-				.add(Attributes.FLYING_SPEED, 1f)
-				.add(Attributes.MOVEMENT_SPEED, 0.3f)
+		return Mob.createMobAttributes()
+				.add(Attributes.MAX_HEALTH, 5f)
+				.add(Attributes.FLYING_SPEED, 0.6f)
+				.add(Attributes.MOVEMENT_SPEED, 1f)
 				.add(Attributes.ATTACK_DAMAGE, 2f);
 	}
 
@@ -208,19 +209,21 @@ public class SummonedBee extends Bee implements TraceableEntity {
 	@Override
 	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		if (this.ownerUUID != null) {
-			compound.putUUID("owner", this.ownerUUID);
+		if (ownerUUID != null) {
+			compound.putUUID("owner", ownerUUID);
 		}
-		compound.putInt("remaining_attacks", this.remainingAttacks);
+		compound.putInt("remaining_attacks", remainingAttacks);
 	}
 
 	@Override
 	public void load(CompoundTag compound) {
 		super.load(compound);
 		if (compound.hasUUID("owner")) {
-			this.ownerUUID = compound.getUUID("owner");
+			ownerUUID = compound.getUUID("owner");
 		}
-		this.remainingAttacks = compound.getInt("remaining_attacks");
+		if (compound.contains("remaining_attacks")) {
+			remainingAttacks = compound.getInt("remaining_attacks");
+		}
 	}
 
 	@Override
