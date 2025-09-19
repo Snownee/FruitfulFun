@@ -61,14 +61,19 @@ public class ServerPlayerMixin {
 		}
 	}
 
-	@WrapOperation(
-			method = "setPlayerInput",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isPassenger()Z"))
-	private boolean setPlayerInput(ServerPlayer player, Operation<Boolean> original) {
+	@Inject(method = "setPlayerInput", at = @At("HEAD"))
+	private void setPlayerInput(float strafe, float forward, boolean jumping, boolean sneaking, CallbackInfo ci) {
+		ServerPlayer player = (ServerPlayer) (Object) this;
 		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
-			return true;
+			if (strafe >= -1.0f && strafe <= 1.0f) {
+				player.xxa = strafe;
+			}
+			if (forward >= -1.0f && forward <= 1.0f) {
+				player.zza = forward;
+			}
+			player.setJumping(jumping);
+			player.setShiftKeyDown(sneaking);
 		}
-		return original.call(player);
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
