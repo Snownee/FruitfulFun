@@ -168,6 +168,8 @@
   "fruitfulfun.config.dragonBreath.dispenserCollecting.desc": "",
   "fruitfulfun.config.dragonBreath.fixExploit": "Fix Exploit",
   "fruitfulfun.config.dragonBreath.fixExploit.desc": "",
+  "fruitfulfun.config.fixRainingStateInNetherAndEnd": "Fix Raining State In Nether And End",
+  "fruitfulfun.config.fixRainingStateInNetherAndEnd.desc": "",
   "fruitfulfun.config.food": "Food",
   "fruitfulfun.config.food.specialEffectTooltip": "Special Effect Tooltip",
   "fruitfulfun.config.food.specialEffectTooltip.desc": "",

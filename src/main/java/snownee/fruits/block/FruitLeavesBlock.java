@@ -178,6 +178,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
+		FruitTreeBlockEntity core = null;
+		if (hasBlockEntity(state)) {
+			core = findCore(world, pos);
+			if (core != null) {
+				//TODO decay blooming leaves
+			}
+		}
 		if (shouldDecay(state)) {
 			dropResources(state, world, pos);
 			world.removeBlock(pos, false);
@@ -187,7 +194,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				if (mode == DropMode.NoDrop) {
 					return;
 				}
-				FruitTreeBlockEntity core = findCore(world, pos);
+				if (core == null) {
+					core = findCore(world, pos);
+				}
 				if (mode == DropMode.OneByOne && core != null && !core.canDrop()) {
 					return;
 				}
@@ -195,7 +204,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 				if (mode == DropMode.OneByOne && core != null && itemEntity != null) {
 					core.setOnlyItem(itemEntity);
 				}
-			} else {
+			} else if (!(state.getValue(AGE) == BLOOMING && type.get().allogamous)) {
 				boolean def = rand.nextInt(100) > (99 - FFCommonConfig.treeGrowingSpeed);
 				CommonProxy.maybeGrowCrops(world, pos, state, def, () -> performBonemeal(world, rand, pos, state));
 			}
@@ -217,6 +226,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public boolean isRandomlyTicking(BlockState state) {
+		if (hasBlockEntity(state)) {
+			return true;
+		}
 		if (state.getValue(AGE) == BLOOMING && type.get().allogamous && !shouldDecay(state)) {
 			return false;
 		}

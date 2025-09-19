@@ -11,6 +11,7 @@
 		"EntityAccess",
 		"GiveGiftToHeroMixin",
 		"InstrumentItemMixin",
+		"LevelMixin",
 		"PlayerMixin",
 		"ServerEntityMixin",
 		"ServerLevelMixin",
