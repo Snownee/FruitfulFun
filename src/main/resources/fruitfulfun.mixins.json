@@ -66,6 +66,7 @@
 		"scent.PhantomSpawnerMixin",
 		"scent.WanderingTraderSpawnerMixin",
 		"shield.BindingCurseEnchantmentMixin",
+		"shield.FlyingMoveControlMixin",
 		"shield.LivingEntityMixin",
 		"shield.PlayerMixin",
 		"shield.SmithingTransformRecipeMixin",
