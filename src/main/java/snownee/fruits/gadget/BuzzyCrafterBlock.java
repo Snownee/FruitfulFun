@@ -1,5 +1,7 @@
 package snownee.fruits.gadget;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,9 +18,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BeehiveBlock;
+import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.ticks.ContainerSingleItem;
 
 public class BuzzyCrafterBlock extends BeehiveBlock {
 	public BuzzyCrafterBlock(Properties properties) {
@@ -33,6 +39,17 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new BuzzyCrafterBlockEntity(pos, state);
+	}
+
+	@Override
+	public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+			Level level,
+			BlockState state,
+			BlockEntityType<T> blockEntityType) {
+		return level.isClientSide() ? null : BeehiveBlock.createTickerHelper(
+				blockEntityType,
+				GadgetModule.BUZZY_CRAFTER_ENTITY.get(),
+				BeehiveBlockEntity::serverTick);
 	}
 
 	@Override
@@ -113,7 +130,7 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 	@Override
 	public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
 		super.stepOn(pLevel, pPos, pState, pEntity);
-		if (!pLevel.isClientSide() && pEntity instanceof ItemEntity itemEntity &&
+		if (!pLevel.isClientSide() && pEntity instanceof ItemEntity itemEntity && itemEntity.hasPickUpDelay() &&
 				pLevel.getBlockEntity(pPos) instanceof Container container) {
 			if (insertItem(container, itemEntity.getItem())) {
 				itemEntity.setItem(itemEntity.getItem()); // send update packet
@@ -144,7 +161,7 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 	}
 
 	public boolean canBeDestroyed(BlockState blockState, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-		return !(level.getBlockEntity(pos) instanceof Container container) || container.isEmpty();
+		return !(level.getBlockEntity(pos) instanceof ContainerSingleItem container) || container.getFirstItem().isEmpty();
 	}
 
 	@Override
@@ -157,6 +174,7 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 			BlockPos neighborPos) {
 		if (direction == Direction.UP && level.getBlockEntity(pos) instanceof BuzzyCrafterBlockEntity be) {
 			be.setBlocked(blocksContainer(neighborState));
+			be.updateBlockPowerReceiver();
 		}
 		return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
 	}

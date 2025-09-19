@@ -2,7 +2,7 @@
 	"required": true,
 	"package": "snownee.fruits.mixin",
 	"plugin": "snownee.fruits.mixin.MixinPlugin",
-	"compatibilityLevel": "JAVA_8",
+	"compatibilityLevel": "JAVA_17",
 	"refmap": "fruitfulfun.refmap.json",
 	"mixins": [
 		"BlockEntityTypeMixin",
@@ -42,6 +42,8 @@
 		"bz.BzBeehiveBlockEntityMixin",
 		"cherry.LivingEntityFlowerCrownMixin",
 		"crafter.BeehiveBlockEntityMixin",
+		"crafter.BeehiveBlockMixin",
+		"crafter.BeeMixin",
 		"food.InteractionEntityMixin",
 		"food.PandaMixin",
 		"food.SkullBlockEntityMixin",
@@ -69,6 +71,7 @@
 		"scent.WanderingTraderSpawnerMixin",
 		"shield.BindingCurseEnchantmentMixin",
 		"shield.LivingEntityMixin",
+		"shield.PlayerMixin",
 		"supp.SuppBeehiveBlockEntityMixin",
 		"vac.ItemEntityMixin"
 	],

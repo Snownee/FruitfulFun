@@ -1,12 +1,20 @@
 package snownee.fruits.gadget;
 
+import java.util.Objects;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.EntityBlock;
@@ -15,8 +23,9 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import snownee.kiwi.block.IKiwiBlock;
 
-public class ScentedCandleBlock extends CandleBlock implements EntityBlock {
+public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiwiBlock {
 	public final ScentType type;
 
 	public ScentedCandleBlock(Properties properties, ScentType type) {
@@ -54,8 +63,20 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock {
 
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (!level.isClientSide() && !state.getValue(LIT) && level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be &&
-				be.getLife() == 0) {
+		if (!(level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be)) {
+			return InteractionResult.FAIL;
+		}
+		ItemStack itemInHand = player.getItemInHand(hand);
+		if (itemInHand.is(Items.COMMAND_BLOCK)) {
+			if (!level.isClientSide()) {
+				be.setCreative(!be.isCreative());
+				player.displayClientMessage(
+						Component.translatable("tip.fruitfulfun.candleCreative." + (be.isCreative() ? "on" : "off")),
+						true);
+			}
+			return InteractionResult.sidedSuccess(level.isClientSide());
+		}
+		if (!level.isClientSide() && !state.getValue(LIT) && !itemInHand.isEmpty() && !itemInHand.is(asItem()) && !be.power().hasLife()) {
 			player.displayClientMessage(Component.translatable("tip.fruitfulfun.candleNoLife"), true);
 		}
 //		if (!level.isClientSide() && player.isHolding(Items.DIAMOND)) {
@@ -67,5 +88,41 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock {
 //			});
 //		}
 		return super.use(state, level, pos, player, hand, hit);
+	}
+
+	@Override
+	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		if (!level.isClientSide() && !stack.isEmpty() && level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be) {
+			be.addCandle(stack);
+		}
+	}
+
+	@Override
+	public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+		if (!level.isClientSide() && player.isCreative() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) &&
+				level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be && !be.power().isEmpty()) {
+			dropResources(state, level, pos, be);
+		}
+		super.playerWillDestroy(level, pos, state, player);
+	}
+
+	@Override
+	public BlockItem createItem(Item.Properties builder) {
+		return new ScentedCandleItem(this, builder);
+	}
+
+	@Nullable
+	public static BuzzyPowerReceiver getPowerReceiver(BuzzyCrafterBlockEntity crafter) {
+		if (!(
+				Objects.requireNonNull(crafter.getLevel()).getBlockEntity(crafter.getBlockPos()
+						.above()) instanceof ScentedCandleBlockEntity be)) {
+			return null;
+		}
+		return (type, amount) -> {
+			if (!be.isRemoved()) {
+				return be.power().addPower(type, amount);
+			}
+			return amount;
+		};
 	}
 }

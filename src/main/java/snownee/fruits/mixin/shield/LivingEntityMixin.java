@@ -78,12 +78,7 @@ public abstract class LivingEntityMixin {
 			ordinal = 1))
 	private void modifyInvulnerableTime(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		if (Hooks.gadget && source.getEntity() instanceof LivingEntity entity) {
-			ItemStack shield = ItemStack.EMPTY;
-			if (entity.getMainHandItem().getItem() instanceof BuzzyShieldItem) {
-				shield = entity.getMainHandItem();
-			} else if (entity.getOffhandItem().getItem() instanceof BuzzyShieldItem) {
-				shield = entity.getOffhandItem();
-			}
+			ItemStack shield = BuzzyShieldItem.getItemInHand(entity);
 			if (shield.isEmpty()) {
 				return;
 			}

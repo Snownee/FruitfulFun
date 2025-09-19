@@ -73,7 +73,9 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 				return;
 			}
 			VacItemProjectile projectile = shootItem(player, gun, container);
-			if (projectile != null && PomegranateModule.POMEGRANATE_ITEM.is(projectile.getItem())) {
+			if (projectile != null && (
+					PomegranateModule.POMEGRANATE_ITEM.is(projectile.getItem()) ||
+							PomegranateModule.ENCHANTED_POMEGRANATE.is(projectile.getItem()))) {
 				player.getCooldowns().addCooldown(gun.getItem(), 10);
 			} else {
 				long gameTime = player.level().getGameTime();

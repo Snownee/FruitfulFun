@@ -50,6 +50,9 @@
               "function": "minecraft:set_count"
             },
             {
+              "function": "fruitfulfun:set_buzzy_power"
+            },
+            {
               "function": "minecraft:explosion_decay"
             }
           ],

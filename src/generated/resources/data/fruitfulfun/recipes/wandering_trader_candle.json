@@ -7,7 +7,7 @@
   ],
   "type": "minecraft:smithing_transform",
   "addition": {
-    "item": "minecraft:rotten_flesh"
+    "item": "fruitfulfun:cherry"
   },
   "base": {
     "tag": "minecraft:candles"
