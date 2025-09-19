@@ -8,10 +8,9 @@ by exploring the world and improving your farming skills.
 
 ![Fruit falls off the tree](art/Fruit%20falls%20off%20the%20tree.webp)
 
-Fruitful Fun adds 10 new fruits to the game. Most of the fruits are not generated in the world. Instead,
-you must obtain them in other fun ways. If there is no people to harvest the fruits, the tree will stop
-growing fruit after a while. But with the help of a special goat horn, you can harvest all the nearby
-fruits at once.
+Fruitful Fun adds 11 new fruits to the game. Most of the fruits cannot be found in the world. Instead,
+you must obtain them in other fun ways. If there are no bees to pollinate the tree, it will eventually
+stop bearing fruit. Certain fruit trees require pollination by bees to bear fruit.
 
 ## Pollination and Crossbreeding 🐝
 
@@ -24,11 +23,11 @@ By pollinating some specific blocks, you can get new fruit saplings that are mor
 
 ![Bee Inspector](art/Bee%20Inspector.webp)
 
-Bees now have different traits and they basically inherit according to Mendel's law. You can unlock some
+Bees now have different traits, and they basically inherit according to Mendel's law. You can unlock some
 new perks and looks, and even be able to ride on a flying bee. In each new world, the genes will have a random
 code, so you will have to guess their effects each time. Here provides a mutagen, using it on parents can
 let you influence the genes of their baby a little bit. (Jade mod is highly recommended for viewing genetic
-and pollination information.)
+and pollination information.) This module can be disabled in the configuration.
 
 ## Fruit-themed Foods 🍰
 

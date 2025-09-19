@@ -109,6 +109,7 @@ import snownee.kiwi.util.Util;
 public class CommonProxy implements ModInitializer {
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("c", "tools/knives");
 	private static final Map<ScentType, AttachmentType<Long>> SCENT_ATTACHMENT_TYPES = Maps.newHashMap();
+	public static boolean trinkets = Platform.isModLoaded("trinkets");
 
 	public static boolean isCurativeItem(MobEffectInstance effectInstance, ItemStack stack) {
 		return stack.is(Items.MILK_BUCKET);
@@ -405,7 +406,7 @@ public class CommonProxy implements ModInitializer {
 		if (stack.getItem() instanceof FlowerCrownItem item) {
 			return item;
 		}
-		if (Hooks.trinkets) {
+		if (trinkets) {
 			return TrinketsCompat.getFlowerCrown(entity);
 		}
 		return null;
