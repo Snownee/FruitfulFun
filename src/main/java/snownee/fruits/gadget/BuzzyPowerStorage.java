@@ -2,6 +2,8 @@ package snownee.fruits.gadget;
 
 import java.util.Optional;
 
+import org.joml.Vector3f;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,6 +13,8 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import snownee.kiwi.util.MathUtil;
+import snownee.lychee.util.Color;
 
 public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 	public static final String NBT_KEY = "buzzy_power";
@@ -60,6 +64,27 @@ public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
+	}
+
+	public static boolean isBarVisible(ItemStack stack) {
+		return read(stack).map(BuzzyPowerStorage::hasLife).orElse(false);
+	}
+
+	public static int getBarColor(ItemStack stack) {
+		return read(stack).map($ -> {
+			float red = $.red();
+			float green = $.green();
+			float blue = $.blue();
+			if (red == 0 && green == 0 && blue == 0) {
+				red = green = blue = 1;
+			}
+			Vector3f hsv = MathUtil.RGBtoHSV(new Color(red, green, blue, 1).getRGB());
+			return Float.isNaN(hsv.x) ? 0xCCCCCC : Mth.hsvToRgb(hsv.x, hsv.y, 0.85f);
+		}).orElse(0xCCCCCC);
+	}
+
+	public static int getBarWidth(ItemStack stack) {
+		return read(stack).map($ -> Math.round($.life() / $.maxLife() * 13f)).orElse(0);
 	}
 
 	public float maxLife() {

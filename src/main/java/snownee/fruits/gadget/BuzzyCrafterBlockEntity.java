@@ -1,5 +1,6 @@
 package snownee.fruits.gadget;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,12 +36,16 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	public static final Map<Class<?>, Function<BuzzyCrafterBlockEntity, BuzzyPowerReceiver>> BLOCK_RECEIVER_FACTORIES = Map.of(
 			ScentedCandleBlock.class, ScentedCandleBlock::getPowerReceiver
 	);
+	public static final Map<Class<?>, Function<ItemStack, BuzzyPowerStorage>> ITEM_STORAGE_FACTORIES = Map.of(
+			BuzzyShieldItem.class, BuzzyShieldItem::getPowerStorage
+	);
 	private static final String ITEM_STACK_KEY = "item";
 	protected ItemStack item = ItemStack.EMPTY;
 	protected TriState blocked = TriState.DEFAULT;
 	private boolean blockPowerReceiverUpdated;
+	private boolean itemPowerReceiverUpdated;
 	private @Nullable BuzzyPowerReceiver blockPowerReceiver;
-	private @Nullable BuzzyPowerReceiver itemPowerReceiver;
+	private @Nullable BuzzyPowerStorage itemPowerReceiver;
 
 	public BuzzyCrafterBlockEntity(BlockPos pos, BlockState state) {
 		super(pos, state);
@@ -54,23 +59,50 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		}
 		BeeAttributes attributes = BeeAttributes.of(occupant);
 		List<String> pollens = attributes.getPollens();
-		if (!pollens.isEmpty()) {
-			if (!blockPowerReceiverUpdated) {
-				updateBlockPowerReceiver();
-			}
-			List<BuzzyPowerReceiver> receivers = Stream.of(blockPowerReceiver, itemPowerReceiver).filter(Objects::nonNull).toList();
-			if (!receivers.isEmpty()) {
+		if (!blockPowerReceiverUpdated) {
+			updateBlockPowerReceiver();
+		}
+		List<BuzzyPowerReceiver> receivers = Stream.of(blockPowerReceiver, itemPowerReceiver).filter(Objects::nonNull).toList();
+		if (!pollens.isEmpty() && !receivers.isEmpty()) {
+			for (Iterator<String> iterator = pollens.iterator(); iterator.hasNext(); ) {
+				String pollen = iterator.next();
 				float amount = 1f;
-				for (BuzzyPowerReceiver receiver : receivers) {
-					amount = receiver.addPower(BuzzyPowerType.RED, amount);
-				}
+				boolean changed = false;
+				do {
+					float oneTime = amount / receivers.size();
+					for (BuzzyPowerReceiver receiver : receivers) {
+						float newOneTime = receiver.addPower(BuzzyPowerType.RED, oneTime);
+						float used = oneTime - newOneTime;
+						amount -= used;
+						if (used > 0f) {
+							changed = true;
+						}
+					}
+				} while (amount > 0f && changed);
 				if (amount < 1f) {
+					itemPowerReceiverUpdated = true;
 					Objects.requireNonNull(level).levelEvent(LevelEvent.PARTICLES_WAX_OFF, worldPosition.above(), 0);
+					iterator.remove();
 				}
-				pollens.clear();
 			}
 		}
 		super.addOccupantWithPresetTicks(occupant, hasNectar, ticksInHive);
+	}
+
+	public void debugAddPower(BuzzyPowerType type, float amount) {
+		if (Objects.requireNonNull(level).isClientSide()) {
+			return;
+		}
+		if (!blockPowerReceiverUpdated) {
+			updateBlockPowerReceiver();
+		}
+		if (blockPowerReceiver != null) {
+			blockPowerReceiver.addPower(type, amount);
+		}
+		if (itemPowerReceiver != null) {
+			itemPowerReceiver.addPower(type, amount);
+			itemPowerReceiverUpdated = true;
+		}
 	}
 
 	@Override
@@ -107,7 +139,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 
 	protected CompoundTag writeData(CompoundTag pTag, boolean network) {
 		if (network || !item.isEmpty()) {
-			pTag.put(ITEM_STACK_KEY, item.save(new CompoundTag()));
+			pTag.put(ITEM_STACK_KEY, getFirstItem().save(new CompoundTag()));
 		}
 		return pTag;
 	}
@@ -184,7 +216,13 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	}
 
 	private void updateItemStats() {
-
+		if (!itemPowerReceiverUpdated || item.isEmpty() || itemPowerReceiver == null) {
+			return;
+		}
+		if (!itemPowerReceiver.isEmpty()) {
+			BuzzyPowerStorage.write(item, itemPowerReceiver);
+		}
+		itemPowerReceiverUpdated = false;
 	}
 
 	@Override
@@ -200,6 +238,9 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	}
 
 	public void updateBlockPowerReceiver() {
+		if (Objects.requireNonNull(level).isClientSide()) {
+			return;
+		}
 		Block block = Objects.requireNonNull(level).getBlockState(worldPosition.above()).getBlock();
 		Function<BuzzyCrafterBlockEntity, BuzzyPowerReceiver> function = BLOCK_RECEIVER_FACTORIES.get(block.getClass());
 		if (function != null) {
@@ -211,6 +252,17 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	}
 
 	public void updateItemPowerReceiver() {
-
+		if (Objects.requireNonNull(level).isClientSide()) {
+			return;
+		}
+		itemPowerReceiverUpdated = false;
+		if (!item.isEmpty()) {
+			Function<ItemStack, BuzzyPowerStorage> function = ITEM_STORAGE_FACTORIES.get(item.getItem().getClass());
+			if (function != null) {
+				itemPowerReceiver = function.apply(item);
+				return;
+			}
+		}
+		itemPowerReceiver = null;
 	}
 }

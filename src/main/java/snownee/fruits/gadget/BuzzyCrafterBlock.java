@@ -14,6 +14,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -63,8 +64,29 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 		if (doesHitTop(pHit)) {
 			return useTop(pState, pLevel, pPos, pPlayer, pHand, pHit);
 		} else {
-			return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+			return useSide(pState, pLevel, pPos, pPlayer, pHand, pHit);
 		}
+	}
+
+	protected InteractionResult useSide(
+			BlockState pState,
+			Level pLevel,
+			BlockPos pPos,
+			Player pPlayer,
+			InteractionHand pHand,
+			BlockHitResult pHit) {
+		if (pPlayer.isCreative() && pLevel.getBlockEntity(pPos) instanceof BuzzyCrafterBlockEntity be) {
+			ItemStack held = pPlayer.getItemInHand(pHand);
+			if (held.is(Items.RED_DYE)) {
+				be.debugAddPower(BuzzyPowerType.RED, 1);
+			} else if (held.is(Items.BLUE_DYE)) {
+				be.debugAddPower(BuzzyPowerType.BLUE, 1);
+			} else if (held.is(Items.GREEN_DYE)) {
+				be.debugAddPower(BuzzyPowerType.GREEN, 1);
+			}
+			return InteractionResult.SUCCESS;
+		}
+		return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
 	}
 
 	protected InteractionResult useTop(

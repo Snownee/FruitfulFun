@@ -24,8 +24,8 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.compat.FFJEIREI;
-import snownee.fruits.ritual.RitualModule;
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.ritual.RitualModule;
 import snownee.lychee.compat.rei.REICompat;
 import snownee.lychee.compat.rei.category.BaseREICategory;
 import snownee.lychee.compat.rei.display.BaseREIDisplay;
@@ -58,9 +58,10 @@ public class FFREICompat implements REIClientPlugin {
 		if (Hooks.ritual) {
 			ItemStack dragonHead = Items.DRAGON_HEAD.getDefaultInstance();
 			ItemStack pie = FFJEIREI.pieItem.get();
-			forEachCategories(BeeModule.RECIPE_TYPE.get(), $ -> {
-				registry.addWorkstations($.getCategoryIdentifier(), EntryStacks.of(dragonHead), EntryStacks.of(pie));
-			});
+			forEachCategories(
+					BeeModule.RECIPE_TYPE.get(), $ -> {
+						registry.addWorkstations($.getCategoryIdentifier(), EntryStacks.of(dragonHead), EntryStacks.of(pie));
+					});
 		}
 	}
 
@@ -77,15 +78,14 @@ public class FFREICompat implements REIClientPlugin {
 		if (FFCommonConfig.isMutagenRecipeEnabled()) {
 			CategoryIdentifier<Display> categoryIdentifier = CategoryIdentifier.of("minecraft", "plugins/brewing");
 			registry.registerVisibilityPredicate((category, display) -> {
-				if (category.getCategoryIdentifier().equals(categoryIdentifier) && display.getOutputEntries().stream()
-						.flatMap(EntryIngredient::stream)
-						.anyMatch($ -> {
-							if ($.getType() != VanillaEntryTypes.ITEM) {
-								return false;
-							}
-							ItemStack output = $.castValue();
-							return BeeModule.MUTAGEN.is(output) && output.hasTag();
-						})) {
+				if (category.getCategoryIdentifier().equals(categoryIdentifier) && display.getOutputEntries().stream().flatMap(
+						EntryIngredient::stream).anyMatch($ -> {
+					if ($.getType() != VanillaEntryTypes.ITEM) {
+						return false;
+					}
+					ItemStack output = $.castValue();
+					return BeeModule.MUTAGEN.is(output) && output.hasTag();
+				})) {
 					return EventResult.interruptFalse();
 				}
 				return EventResult.pass();

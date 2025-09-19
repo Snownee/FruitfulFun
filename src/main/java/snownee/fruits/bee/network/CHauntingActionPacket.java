@@ -18,6 +18,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -124,6 +126,9 @@ public class CHauntingActionPacket extends PacketHandler {
 		if (brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
 			brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
 		}
+		if (brain.hasMemoryValue(MemoryModuleType.ATTACK_COOLING_DOWN)) {
+			brain.setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false);
+		}
 		if (brain.hasMemoryValue(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE)) {
 			brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
 		}
@@ -132,6 +137,15 @@ public class CHauntingActionPacket extends PacketHandler {
 			mob.setTarget(target);
 			if (mob instanceof Warden warden) {
 				warden.setAttackTarget(target);
+			} else if (mob instanceof Frog frog) {
+				frog.setTongueTarget(target);
+			} else if (mob instanceof Goat) {
+				if (brain.hasMemoryValue(MemoryModuleType.RAM_COOLDOWN_TICKS)) {
+					brain.eraseMemory(MemoryModuleType.RAM_COOLDOWN_TICKS);
+				}
+				if (brain.hasMemoryValue(MemoryModuleType.RAM_TARGET)) {
+					brain.setMemory(MemoryModuleType.RAM_TARGET, target.position());
+				}
 			}
 			return true;
 		}

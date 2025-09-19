@@ -61,7 +61,7 @@ public abstract class LivingEntityMixin {
 		if (!Hooks.gadget || !(useItem.getItem() instanceof BuzzyShieldItem)) {
 			return;
 		}
-		float newDamage = GadgetModule.buzzyShieldBlock((LivingEntity) (Object) this, source, damageRecord.get());
+		float newDamage = GadgetModule.buzzyShieldBlock((LivingEntity) (Object) this, source, damageRecord.get(), useItem);
 		if (newDamage > 0) {
 			blockedRef.set(false);
 		}
