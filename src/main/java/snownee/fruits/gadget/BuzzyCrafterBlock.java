@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -214,5 +215,18 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 			return 0;
 		}
 		return be.getAnalogOutput();
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+		if (state.is(newState.getBlock())) {
+			return;
+		}
+		if (level.getBlockEntity(pos) instanceof Container container) {
+			Containers.dropContents(level, pos, container);
+			level.updateNeighbourForOutputSignal(pos, this);
+		}
+		super.onRemove(state, level, pos, newState, movedByPiston);
 	}
 }
