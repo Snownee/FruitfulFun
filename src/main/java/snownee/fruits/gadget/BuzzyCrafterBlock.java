@@ -207,4 +207,12 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 		}
 		return !blockState.isAir() && !blockState.is(GadgetModule.SUSTAIN_CRAFTER_ITEM);
 	}
+
+	@Override
+	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+		if (!(level.getBlockEntity(pos) instanceof BuzzyCrafterBlockEntity be)) {
+			return 0;
+		}
+		return be.getAnalogOutput();
+	}
 }

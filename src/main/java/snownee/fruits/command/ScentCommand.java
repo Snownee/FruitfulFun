@@ -1,5 +1,7 @@
 package snownee.fruits.command;
 
+import org.apache.commons.lang3.mutable.MutableInt;
+
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 
@@ -8,6 +10,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.gadget.ScentType;
@@ -18,12 +21,28 @@ public class ScentCommand {
 				.requires($ -> $.hasPermission(2))
 				.executes($ -> show($.getSource()))
 				.then(Commands.literal("clear")
-						.executes($ -> clear(1, $.getSource()))
-						.then(Commands.argument("range", IntegerArgumentType.integer(1))
+						.executes($ -> clear(0, $.getSource()))
+						.then(Commands.argument("range", IntegerArgumentType.integer(0, 99))
 								.executes($ -> clear(IntegerArgumentType.getInteger($, "range"), $.getSource()))));
 	}
 
 	private static int clear(int range, CommandSourceStack source) {
+		ServerLevel level = source.getLevel();
+		long lastGameTime = level.getGameTime() - 1;
+		BlockPos pos = BlockPos.containing(source.getPosition());
+		MutableInt count = new MutableInt();
+		ChunkPos.rangeClosed(new ChunkPos(pos), range).forEach(chunkPos -> {
+			LevelChunk chunk = level.getChunk(chunkPos.x, chunkPos.z);
+			for (ScentType scentType : FFRegistries.SCENT_TYPE) {
+				if (scentType.isActiveAt(chunk)) {
+					scentType.setTime(chunk, lastGameTime);
+					count.increment();
+				}
+			}
+		});
+		source.sendSystemMessage(Component.literal("Affected %d %s".formatted(
+				count.getValue(),
+				count.getValue() == 1 ? "chunk" : "chunks")));
 		return 0;
 	}
 

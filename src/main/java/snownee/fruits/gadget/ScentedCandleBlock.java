@@ -118,11 +118,16 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 						.above()) instanceof ScentedCandleBlockEntity be)) {
 			return null;
 		}
-		return (type, amount) -> {
-			if (!be.isRemoved()) {
-				return be.power().addPower(type, amount);
+		return new BuzzyPowerReceiver() {
+			@Override
+			public float addPower(BuzzyPowerType type, float amount) {
+				return be.isRemoved() ? amount : be.power().addPower(type, amount);
 			}
-			return amount;
+
+			@Override
+			public @Nullable BuzzyPowerStorage view() {
+				return be.isRemoved() ? null : be.power();
+			}
 		};
 	}
 }

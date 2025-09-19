@@ -1,6 +1,9 @@
 package snownee.fruits.gadget;
 
-@FunctionalInterface
+import org.jetbrains.annotations.Nullable;
+
 public interface BuzzyPowerReceiver {
 	float addPower(BuzzyPowerType type, float amount);
+
+	@Nullable BuzzyPowerStorage view();
 }
