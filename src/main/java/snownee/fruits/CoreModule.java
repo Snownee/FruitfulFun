@@ -99,6 +99,7 @@ public final class CoreModule extends AbstractModule {
 			() -> new HangingSignItem(
 					CITRUS_HANGING_SIGN.get(), CITRUS_WALL_HANGING_SIGN.get(),
 					itemProp().stacksTo(Items.OAK_HANGING_SIGN.getMaxStackSize())));
+	public static final TagKey<Item> CITRUS_FRUITS = itemTag("c", "fruits/citrus");
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final KiwiGO<Item> TANGERINE = go(() -> new ModItem(itemProp().food(Foods.TANGERINE)));
 	public static final KiwiGO<Item> LIME = go(() -> new ModItem(itemProp().food(Foods.LIME)));

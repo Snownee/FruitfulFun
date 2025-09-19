@@ -82,39 +82,4 @@ public class CoreFruitType extends FruitType {
 		}
 		return pLargeHive ? treeBeesFeature : treeFeature;
 	}
-
-//	public static Holder<ConfiguredFeature<?, ?>> makeConfiguredFeature(FruitType type, boolean worldGen, Supplier<Block> carpet) {
-//		BlockStateProvider leavesProvider;
-//		List<TreeDecorator> decorators;
-//		if (worldGen) {
-//			if (carpet == null) {
-//				decorators = ImmutableList.of(new BeehiveDecorator(0.05F));
-//			} else {
-//				decorators = ImmutableList.of(new BeehiveDecorator(0.05F), new CarpetTreeDecorator(BlockStateProvider.simple(carpet.get())));
-//			}
-//			leavesProvider = new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(type.leaves.get().defaultBlockState(), 2).add(type.leaves.get().defaultBlockState().setValue(FruitLeavesBlock.AGE, 2), 1));
-//		} else {
-//			decorators = ImmutableList.of();
-//			leavesProvider = BlockStateProvider.simple(type.leaves.get());
-//		}
-//		StringBuffer buf = new StringBuffer(FFRegistries.FRUIT_TYPE.getKey(type).toString());
-//		if (worldGen) {
-//			buf.append("_wg");
-//		}
-//		/* off */
-//		return FeatureUtils.register(buf.toString(), Feature.TREE,
-//				new TreeConfigurationBuilder(
-//						BlockStateProvider.simple(type.log.get()),
-//						new StraightTrunkPlacer(4, 2, 0),
-//						leavesProvider,
-//						new FruitBlobFoliagePlacer(ConstantInt.of(2), ConstantInt.ZERO, 3),
-//						new TwoLayersFeatureSize(1, 0, 1)
-//				)
-//						.ignoreVines()
-//						.decorators(decorators)
-//						.build()
-//		);
-//		/* on */
-//	}
-
 }
