@@ -161,7 +161,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 		}
 	}
 
-	public static VacGunContainer readItemContainer(ItemStack gun) {
+	public static @Nullable VacGunContainer readItemContainer(ItemStack gun) {
 		String ammoType = getAmmoType(gun);
 		if (ammoType != null && !"item".equals(ammoType)) {
 			return null;
@@ -344,7 +344,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 				CommonProxy.extinguishCandle(player, state, level, pos);
 				return;
 			}
-			if (player != null && state.is(GadgetModule.VCD_PERFORM_USING)) {
+			if (state.is(GadgetModule.VCD_PERFORM_USING)) {
 				BlockHitResult blockHitResult = new BlockHitResult(center, player.getDirection().getOpposite(), pos, false);
 				state.use(level, player, player.getUsedItemHand(), blockHitResult);
 				return;
@@ -453,7 +453,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 		}
 	}
 
-	public static void playContainerAnimation(BlockEntity blockEntity) {
+	public static void playContainerAnimation(@Nullable BlockEntity blockEntity) {
 		if (blockEntity instanceof Container && blockEntity instanceof MenuProvider menuProvider) {
 			ContainerOpenerFakePlayer player = ContainerOpenerFakePlayer.getOrCreate(
 					(ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos());

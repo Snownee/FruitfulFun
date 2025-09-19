@@ -3,6 +3,8 @@ package snownee.fruits;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
+import com.mojang.datafixers.util.Either;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -38,12 +40,21 @@ public abstract class FruitType {
 		this.fruit = fruit;
 	}
 
-	public static Item getFruitOrDefault(String id) {
+	public static Item getFruitOrItem(String id) {
 		Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
 		if (block instanceof FruitLeavesBlock leavesBlock) {
 			return leavesBlock.type.get().fruit.get();
 		} else {
 			return block.asItem();
+		}
+	}
+
+	public static Either<FruitType, Block> getFruitOrBlock(String id) {
+		Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
+		if (block instanceof FruitLeavesBlock leavesBlock) {
+			return Either.left(leavesBlock.type.get());
+		} else {
+			return Either.right(block);
 		}
 	}
 

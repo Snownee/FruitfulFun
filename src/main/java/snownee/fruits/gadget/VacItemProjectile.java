@@ -111,7 +111,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 				}
 			}
 			BlockEntity blockEntity = level().getBlockEntity(pos);
-			if (CommonProxy.insertItem(level(), pos, blockState, blockEntity, blockHitResult.getDirection(), item)) {
+			if (CommonProxy.insertItem(level(), pos, blockState, blockEntity, blockHitResult.getDirection(), item) > 0) {
 				playSound(SoundEvents.ITEM_PICKUP, 0.2f, ((random.nextFloat() - random.nextFloat()) * 0.7f + 1.0f) * 2.0f);
 				VacGunItem.playContainerAnimation(blockEntity);
 				updateItem();

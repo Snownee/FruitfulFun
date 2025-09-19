@@ -1,0 +1,21 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:gadget"
+    }
+  ],
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "minecraft:chorus_fruit"
+  },
+  "base": {
+    "tag": "minecraft:candles"
+  },
+  "result": {
+    "item": "fruitfulfun:ender_candle"
+  },
+  "template": {
+    "tag": "fruitfulfun:gadget_token"
+  }
+}

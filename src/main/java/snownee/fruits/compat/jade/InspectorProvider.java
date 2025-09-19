@@ -112,7 +112,7 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 		} else {
 			List<IElement> elements = Lists.newArrayList();
 			for (Tag tag : pollens) {
-				elements.add(IElementHelper.get().item(FruitType.getFruitOrDefault(tag.getAsString()).getDefaultInstance()));
+				elements.add(IElementHelper.get().item(FruitType.getFruitOrItem(tag.getAsString()).getDefaultInstance()));
 			}
 			tooltip.add(elements);
 		}

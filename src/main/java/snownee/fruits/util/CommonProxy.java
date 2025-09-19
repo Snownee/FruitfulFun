@@ -207,6 +207,9 @@ public class CommonProxy {
 		if (Hooks.food) {
 			addBuiltinPack(modContainer, "food");
 		}
+		if (Hooks.gadget) {
+			addBuiltinPack(modContainer, "gadget");
+		}
 		if (Hooks.farmersdelight) {
 			String mode = FarmersDelightModule.getMode();
 			if ("vectorwing".equals(mode)) {
@@ -232,7 +235,7 @@ public class CommonProxy {
 		return blockState.is(Tags.Blocks.BOOKSHELVES);
 	}
 
-	public static boolean insertItem(
+	public static long insertItem(
 			Level level,
 			BlockPos blockPos,
 			BlockState blockState,
@@ -240,32 +243,34 @@ public class CommonProxy {
 			Direction direction,
 			ItemStack item) {
 		if (item.isEmpty()) {
-			return false;
+			return 0;
 		}
 		LazyOptional<IItemHandler> cap;
 		if (blockEntity != null && (cap = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction)).isPresent()) {
 			IItemHandler itemHandler = cap.orElseThrow(NullPointerException::new);
 			ItemStack ret = ItemHandlerHelper.insertItem(itemHandler, item.copy(), false);
 			if (ret.getCount() == item.getCount()) {
-				return false;
+				return 0;
 			}
-			item.setCount(ret.getCount());
-			return true;
+			int shrink = item.getCount() - ret.getCount();
+			item.shrink(shrink);
+			return shrink;
 		}
 		if (blockState.getBlock() instanceof WorldlyContainerHolder containerHolder) {
 			WorldlyContainer container = containerHolder.getContainer(blockState, level, blockPos);
 			//noinspection ConstantValue
 			if (container == null) {
-				return false;
+				return 0;
 			}
 			ItemStack ret = HopperBlockEntity.addItem(null, container, item, direction);
 			if (ret.getCount() == item.getCount()) {
-				return false;
+				return 0;
 			}
-			item.setCount(ret.getCount());
-			return true;
+			int shrink = item.getCount() - ret.getCount();
+			item.shrink(shrink);
+			return shrink;
 		}
-		return false;
+		return 0;
 	}
 
 	public static ItemStack extractOneItem(

@@ -8,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
@@ -24,23 +23,14 @@ public interface InspectTarget {
 			return null;
 		}
 		if (hitResult.getType() == HitResult.Type.ENTITY) {
-			Entity entity = ((EntityHitResult) hitResult).getEntity();
-			if (entity instanceof Bee bee) {
-				return EntityTarget.of(bee);
-			}
+			return EntityTarget.of(((EntityHitResult) hitResult).getEntity());
 		} else if (hitResult.getType() == HitResult.Type.BLOCK) {
-			BlockPos pos = ((BlockHitResult) hitResult).getBlockPos();
-			BlockEntity be = level.getBlockEntity(pos);
-			if (be != null && Hooks.supplementaries) {
-				Entity entity = SupplementariesCompat.getTargetEntity(be);
-				if (entity instanceof Bee) {
-					return BlockTarget.of(level, pos);
-				}
-			}
+			return BlockTarget.of(level, ((BlockHitResult) hitResult).getBlockPos());
 		}
 		return null;
 	}
 
+	@Nullable
 	static InspectTarget fromNetwork(FriendlyByteBuf buf) {
 		int i = buf.readVarInt();
 		if (i == 0) {
@@ -51,9 +41,11 @@ public interface InspectTarget {
 		return null;
 	}
 
-	Entity getEntity(Level level);
+	@Nullable Entity getEntity(Level level);
 
 	void toNetwork(FriendlyByteBuf buf);
+
+	boolean isFor(Level level);
 
 	record EntityTarget(ResourceKey<Level> dimension, int id) implements InspectTarget {
 		public static EntityTarget of(Entity entity) {
@@ -61,10 +53,7 @@ public interface InspectTarget {
 		}
 
 		@Override
-		public Entity getEntity(Level level) {
-			if (level.dimension() != dimension) {
-				return null;
-			}
+		public @Nullable Entity getEntity(Level level) {
 			return level.getEntity(id);
 		}
 
@@ -74,6 +63,11 @@ public interface InspectTarget {
 			buf.writeResourceKey(dimension);
 			buf.writeVarInt(id);
 		}
+
+		@Override
+		public boolean isFor(Level level) {
+			return level.dimension() == dimension;
+		}
 	}
 
 	record BlockTarget(ResourceKey<Level> dimension, BlockPos pos) implements InspectTarget {
@@ -82,10 +76,7 @@ public interface InspectTarget {
 		}
 
 		@Override
-		public Entity getEntity(Level level) {
-			if (level.dimension() != dimension) {
-				return null;
-			}
+		public @Nullable Entity getEntity(Level level) {
 			BlockEntity be = level.getBlockEntity(pos);
 			if (be == null) {
 				return null;
@@ -101,6 +92,11 @@ public interface InspectTarget {
 			buf.writeVarInt(1);
 			buf.writeResourceKey(dimension);
 			buf.writeBlockPos(pos);
+		}
+
+		@Override
+		public boolean isFor(Level level) {
+			return level.dimension() == dimension && level.isLoaded(pos);
 		}
 	}
 }

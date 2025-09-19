@@ -15,6 +15,7 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -76,6 +77,7 @@ import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.AirVortexParticleOption;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.client.BeeSwarmRenderer;
+import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileRenderer;
 import snownee.kiwi.util.ColorProviderUtil;
@@ -246,6 +248,7 @@ public class ClientProxy {
 			eventBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
 				event.registerEntityRenderer(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
 				event.registerEntityRenderer(GadgetModule.BEE_SWARM.getOrCreate(), BeeSwarmRenderer::new);
+				event.registerBlockEntityRenderer(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
 			});
 
 			ResourceLocation blocking = new ResourceLocation("blocking");
@@ -288,6 +291,7 @@ public class ClientProxy {
 		Minecraft.getInstance().setScreen(new EditGeneNameScreen());
 	}
 
+	@Nullable
 	public static ItemProjectileColor getItemProjectileColor(ItemStack itemStack) {
 		ItemProjectileColor color;
 		if (Hooks.supplementaries && (color = SupplementariesCompat.getItemProjectileColor(itemStack)) != null) {
@@ -321,6 +325,7 @@ public class ClientProxy {
 		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), mainArm), vec.x(), vec.y(), vec.z(), 0, 0, 0);
 	}
 
+	@Nullable
 	public static Player getPlayer() {
 		return Minecraft.getInstance().player;
 	}
