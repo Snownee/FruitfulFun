@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.util.CommonProxy;
 
@@ -57,8 +58,12 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		if (isFull() || !(occupant instanceof Bee)) {
 			return;
 		}
-		BeeAttributes attributes = BeeAttributes.of(occupant);
-		List<String> pollens = attributes.getPollens();
+		List<String> pollens;
+		if (Hooks.bee) {
+			pollens = BeeAttributes.of(occupant).getPollens();
+		} else {
+			pollens = List.of("*");
+		}
 		if (!blockPowerReceiverUpdated) {
 			updateBlockPowerReceiver();
 		}
