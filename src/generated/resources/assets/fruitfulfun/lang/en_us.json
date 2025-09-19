@@ -255,6 +255,8 @@
   "fruitfulfun.config.mutationRate.RC.desc": "",
   "fruitfulfun.config.redloveFruitUse": "Redlove Fruit Use",
   "fruitfulfun.config.redloveFruitUse.desc": "",
+  "fruitfulfun.config.renderServerSideHitbox": "Render Server Side Hitbox",
+  "fruitfulfun.config.renderServerSideHitbox.desc": "",
   "fruitfulfun.config.treeGrowingSpeed": "Tree Growing Speed",
   "fruitfulfun.config.treeGrowingSpeed.desc": "",
   "fruitfulfun.config.villageAppleTreeWorldGen": "Village Apple Tree World Gen",

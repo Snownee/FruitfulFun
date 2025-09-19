@@ -86,6 +86,7 @@
 		"cherry.ItemRendererMixin",
 		"client.BlockMixin",
 		"client.CameraMixin",
+		"client.EntityRenderDispatcherMixin",
 		"client.GameRendererMixin",
 		"client.GuiMixin",
 		"client.HumanoidModelMixin",

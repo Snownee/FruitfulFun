@@ -24,4 +24,5 @@ public final class FFClientConfig {
 	// But it becomes a vanilla feature in 1.22. So maybe we should skip to 1.22?
 	public static boolean beehiveTooltipDisplayBees = true;
 
+	public static boolean renderServerSideHitbox;
 }
