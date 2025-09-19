@@ -108,6 +108,10 @@ tip.fruitfulfun.whenUseOnBlock: 'Use on Block:'
 tip.fruitfulfun.viewScents: ' View current scents'
 tip.fruitfulfun.whenUseOnAnimal: 'Use on Animal:'
 tip.fruitfulfun.redloveFruitUse: ' Reduce breeding cooldown'
+tip.fruitfulfun.whenInHand: 'When In Hand:'
+tip.fruitfulfun.halveAttackCd: ' Halve attack cooldown'
+tip.fruitfulfun.whenPerfectBlock: 'When Perfect Block:'
+tip.fruitfulfun.summonBees: ' Summon 3 bees to help you fight'
 tip.fruitfulfun.leavesUsInPeace: >-
   Fruitful Fun detected that you have Leaves Us In Peace installed, which will
   cause the new leaves to disappear immediately after the bees have finished

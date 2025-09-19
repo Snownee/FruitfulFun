@@ -30,6 +30,7 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
@@ -76,7 +77,6 @@ import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.AirVortexParticleOption;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.client.BeeSwarmRenderer;
 import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileRenderer;
@@ -247,7 +247,7 @@ public class ClientProxy {
 		if (Hooks.gadget) {
 			eventBus.addListener((EntityRenderersEvent.RegisterRenderers event) -> {
 				event.registerEntityRenderer(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
-				event.registerEntityRenderer(GadgetModule.BEE_SWARM.getOrCreate(), BeeSwarmRenderer::new);
+				event.registerEntityRenderer(GadgetModule.SUMMONED_BEE.getOrCreate(), BeeRenderer::new);
 				event.registerBlockEntityRenderer(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
 			});
 
