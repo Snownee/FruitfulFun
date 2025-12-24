@@ -49,7 +49,7 @@ public abstract class LivingEntityMixin extends Entity {
 			@Local(argsOnly = true) MobEffectInstance effect) {
 		boolean result = original.call(entity, effectInstance);
 		if (result && Hooks.gadget && !Hooks.scentEffects.contains(effect.getEffect()) && !effect.isInfiniteDuration() &&
-				!effect.getEffect().isInstantenous()) {
+				!effect.getEffect().isInstantenous() && entity.hasEffect(GadgetModule.WEAK_SCENT.get())) {
 			//noinspection UnstableApiUsage
 			effect.duration = IntMath.saturatedAdd(effect.getDuration(), effect.getDuration());
 		}
