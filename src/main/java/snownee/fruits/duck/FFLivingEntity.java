@@ -2,7 +2,7 @@ package snownee.fruits.duck;
 
 import java.util.UUID;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.bee.genetics.Trait;

@@ -43,7 +43,10 @@ public class ScentType {
 			effect = new MobEffectInstance(effect);
 			effect.duration = duration;
 			if (entity.addEffect(effect) && !hasEffect && !effect.isVisible()) {
-				entity.level().levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH, entity.blockPosition(), effect.getEffect().getColor());
+				entity.level().levelEvent(
+						LevelEvent.PARTICLES_SPELL_POTION_SPLASH,
+						entity.blockPosition(),
+						effect.getEffect().value().getColor());
 			}
 		}
 	}

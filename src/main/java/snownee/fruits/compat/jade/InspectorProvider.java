@@ -11,8 +11,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.Items;
 import snownee.fruits.FruitType;
 import snownee.fruits.bee.BeeAttributes;
@@ -177,7 +177,7 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 	}
 
 	@Override
-	public ResourceLocation getUid() {
+	public Identifier getUid() {
 		return JadeCompat.INSPECTOR;
 	}
 

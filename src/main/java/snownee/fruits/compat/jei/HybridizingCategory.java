@@ -14,13 +14,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.HybridizingRecipe;
 import snownee.fruits.compat.DummyBlockInput;
-import snownee.fruits.compat.FFJEIREI;
+import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.lychee.client.gui.GuiGameElement;
 import snownee.lychee.compat.jei.JEICompat;
 import snownee.lychee.compat.jei.SideBlockIcon;
@@ -54,7 +54,7 @@ public class HybridizingCategory extends BaseJEICategory<LycheeContext, Hybridiz
 	public void draw(HybridizingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		drawInfoBadge(recipe, graphics, mouseX, mouseY);
 		line.draw(graphics, 68, 24);
-		FFJEIREI.renderBee(graphics, recipe, bee);
+		LycheeCompat.renderBee(graphics, recipe, bee);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class HybridizingCategory extends BaseJEICategory<LycheeContext, Hybridiz
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, HybridizingRecipe recipe, IFocusGroup focuses) {
 		int xCenter = getWidth() / 2;
-		List<FFJEIREI.Input> inputs = FFJEIREI.getInputs(recipe);
+		List<LycheeCompat.Input> inputs = LycheeCompat.getInputs(recipe);
 		int y = inputs.size() > 9 || recipe.showingActionsCount() > 9 ? 26 : 28;
 		ingredientGroup(builder, inputs, xCenter - 45, y);
 		actionGroup(builder, recipe, xCenter + 50, y);
@@ -74,7 +74,7 @@ public class HybridizingCategory extends BaseJEICategory<LycheeContext, Hybridiz
 		recipe.addInvisibleOutputs(builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)::addItemStack);
 	}
 
-	public void ingredientGroup(IRecipeLayoutBuilder builder, List<FFJEIREI.Input> inputs, int x, int y) {
+	public void ingredientGroup(IRecipeLayoutBuilder builder, List<LycheeCompat.Input> inputs, int x, int y) {
 		slotGroup(builder, x + 1, y + 1, 0, inputs, (layout0, input, i, x0, y0) -> {
 			IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, x0, y0);
 			if (input.isItem()) {

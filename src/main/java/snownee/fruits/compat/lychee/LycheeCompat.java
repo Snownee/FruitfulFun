@@ -1,28 +1,27 @@
-package snownee.fruits.compat;
+package snownee.fruits.compat.lychee;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.BlockPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -31,15 +30,13 @@ import net.minecraft.world.level.block.Block;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
-import snownee.fruits.bee.BeeHasTrait;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipe;
+import snownee.fruits.bee.genetics.BeeHasTrait;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.food.PieBlock;
-import snownee.lychee.client.gui.ILightingSettings;
-import snownee.lychee.core.contextual.ContextualCondition;
 
-public class FFJEIREI {
+public class LycheeCompat {
 	public static final Supplier<ItemStack> pieItem = Suppliers.memoize(FoodModule.CHORUS_FRUIT_PIE::itemStack);
 	public static final Supplier<BlockPredicate> pieBlockPredicate = Suppliers.memoize(() -> {
 		PieBlock pieBlock = FoodModule.CHORUS_FRUIT_PIE.get();
@@ -114,7 +111,7 @@ public class FFJEIREI {
 	public static List<Input> getInputs(HybridizingRecipe recipe) {
 		List<Input> inputs = Lists.newArrayListWithExpectedSize(recipe.pollens.size());
 		for (String pollen : recipe.pollens) {
-			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen));
+			Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen));
 			Item item = block.asItem();
 			if (item == Items.AIR) {
 				inputs.add(new Input(block));

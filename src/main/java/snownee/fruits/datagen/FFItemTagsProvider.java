@@ -15,14 +15,11 @@ import static snownee.fruits.food.FoodModule.RICE_WITH_FRUITS;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -33,12 +30,12 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModules;
 
-public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
+public class FFItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 	static final TagKey<Item> CITRUS_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "citrus_logs");
 	static final TagKey<Item> REDLOVE_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "redlove_logs");
 	static final TagKey<Item> FRUITS = AbstractModule.itemTag("c", "fruits");
@@ -51,9 +48,9 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 	static final TagKey<Item> GADGET_TOKEN = AbstractModule.itemTag(FruitfulFun.ID, "gadget_token");
 
 	public FFItemTagsProvider(
-			FabricDataOutput output,
+			FabricPackOutput output,
 			CompletableFuture<HolderLookup.Provider> registriesFuture,
-			@Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
+			FabricTagsProvider.BlockTagsProvider blockTagProvider) {
 		super(output, registriesFuture, blockTagProvider);
 	}
 
@@ -78,46 +75,47 @@ public class FFItemTagsProvider extends FabricTagProvider.ItemTagProvider {
 		copy(FFBlockTagsProvider.REDLOVE_LOGS, REDLOVE_LOGS);
 		copy(BlockTags.FLOWERS, ItemTags.FLOWERS);
 
-		FabricTagProvider<Item>.FabricTagBuilder fruits = getOrCreateTagBuilder(FRUITS)
-				.add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES);
-		FabricTagProvider<Item>.FabricTagBuilder citrusFruits = getOrCreateTagBuilder(CITRUS_FRUITS);
+		var fruits = valueLookupBuilder(FRUITS).add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES);
+		var citrusFruits = valueLookupBuilder(CITRUS_FRUITS);
+		var villagerPicksUp = valueLookupBuilder(ItemTags.VILLAGER_PICKS_UP);
 		FFRegistries.FRUIT_TYPE.forEach($ -> {
 			if (CoreModule.CITRUS_LOG.is($.log.get())) {
 				citrusFruits.add($.fruit.get());
 			} else {
 				fruits.add($.fruit.get());
 			}
+			villagerPicksUp.add($.fruit.get());
 		});
 		fruits.addTag(CITRUS_FRUITS);
-		tag(ItemTags.FOX_FOOD).addTag(FRUITS);
-		tag(FoodModule.PANDA_FOOD).addOptional(RICE_WITH_FRUITS.key());
+		valueLookupBuilder(ItemTags.FOX_FOOD).addTag(FRUITS);
+		getOrCreateRawBuilder(ItemTags.PANDA_FOOD).addOptionalElement(RICE_WITH_FRUITS.key());
 
-		TagAppender<Item> tagAppender = tag(ConventionalItemTags.FOODS);
+		var tagAppender = valueLookupBuilder(ConventionalItemTags.FOODS);
 		tagAppender.addTag(FRUITS);
-		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.ITEM)
-				.map($ -> $.name)
+		KiwiModules.get(FruitfulFun.id("food")).getRegistryEntries(Registries.ITEM)
+				.map(KiwiGO::get)
 				.forEach(tagAppender::addOptional);
-		tagAppender = tag(UPRIGHT_ON_BELT);
-		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.ITEM)
-				.map($ -> $.name)
+		tagAppender = valueLookupBuilder(UPRIGHT_ON_BELT);
+		KiwiModules.get(FruitfulFun.id("food")).getRegistryEntries(Registries.ITEM)
+				.map(KiwiGO::get)
 				.forEach(tagAppender::addOptional);
-		tagAppender.addOptional(BeeModule.MUTAGEN.key());
-		getOrCreateTagBuilder(HYDRATING_DRINKS).addOptional(HONEY_POMELO_TEA.key());
-		getOrCreateTagBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
-		getOrCreateTagBuilder(GADGET_TOKEN).add(Items.EMERALD_BLOCK);
-		getOrCreateTagBuilder(TULIPS)
+		tagAppender.addOptional(BeeModule.MUTAGEN.get());
+		getOrCreateRawBuilder(HYDRATING_DRINKS).addOptionalElement(HONEY_POMELO_TEA.key());
+		valueLookupBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
+		valueLookupBuilder(GADGET_TOKEN).add(Items.EMERALD_BLOCK);
+		valueLookupBuilder(TULIPS)
 				.add(Items.ORANGE_TULIP)
 				.add(Items.PINK_TULIP)
 				.add(Items.RED_TULIP)
 				.add(Items.WHITE_TULIP)
-				.addOptionalTag(new ResourceLocation("biomeswevegone", "flowers/tulips"));
-		getOrCreateTagBuilder(ConventionalItemTags.SHIELDS).addOptional(GadgetModule.BUZZY_SHIELD.key());
-		getOrCreateTagBuilder(OFFHAND_EQUIPMENT).addOptional(GadgetModule.BUZZY_SHIELD.key());
+				.addOptionalTag(AbstractModule.itemTag("biomeswevegone", "flowers/tulips"));
+		getOrCreateRawBuilder(ConventionalItemTags.SHIELD_TOOLS).addOptionalElement(GadgetModule.BUZZY_SHIELD.key());
+		getOrCreateRawBuilder(OFFHAND_EQUIPMENT).addOptionalElement(GadgetModule.BUZZY_SHIELD.key());
 
 		if (Hooks.farmersdelight) {
-			getOrCreateTagBuilder(WOODEN_CABINETS)
-					.addOptional(CITRUS_CABINET.key())
-					.addOptional(REDLOVE_CABINET.key());
+			getOrCreateRawBuilder(WOODEN_CABINETS)
+					.addOptionalElement(CITRUS_CABINET.key())
+					.addOptionalElement(REDLOVE_CABINET.key());
 		}
 	}
 }

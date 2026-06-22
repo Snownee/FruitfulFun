@@ -2,15 +2,15 @@ package snownee.fruits.compat.jei;
 
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import snownee.fruits.compat.FFJEIREI;
+import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.ritual.DragonRitualContext;
 import snownee.fruits.ritual.DragonRitualRecipe;
@@ -36,12 +36,12 @@ public class DragonRitualCategory extends ItemAndBlockBaseCategory<DragonRitualC
 
 	@Override
 	public @Nullable BlockPredicate getInputBlock(DragonRitualRecipe recipe) {
-		return FFJEIREI.pieBlockPredicate.get();
+		return LycheeCompat.pieBlockPredicate.get();
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, DragonRitualRecipe recipe, IFocusGroup focuses) {
 		super.setRecipe(builder, recipe, focuses);
-		builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(FFJEIREI.pieItem.get());
+		builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(LycheeCompat.pieItem.get());
 	}
 }

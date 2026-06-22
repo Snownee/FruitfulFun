@@ -2,7 +2,7 @@ package snownee.fruits.food;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -22,8 +23,12 @@ import snownee.fruits.util.CommonProxy;
 public class PieBlock extends FeastBlock {
 	public static final IntegerProperty PIE_SERVINGS = IntegerProperty.create("servings", 1, 4);
 
-	public PieBlock(VoxelShape northShape, @Nullable VoxelShape leftoverShape, Supplier<Item> servingItem) {
-		super(northShape, leftoverShape, servingItem);
+	public PieBlock(
+			VoxelShape northShape,
+			@Nullable VoxelShape leftoverShape,
+			Supplier<Item> servingItem,
+			BlockBehaviour.Properties properties) {
+		super(northShape, leftoverShape, servingItem, properties);
 	}
 
 	@Override
@@ -41,7 +46,7 @@ public class PieBlock extends FeastBlock {
 				popResource(level, pos, servingItem);
 			}
 			level.playSound(player, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
-			return InteractionResult.sidedSuccess(level.isClientSide());
+			return InteractionResult.SUCCESS_SERVER;
 		}
 		return super.use(state, level, pos, player, hand, hit);
 	}

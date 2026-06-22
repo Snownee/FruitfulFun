@@ -11,7 +11,7 @@ import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import snownee.fruits.FFCommonConfig;
@@ -19,15 +19,13 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
-import snownee.fruits.compat.FFJEIREI;
+import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.fruits.ritual.RitualModule;
-import snownee.lychee.compat.jei.JEICompat;
-import snownee.lychee.compat.jei.category.BaseJEICategory;
 
 @JeiPlugin
 public class FFJEICompat implements IModPlugin {
 
-	public static final ResourceLocation UID = FruitfulFun.id("main");
+	public static final Identifier UID = FruitfulFun.id("main");
 
 	public FFJEICompat() {
 		JEICompat.addCategoryFactoryProvider($ -> {
@@ -41,7 +39,7 @@ public class FFJEICompat implements IModPlugin {
 	}
 
 	@Override
-	public ResourceLocation getPluginUid() {
+	public Identifier getPluginUid() {
 		return UID;
 	}
 
@@ -49,7 +47,7 @@ public class FFJEICompat implements IModPlugin {
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		if (Hooks.ritual) {
 			ItemStack dragonHead = Items.DRAGON_HEAD.getDefaultInstance();
-			ItemStack pie = FFJEIREI.pieItem.get();
+			ItemStack pie = LycheeCompat.pieItem.get();
 			for (BaseJEICategory<?, ?> category : JEICompat.CATEGORIES.getOrDefault(RitualModule.RECIPE_TYPE.get().categoryId, Map.of())
 					.values()) {
 				registration.addRecipeCatalyst(dragonHead, category.getRecipeType());
@@ -62,13 +60,14 @@ public class FFJEICompat implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		if (FFCommonConfig.isMutagenRecipeEnabled()) {
 			NoHashBrewingRecipe brewingRecipe = new NoHashBrewingRecipe(
+					BeeModule.MUTAGEN.key(),
 					List.of(new ItemStack(MutagenItem.BREWING_ITEM)),
 					List.of(Items.POTION.getDefaultInstance()),
 					new ItemStack(BeeModule.MUTAGEN.get()), 1);
 			registration.addRecipes(RecipeTypes.BREWING, List.of(brewingRecipe));
 		}
 
-		FFJEIREI.addInformation(registration::addItemStackInfo);
+		LycheeCompat.addInformation(registration::addItemStackInfo);
 	}
 
 	@Override

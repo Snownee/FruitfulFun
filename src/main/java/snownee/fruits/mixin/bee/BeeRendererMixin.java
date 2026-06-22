@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.layers.SaddleLayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.animal.bee.Bee;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
@@ -38,12 +38,12 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeModel<Bee>> {
 	}
 
 	@Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
-	private void getTextureLocation(Bee bee, CallbackInfoReturnable<ResourceLocation> ci) {
+	private void getTextureLocation(Bee bee, CallbackInfoReturnable<Identifier> ci) {
 		if (!Hooks.bee) {
 			return;
 		}
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		ResourceLocation texture = attributes.getTexture();
+		Identifier texture = attributes.getTexture();
 		if (texture != null) {
 			texture = texture.withPath($ -> {
 				if (bee.isAngry() && bee.hasNectar()) {

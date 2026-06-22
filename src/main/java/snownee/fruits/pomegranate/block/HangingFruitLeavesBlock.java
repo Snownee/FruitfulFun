@@ -2,16 +2,14 @@ package snownee.fruits.pomegranate.block;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -24,11 +22,11 @@ import snownee.fruits.block.entity.FruitTreeBlockEntity;
 
 public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 	public HangingFruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
-		super(type, properties);
+		super(type, 0.01F, properties);
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult ray) {
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 		return InteractionResult.PASS;
 	}
 
@@ -46,11 +44,7 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 	}
 
 	@Override
-	public boolean isPathfindable(
-			BlockState blockState,
-			BlockGetter blockGetter,
-			BlockPos blockPos,
-			PathComputationType pathComputationType) {
+	protected boolean isPathfindable(BlockState state, PathComputationType type) {
 		return false;
 	}
 

@@ -1,73 +1,67 @@
 package snownee.fruits.ritual;
 
+import java.util.List;
 import java.util.Optional;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import snownee.lychee.LycheeLootContextParams;
-import snownee.lychee.core.input.ItemHolderCollection;
-import snownee.lychee.core.recipe.LycheeRecipe;
-import snownee.lychee.core.recipe.type.LycheeRecipeType;
+import snownee.kiwi.recipe.SizedIngredient;
+import snownee.lychee.LootContextKeys;
+import snownee.lychee.util.codec.LycheeCodecs;
+import snownee.lychee.util.context.LycheeContext;
+import snownee.lychee.util.recipe.LycheeRecipe;
+import snownee.lychee.util.recipe.LycheeRecipeCommonProperties;
+import snownee.lychee.util.recipe.LycheeRecipeType;
 
-public class DragonRitualRecipe extends LycheeRecipe<DragonRitualContext> {
-	protected Ingredient input;
+public class DragonRitualRecipe extends LycheeRecipe<LycheeContext> {
+	public static final MapCodec<DragonRitualRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+			LycheeRecipeCommonProperties.SIMPLE_MAP_CODEC.forGetter(LycheeRecipe::commonProperties),
+			LycheeCodecs.SIZED_INGREDIENT.fieldOf("item_in").forGetter(r -> r.input)
+	).apply(instance, DragonRitualRecipe::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf, DragonRitualRecipe> STREAM_CODEC = StreamCodec.composite(
+			LycheeRecipeCommonProperties.STREAM_CODEC,
+			LycheeRecipe::commonProperties,
+			SizedIngredient.STREAM_CODEC,
+			r -> r.input,
+			DragonRitualRecipe::new);
+	protected SizedIngredient input;
 
-	public DragonRitualRecipe(ResourceLocation id) {
-		super(id);
+	public DragonRitualRecipe(LycheeRecipeCommonProperties commonProperties, SizedIngredient input) {
+		super(commonProperties);
+		this.input = input;
 	}
 
 	@Override
-	public boolean matches(DragonRitualContext ctx, Level worldIn) {
+	public boolean matches(LycheeContext ctx, Level level) {
 		return this.input.test(ctx.getItem(0));
 	}
 
 	@Override
-	public LycheeRecipe.Serializer<?> getSerializer() {
+	public RecipeSerializer<DragonRitualRecipe> getSerializer() {
 		return RitualModule.SERIALIZER.get();
 	}
 
 	@Override
-	public LycheeRecipeType<?, ?> getType() {
+	public LycheeRecipeType<?> getType() {
 		return RitualModule.RECIPE_TYPE.get();
 	}
 
 	@Override
-	public NonNullList<Ingredient> getIngredients() {
-		return NonNullList.of(Ingredient.EMPTY, input);
-	}
-
-	public static class Serializer extends LycheeRecipe.Serializer<DragonRitualRecipe> {
-		public Serializer() {
-			super(DragonRitualRecipe::new);
-		}
-
-		@Override
-		public void fromJson(DragonRitualRecipe recipe, JsonObject jsonObject) {
-			recipe.input = Ingredient.fromJson(jsonObject.get("item_in"));
-		}
-
-		@Override
-		public void fromNetwork(DragonRitualRecipe recipe, FriendlyByteBuf buf) {
-			recipe.input = Ingredient.fromNetwork(buf);
-		}
-
-		@Override
-		public void toNetwork0(FriendlyByteBuf buf, DragonRitualRecipe recipe) {
-			recipe.input.toNetwork(buf);
-		}
+	public List<SizedIngredient> sizedIngredients() {
+		return List.of(input);
 	}
 
 	public static boolean on(ItemEntity entity, BlockPos pos, int heads) {
 		DragonRitualContext.Builder builder = new DragonRitualContext.Builder(entity.level(), heads);
-		builder.withParameter(LycheeLootContextParams.BLOCK_POS, pos);
+		builder.withParameter(LootContextKeys.BLOCK_POS, pos);
 		builder.withParameter(LootContextParams.ORIGIN, entity.position());
 		builder.withParameter(LootContextParams.THIS_ENTITY, entity);
 		DragonRitualContext ctx = builder.create(RitualModule.RECIPE_TYPE.get().contextParamSet);

@@ -58,11 +58,12 @@ import static snownee.fruits.pomegranate.PomegranateModule.POTTED_POMEGRANATE;
 
 import java.util.concurrent.CompletableFuture;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -74,9 +75,10 @@ import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentedCandleBlock;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModules;
 
-public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
+public class FFBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
 	static final TagKey<Block> CITRUS_LOGS = AbstractModule.blockTag(FruitfulFun.ID, "citrus_logs");
 	static final TagKey<Block> REDLOVE_LOGS = AbstractModule.blockTag(FruitfulFun.ID, "redlove_logs");
 	// Leaves us in Peace mod compatibility
@@ -84,37 +86,37 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 	static final TagKey<Block> TREE_TYPES_JUNGLE_LOG = AbstractModule.blockTag("minecraft", "tree_types/jungle_log");
 	static final TagKey<Block> MINEABLE_WITH_KNIFE = AbstractModule.blockTag("farmersdelight", "mineable/knife");
 
-	public FFBlockTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+	public FFBlockTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 		super(output, registriesFuture);
 	}
 
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
-		getOrCreateTagBuilder(CITRUS_LOGS).add(
+		valueLookupBuilder(CITRUS_LOGS).add(
 				CITRUS_LOG.get(),
 				CITRUS_WOOD.get(),
 				STRIPPED_CITRUS_LOG.get(),
 				STRIPPED_CITRUS_WOOD.get());
-		getOrCreateTagBuilder(REDLOVE_LOGS).add(
+		valueLookupBuilder(REDLOVE_LOGS).add(
 				REDLOVE_LOG.get(),
 				REDLOVE_WOOD.get(),
 				STRIPPED_REDLOVE_LOG.get(),
 				STRIPPED_REDLOVE_WOOD.get());
-		tag(BlockTags.LOGS_THAT_BURN).addTag(CITRUS_LOGS).addTag(REDLOVE_LOGS);
-		getOrCreateTagBuilder(BlockTags.WOODEN_FENCES).add(CITRUS_FENCE.get(), REDLOVE_FENCE.get());
-		getOrCreateTagBuilder(BlockTags.FENCE_GATES).add(CITRUS_FENCE_GATE.get(), REDLOVE_FENCE_GATE.get());
-		getOrCreateTagBuilder(BlockTags.WOODEN_BUTTONS).add(CITRUS_BUTTON.get(), REDLOVE_BUTTON.get());
-		getOrCreateTagBuilder(BlockTags.WOODEN_SLABS).add(CITRUS_SLAB.get(), REDLOVE_SLAB.get());
-		getOrCreateTagBuilder(BlockTags.WOODEN_STAIRS).add(CITRUS_STAIRS.get(), REDLOVE_STAIRS.get());
-		getOrCreateTagBuilder(BlockTags.WOODEN_PRESSURE_PLATES).add(CITRUS_PRESSURE_PLATE.get(), REDLOVE_PRESSURE_PLATE.get());
-		getOrCreateTagBuilder(BlockTags.WOODEN_TRAPDOORS).add(CITRUS_TRAPDOOR.get(), REDLOVE_TRAPDOOR.get());
-		getOrCreateTagBuilder(BlockTags.PLANKS).add(CITRUS_PLANKS.get(), REDLOVE_PLANKS.get());
-		getOrCreateTagBuilder(BlockTags.WALL_SIGNS).add(CITRUS_WALL_SIGN.get(), REDLOVE_WALL_SIGN.get());
-		getOrCreateTagBuilder(BlockTags.STANDING_SIGNS).add(CITRUS_SIGN.get(), REDLOVE_SIGN.get());
-		getOrCreateTagBuilder(BlockTags.WALL_HANGING_SIGNS).add(CITRUS_WALL_HANGING_SIGN.get(), REDLOVE_WALL_HANGING_SIGN.get());
-		getOrCreateTagBuilder(BlockTags.CEILING_HANGING_SIGNS).add(CITRUS_HANGING_SIGN.get(), REDLOVE_HANGING_SIGN.get());
-		getOrCreateTagBuilder(BlockTags.WOODEN_DOORS).add(CITRUS_DOOR.get(), REDLOVE_DOOR.get(), REDLOVE_SLIDING_DOOR.get());
-		getOrCreateTagBuilder(BlockTags.FLOWER_POTS).add(
+		valueLookupBuilder(BlockTags.LOGS_THAT_BURN).addTag(CITRUS_LOGS).addTag(REDLOVE_LOGS);
+		valueLookupBuilder(BlockTags.WOODEN_FENCES).add(CITRUS_FENCE.get(), REDLOVE_FENCE.get());
+		valueLookupBuilder(BlockTags.FENCE_GATES).add(CITRUS_FENCE_GATE.get(), REDLOVE_FENCE_GATE.get());
+		valueLookupBuilder(BlockTags.WOODEN_BUTTONS).add(CITRUS_BUTTON.get(), REDLOVE_BUTTON.get());
+		valueLookupBuilder(BlockTags.WOODEN_SLABS).add(CITRUS_SLAB.get(), REDLOVE_SLAB.get());
+		valueLookupBuilder(BlockTags.WOODEN_STAIRS).add(CITRUS_STAIRS.get(), REDLOVE_STAIRS.get());
+		valueLookupBuilder(BlockTags.WOODEN_PRESSURE_PLATES).add(CITRUS_PRESSURE_PLATE.get(), REDLOVE_PRESSURE_PLATE.get());
+		valueLookupBuilder(BlockTags.WOODEN_TRAPDOORS).add(CITRUS_TRAPDOOR.get(), REDLOVE_TRAPDOOR.get());
+		valueLookupBuilder(BlockTags.PLANKS).add(CITRUS_PLANKS.get(), REDLOVE_PLANKS.get());
+		valueLookupBuilder(BlockTags.WALL_SIGNS).add(CITRUS_WALL_SIGN.get(), REDLOVE_WALL_SIGN.get());
+		valueLookupBuilder(BlockTags.STANDING_SIGNS).add(CITRUS_SIGN.get(), REDLOVE_SIGN.get());
+		valueLookupBuilder(BlockTags.WALL_HANGING_SIGNS).add(CITRUS_WALL_HANGING_SIGN.get(), REDLOVE_WALL_HANGING_SIGN.get());
+		valueLookupBuilder(BlockTags.CEILING_HANGING_SIGNS).add(CITRUS_HANGING_SIGN.get(), REDLOVE_HANGING_SIGN.get());
+		valueLookupBuilder(BlockTags.WOODEN_DOORS).add(CITRUS_DOOR.get(), REDLOVE_DOOR.get(), REDLOVE_SLIDING_DOOR.get());
+		valueLookupBuilder(BlockTags.FLOWER_POTS).add(
 				POTTED_APPLE.get(),
 				POTTED_CITRON.get(),
 				POTTED_GRAPEFRUIT.get(),
@@ -127,57 +129,57 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 				POTTED_CHERRY.get(),
 				POTTED_POMEGRANATE.get());
 		{
-			FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(BlockTags.SAPLINGS);
+			var builder = valueLookupBuilder(BlockTags.SAPLINGS);
 			FFRegistries.FRUIT_TYPE.forEach($ -> builder.add($.sapling.get()));
 		}
 		{
-			FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(ALL_LEAVES);
+			var builder = valueLookupBuilder(ALL_LEAVES);
 			FFRegistries.FRUIT_TYPE.forEach($ -> builder.add($.leaves.get()));
 		}
-		tag(BlockTags.LEAVES).addTag(ALL_LEAVES);
-		getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_HOE).addTag(ALL_LEAVES);
-		getOrCreateTagBuilder(BlockTags.FLOWERS).add(
+		valueLookupBuilder(BlockTags.LEAVES).addTag(ALL_LEAVES);
+		valueLookupBuilder(BlockTags.MINEABLE_WITH_HOE).addTag(ALL_LEAVES);
+		valueLookupBuilder(BlockTags.FLOWERS).add(
 				REDLOVE_LEAVES.get(),
 				CHERRY_SAPLING.get(),
 				PEACH_PINK_PETALS.get(),
 				Blocks.SPORE_BLOSSOM);
-		getOrCreateTagBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).add(PEACH_PINK_PETALS.get());
+		valueLookupBuilder(BlockTags.INSIDE_STEP_SOUND_BLOCKS).add(PEACH_PINK_PETALS.get());
 
 		{
-			FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(CoreModule.CANDLES);
+			var builder = getOrCreateRawBuilder(CoreModule.CANDLES);
 			for (Block block : BuiltInRegistries.BLOCK) {
 				if (block instanceof ScentedCandleBlock) {
-					builder.addOptional(BuiltInRegistries.BLOCK.getKey(block));
+					builder.addOptionalElement(BuiltInRegistries.BLOCK.getKey(block));
 				}
 			}
 			builder
 					.addOptionalTag(BlockTags.CANDLES.location())
 					.addOptionalTag(BlockTags.CANDLE_CAKES.location())
-					.addOptionalTag(new ResourceLocation("supplementaries:candle_holders"))
-					.addOptionalTag(new ResourceLocation("the_bumblezone:candles"));
+					.addOptionalTag(Identifier.parse("supplementaries:candle_holders"))
+					.addOptionalTag(Identifier.parse("the_bumblezone:candles"));
 		}
-		getOrCreateTagBuilder(GadgetModule.SUSTAIN_CRAFTER_ITEM)
+		valueLookupBuilder(GadgetModule.SUSTAIN_CRAFTER_ITEM)
 				.addTag(CoreModule.CANDLES);
-		getOrCreateTagBuilder(GadgetModule.VCD_PERFORM_USING)
+		valueLookupBuilder(GadgetModule.VCD_PERFORM_USING)
 				.addTag(ALL_LEAVES)
-				.addOptionalTag(BlockTags.CAVE_VINES.location())
+				.addOptionalTag(BlockTags.CAVE_VINES)
 				.add(Blocks.SWEET_BERRY_BUSH);
-		getOrCreateTagBuilder(GadgetModule.VCD_PERFORM_BREAKING)
+		valueLookupBuilder(GadgetModule.VCD_PERFORM_BREAKING)
 				.add(Blocks.COCOA)
 				.add(POMEGRANATE.get());
-		getOrCreateTagBuilder(TREE_TYPES_OAK_LOG).add(APPLE_LEAVES.get());
-		getOrCreateTagBuilder(TREE_TYPES_JUNGLE_LOG).add(POMEGRANATE_LEAVES.get());
-		getOrCreateTagBuilder(BlockTags.BEEHIVES).addOptional(GadgetModule.BUZZY_CRAFTER.key());
+		valueLookupBuilder(TREE_TYPES_OAK_LOG).add(APPLE_LEAVES.get());
+		valueLookupBuilder(TREE_TYPES_JUNGLE_LOG).add(POMEGRANATE_LEAVES.get());
+		valueLookupBuilder(BlockTags.BEEHIVES).addOptional(GadgetModule.BUZZY_CRAFTER.get());
 
 		if (Hooks.farmersdelight) {
-			getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
-					.addOptional(CITRUS_CABINET.key())
-					.addOptional(REDLOVE_CABINET.key());
+			getOrCreateRawBuilder(BlockTags.MINEABLE_WITH_AXE)
+					.addOptionalElement(CITRUS_CABINET.key())
+					.addOptionalElement(REDLOVE_CABINET.key());
 		}
 
-		FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(MINEABLE_WITH_KNIFE);
-		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.BLOCK)
-				.map($ -> $.name)
+		var builder = valueLookupBuilder(MINEABLE_WITH_KNIFE);
+		KiwiModules.get(FruitfulFun.id("food")).getRegistryEntries(Registries.BLOCK)
+				.map(KiwiGO::get)
 				.forEach(builder::addOptional);
 	}
 }

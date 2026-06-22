@@ -1,6 +1,6 @@
 package snownee.fruits.cherry.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.SlidingDoorBlock;
 import snownee.fruits.cherry.CherryModule;
@@ -9,7 +9,7 @@ import snownee.fruits.datagen.CoreBlockLoot;
 
 public class CherryBlockLoot extends CoreBlockLoot {
 
-	public CherryBlockLoot(FabricDataOutput dataOutput) {
+	public CherryBlockLoot(FabricPackOutput dataOutput) {
 		super(FruitfulFun.id("cherry"), dataOutput);
 	}
 

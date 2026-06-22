@@ -7,14 +7,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
@@ -46,7 +46,7 @@ public class SSyncBeePacket extends PacketHandler {
 				if (texture.isEmpty()) {
 					attributes.setTexture(null);
 				} else {
-					attributes.setTexture(ResourceLocation.tryParse(texture));
+					attributes.setTexture(Identifier.tryParse(texture));
 				}
 				attributes.getGenes().setTraits(traits.stream()
 						.map(Trait.REGISTRY::get)
@@ -71,7 +71,7 @@ public class SSyncBeePacket extends PacketHandler {
 			buf.writeVarInt(bee.getId());
 			buf.writeItem(attributes.getSaddle());
 			buf.writeCollection(attributes.getTrusted(), FriendlyByteBuf::writeUUID);
-			ResourceLocation texture = attributes.getTexture();
+			Identifier texture = attributes.getTexture();
 			buf.writeUtf(texture == null ? "" : texture.toString());
 			buf.writeCollection(attributes.getGenes().getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf.writeLong(attributes.getMutagenEndsIn());

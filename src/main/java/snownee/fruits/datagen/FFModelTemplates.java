@@ -2,8 +2,8 @@ package snownee.fruits.datagen;
 
 import java.util.Optional;
 
-import net.minecraft.data.models.model.ModelTemplate;
-import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.TextureSlot;
 import snownee.fruits.FruitfulFun;
 
 public class FFModelTemplates {

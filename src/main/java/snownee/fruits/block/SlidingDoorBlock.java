@@ -1,11 +1,11 @@
 package snownee.fruits.block;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
@@ -13,7 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -50,14 +52,14 @@ public class SlidingDoorBlock extends DoorBlock {
 			Block.box(3, 0, 13, 4, 16, 29)};
 	protected static final VoxelShape[][] AABB = {SOUTH_AABB, WEST_AABB, NORTH_AABB, EAST_AABB};
 
-	public SlidingDoorBlock(Block.Properties builder, BlockSetType blockSetType) {
-		super(builder, blockSetType);
+	public SlidingDoorBlock(BlockSetType blockSetType, Properties builder) {
+		super(blockSetType, builder);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		int index = 0;
-		if (state.getValue(OPEN) == Boolean.TRUE) {
+		if (state.getValue(OPEN)) {
 			++index;
 			if (state.getValue(HINGE) == DoorHingeSide.RIGHT) {
 				++index;
@@ -67,32 +69,32 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	@Override
-	public BlockState updateShape(
-			BlockState stateIn,
-			Direction facing,
-			BlockState facingState,
-			LevelAccessor worldIn,
-			BlockPos currentPos,
-			BlockPos facingPos) {
-		DoubleBlockHalf doubleblockhalf = stateIn.getValue(HALF);
-		if (facing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (facing == Direction.UP)) {
-			return facingState.is(this) && facingState.getValue(HALF) != doubleblockhalf ?
-					stateIn.setValue(FACING, facingState.getValue(FACING))
-							.setValue(OPEN, facingState.getValue(OPEN))
-							.setValue(HINGE, facingState.getValue(HINGE))
-							.setValue(POWERED, facingState.getValue(POWERED)) :
+	protected BlockState updateShape(
+			BlockState state,
+			LevelReader level,
+			ScheduledTickAccess ticks,
+			BlockPos pos,
+			Direction directionToNeighbour,
+			BlockPos neighbourPos,
+			BlockState neighbourState,
+			RandomSource random) {
+		DoubleBlockHalf doubleblockhalf = state.getValue(HALF);
+		if (directionToNeighbour.getAxis() == Direction.Axis.Y &&
+				doubleblockhalf == DoubleBlockHalf.LOWER == (directionToNeighbour == Direction.UP)) {
+			return neighbourState.is(this) && neighbourState.getValue(HALF) != doubleblockhalf ?
+					state.setValue(FACING, neighbourState.getValue(FACING))
+							.setValue(OPEN, neighbourState.getValue(OPEN))
+							.setValue(HINGE, neighbourState.getValue(HINGE))
+							.setValue(POWERED, neighbourState.getValue(POWERED)) :
 					Blocks.AIR.defaultBlockState();
 		} else {
-			return doubleblockhalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ?
+			return doubleblockhalf == DoubleBlockHalf.LOWER && directionToNeighbour == Direction.DOWN && !state.canSurvive(
+					level,
+					pos) ?
 					Blocks.AIR.defaultBlockState() :
-					super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+					super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
 		}
 	}
-
-	//    @Override
-	//    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
-	//        return false;
-	//    }
 
 	@Override
 	@Nullable
@@ -151,10 +153,10 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 		if (type().canOpenByHand()) {
-			setOpen(player, worldIn, state, pos, !state.getValue(OPEN));
-			return InteractionResult.sidedSuccess(worldIn.isClientSide());
+			setOpen(player, level, state, pos, !state.getValue(OPEN));
+			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
 	}
@@ -169,10 +171,16 @@ public class SlidingDoorBlock extends DoorBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	protected void neighborChanged(
+			BlockState state,
+			Level level,
+			BlockPos pos,
+			Block block,
+			@Nullable Orientation orientation,
+			boolean movedByPiston) {
 		boolean open = level.hasNeighborSignal(pos) ||
 				level.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-		if (blockIn != this && open != state.getValue(POWERED)) {
+		if (block != this && open != state.getValue(POWERED)) {
 			if (open != state.getValue(OPEN)) {
 				playSound(level, pos, open);
 				level.gameEvent(null, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
@@ -180,13 +188,12 @@ public class SlidingDoorBlock extends DoorBlock {
 
 			level.setBlock(pos, state.setValue(POWERED, open).setValue(OPEN, open), 2);
 		}
-
 	}
 
 	private void playSound(Level worldIn, BlockPos pos, boolean isOpening) {
 		worldIn.playSound(
 				null, pos, isOpening ? CoreModule.OPEN_SOUND.get() : CoreModule.CLOSE_SOUND.get(), SoundSource.BLOCKS, 1.0F,
-				worldIn.random.nextFloat() * 0.1F + 0.9F);
+				worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Override

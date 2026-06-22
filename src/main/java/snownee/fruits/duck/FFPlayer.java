@@ -3,7 +3,7 @@ package snownee.fruits.duck;
 import java.util.Map;
 import java.util.Objects;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.world.entity.Entity;
 import snownee.fruits.bee.HauntingManager;

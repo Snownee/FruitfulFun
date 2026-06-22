@@ -3,9 +3,9 @@ package snownee.fruits.compat.jade;
 import java.util.function.Function;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IServerDataProvider;
 
@@ -25,7 +25,7 @@ public class InspectorBlockProvider implements IServerDataProvider<BlockAccessor
 	}
 
 	@Override
-	public ResourceLocation getUid() {
+	public Identifier getUid() {
 		return JadeCompat.INSPECTOR_BLOCK;
 	}
 }

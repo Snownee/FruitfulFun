@@ -17,13 +17,10 @@ import snownee.fruits.gadget.ScentType;
 
 public class ScentCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
-		return Commands.literal("scent")
-				.requires($ -> $.hasPermission(2))
-				.executes($ -> show($.getSource()))
-				.then(Commands.literal("clear")
-						.executes($ -> clear(0, $.getSource()))
-						.then(Commands.argument("range", IntegerArgumentType.integer(0, 99))
-								.executes($ -> clear(IntegerArgumentType.getInteger($, "range"), $.getSource()))));
+		return Commands.literal("scent").requires($ -> $.hasPermission(2)).executes($ -> show($.getSource())).then(Commands.literal("clear")
+				.executes($ -> clear(0, $.getSource()))
+				.then(Commands.argument("range", IntegerArgumentType.integer(0, 99))
+						.executes($ -> clear(IntegerArgumentType.getInteger($, "range"), $.getSource()))));
 	}
 
 	private static int clear(int range, CommandSourceStack source) {
@@ -31,8 +28,8 @@ public class ScentCommand {
 		long lastGameTime = level.getGameTime() - 1;
 		BlockPos pos = BlockPos.containing(source.getPosition());
 		MutableInt count = new MutableInt();
-		ChunkPos.rangeClosed(new ChunkPos(pos), range).forEach(chunkPos -> {
-			LevelChunk chunk = level.getChunk(chunkPos.x, chunkPos.z);
+		ChunkPos.rangeClosed(ChunkPos.containing(pos), range).forEach(chunkPos -> {
+			LevelChunk chunk = level.getChunk(chunkPos.x(), chunkPos.z());
 			for (ScentType scentType : FFRegistries.SCENT_TYPE) {
 				if (scentType.isActiveAt(chunk)) {
 					scentType.setTime(chunk, lastGameTime);
@@ -41,8 +38,8 @@ public class ScentCommand {
 			}
 		});
 		source.sendSystemMessage(Component.literal("Affected %d %s".formatted(
-				count.getValue(),
-				count.getValue() == 1 ? "chunk" : "chunks")));
+				count.intValue(),
+				count.intValue() == 1 ? "chunk" : "chunks")));
 		return 0;
 	}
 

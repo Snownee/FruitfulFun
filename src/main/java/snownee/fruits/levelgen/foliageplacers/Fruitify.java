@@ -4,12 +4,13 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -20,7 +21,7 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.block.FruitLeavesBlock;
 
 public class Fruitify extends FoliagePlacer {
-	public static final Codec<Fruitify> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<Fruitify> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			FoliagePlacer.CODEC.fieldOf("wrapped").forGetter($ -> $.wrapped),
 			Codec.BOOL.optionalFieldOf("worldgen", false).forGetter($ -> $.worldgen)
 	).apply(instance, Fruitify::new));
@@ -56,7 +57,7 @@ public class Fruitify extends FoliagePlacer {
 
 	@Override
 	public void createFoliage(
-			LevelSimulatedReader level,
+			WorldGenLevel level,
 			FoliageSetter foliageSetter,
 			RandomSource pRandom,
 			TreeConfiguration pConfig,
@@ -68,8 +69,16 @@ public class Fruitify extends FoliagePlacer {
 		Set<BlockPos> activeLeaves = Sets.newLinkedHashSet();
 		FruitifiedFoliageSetter fruitifiedSetter = new FruitifiedFoliageSetter(foliageSetter, activeLeaves, pRandom, worldgen);
 		wrapped.createFoliage(
-				level, fruitifiedSetter, pRandom, pConfig, pMaxFreeTreeHeight, pAttachment, pFoliageHeight, pFoliageRadius, pOffset);
-		BlockState core = pConfig.foliageProvider.getState(pRandom, pAttachment.pos());
+				level,
+				fruitifiedSetter,
+				pRandom,
+				pConfig,
+				pMaxFreeTreeHeight,
+				pAttachment,
+				pFoliageHeight,
+				pFoliageRadius,
+				pOffset);
+		BlockState core = pConfig.foliageProvider.getState(level, pRandom, pAttachment.pos());
 		if (core.getBlock() instanceof FruitLeavesBlock) {
 			core = core.setValue(LeavesBlock.DISTANCE, 1).setValue(LeavesBlock.PERSISTENT, true);
 		}

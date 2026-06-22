@@ -2,11 +2,11 @@ package snownee.fruits.block.grower;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import snownee.fruits.FruitType;
 
-public class FruitTreeGrower extends AbstractTreeGrower {
+public class FruitTreeGrower extends TreeGrower {
 
 	private final FruitType fruitType;
 

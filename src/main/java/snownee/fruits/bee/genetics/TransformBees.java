@@ -17,40 +17,31 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import snownee.fruits.bee.BeeModule;
-import snownee.lychee.core.LycheeContext;
-import snownee.lychee.core.Reference;
-import snownee.lychee.core.post.PostAction;
-import snownee.lychee.core.post.PostActionType;
-import snownee.lychee.core.recipe.ILycheeRecipe;
+import snownee.lychee.context.ActionContext;
+import snownee.lychee.util.Reference;
+import snownee.lychee.util.action.PostAction;
+import snownee.lychee.util.action.PostActionCommonProperties;
+import snownee.lychee.util.action.PostActionType;
+import snownee.lychee.util.context.LycheeContext;
 
-public class TransformBees extends PostAction {
-	public final Reference target;
-	public final ImmutableList<Trait> addTraits;
-	public final ImmutableList<Trait> removeTraits;
-
-	public TransformBees(Reference target, ImmutableList<Trait> addTraits, ImmutableList<Trait> removeTraits) {
-		this.target = target;
-		this.addTraits = addTraits;
-		this.removeTraits = removeTraits;
-	}
+public record TransformBees(
+		PostActionCommonProperties commonProperties,
+		Reference target,
+		ImmutableList<Trait> addTraits,
+		ImmutableList<Trait> removeTraits) implements PostAction {
 
 	@Override
-	public PostActionType<?> getType() {
+	public PostActionType<?> type() {
 		return BeeModule.TRANSFORM_BEES.get();
 	}
 
 	@Override
-	public boolean canRepeat() {
-		return false;
-	}
-
-	@Override
-	protected void apply(ILycheeRecipe<?> recipe, LycheeContext ctx, int times) {
+	public void apply(LycheeContext ctx, ActionContext actionContext, int i) {
 		IntList indexes = recipe.getItemIndexes(this.target);
 		for (int index : indexes) {
 			ItemStack stack = ctx.getItem(index);

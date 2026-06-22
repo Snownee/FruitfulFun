@@ -2,7 +2,7 @@ package snownee.fruits.gadget;
 
 import java.util.Objects;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -46,7 +46,7 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 		if (!state.getValue(LIT)) {
 			return null;
 		}
-		return level.isClientSide ? null : createTickerHelper(
+		return level.isClientSide() ? null : createTickerHelper(
 				blockEntityType,
 				GadgetModule.SCENTED_CANDLE_ENTITY.get(),
 				ScentedCandleBlockEntity::serverTick);
@@ -70,14 +70,12 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 		if (itemInHand.is(Items.COMMAND_BLOCK)) {
 			if (!level.isClientSide()) {
 				be.setCreative(!be.isCreative());
-				player.displayClientMessage(
-						Component.translatable("tip.fruitfulfun.candleCreative." + (be.isCreative() ? "on" : "off")),
-						true);
+				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.candleCreative." + (be.isCreative() ? "on" : "off")));
 			}
 			return InteractionResult.sidedSuccess(level.isClientSide());
 		}
 		if (!level.isClientSide() && !state.getValue(LIT) && !itemInHand.isEmpty() && !itemInHand.is(asItem()) && !be.power().hasLife()) {
-			player.displayClientMessage(Component.translatable("tip.fruitfulfun.notEnoughPower"), true);
+			player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.notEnoughPower"));
 		}
 //		if (!level.isClientSide() && player.isHolding(Items.DIAMOND)) {
 //			ScentedCandleBlockEntity.getChunksAtExactChessboardDistance(level, pos, state.getValue(CANDLES) - 1).forEach(chunk -> {

@@ -1,62 +1,64 @@
 package snownee.fruits.bee.network;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-
-import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeModule;
-import snownee.kiwi.network.KPacketTarget;
+import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
-import snownee.kiwi.network.PacketHandler;
+import snownee.kiwi.network.PayloadContext;
+import snownee.kiwi.network.PlayPacketHandler;
 
-@KiwiPacket(value = "haunting_particles", dir = KiwiPacket.Direction.PLAY_TO_CLIENT)
-public class SHauntingParticlesPacket extends PacketHandler {
-	public static SHauntingParticlesPacket I;
+@KiwiPacket
+public record SHauntingParticlesPacket(Vec3 pos) implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<SHauntingParticlesPacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id(
+			"haunting_particles"));
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(
-			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
-			FriendlyByteBuf buf,
-			@Nullable ServerPlayer player) {
-		Vec3 vec3 = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
-		return executor.apply(() -> {
+	public CustomPacketPayload.Type<SHauntingParticlesPacket> type() {
+		return TYPE;
+	}
+
+	public static class Handler implements PlayPacketHandler<SHauntingParticlesPacket> {
+		public static final StreamCodec<RegistryFriendlyByteBuf, SHauntingParticlesPacket> STREAM_CODEC = StreamCodec.composite(
+				Vec3.STREAM_CODEC,
+				SHauntingParticlesPacket::pos,
+				SHauntingParticlesPacket::new);
+
+		@Override
+		public void handle(SHauntingParticlesPacket packet, PayloadContext context) {
 			if (!FFCommonConfig.hauntingInteractionParticles) {
 				return;
 			}
-			ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-			int count = 1 + level.random.nextInt(3);
-			for (int i = 0; i < count; i++) {
-				double x = vec3.x + (level.random.nextDouble() - 0.5D) * 0.5D;
-				double y = vec3.y + (level.random.nextDouble() - 0.5D) * 0.5D;
-				double z = vec3.z + (level.random.nextDouble() - 0.5D) * 0.5D;
-				level.addAlwaysVisibleParticle(BeeModule.GHOST.get(), x, y, z, 0.0D, 0.0D, 0.0D);
-			}
-		});
+			context.execute(() -> {
+				Vec3 vec3 = packet.pos();
+				ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
+				int count = 1 + level.getRandom().nextInt(3);
+				for (int i = 0; i < count; i++) {
+					double x = vec3.x + (level.getRandom().nextDouble() - 0.5D) * 0.5D;
+					double y = vec3.y + (level.getRandom().nextDouble() - 0.5D) * 0.5D;
+					double z = vec3.z + (level.getRandom().nextDouble() - 0.5D) * 0.5D;
+					level.addAlwaysVisibleParticle(BeeModule.GHOST.get(), x, y, z, 0.0D, 0.0D, 0.0D);
+				}
+			});
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, SHauntingParticlesPacket> streamCodec() {
+			return STREAM_CODEC;
+		}
 	}
 
-	public static void send(ServerLevel level, Vec3 vec3) {
-		I.send(KPacketTarget.tracking(level, BlockPos.containing(vec3)), buf -> {
-			buf.writeFloat((float) vec3.x);
-			buf.writeFloat((float) vec3.y);
-			buf.writeFloat((float) vec3.z);
-		});
+	public static void send(ServerLevel level, Vec3 pos) {
+		KPacketSender.sendToTracking(new SHauntingParticlesPacket(pos), level, BlockPos.containing(pos));
 	}
-
-//	public static void spawnOnEntity(ServerPlayer player, Entity target) {
-//		AABB box = target.getBoundingBox();
-//		Vec3 eyePosition = player.getEyePosition();
-//		Vec3 center = box.getCenter();
-//		Vec3 vec3 = box.clip(eyePosition, center).orElse(center);
-//		send(player.serverLevel(), vec3);
-//	}
 }

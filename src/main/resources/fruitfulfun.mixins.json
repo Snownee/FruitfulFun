@@ -2,8 +2,7 @@
 	"required": true,
 	"package": "snownee.fruits.mixin",
 	"plugin": "snownee.fruits.mixin.MixinPlugin",
-	"compatibilityLevel": "JAVA_17",
-	"refmap": "fruitfulfun.refmap.json",
+	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"BlockEntityTypeMixin",
 		"BlockStateMixin",
@@ -79,7 +78,7 @@
 		"bee.GuiGraphicsMixin",
 		"bee.LivingEntityRendererMixin",
 		"cherry.BlockMixin",
-		"cherry.CherryLeavesBlockMixin",
+		"cherry.UntintedParticleLeavesBlockMixin",
 		"cherry.ItemRendererMixin",
 		"cherry.LivingEntityFlowerCrownMixin",
 		"client.CameraMixin",

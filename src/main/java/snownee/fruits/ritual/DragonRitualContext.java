@@ -4,10 +4,9 @@ import java.util.Map;
 
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
-import snownee.lychee.core.LycheeContext;
+import snownee.lychee.util.context.LycheeContext;
 
+//TODO remove this
 public class DragonRitualContext extends LycheeContext {
 	public final int dragonHeads;
 

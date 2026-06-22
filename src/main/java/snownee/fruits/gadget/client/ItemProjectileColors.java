@@ -8,7 +8,7 @@ import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -62,7 +62,7 @@ public class ItemProjectileColors {
 				return;
 			}
 		}
-		ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
+		Identifier id = BuiltInRegistries.ITEM.getKey(item);
 		String palette = null;
 		for (DyeColor dyeColor : DYE_COLOR_ORDER) {
 			if (id.getPath().contains(dyeColor.getName())) {

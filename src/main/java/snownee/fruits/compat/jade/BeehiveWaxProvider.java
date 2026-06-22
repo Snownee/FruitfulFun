@@ -1,49 +1,60 @@
 package snownee.fruits.compat.jade;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import snownee.fruits.duck.FFBeehiveBlockEntity;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
-import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
-import snownee.jade.api.Identifiers;
+import snownee.jade.api.JadeIds;
+import snownee.jade.api.StreamServerDataProvider;
 import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.api.ui.IElement;
-import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.Element;
+import snownee.jade.api.ui.JadeUI;
 import snownee.jade.impl.ui.CompoundElement;
 
-public class BeehiveWaxProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+public class BeehiveWaxProvider implements StreamServerDataProvider<BlockAccessor, Boolean> {
 	@Override
-	public @Nullable IElement getIcon(BlockAccessor accessor, IPluginConfig config, IElement currentIcon) {
-		if (accessor.getPickedResult().isEmpty() || !accessor.getServerData().contains("FFWaxed") || !config.get(Identifiers.MC_WAXED)) {
-			return currentIcon;
-		}
-		IElementHelper helper = IElementHelper.get();
-		IElement largeIcon = helper.item(accessor.getPickedResult());
-		return new CompoundElement(largeIcon, helper.item(Items.HONEYCOMB.getDefaultInstance(), 0.5f));
-	}
-
-	@Override
-	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {}
-
-	@Override
-	public ResourceLocation getUid() {
+	public Identifier getUid() {
 		return JadeCompat.WAXED;
 	}
 
 	@Override
-	public boolean isRequired() {
-		return true;
+	public @Nullable Boolean streamData(BlockAccessor blockAccessor) {
+		if (blockAccessor.getBlockEntity() instanceof FFBeehiveBlockEntity be && be.fruits$isWaxed()) {
+			return true;
+		}
+		return null;
 	}
 
 	@Override
-	public void appendServerData(CompoundTag compoundTag, BlockAccessor accessor) {
-		if (accessor.getBlockEntity() instanceof FFBeehiveBlockEntity be && be.fruits$isWaxed()) {
-			compoundTag.putBoolean("FFWaxed", true);
+	public StreamCodec<RegistryFriendlyByteBuf, Boolean> streamCodec() {
+		return ByteBufCodecs.BOOL.cast();
+	}
+
+	public static class Client extends BeehiveWaxProvider implements IBlockComponentProvider {
+		@Override
+		public @Nullable Element getIcon(BlockAccessor accessor, IPluginConfig config, @Nullable Element currentIcon) {
+			if (accessor.getPickedResult().isEmpty() || !config.get(JadeIds.MC_WAXED)) {
+				return currentIcon;
+			}
+			Element largeIcon = JadeUI.item(accessor.getPickedResult());
+			return new CompoundElement(largeIcon, JadeUI.item(Items.HONEYCOMB.getDefaultInstance(), 0.5f));
+		}
+
+		@Override
+		public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
+			// NO-OP
+		}
+
+		@Override
+		public boolean isRequired() {
+			return true;
 		}
 	}
 }

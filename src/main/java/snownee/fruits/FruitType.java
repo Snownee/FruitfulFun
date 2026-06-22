@@ -7,13 +7,11 @@ import com.mojang.datafixers.util.Either;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import snownee.fruits.block.FruitLeavesBlock;
 
@@ -26,6 +24,7 @@ public abstract class FruitType {
 	public final Supplier<Item> fruit;
 	public Holder<PoiType> poiType;
 	public boolean allogamous;
+	public TreeGrower grower;
 
 	public FruitType(
 			int tier,
@@ -41,7 +40,7 @@ public abstract class FruitType {
 	}
 
 	public static Item getFruitOrItem(String id) {
-		Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
+		Block block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(id));
 		if (block instanceof FruitLeavesBlock leavesBlock) {
 			return leavesBlock.type.get().fruit.get();
 		} else {
@@ -50,7 +49,7 @@ public abstract class FruitType {
 	}
 
 	public static Either<FruitType, Block> getFruitOrBlock(String id) {
-		Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(id));
+		Block block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(id));
 		if (block instanceof FruitLeavesBlock leavesBlock) {
 			return Either.left(leavesBlock.type.get());
 		} else {
@@ -63,9 +62,5 @@ public abstract class FruitType {
 		return this;
 	}
 
-	public abstract void receiveKey(ResourceLocation id);
-
-	public abstract void makeFeatures(ResourceLocation id, boolean worldgen, BiConsumer<ResourceLocation, TreeConfiguration> exporter);
-
-	public abstract ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource pRandom, boolean pLargeHive);
+	public abstract void makeFeatures(Identifier id, boolean worldgen, BiConsumer<Identifier, TreeConfiguration> exporter);
 }

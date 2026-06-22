@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -148,7 +148,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 
 	protected CompoundTag writeData(CompoundTag pTag, boolean network) {
 		if (network || !item.isEmpty()) {
-			pTag.put(ITEM_STACK_KEY, getFirstItem().save(new CompoundTag()));
+			pTag.put(ITEM_STACK_KEY, getTheItem().save(new CompoundTag()));
 		}
 		return pTag;
 	}
@@ -199,31 +199,6 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		return blocked == TriState.TRUE;
 	}
 
-	@Override
-	public void setItem(int pSlot, ItemStack pStack) {
-		boolean empty = item.isEmpty();
-		item = pStack;
-		maybePopItem();
-		if (pStack.getCount() > getMaxStackSize()) {
-			pStack.setCount(getMaxStackSize());
-		}
-		updateItemPowerReceiver();
-		refresh();
-		if (level != null && !level.isClientSide) {
-			if (empty && !item.isEmpty()) {
-				level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1);
-			} else if (!empty && item.isEmpty()) {
-				level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1, 1);
-			}
-		}
-	}
-
-	@Override
-	public ItemStack getItem(int slot) {
-		updateItemStats();
-		return item;
-	}
-
 	private void updateItemStats() {
 		if (!itemPowerReceiverUpdated || item.isEmpty() || itemPowerReceiver == null) {
 			return;
@@ -232,6 +207,31 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			BuzzyPowerStorage.write(item, itemPowerReceiver);
 		}
 		itemPowerReceiverUpdated = false;
+	}
+
+	@Override
+	public ItemStack getTheItem() {
+		updateItemStats();
+		return item;
+	}
+
+	@Override
+	public void setTheItem(ItemStack itemStack) {
+		boolean empty = item.isEmpty();
+		item = itemStack;
+		maybePopItem();
+		if (itemStack.getCount() > getMaxStackSize()) {
+			itemStack.setCount(getMaxStackSize());
+		}
+		updateItemPowerReceiver();
+		refresh();
+		if (level != null && !level.isClientSide()) {
+			if (empty && !item.isEmpty()) {
+				level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1);
+			} else if (!empty && item.isEmpty()) {
+				level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1, 1);
+			}
+		}
 	}
 
 	@Override

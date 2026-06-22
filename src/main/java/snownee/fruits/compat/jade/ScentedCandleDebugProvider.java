@@ -5,7 +5,7 @@ import com.ibm.icu.text.NumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.gadget.BuzzyPowerStorage;
 import snownee.fruits.gadget.ScentedCandleBlockEntity;
@@ -16,7 +16,7 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
 public class ScentedCandleDebugProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
-	private static final ResourceLocation UID = FruitfulFun.id("scented_candle_debug");
+	private static final Identifier UID = FruitfulFun.id("scented_candle_debug");
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
@@ -42,7 +42,7 @@ public class ScentedCandleDebugProvider implements IBlockComponentProvider, ISer
 	}
 
 	@Override
-	public ResourceLocation getUid() {
+	public Identifier getUid() {
 		return UID;
 	}
 

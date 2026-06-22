@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.cherry.item.FlowerCrownItem;
@@ -41,7 +41,7 @@ public class ItemRendererMixin {
 			CallbackInfo ci,
 			@Local(argsOnly = true) LocalRef<BakedModel> modelSetter) {
 		if (itemDisplayContext == ItemDisplayContext.HEAD && itemStack.getItem() instanceof FlowerCrownItem) {
-			ResourceLocation id = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
+			Identifier id = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
 			BakedModel model = ClientProxy.getModel(itemModelShaper.getModelManager(), id.withPrefix("block/"));
 			if (model != null) {
 				modelSetter.set(model);

@@ -3,7 +3,7 @@ package snownee.fruits.bee;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -14,7 +14,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
@@ -26,15 +26,15 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
@@ -47,6 +47,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.genetics.BeeHasTrait;
 import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.bee.genetics.Trait;
@@ -61,13 +62,12 @@ import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
 import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.loader.event.InitEvent;
-import snownee.lychee.LycheeLootContextParams;
+import snownee.lychee.LootContextKeys;
 import snownee.lychee.LycheeRegistries;
 import snownee.lychee.RecipeTypes;
-import snownee.lychee.core.contextual.ContextualConditionType;
-import snownee.lychee.core.post.PostActionType;
-import snownee.lychee.core.recipe.LycheeRecipe;
 import snownee.lychee.mixin.LootContextParamSetsAccess;
+import snownee.lychee.util.action.PostActionType;
+import snownee.lychee.util.contextual.ContextualConditionType;
 
 @KiwiModule("bee")
 @KiwiModule.Optional
@@ -79,15 +79,15 @@ public class BeeModule extends AbstractModule {
 			HybridizingRecipe.class,
 			null));
 	@Name("hybridizing")
-	public static final KiwiGO<LycheeRecipe.Serializer<HybridizingRecipe>> SERIALIZER = go(HybridizingRecipe.Serializer::new);
+	public static final KiwiGO<RecipeSerializer<HybridizingRecipe>> SERIALIZER = go(HybridizingRecipe.Serializer::new);
 	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(
 			BeeHasTrait.Type::new,
 			() -> LycheeRegistries.CONTEXTUAL);
 	public static final KiwiGO<PostActionType<TransformBees>> TRANSFORM_BEES = go(
 			TransformBees.Type::new,
 			() -> LycheeRegistries.POST_ACTION);
-	public static ResourceLocation BEE_ONE_CM = FruitfulFun.id("bee_one_cm");
-	public static ResourceLocation BEES_BRED = FruitfulFun.id("bees_bred");
+	public static Identifier BEE_ONE_CM = FruitfulFun.id("bee_one_cm");
+	public static Identifier BEES_BRED = FruitfulFun.id("bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("entity.bee.shear")));
 	public static final KiwiGO<SoundEvent> START_HAUNTING = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"entity.start_haunting")));
@@ -112,7 +112,7 @@ public class BeeModule extends AbstractModule {
 					$.required(LootContextParams.ORIGIN)
 							.required(LootContextParams.THIS_ENTITY)
 							.required(LootContextParams.BLOCK_STATE)
-							.required(LycheeLootContextParams.BLOCK_POS)
+							.required(LootContextKeys.BLOCK_POS)
 							.optional(LootContextParams.BLOCK_ENTITY);
 				});
 	}

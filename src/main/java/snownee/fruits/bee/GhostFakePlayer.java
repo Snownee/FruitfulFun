@@ -2,7 +2,7 @@ package snownee.fruits.bee;
 
 import java.util.UUID;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.authlib.GameProfile;
 
@@ -19,7 +19,7 @@ public class GhostFakePlayer extends FFFakePlayer implements OwnableEntity {
 	}
 
 	public static GhostFakePlayer getOrCreate(ServerPlayer player) {
-		String name = "FruitfulFunGhost " + player.getGameProfile().getName();
+		String name = "FruitfulFunGhost " + player.getGameProfile().name();
 		GhostFakePlayer fakePlayer = new GhostFakePlayer(player.serverLevel(), new GameProfile(null, name));
 		fakePlayer.ownerUUID = player.getUUID();
 		fakePlayer.setPos(player.position());

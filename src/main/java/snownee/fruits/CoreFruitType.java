@@ -4,14 +4,10 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
@@ -25,11 +21,6 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
 
 public class CoreFruitType extends FruitType {
-
-	public ResourceKey<ConfiguredFeature<?, ?>> treeFeature;
-	public ResourceKey<ConfiguredFeature<?, ?>> treeBeesFeature;
-	public ResourceKey<ConfiguredFeature<?, ?>> treeFancyFeature;
-
 	public CoreFruitType(
 			int tier,
 			Supplier<Block> log,
@@ -40,14 +31,7 @@ public class CoreFruitType extends FruitType {
 	}
 
 	@Override
-	public void receiveKey(ResourceLocation id) {
-		treeFeature = FeatureUtils.createKey(id.toString());
-		treeFancyFeature = FeatureUtils.createKey(id.withSuffix("_fancy").toString());
-		treeBeesFeature = FeatureUtils.createKey(id.withSuffix("_bees").toString());
-	}
-
-	@Override
-	public void makeFeatures(ResourceLocation id, boolean worldgen, BiConsumer<ResourceLocation, TreeConfiguration> exporter) {
+	public void makeFeatures(Identifier id, boolean worldgen, BiConsumer<Identifier, TreeConfiguration> exporter) {
 		exporter.accept(id, treeBuilder(false, worldgen).build());
 		exporter.accept(id.withSuffix("_fancy"), treeBuilder(true, worldgen).build());
 		exporter.accept(id.withSuffix("_bees"), treeBuilder(false, worldgen).decorators(List.of(new BeehiveDecorator(0.05f))).build());
@@ -73,13 +57,5 @@ public class CoreFruitType extends FruitType {
 				new Fruitify(foliagePlacer, worldgen),
 				new TwoLayersFeatureSize(1, 0, 1)
 		).ignoreVines();
-	}
-
-	@Override
-	public ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource pRandom, boolean pLargeHive) {
-		if (pRandom.nextInt(5) == 0) {
-			return treeFancyFeature;
-		}
-		return pLargeHive ? treeBeesFeature : treeFeature;
 	}
 }

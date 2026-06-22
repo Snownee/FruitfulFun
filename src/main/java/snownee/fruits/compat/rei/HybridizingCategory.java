@@ -13,13 +13,13 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.HybridizingRecipe;
 import snownee.fruits.compat.DummyBlockInput;
-import snownee.fruits.compat.FFJEIREI;
+import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.lychee.client.gui.GuiGameElement;
 import snownee.lychee.compat.rei.LEntryWidget;
 import snownee.lychee.compat.rei.REICompat;
@@ -62,7 +62,7 @@ public class HybridizingCategory extends BaseREICategory<LycheeContext, Hybridiz
 		List<Widget> widgets = super.setupDisplay(display, bounds);
 		this.drawInfoBadge(widgets, display, startPoint);
 		int xCenter = bounds.getCenterX();
-		List<FFJEIREI.Input> inputs = FFJEIREI.getInputs(recipe);
+		List<LycheeCompat.Input> inputs = LycheeCompat.getInputs(recipe);
 		int y = inputs.size() <= 9 && recipe.showingActionsCount() <= 9 ? 28 : 26;
 		this.ingredientGroup(widgets, startPoint, inputs, xCenter - 45 - startPoint.x, y);
 		this.actionGroup(widgets, startPoint, recipe, xCenter + 50 - startPoint.x, y);
@@ -70,7 +70,7 @@ public class HybridizingCategory extends BaseREICategory<LycheeContext, Hybridiz
 		return widgets;
 	}
 
-	public void ingredientGroup(List<Widget> widgets, Point startPoint, List<FFJEIREI.Input> inputs, int x, int y) {
+	public void ingredientGroup(List<Widget> widgets, Point startPoint, List<LycheeCompat.Input> inputs, int x, int y) {
 		slotGroup(widgets, startPoint, x, y, inputs, (widgets0, startPoint0, input, x0, y0) -> {
 			LEntryWidget slot = REICompat.slot(startPoint, x0, y0, REICompat.SlotType.NORMAL);
 			if (input.isItem()) {
@@ -87,7 +87,7 @@ public class HybridizingCategory extends BaseREICategory<LycheeContext, Hybridiz
 		widgets.add(Widgets.createDrawableWidget((graphics, mouseX, mouseY, delta) -> {
 			graphics.pose().pushPose();
 			graphics.pose().translate(bounds.x, bounds.y + 4, 20);
-			FFJEIREI.renderBee(graphics, display.recipe, bee);
+			LycheeCompat.renderBee(graphics, display.recipe, bee);
 			graphics.pose().popPose();
 		}));
 		widgets.add(Widgets.createTexturedWidget(FruitfulFun.id("textures/gui/jei.png"),

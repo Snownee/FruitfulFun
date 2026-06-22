@@ -44,19 +44,15 @@
 	"mixins": [
 		"fruitfulfun.mixins.json"
 	],
-	"accessWidener": "fruitfulfun.accesswidener",
+	"accessWidener": "fruitfulfun.classtweaker",
 	"depends": {
-		"fabricloader": ">=0.15",
-		"fabric-api": ">=0.73",
-		"minecraft": ">=1.20",
-		"kiwi": ">=11.4",
-		"lychee": ">=5.1.10"
+		"fabric-api": ">=0.152",
+		"minecraft": ">=26",
+		"kiwi": ">=26",
+		"lychee": ">=26"
 	},
 	"recommends": {
-		"jade": ">=11.12"
-	},
-	"breaks": {
-		"jade": "<11.12"
+		"jade": ">=26"
 	},
 	"custom": {
 		"modmenu": {

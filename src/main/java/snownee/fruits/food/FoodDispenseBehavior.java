@@ -1,8 +1,8 @@
 package snownee.fruits.food;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -14,9 +14,9 @@ import net.minecraft.world.level.block.DispenserBlock;
 public class FoodDispenseBehavior extends DefaultDispenseItemBehavior {
 	@Override
 	protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
-		ServerLevel level = blockSource.getLevel();
-		Direction facing = blockSource.getBlockState().getValue(DispenserBlock.FACING);
-		BlockPos blockPos = blockSource.getPos().relative(facing);
+		ServerLevel level = blockSource.level();
+		Direction facing = blockSource.state().getValue(DispenserBlock.FACING);
+		BlockPos blockPos = blockSource.pos().relative(facing);
 		DirectionalPlaceContext context = new DirectionalPlaceContext(level, blockPos, facing, itemStack, Direction.DOWN);
 		BlockItem blockItem = (BlockItem) itemStack.getItem();
 		if (blockItem.place(context) == InteractionResult.FAIL) {

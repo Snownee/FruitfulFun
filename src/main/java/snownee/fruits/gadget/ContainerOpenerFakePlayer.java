@@ -3,7 +3,7 @@ package snownee.fruits.gadget;
 import java.util.List;
 import java.util.OptionalInt;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.authlib.GameProfile;
 
@@ -23,7 +23,7 @@ public class ContainerOpenerFakePlayer extends FFFakePlayer {
 		List<ContainerOpenerFakePlayer> entities = level.getEntitiesOfClass(
 				ContainerOpenerFakePlayer.class, new AABB(pos), $ -> $.getName().getString().equals(name));
 		if (!entities.isEmpty()) {
-			return entities.get(0);
+			return entities.getFirst();
 		}
 		ContainerOpenerFakePlayer player = new ContainerOpenerFakePlayer(level, new GameProfile(null, name));
 		player.setPos(Vec3.atCenterOf(pos));

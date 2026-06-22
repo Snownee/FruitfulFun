@@ -2,35 +2,37 @@ package snownee.fruits.block.entity;
 
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
 import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFFruitTypes;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
 import snownee.kiwi.block.entity.ModBlockEntity;
-import snownee.kiwi.util.Util;
+import snownee.kiwi.util.KUtil;
 
 public class FruitTreeBlockEntity extends ModBlockEntity {
 
-	public FruitType type = FFFruitTypes.CITRON.get();
+	public Holder<FruitType> type = FFFruitTypes.CITRON.holder().orElseThrow();
 	private int lifespan = 20;
 	private int maxLifespan = 30;
 	private int fruitProduced = 0;
-	private ItemEntity onlyItem;
+	private @Nullable ItemEntity onlyItem;
 	private final LongLinkedOpenHashSet leaves = new LongLinkedOpenHashSet();
 	private final List<BlockPos> leavesCache = Lists.newArrayList();
 	private @Nullable BlockPos lastWorldPosition;
@@ -39,7 +41,7 @@ public class FruitTreeBlockEntity extends ModBlockEntity {
 		super(CoreModule.FRUIT_TREE.get(), pos, state);
 	}
 
-	public FruitTreeBlockEntity(BlockPos pos, BlockState state, FruitType type) {
+	public FruitTreeBlockEntity(BlockPos pos, BlockState state, Holder<FruitType> type) {
 		this(pos, state);
 		this.type = type;
 	}
@@ -50,46 +52,43 @@ public class FruitTreeBlockEntity extends ModBlockEntity {
 	}
 
 	@Override
-	protected void readPacketData(CompoundTag data) {
+	protected void readPacketData(ValueInput valueInput) {
+		// NO-OP
 	}
 
 	@Override
-	protected CompoundTag writePacketData(CompoundTag data) {
-		return data;
+	protected void writePacketData(ValueOutput valueOutput) {
+		// NO-OP
 	}
 
 	@Override
-	public void load(CompoundTag data) {
-		String id = data.getString("Type");
-		if (!id.isEmpty()) {
-			type = FFRegistries.FRUIT_TYPE.get(Util.RL(id, FruitfulFun.ID));
+	protected void loadAdditional(ValueInput input) {
+		Identifier id = KUtil.RL(input.getStringOr("Type", ""), FruitfulFun.ID);
+		if (id != null) {
+			type = FFRegistries.FRUIT_TYPE.getOrThrow(ResourceKey.create(FFRegistries.FRUIT_TYPE.key(), id));
 		}
-		lifespan = data.getInt("Lifespan");
-		maxLifespan = data.getInt("MaxLifespan");
-		fruitProduced = data.getInt("FruitProduced");
+		lifespan = input.getIntOr("Lifespan", 20);
+		maxLifespan = input.getIntOr("MaxLifespan", 30);
+		fruitProduced = input.getIntOr("FruitProduced", 0);
 		leaves.clear();
-		if (data.contains("Leaves", Tag.TAG_LONG_ARRAY)) {
-			for (long pos : data.getLongArray("Leaves")) {
+		if (input.contains("Leaves")) {
+			for (long pos : input.getOptionalLongArray("Leaves").orElseThrow()) {
 				leaves.add(pos);
 			}
-		} else if (data.contains("ActiveLeaves", Tag.TAG_COMPOUND)) {
-			for (Tag tag : data.getList("ActiveLeaves", Tag.TAG_COMPOUND)) {
-				leaves.add(NbtUtils.readBlockPos((CompoundTag) tag).asLong());
-			}
 		}
-		super.load(data);
+		super.loadAdditional(input);
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag data) {
-		data.putString("Type", Util.trimRL(FFRegistries.FRUIT_TYPE.getKey(type), FruitfulFun.ID));
-		data.putInt("Lifespan", lifespan);
-		data.putInt("MaxLifespan", maxLifespan);
-		data.putInt("FruitProduced", fruitProduced);
+	protected void saveAdditional(ValueOutput output) {
+		output.putString("Type", KUtil.trimRL(type.getRegisteredName(), FruitfulFun.ID));
+		output.putInt("Lifespan", lifespan);
+		output.putInt("MaxLifespan", maxLifespan);
+		output.putInt("FruitProduced", fruitProduced);
 		if (!leaves.isEmpty()) {
-			data.putLongArray("Leaves", leaves.toLongArray());
+			output.putLongArray("Leaves", leaves.toLongArray());
 		}
-		super.saveAdditional(data);
+		super.saveAdditional(output);
 	}
 
 	public boolean canDrop() {

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -13,11 +13,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.genetics.Allele;
@@ -36,7 +36,7 @@ public class BeeAttributes {
 	private ItemStack saddle = ItemStack.EMPTY;
 	private List<UUID> trusted = List.of();
 	@Nullable
-	private ResourceLocation texture;
+	private Identifier texture;
 	private long mutagenEndsIn;
 
 	public static BeeAttributes of(Object bee) {
@@ -186,11 +186,11 @@ public class BeeAttributes {
 		}
 	}
 
-	public @Nullable ResourceLocation getTexture() {
+	public @Nullable Identifier getTexture() {
 		return texture;
 	}
 
-	public void setTexture(@Nullable ResourceLocation texture) {
+	public void setTexture(@Nullable Identifier texture) {
 		this.texture = texture;
 		dirty = true;
 	}

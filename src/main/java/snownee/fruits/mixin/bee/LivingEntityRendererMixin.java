@@ -10,9 +10,9 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
 
@@ -22,15 +22,15 @@ public class LivingEntityRendererMixin {
 			method = "getRenderType",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"))
+					target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/RenderType;"))
 	private RenderType getRenderType(
 			EntityModel instance,
-			ResourceLocation resourceLocation,
+			Identifier Identifier,
 			Operation<RenderType> original,
 			@Local(argsOnly = true) LivingEntity entity) {
 		if (entity instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
-			return RenderType.entityTranslucent(resourceLocation);
+			return RenderType.entityTranslucent(Identifier);
 		}
-		return original.call(instance, resourceLocation);
+		return original.call(instance, Identifier);
 	}
 }

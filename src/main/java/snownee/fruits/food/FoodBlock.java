@@ -1,5 +1,7 @@
 package snownee.fruits.food;
 
+import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -14,8 +16,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -32,8 +34,8 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 	private final VoxelShape[] shapes = new VoxelShape[4];
 	public boolean lockShapeRotation = true;
 
-	public FoodBlock(VoxelShape northShape) {
-		super(Block.Properties.copy(Blocks.CAKE));
+	public FoodBlock(VoxelShape northShape, BlockBehaviour.Properties properties) {
+		super(properties);
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
 		shapes[Direction.NORTH.get2DDataValue()] = northShape;
 	}
@@ -72,7 +74,7 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType type) {
 		return false;
 	}
 
@@ -108,5 +110,10 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 			return;
 		}
 		RitualModule.tryStartRitual(level, pos, blockState);
+	}
+
+	@Override
+	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return null;//TODO
 	}
 }

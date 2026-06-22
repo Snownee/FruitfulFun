@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.CreativeModeTab;
@@ -24,27 +23,25 @@ import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
-import snownee.kiwi.datagen.GameObjectLookup;
 import snownee.kiwi.item.ItemCategoryFiller;
+import snownee.kiwi.util.GameObjectLookup;
 
 @KiwiModule("creative_tab")
 @KiwiModule.Optional
 public final class CreativeTabModule extends AbstractModule {
 	public static final KiwiGO<CreativeModeTab> MAIN = go(() -> itemCategory(
-			FruitfulFun.ID,
-			"main",
-			CoreModule.GRAPEFRUIT::itemStack)
-			.title(Component.translatable("modmenu.nameTranslation.fruitfulfun"))
+			FruitfulFun.id("main"),
+			CoreModule.GRAPEFRUIT::itemStack).title(Component.translatable("modmenu.nameTranslation.fruitfulfun"))
 			.displayItems(CreativeTabModule::generate)
 			.build());
 
 	private static void generate(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-		LinkedHashMap<String, Item> map = GameObjectLookup.all(Registries.ITEM, FruitfulFun.ID).collect(Collectors.toMap(
-				item -> BuiltInRegistries.ITEM.getKey(item).getPath(),
-				item -> item,
-				(a, b) -> a,
-				LinkedHashMap::new
-		));
+		LinkedHashMap<String, Item> map = GameObjectLookup.all(BuiltInRegistries.ITEM, FruitfulFun.ID)
+				.collect(Collectors.toMap(
+						item -> BuiltInRegistries.ITEM.getKey(item).getPath(),
+						item -> item,
+						(a, _) -> a,
+						LinkedHashMap::new));
 		map.remove("redlove_crown");
 		for (FruitType type : FFRegistries.FRUIT_TYPE) {
 			add(type.fruit.get(), output::accept);

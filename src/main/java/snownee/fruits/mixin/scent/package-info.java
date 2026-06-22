@@ -1,4 +1,4 @@
-@NotNullByDefault
+@NullMarked
 package snownee.fruits.mixin.scent;
 
-import snownee.kiwi.util.NotNullByDefault;
+import org.jspecify.annotations.NullMarked;

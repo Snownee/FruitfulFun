@@ -1,25 +1,26 @@
 package snownee.fruits.datagen;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityFlagsPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ImpossibleTrigger;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.PickedUpItemTrigger;
-import net.minecraft.advancements.critereon.StartRidingTrigger;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.criterion.ConsumeItemTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityFlagsPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.ImpossibleTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.PickedUpItemTrigger;
+import net.minecraft.advancements.criterion.StartRidingTrigger;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -32,57 +33,58 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.pomegranate.PomegranateModule;
-import snownee.kiwi.datagen.GameObjectLookup;
 import snownee.kiwi.recipe.ModuleLoadedCondition;
+import snownee.kiwi.util.GameObjectLookup;
 
 public class FFAdvancements extends FabricAdvancementProvider {
 
-	protected FFAdvancements(FabricDataOutput output) {
-		super(output);
+	protected FFAdvancements(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+		super(output, registryLookup);
 	}
 
 	@Override
-	public void generateAdvancement(Consumer<Advancement> consumer) {
-		Advancement rootDummy = AdvancementSubProvider.createPlaceholder("husbandry/root");
+	public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
+		AdvancementHolder rootDummy = AdvancementSubProvider.createPlaceholder("husbandry/root");
 		AdvancementRewards xp100 = AdvancementRewards.Builder.experience(100).build();
 
 		// use `registerAdvancement` to disable mojang from sending telemetry messages
-		Advancement start = Advancement.Builder.recipeAdvancement()
+		AdvancementHolder start = Advancement.Builder.recipeAdvancement()
 				.parent(rootDummy)
 				.display(
 						CoreModule.LEMON.get(),
 						Component.translatable("advancements.fruitfulfun.start.title"),
 						Component.translatable("advancements.fruitfulfun.start.description"),
-						null, FrameType.TASK, false, true, false)
+						null, AdvancementType.TASK, false, true, false)
 				.addCriterion(
 						"_",
 						InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(FFItemTagsProvider.FRUITS).build()))
 				.save(consumer, "husbandry/fruitfulfun/start");
 
-		Advancement grapefruit = Advancement.Builder.recipeAdvancement()
+		AdvancementHolder grapefruit = Advancement.Builder.recipeAdvancement()
 				.parent(start)
 				.display(
 						CoreModule.GRAPEFRUIT.get(),
 						Component.translatable("advancements.fruitfulfun.grapefruit.title"),
 						Component.translatable("advancements.fruitfulfun.grapefruit.description"),
-						null, FrameType.GOAL, true, true, false)
+						null, AdvancementType.GOAL, true, true, false)
 				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CoreModule.GRAPEFRUIT_SAPLING.get()))
 				.rewards(xp100)
 				.save(consumer, "husbandry/fruitfulfun/grapefruit");
 
-		Advancement apple = Advancement.Builder.recipeAdvancement()
+		AdvancementHolder apple = Advancement.Builder.recipeAdvancement()
 				.parent(start)
 				.display(
 						CoreModule.APPLE_SAPLING.get(),
 						Component.translatable("advancements.fruitfulfun.apple.title"),
 						Component.translatable("advancements.fruitfulfun.apple.description"),
-						null, FrameType.TASK, true, true, false)
-				.addCriterion("_", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByPlayer(
-						ContextAwarePredicate.ANY,
-						ItemPredicate.Builder.item().of(CoreModule.APPLE_SAPLING.get()).build(),
-						EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.VILLAGER).flags(
-								EntityFlagsPredicate.Builder.flags().setIsBaby(Boolean.TRUE).build()
-						).build())))
+						null, AdvancementType.TASK, true, true, false)
+				.addCriterion(
+						"_", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByPlayer(
+								ContextAwarePredicate.ANY,
+								ItemPredicate.Builder.item().of(CoreModule.APPLE_SAPLING.get()).build(),
+								EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.VILLAGER).flags(
+										EntityFlagsPredicate.Builder.flags().setIsBaby(Boolean.TRUE).build()
+								).build())))
 				.save(consumer, "husbandry/fruitfulfun/apple");
 
 		Advancement.Builder.recipeAdvancement()
@@ -91,7 +93,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						CherryModule.REDLOVE.get(),
 						Component.translatable("advancements.fruitfulfun.redlove.title"),
 						Component.translatable("advancements.fruitfulfun.redlove.description"),
-						null, FrameType.GOAL, true, true, false)
+						null, AdvancementType.GOAL, true, true, false)
 				.addCriterion("_", InventoryChangeTrigger.TriggerInstance.hasItems(CherryModule.REDLOVE_SAPLING.get()))
 				.rewards(xp100)
 				.save(consumer, "husbandry/fruitfulfun/redlove");
@@ -102,20 +104,20 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						Items.GOAT_HORN,
 						Component.translatable("advancements.fruitfulfun.horn.title"),
 						Component.translatable("advancements.fruitfulfun.horn.description"),
-						null, FrameType.TASK, true, true, false)
+						null, AdvancementType.TASK, true, true, false)
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(consumer, "husbandry/fruitfulfun/horn");
 
-		Consumer<Advancement> beeExporter = withConditions(
+		Consumer<AdvancementHolder> beeExporter = withConditions(
 				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("bee")));
 
-		Advancement inspector = Advancement.Builder.recipeAdvancement()
+		AdvancementHolder inspector = Advancement.Builder.recipeAdvancement()
 				.parent(start)
 				.display(
 						BeeModule.INSPECTOR.get(),
 						Component.translatable("advancements.fruitfulfun.inspector.title"),
 						Component.translatable("advancements.fruitfulfun.inspector.description"),
-						null, FrameType.TASK, true, true, false)
+						null, AdvancementType.TASK, true, true, false)
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(beeExporter, "husbandry/fruitfulfun/inspector");
 
@@ -125,12 +127,13 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						Items.FEATHER,
 						Component.translatable("advancements.fruitfulfun.bee_jockey.title"),
 						Component.translatable("advancements.fruitfulfun.bee_jockey.description"),
-						null, FrameType.GOAL, true, true, false)
-				.addCriterion("_", StartRidingTrigger.TriggerInstance.playerStartsRiding(
-						EntityPredicate.Builder.entity().vehicle(
-								EntityPredicate.Builder.entity().of(EntityType.BEE).build()
-						)
-				))
+						null, AdvancementType.GOAL, true, true, false)
+				.addCriterion(
+						"_", StartRidingTrigger.TriggerInstance.playerStartsRiding(
+								EntityPredicate.Builder.entity().vehicle(
+										EntityPredicate.Builder.entity().of(EntityType.BEE).build()
+								)
+						))
 				.rewards(xp100)
 				.save(beeExporter, "husbandry/fruitfulfun/bee_jockey");
 
@@ -140,30 +143,30 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						Items.BEEHIVE,
 						Component.translatable("advancements.fruitfulfun.apiarist.title"),
 						Component.translatable("advancements.fruitfulfun.apiarist.description"),
-						null, FrameType.CHALLENGE, true, true, false)
+						null, AdvancementType.CHALLENGE, true, true, false)
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(beeExporter, "husbandry/fruitfulfun/apiarist");
 
-		Consumer<Advancement> ritualExporter = withConditions(
+		Consumer<AdvancementHolder> ritualExporter = withConditions(
 				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("ritual")));
 
-		Advancement ritual = Advancement.Builder.recipeAdvancement()
+		AdvancementHolder ritual = Advancement.Builder.recipeAdvancement()
 				.parent(start)
 				.display(
 						FoodModule.CHORUS_FRUIT_PIE.get(),
 						Component.translatable("advancements.fruitfulfun.ritual.title"),
 						Component.translatable("advancements.fruitfulfun.ritual.description"),
-						null, FrameType.TASK, true, true, false)
+						null, AdvancementType.TASK, true, true, false)
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(ritualExporter, "husbandry/fruitfulfun/ritual");
 
-		Advancement hauntingInteraction = Advancement.Builder.recipeAdvancement()
+		AdvancementHolder hauntingInteraction = Advancement.Builder.recipeAdvancement()
 				.parent(ritual)
 				.display(
 						Items.BELL,
 						Component.translatable("advancements.fruitfulfun.haunting_interaction.title"),
 						Component.translatable("advancements.fruitfulfun.haunting_interaction.description"),
-						null, FrameType.TASK, true, true, false)
+						null, AdvancementType.TASK, true, true, false)
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(ritualExporter, "husbandry/fruitfulfun/haunting_interaction");
 
@@ -173,13 +176,13 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						Items.IRON_AXE,
 						Component.translatable("advancements.fruitfulfun.haunting_skill.title"),
 						Component.translatable("advancements.fruitfulfun.haunting_skill.description"),
-						null, FrameType.CHALLENGE, true, true, false)
+						null, AdvancementType.CHALLENGE, true, true, false)
 				.addCriterion("_", new ImpossibleTrigger.TriggerInstance())
 				.save(ritualExporter, "husbandry/fruitfulfun/haunting_skill");
 
-		Consumer<Advancement> foodExporter = withConditions(
+		Consumer<AdvancementHolder> foodExporter = withConditions(
 				consumer, ModuleLoadedCondition.provider(FruitfulFun.id("food")));
-		Item[] foods = GameObjectLookup.all(Registries.ITEM, FruitfulFun.ID)
+		Item[] foods = GameObjectLookup.all(BuiltInRegistries.ITEM, FruitfulFun.ID)
 				.filter($ -> $.getDefaultInstance().isEdible())
 				.filter(Predicate.not(FoodModule.RICE_WITH_FRUITS.get().asItem()::equals))
 				.toArray(Item[]::new);
@@ -189,11 +192,11 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						PomegranateModule.POMEGRANATE.get(),
 						Component.translatable("advancements.fruitfulfun.all_fruit.title"),
 						Component.translatable("advancements.fruitfulfun.all_fruit_and_food.description"),
-						null, FrameType.CHALLENGE, true, true, false)
+						null, AdvancementType.CHALLENGE, true, true, false)
 				.rewards(xp100)
 				.save(foodExporter, "husbandry/fruitfulfun/all_fruit_and_food");
 
-		Consumer<Advancement> noFoodExporter = withConditions(
+		Consumer<AdvancementHolder> noFoodExporter = withConditions(
 				consumer, DefaultResourceConditions.not(ModuleLoadedCondition.provider(FruitfulFun.id("food"))));
 		foods = FFRegistries.FRUIT_TYPE.stream()
 				.map($ -> $.fruit.get())
@@ -205,7 +208,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 						PomegranateModule.POMEGRANATE.get(),
 						Component.translatable("advancements.fruitfulfun.all_fruit.title"),
 						Component.translatable("advancements.fruitfulfun.all_fruit.description"),
-						null, FrameType.CHALLENGE, true, true, false)
+						null, AdvancementType.CHALLENGE, true, true, false)
 				.rewards(xp100)
 				.save(noFoodExporter, "husbandry/fruitfulfun/all_fruit");
 		/* on */
@@ -217,5 +220,4 @@ public class FFAdvancements extends FabricAdvancementProvider {
 		}
 		return builder;
 	}
-
 }

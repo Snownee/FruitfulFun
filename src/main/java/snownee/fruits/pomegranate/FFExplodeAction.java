@@ -15,11 +15,9 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFDamageTypes;
-import snownee.lychee.core.LycheeContext;
-import snownee.lychee.core.post.Explode;
-import snownee.lychee.core.post.PostActionType;
-import snownee.lychee.core.recipe.ILycheeRecipe;
+import snownee.lychee.action.Explode;
 import snownee.lychee.util.CommonProxy;
+import snownee.lychee.util.action.PostActionType;
 
 public class FFExplodeAction extends Explode {
 	public FFExplodeAction(Explosion.BlockInteraction blockInteraction, BlockPos offset, boolean fire, float radius, float step) {

@@ -1,13 +1,13 @@
 package snownee.fruits.pomegranate.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.datagen.CoreBlockLoot;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.fruits.pomegranate.block.HangingFruitLeavesBlock;
 
 public class PomegranateBlockLoot extends CoreBlockLoot {
-	public PomegranateBlockLoot(FabricDataOutput dataOutput) {
+	public PomegranateBlockLoot(FabricPackOutput dataOutput) {
 		super(FruitfulFun.id("pomegranate"), dataOutput);
 	}
 

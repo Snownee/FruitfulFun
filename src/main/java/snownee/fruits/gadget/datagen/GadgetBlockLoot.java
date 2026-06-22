@@ -2,8 +2,8 @@ package snownee.fruits.gadget.datagen;
 
 import java.util.List;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -17,7 +17,7 @@ import snownee.fruits.datagen.CoreBlockLoot;
 import snownee.fruits.gadget.ScentedCandleBlock;
 
 public class GadgetBlockLoot extends CoreBlockLoot {
-	public GadgetBlockLoot(FabricDataOutput dataOutput) {
+	public GadgetBlockLoot(FabricPackOutput dataOutput) {
 		super(FruitfulFun.id("gadget"), dataOutput);
 	}
 

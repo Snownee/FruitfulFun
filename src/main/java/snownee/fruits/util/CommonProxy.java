@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
@@ -14,21 +14,18 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -43,11 +40,8 @@ import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -55,12 +49,11 @@ import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -97,12 +90,12 @@ import snownee.fruits.gadget.ScentType;
 import snownee.fruits.gadget.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.KiwiModuleContainer;
 import snownee.kiwi.KiwiModules;
 import snownee.kiwi.Mod;
-import snownee.kiwi.ModuleInfo;
 import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
-import snownee.kiwi.util.Util;
+import snownee.kiwi.util.KUtil;
 
 @SuppressWarnings("UnstableApiUsage")
 @Mod(FruitfulFun.ID)
@@ -110,18 +103,6 @@ public class CommonProxy implements ModInitializer {
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("c", "tools/knives");
 	private static final Map<ScentType, AttachmentType<Long>> SCENT_ATTACHMENT_TYPES = Maps.newHashMap();
 	public static boolean trinkets = Platform.isModLoaded("trinkets");
-
-	public static boolean isCurativeItem(MobEffectInstance effectInstance, ItemStack stack) {
-		return stack.is(Items.MILK_BUCKET);
-	}
-
-	public static boolean isFakePlayer(Entity entity) {
-		return entity instanceof FakePlayer;
-	}
-
-	public static Packet<ClientGamePacketListener> getAddEntityPacket(Entity entity) {
-		return new ClientboundAddEntityPacket(entity);
-	}
 
 	public static void maybeGrowCrops(ServerLevel world, BlockPos pos, BlockState state, boolean defaultResult, Runnable defaultAction) {
 		if (defaultResult) {
@@ -151,11 +132,7 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	private static void addBuiltinPack(ModContainer modContainer, String id) {
-		ResourceManagerHelper.registerBuiltinResourcePack(FruitfulFun.id(id), modContainer, ResourcePackActivationType.ALWAYS_ENABLED);
-	}
-
-	public static boolean isShears(ItemStack stack) {
-		return stack.is(ConventionalItemTags.SHEARS);
+		ResourceLoader.registerBuiltinPack(FruitfulFun.id(id), modContainer, PackActivationType.ALWAYS_ENABLED);
 	}
 
 	public static boolean isBookshelf(BlockState blockState) {
@@ -264,7 +241,7 @@ public class CommonProxy implements ModInitializer {
 						return;
 					}
 					trades.add((entity, random) -> {
-						ItemStack sapling = net.minecraft.Util.getRandom(
+						ItemStack sapling = Util.getRandom(
 										FFRegistries.FRUIT_TYPE.stream()
 												.filter($ -> $.tier == 0)
 												.map($ -> $.sapling.get())
@@ -276,7 +253,7 @@ public class CommonProxy implements ModInitializer {
 					});
 				});
 
-		ServerWorldEvents.LOAD.register((server, world) -> {
+		ServerLevelEvents.LOAD.register((server, world) -> {
 			if (world == server.overworld()) {
 				long seed = world.getSeed();
 				GeneticSavedData data = world.getDataStorage().computeIfAbsent(
@@ -289,7 +266,7 @@ public class CommonProxy implements ModInitializer {
 
 		if (Platform.isModLoaded("brainierbees") || Platform.isModLoaded("leaves_us_in_peace")) {
 			ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-				if (isFakePlayer(handler.getPlayer())) {
+				if (Platform.isFakePlayer(handler.getPlayer())) {
 					return;
 				}
 				boolean save = false;
@@ -318,10 +295,6 @@ public class CommonProxy implements ModInitializer {
 		});
 
 		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
-	}
-
-	public static ItemStack getRecipeRemainder(ItemStack itemStack) {
-		return itemStack.getRecipeRemainder();
 	}
 
 	public static void initBeeModule() {
@@ -379,23 +352,24 @@ public class CommonProxy implements ModInitializer {
 			return InteractionResult.PASS;
 		});
 
-		for (ModuleInfo module : KiwiModules.get()) {
-			module.getRegistryEntries(FFRegistries.SCENT_TYPE).forEach($ -> {
-				onScentTypeAdded($.name, $.entry);
+		for (KiwiModuleContainer module : KiwiModules.get()) {
+			module.getRegistryEntries(FFRegistries.SCENT_TYPE_KEY).forEach($ -> {
+				onScentTypeAdded($.key(), $.get());
 			});
 		}
 	}
 
-	public static void onScentTypeAdded(ResourceLocation id, ScentType scentType) {
+	public static void onScentTypeAdded(Identifier id, ScentType scentType) {
 		AttachmentType<Long> type = AttachmentRegistry.<Long>builder().persistent(Codec.LONG).buildAndRegister(id.withSuffix("_scent"));
 		SCENT_ATTACHMENT_TYPES.put(scentType, type);
 	}
 
 	public static void addFeature(String id) {
-		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(Util.RL(id, FruitfulFun.ID)).toString());
+		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(KUtil.RL(id, FruitfulFun.ID)).toString());
 		BiomeModifications.addFeature(
 				context -> {
-					return context.hasTag(ConventionalBiomeTags.TREE_DECIDUOUS) || context.hasTag(ConventionalBiomeTags.TREE_JUNGLE) ||
+					return context.hasTag(ConventionalBiomeTags.IS_DECIDUOUS_TREE) ||
+							context.hasTag(ConventionalBiomeTags.IS_JUNGLE_TREE) ||
 							context.hasFeature(VegetationFeatures.TREES_PLAINS);
 				}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
 	}

@@ -2,7 +2,7 @@ package snownee.fruits.food;
 
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.network.chat.Component;
@@ -15,13 +15,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import snownee.fruits.Hooks;
-import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.item.ModItem;
+import snownee.kiwi.loader.Platform;
 
 public class FoodItem extends ModItem {
 
@@ -47,7 +48,7 @@ public class FoodItem extends ModItem {
 			if (!level.isClientSide() && Hooks.shouldClearHarmfulEffects(stack.getItem())) {
 				ItemStack milk = Items.MILK_BUCKET.getDefaultInstance();
 				entity.getActiveEffectsMap().values().stream()
-						.filter($ -> !$.getEffect().isBeneficial() && CommonProxy.isCurativeItem($, milk))
+						.filter($ -> !$.getEffect().isBeneficial() && Platform.isCurativeItem($, milk))
 						.map(MobEffectInstance::getEffect)
 						.forEach(entity::removeEffect);
 			}
@@ -57,40 +58,14 @@ public class FoodItem extends ModItem {
 			}
 		} else {
 			entity.eat(level, stack);
-//			if (FFCommonConfig.chorusFruitPieMaxTeleportDistance > 0 && !level.isClientSide() && FoodModule.CHORUS_FRUIT_PIE.is(stack)) {
-//				HitResult pick = entity.pick(FFCommonConfig.chorusFruitPieMaxTeleportDistance, 1.0F, false);
-//				if (pick instanceof BlockHitResult hit) {
-//					Direction direction = hit.getDirection();
-//					Vec3 vec3 = Vec3.atBottomCenterOf(hit.getBlockPos().relative(direction));
-//					AABB bb = entity.getBoundingBox();
-//					double x = vec3.x() + direction.getStepX() * 1.01 * bb.getXsize() / 2;
-//					double y = vec3.y();
-//					double z = vec3.z() + direction.getStepZ() * 1.01 * bb.getZsize() / 2;
-//					if (direction == Direction.DOWN) {
-//						y -= bb.getYsize();
-//					}
-//					bb = bb.move(x - entity.getX(), y - entity.getY(), z - entity.getZ());
-//					if (level.noCollision(entity, bb)) {
-//						if (entity.isPassenger()) {
-//							entity.dismountTo(x, y, z);
-//						} else {
-//							entity.teleportTo(x, y, z);
-//						}
-//						entity.resetFallDistance();
-//						if (player != null) {
-//							player.getCooldowns().addCooldown(stack.getItem(), 20);
-//						}
-//					}
-//				}
-//			}
 		}
 
-		ItemStack remainder = CommonProxy.getRecipeRemainder(stack);
-		if (!remainder.isEmpty() && (player == null || !player.getAbilities().instabuild)) {
+		ItemStackTemplate remainder = Platform.getCraftingRemainingItem(stack);
+		if (remainder != null && (player == null || !player.getAbilities().instabuild)) {
 			if (stack.isEmpty()) {
-				return remainder;
-			} else if (player != null && !player.addItem(remainder)) {
-				player.drop(remainder, false);
+				return remainder.create();
+			} else if (player != null && !player.addItem(remainder.create())) {
+				player.drop(remainder.create(), false);
 			}
 		}
 		return stack;

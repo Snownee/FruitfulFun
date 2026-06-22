@@ -13,22 +13,17 @@ public interface BuzzyCrafterContainer extends ContainerSingleItem {
 
 	@Override
 	default ItemStack removeItem(int pSlot, int pAmount) {
-		if (getFirstItem().isEmpty() || pAmount <= 0) {
+		if (getTheItem().isEmpty() || pAmount <= 0) {
 			return ItemStack.EMPTY;
 		}
-		ItemStack item = getFirstItem();
+		ItemStack item = getTheItem();
 		ItemStack itemstack = item.copyWithCount(pAmount);
 		setItem(0, item.copyWithCount(item.getCount() - pAmount)); // play the removing sound if possible
 		return itemstack;
 	}
 
 	@Override
-	default void clearContent() {
-		setItem(0, ItemStack.EMPTY);
-	}
-
-	@Override
 	default boolean canPlaceItem(int index, ItemStack stack) {
-		return getFirstItem().isEmpty();
+		return getTheItem().isEmpty();
 	}
 }

@@ -3,8 +3,6 @@ package snownee.fruits.pomegranate.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -28,24 +26,18 @@ public class HangingFruitBlock extends HangingRootsBlock {
 	}
 
 	@Override
-	public InteractionResult use(
-			BlockState blockState,
-			Level level,
-			BlockPos blockPos,
-			Player player,
-			InteractionHand interactionHand,
-			BlockHitResult blockHitResult) {
-		FruitLeavesBlock.giveItemTo(player, blockHitResult, asItem().getDefaultInstance());
-		level.removeBlock(blockPos, false);
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		FruitLeavesBlock.giveItemTo(player, hitResult, asItem().getDefaultInstance());
+		level.removeBlock(pos, false);
 		if (!level.isClientSide()) {
-			BlockPos up = blockPos.above();
+			BlockPos up = pos.above();
 			BlockState upState = level.getBlockState(up);
 			if (upState.getBlock() instanceof FruitLeavesBlock leavesBlock && leavesBlock.type.get().fruit.get() == asItem() &&
 					upState.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.FRUITING) {
 				leavesBlock.gotoDeadOrYoung((ServerLevel) level, up, upState, null);
 			}
 		}
-		return InteractionResult.sidedSuccess(level.isClientSide());
+		return InteractionResult.SUCCESS_SERVER;
 	}
 
 	@Override
@@ -58,16 +50,14 @@ public class HangingFruitBlock extends HangingRootsBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-		Vec3 vec3 = blockState.getOffset(blockGetter, blockPos);
+		Vec3 vec3 = blockState.getOffset(blockPos);
 		return SHAPE.move(vec3.x, vec3.y, vec3.z);
 	}
 
 	@Override
 	public void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
-		//TODO(1.21): gamerule projectilesCanBreakBlocks
 		BlockPos blockPos = blockHitResult.getBlockPos();
-		if (!level.isClientSide() && projectile.mayInteract(level, blockPos) &&
-				projectile.getType().is(EntityTypeTags.IMPACT_PROJECTILES)) {
+		if (level instanceof ServerLevel serverLevel && projectile.mayInteract(serverLevel, blockPos) && projectile.mayBreak(serverLevel)) {
 			level.destroyBlock(blockPos, true, projectile);
 		}
 	}

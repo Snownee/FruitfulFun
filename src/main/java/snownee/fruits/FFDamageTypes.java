@@ -1,6 +1,6 @@
 package snownee.fruits;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;

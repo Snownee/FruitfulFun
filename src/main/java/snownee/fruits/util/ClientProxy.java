@@ -13,7 +13,7 @@ import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -24,7 +24,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.ChatFormatting;
@@ -43,7 +43,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -84,7 +84,7 @@ import snownee.lychee.client.core.post.PostActionRenderer;
 
 public class ClientProxy implements ClientModInitializer {
 	@Nullable
-	public static BakedModel getModel(ModelManager modelManager, ResourceLocation id) {
+	public static BakedModel getModel(ModelManager modelManager, Identifier id) {
 		return modelManager.getModel(id);
 	}
 
@@ -214,8 +214,8 @@ public class ClientProxy implements ClientModInitializer {
 				GRAPEFRUIT_LEAVES.get(),
 				APPLE_LEAVES.get());
 
-		ParticleFactoryRegistry.getInstance().register(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
+		ParticleProviderRegistry.getInstance().register(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
+		ParticleProviderRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
 
 		BlockColor birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
 		ColorProviderRegistry.BLOCK.register(
@@ -287,11 +287,11 @@ public class ClientProxy implements ClientModInitializer {
 				}
 			});
 
-			ParticleFactoryRegistry.getInstance().register(BeeModule.GHOST.getOrCreate(), GhostParticle.EmissiveProvider::new);
+			ParticleProviderRegistry.getInstance().register(BeeModule.GHOST.getOrCreate(), GhostParticle.EmissiveProvider::new);
 		}
 
 		if (Hooks.food) {
-			ParticleFactoryRegistry.getInstance().register(FoodModule.SMOKE.getOrCreate(), FoodSmokeParticle.Factory::new);
+			ParticleProviderRegistry.getInstance().register(FoodModule.SMOKE.getOrCreate(), FoodSmokeParticle.Factory::new);
 		}
 
 		if (CommonProxy.trinkets) {
@@ -300,12 +300,12 @@ public class ClientProxy implements ClientModInitializer {
 
 		if (Hooks.gadget) {
 			EntityRendererRegistry.register(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
-			ParticleFactoryRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
+			ParticleProviderRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
 
 			EntityRendererRegistry.register(GadgetModule.SUMMONED_BEE.getOrCreate(), BeeRenderer::new);
 			BlockEntityRenderers.register(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
 
-			ResourceLocation blocking = new ResourceLocation("blocking");
+			Identifier blocking = new Identifier("blocking");
 			if (ItemProperties.getProperty(Items.SHIELD, blocking) instanceof ClampedItemPropertyFunction function) {
 				ItemProperties.register(GadgetModule.BUZZY_SHIELD.getOrCreate(), blocking, function);
 			} else {

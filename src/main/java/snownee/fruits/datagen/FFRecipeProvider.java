@@ -38,18 +38,21 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_WOOD;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_WOOD;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
 import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -102,8 +105,13 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 			.recipeUnlockedBy("has_planks")
 			.getFamily();
 
-	public FFRecipeProvider(FabricDataOutput output) {
-		super(output);
+	public FFRecipeProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+		super(output, registriesFuture);
+	}
+
+	@Override
+	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+		return null;
 	}
 
 	@Override
@@ -381,5 +389,10 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				.define('T', trapdoor)
 				.unlockedBy("has_item", has(trapdoor))
 				.save(exporter);
+	}
+
+	@Override
+	public String getName() {
+		return "Fruitful Fun - Recipes";
 	}
 }

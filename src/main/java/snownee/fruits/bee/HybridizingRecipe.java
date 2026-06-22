@@ -13,37 +13,36 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import snownee.fruits.block.FruitLeavesBlock;
-import snownee.kiwi.util.Util;
-import snownee.lychee.core.LycheeContext;
-import snownee.lychee.core.recipe.BlockKeyRecipe;
-import snownee.lychee.core.recipe.ILycheeRecipe;
-import snownee.lychee.core.recipe.LycheeRecipe;
-import snownee.lychee.core.recipe.type.LycheeRecipeType;
+import snownee.lychee.util.context.LycheeContext;
 import snownee.lychee.util.json.JsonPointer;
+import snownee.lychee.util.recipe.BlockKeyableRecipe;
+import snownee.lychee.util.recipe.ILycheeRecipe;
+import snownee.lychee.util.recipe.LycheeRecipe;
 
-public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements BlockKeyRecipe<HybridizingRecipe> {
+public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements BlockKeyableRecipe {
 
 	public Collection<String> pollens = List.of();
 	public Collection<String> endingStep = List.of();
 	public NonNullList<Ingredient> ingredients;
 	public boolean resetPollens;
 
-	public HybridizingRecipe(ResourceLocation id) {
+	public HybridizingRecipe(Identifier id) {
 		super(id);
 	}
 
@@ -54,12 +53,12 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 	}
 
 	@Override
-	public LycheeRecipe.Serializer<?> getSerializer() {
+	public RecipeSerializer<? extends ILycheeRecipe<LycheeContext>> getSerializer() {
 		return BeeModule.SERIALIZER.get();
 	}
 
 	@Override
-	public LycheeRecipeType<?, ?> getType() {
+	public HybridizingRecipeType getType() {
 		return BeeModule.RECIPE_TYPE.get();
 	}
 
@@ -69,7 +68,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 	}
 
 	@Override
-	public BlockPredicate getBlock() {
+	public BlockPredicate blockPredicate() {
 		return BlockPredicate.ANY; // not applicable
 	}
 
@@ -92,7 +91,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 		}
 		ingredients = NonNullList.create();
 		for (String pollen : pollens) {
-			Item item = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen)).asItem();
+			Item item = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen)).asItem();
 			if (item != Items.AIR) {
 				ingredients.add(Ingredient.of(item));
 			}
@@ -106,7 +105,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 
 	public void addInvisibleInputs(Consumer<ItemStack> acceptor) {
 		for (String pollen : pollens) {
-			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen));
+			Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen));
 			if (block instanceof FruitLeavesBlock leavesBlock) {
 				acceptor.accept(new ItemStack(leavesBlock.type.get().sapling.get()));
 			}
@@ -140,7 +139,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 			recipe.pollens = Sets.newLinkedHashSetWithExpectedSize(ingredients.size());
 			for (JsonElement element : ingredients) {
 				String s = element.getAsString();
-				Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(s));
+				Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(s));
 				Preconditions.checkArgument(block != Blocks.AIR, "Unknown block: " + s);
 				recipe.pollens.add(Util.trimRL(s));
 			}

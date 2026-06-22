@@ -2,7 +2,7 @@ package snownee.fruits.food;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,9 +14,11 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -25,7 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import snownee.fruits.util.CommonProxy;
+import snownee.kiwi.loader.Platform;
 
 public class FeastBlock extends FoodBlock {
 
@@ -35,8 +37,12 @@ public class FeastBlock extends FoodBlock {
 	private final VoxelShape leftoverShape;
 	private final int maxServings;
 
-	public FeastBlock(VoxelShape northShape, @Nullable VoxelShape leftoverShape, Supplier<Item> servingItem) {
-		super(leftoverShape == null ? northShape : Shapes.or(northShape, leftoverShape));
+	public FeastBlock(
+			VoxelShape northShape,
+			@Nullable VoxelShape leftoverShape,
+			Supplier<Item> servingItem,
+			BlockBehaviour.Properties properties) {
+		super(leftoverShape == null ? northShape : Shapes.or(northShape, leftoverShape), properties);
 		this.leftoverShape = leftoverShape;
 		this.servingItem = servingItem;
 		int size = getServingsProperty().getPossibleValues().size();
@@ -52,11 +58,11 @@ public class FeastBlock extends FoodBlock {
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		int serves = getServings(state);
 		ItemStack servingItem = new ItemStack(this.servingItem.get());
-		ItemStack remainder = CommonProxy.getRecipeRemainder(servingItem);
+		ItemStackTemplate remainder = Platform.getCraftingRemainingItem(servingItem);
 		ItemStack held = player.getItemInHand(hand);
 		if (serves == 0) {
 			consumeServing(level, pos, state, player);
-		} else if (remainder.isEmpty()) {
+		} else if (remainder == null) {
 			// has no container. eat serving item directly
 			FoodProperties food = servingItem.getItem().getFoodProperties();
 			if (food == null || !player.canEat(food.canAlwaysEat())) {
@@ -64,7 +70,7 @@ public class FeastBlock extends FoodBlock {
 			}
 			consumeServing(level, pos, state, player);
 			player.eat(level, servingItem);
-		} else if (ItemStack.isSameItem(held, remainder)) {
+		} else if (ItemStack.isSameItem(held, remainder.create())) {
 			// has container. give serving item
 			if (!level.isClientSide()) {
 				consumeServing(level, pos, state, player);
@@ -85,11 +91,11 @@ public class FeastBlock extends FoodBlock {
 			}
 		} else {
 			if (level.isClientSide()) {
-				player.displayClientMessage(Component.translatable("tip.fruitfulfun.useContainer", remainder.getHoverName()), true);
+				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.useContainer", remainder.getHoverName()));
 			}
 			return InteractionResult.PASS;
 		}
-		return InteractionResult.sidedSuccess(level.isClientSide());
+		return InteractionResult.SUCCESS_SERVER;
 	}
 
 	public void consumeServing(Level level, BlockPos pos, BlockState state, @Nullable Player player) {
@@ -109,8 +115,8 @@ public class FeastBlock extends FoodBlock {
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
-		return getServings(blockState);
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+		return getServings(state);
 	}
 
 	@Override

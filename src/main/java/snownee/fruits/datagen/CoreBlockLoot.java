@@ -1,8 +1,8 @@
 package snownee.fruits.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.resources.ResourceLocation;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -20,11 +20,11 @@ import snownee.kiwi.datagen.KiwiBlockLoot;
 
 public class CoreBlockLoot extends KiwiBlockLoot {
 
-	public CoreBlockLoot(FabricDataOutput dataOutput) {
+	public CoreBlockLoot(FabricPackOutput dataOutput) {
 		this(FruitfulFun.id("core"), dataOutput);
 	}
 
-	public CoreBlockLoot(ResourceLocation moduleId, FabricDataOutput dataOutput) {
+	public CoreBlockLoot(Identifier moduleId, FabricPackOutput dataOutput) {
 		super(moduleId, dataOutput);
 	}
 

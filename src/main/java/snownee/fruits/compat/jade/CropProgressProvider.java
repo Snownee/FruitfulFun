@@ -2,21 +2,21 @@ package snownee.fruits.compat.jade;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
-import snownee.jade.api.Identifiers;
+import snownee.jade.api.JadeIds;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.theme.IThemeHelper;
 
 public class CropProgressProvider implements IBlockComponentProvider {
 	@Override
 	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-		if (!config.get(Identifiers.MC_CROP_PROGRESS)) {
+		if (!config.get(JadeIds.MC_CROP_PROGRESS)) {
 			return;
 		}
 		BlockState state = accessor.getBlockState();
@@ -50,7 +50,7 @@ public class CropProgressProvider implements IBlockComponentProvider {
 	}
 
 	@Override
-	public ResourceLocation getUid() {
+	public Identifier getUid() {
 		return JadeCompat.CROP_PROGRESS;
 	}
 

@@ -3,7 +3,7 @@ package snownee.fruits.gadget;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Sets;
 
@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
@@ -122,8 +122,8 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 	}
 
 	@Override
-	public UseAnim getUseAnimation(ItemStack itemStack) {
-		return hasNoPower(itemStack) ? UseAnim.NONE : super.getUseAnimation(itemStack);
+	public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
+		return hasNoPower(itemStack) ? ItemUseAnimation.NONE : super.getUseAnimation(itemStack);
 	}
 
 	public boolean hasNoPower(ItemStack itemStack) {

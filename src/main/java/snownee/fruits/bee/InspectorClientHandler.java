@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -18,9 +18,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -130,7 +130,7 @@ public class InspectorClientHandler {
 
 		lines.add(I18n.get("text.fruitfulfun.pollen"));
 		for (String pollen : pollens) {
-			Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(pollen));
+			Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen));
 			if (block == Blocks.AIR) {
 				lines.add("- " + StringUtils.capitalize(pollen.replace('_', ' ')));
 			} else {

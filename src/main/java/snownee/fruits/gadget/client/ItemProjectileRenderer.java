@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
@@ -95,7 +95,7 @@ public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile> {
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(VacItemProjectile entity) {
+	public Identifier getTextureLocation(VacItemProjectile entity) {
 		return TextureAtlas.LOCATION_BLOCKS;
 	}
 }

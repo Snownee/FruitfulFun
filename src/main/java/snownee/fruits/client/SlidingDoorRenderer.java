@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.InventoryMenu;
 import snownee.fruits.block.entity.SlidingDoorEntity;
 
@@ -32,7 +32,7 @@ public class SlidingDoorRenderer extends EntityRenderer<SlidingDoorEntity> {
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(SlidingDoorEntity entity) {
+	public Identifier getTextureLocation(SlidingDoorEntity entity) {
 		return InventoryMenu.BLOCK_ATLAS;
 	}
 

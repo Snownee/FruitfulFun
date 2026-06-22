@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import com.google.common.collect.Lists;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -13,7 +13,7 @@ import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -28,7 +28,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 
 public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
-	public FFDynamicRegistryProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+	public FFDynamicRegistryProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 		super(output, registriesFuture);
 	}
 
@@ -41,7 +41,7 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 	public static void addConfiguredFeatures(FabricDynamicRegistryProvider.Entries entries) {
 		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.holders().toList()) {
 			FruitType type = holder.value();
-			ResourceLocation id = holder.key().location();
+			Identifier id = holder.key().identifier();
 			type.makeFeatures(
 					id, false, (location, config) -> entries.add(FeatureUtils.createKey(location.toString()), cf(Feature.TREE, config)));
 			List<WeightedPlacedFeature> features = Lists.newArrayList();
@@ -69,7 +69,7 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 			if (type.tier != 0) {
 				continue;
 			}
-			ResourceLocation id = holder.key().location();
+			Identifier id = holder.key().identifier();
 			PlacedFeature placedFeature = makePlacedFeature(
 					entries.ref(FeatureUtils.createKey(id.withSuffix("_random").toString())), type.sapling.get());
 			entries.add(PlacementUtils.createKey(id.toString()), placedFeature);

@@ -1,6 +1,6 @@
 package snownee.fruits.mixin.bee;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Saddleable;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.Items;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;

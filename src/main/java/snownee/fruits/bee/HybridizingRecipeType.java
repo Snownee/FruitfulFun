@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
@@ -15,30 +15,27 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
-import snownee.kiwi.util.Util;
-import snownee.lychee.LycheeLootContextParams;
-import snownee.lychee.core.LycheeContext;
-import snownee.lychee.core.recipe.type.BlockKeyRecipeType;
+import snownee.lychee.LootContextKeys;
 import snownee.lychee.util.CommonProxy;
-import snownee.lychee.util.Pair;
+import snownee.lychee.util.context.LycheeContext;
+import snownee.lychee.util.recipe.BlockKeyableRecipeType;
 
-public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, HybridizingRecipe> {
+public class HybridizingRecipeType extends BlockKeyableRecipeType<HybridizingRecipe> {
 	public HybridizingRecipeType(String name, Class<HybridizingRecipe> clazz, @Nullable LootContextParamSet paramSet) {
 		super(name, clazz, paramSet);
 	}
@@ -67,11 +64,11 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 		LinkedHashSet<Block> pollenBlocks = new LinkedHashSet<>();
 		for (HybridizingRecipe recipe : recipes) {
 			recipe.endingStep().stream()
-					.map(ResourceLocation::new)
+					.map(Identifier::new)
 					.map(BuiltInRegistries.BLOCK::get)
 					.forEach($ -> multimap.put($, recipe));
 			recipe.pollens.stream()
-					.map(ResourceLocation::new)
+					.map(Identifier::new)
 					.map(BuiltInRegistries.BLOCK::get)
 					.forEach(pollenBlocks::add);
 		}
@@ -153,7 +150,7 @@ public class HybridizingRecipeType extends BlockKeyRecipeType<LycheeContext, Hyb
 			builder.withParameter(LootContextParams.THIS_ENTITY, bee);
 			builder.withParameter(LootContextParams.BLOCK_STATE, state);
 			builder.withParameter(LootContextParams.ORIGIN, Vec3.atBottomCenterOf(flowerPos));
-			builder.withParameter(LycheeLootContextParams.BLOCK_POS, flowerPos);
+			builder.withParameter(LootContextKeys.BLOCK_POS, flowerPos);
 			return builder.create(BeeModule.RECIPE_TYPE.get().contextParamSet);
 		};
 	}

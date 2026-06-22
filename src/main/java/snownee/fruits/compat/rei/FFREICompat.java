@@ -23,7 +23,7 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
-import snownee.fruits.compat.FFJEIREI;
+import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.ritual.RitualModule;
 import snownee.lychee.compat.rei.REICompat;
@@ -57,7 +57,7 @@ public class FFREICompat implements REIClientPlugin {
 	public void registerCategories(CategoryRegistry registry) {
 		if (Hooks.ritual) {
 			ItemStack dragonHead = Items.DRAGON_HEAD.getDefaultInstance();
-			ItemStack pie = FFJEIREI.pieItem.get();
+			ItemStack pie = LycheeCompat.pieItem.get();
 			forEachCategories(
 					BeeModule.RECIPE_TYPE.get(), $ -> {
 						registry.addWorkstations($.getCategoryIdentifier(), EntryStacks.of(dragonHead), EntryStacks.of(pie));
@@ -97,7 +97,7 @@ public class FFREICompat implements REIClientPlugin {
 					new ItemStack(BeeModule.MUTAGEN.get())));
 		}
 
-		FFJEIREI.addInformation((items, component) -> {
+		LycheeCompat.addInformation((items, component) -> {
 			registry.add(DefaultInformationDisplay.createFromEntries(EntryIngredients.ofItemStacks(items), items.get(0).getHoverName())
 					.line(component));
 		});

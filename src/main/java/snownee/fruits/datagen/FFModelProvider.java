@@ -1,24 +1,28 @@
 package snownee.fruits.datagen;
 
-import java.util.List;
+import java.util.Objects;
 
-import com.google.common.collect.Lists;
+import org.jspecify.annotations.Nullable;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.blockstates.Condition;
-import net.minecraft.data.models.blockstates.MultiPartGenerator;
-import net.minecraft.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.data.models.blockstates.PropertyDispatch;
-import net.minecraft.data.models.blockstates.Variant;
-import net.minecraft.data.models.blockstates.VariantProperties;
-import net.minecraft.data.models.model.ModelLocationUtils;
-import net.minecraft.data.models.model.ModelTemplates;
-import net.minecraft.data.models.model.TextureMapping;
-import net.minecraft.data.models.model.TexturedModel;
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Quadrant;
+
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.ConditionBuilder;
+import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import snownee.fruits.CoreModule;
@@ -33,7 +37,7 @@ import snownee.fruits.gadget.ScentedCandleBlock;
 import snownee.fruits.pomegranate.PomegranateModule;
 
 public class FFModelProvider extends FabricModelProvider {
-	public FFModelProvider(FabricDataOutput output) {
+	public FFModelProvider(FabricPackOutput output) {
 		super(output);
 	}
 
@@ -41,43 +45,55 @@ public class FFModelProvider extends FabricModelProvider {
 	public void generateBlockStateModels(BlockModelGenerators generators) {
 		createCitrusLeaves(generators, CoreModule.TANGERINE_LEAVES.get(), FruitScale.SMALL);
 		generators.createPlant(
-				CoreModule.TANGERINE_SAPLING.get(), CoreModule.POTTED_TANGERINE.get(), BlockModelGenerators.TintState.NOT_TINTED);
+				CoreModule.TANGERINE_SAPLING.get(),
+				CoreModule.POTTED_TANGERINE.get(),
+				BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.CITRON_LEAVES.get(), FruitScale.SMALL);
-		generators.createPlant(CoreModule.CITRON_SAPLING.get(), CoreModule.POTTED_CITRON.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(CoreModule.CITRON_SAPLING.get(), CoreModule.POTTED_CITRON.get(), BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.GRAPEFRUIT_LEAVES.get(), FruitScale.MIDDLE);
 		generators.createPlant(
-				CoreModule.GRAPEFRUIT_SAPLING.get(), CoreModule.POTTED_GRAPEFRUIT.get(), BlockModelGenerators.TintState.NOT_TINTED);
+				CoreModule.GRAPEFRUIT_SAPLING.get(),
+				CoreModule.POTTED_GRAPEFRUIT.get(),
+				BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.LEMON_LEAVES.get(), FruitScale.MIDDLE);
-		generators.createPlant(CoreModule.LEMON_SAPLING.get(), CoreModule.POTTED_LEMON.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(CoreModule.LEMON_SAPLING.get(), CoreModule.POTTED_LEMON.get(), BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.LIME_LEAVES.get(), FruitScale.MIDDLE);
-		generators.createPlant(CoreModule.LIME_SAPLING.get(), CoreModule.POTTED_LIME.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(CoreModule.LIME_SAPLING.get(), CoreModule.POTTED_LIME.get(), BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.ORANGE_LEAVES.get(), FruitScale.MIDDLE);
-		generators.createPlant(CoreModule.ORANGE_SAPLING.get(), CoreModule.POTTED_ORANGE.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(CoreModule.ORANGE_SAPLING.get(), CoreModule.POTTED_ORANGE.get(), BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.APPLE_LEAVES.get(), FruitScale.MIDDLE);
-		generators.createPlant(CoreModule.APPLE_SAPLING.get(), CoreModule.POTTED_APPLE.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(CoreModule.APPLE_SAPLING.get(), CoreModule.POTTED_APPLE.get(), BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, CoreModule.POMELO_LEAVES.get(), FruitScale.LARGE);
-		generators.createPlant(CoreModule.POMELO_SAPLING.get(), CoreModule.POTTED_POMELO.get(), BlockModelGenerators.TintState.NOT_TINTED);
+		generators.createPlant(CoreModule.POMELO_SAPLING.get(), CoreModule.POTTED_POMELO.get(), BlockModelGenerators.PlantType.NOT_TINTED);
 		createCitrusLeaves(generators, PomegranateModule.POMEGRANATE_LEAVES.get(), FruitScale.NONE);
 		generators.createPlant(
-				PomegranateModule.POMEGRANATE_SAPLING.get(), PomegranateModule.POTTED_POMEGRANATE.get(),
-				BlockModelGenerators.TintState.NOT_TINTED);
+				PomegranateModule.POMEGRANATE_SAPLING.get(),
+				PomegranateModule.POTTED_POMEGRANATE.get(),
+				BlockModelGenerators.PlantType.NOT_TINTED);
 		createRedloveLeaves(generators, CherryModule.REDLOVE_LEAVES.get());
 		generators.createPlant(
-				CherryModule.REDLOVE_SAPLING.get(), CherryModule.POTTED_REDLOVE.get(), BlockModelGenerators.TintState.NOT_TINTED);
+				CherryModule.REDLOVE_SAPLING.get(),
+				CherryModule.POTTED_REDLOVE.get(),
+				BlockModelGenerators.PlantType.NOT_TINTED);
 		createRedloveLeaves(generators, CherryModule.CHERRY_LEAVES.get());
 		generators.createPlant(
-				CherryModule.CHERRY_SAPLING.get(), CherryModule.POTTED_CHERRY.get(), BlockModelGenerators.TintState.NOT_TINTED);
+				CherryModule.CHERRY_SAPLING.get(),
+				CherryModule.POTTED_CHERRY.get(),
+				BlockModelGenerators.PlantType.NOT_TINTED);
 		generators.createFlowerBed(CherryModule.PEACH_PINK_PETALS.get());
-		generators.createSimpleFlatItemModel(CherryModule.CHERRY_CROWN.get());
-		generators.createSimpleFlatItemModel(CherryModule.REDLOVE_CROWN.get());
+		generators.registerSimpleFlatItemModel(CherryModule.CHERRY_CROWN.get());
+		generators.registerSimpleFlatItemModel(CherryModule.REDLOVE_CROWN.get());
 		generators.createHangingSign(
-				CoreModule.STRIPPED_CITRUS_LOG.get(), CoreModule.CITRUS_HANGING_SIGN.get(), CoreModule.CITRUS_WALL_HANGING_SIGN.get());
+				CoreModule.STRIPPED_CITRUS_LOG.get(),
+				CoreModule.CITRUS_HANGING_SIGN.get(),
+				CoreModule.CITRUS_WALL_HANGING_SIGN.get());
 		generators.createHangingSign(
-				CherryModule.STRIPPED_REDLOVE_LOG.get(), CherryModule.REDLOVE_HANGING_SIGN.get(),
+				CherryModule.STRIPPED_REDLOVE_LOG.get(),
+				CherryModule.REDLOVE_HANGING_SIGN.get(),
 				CherryModule.REDLOVE_WALL_HANGING_SIGN.get());
-		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE.get().asItem());
-		generators.createSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE_SLICE.get());
-		generators.createSimpleFlatItemModel(PomegranateModule.POMEGRANATE_ITEM.get());
+		generators.registerSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE.get().asItem());
+		generators.registerSimpleFlatItemModel(FoodModule.CHORUS_FRUIT_PIE_SLICE.get());
+		generators.registerSimpleFlatItemModel(PomegranateModule.POMEGRANATE_ITEM.get());
 
 		createCandle(generators, GadgetModule.PHANTOM_CANDLE.get());
 		createCandle(generators, GadgetModule.WANDERING_TRADER_CANDLE.get());
@@ -87,115 +103,91 @@ public class FFModelProvider extends FabricModelProvider {
 		generators.createHorizontallyRotatedBlock(GadgetModule.BUZZY_CRAFTER.get(), TexturedModel.ORIENTABLE);
 	}
 
+	@Override
+	public void generateItemModels(ItemModelGenerators itemModelGenerators) {
+	}
+
 	public static void createCandle(BlockModelGenerators generators, ScentedCandleBlock block) {
-		generators.createSimpleFlatItemModel(block.asItem());
+		generators.registerSimpleFlatItemModel(block.asItem());
 		TextureMapping textureMapping = TextureMapping.cube(TextureMapping.getBlockTexture(block));
 		TextureMapping textureMapping2 = TextureMapping.cube(TextureMapping.getBlockTexture(block, "_lit"));
-		ResourceLocation resourceLocation = ModelTemplates.CANDLE.createWithSuffix(
-				block,
-				"_one_candle",
-				textureMapping,
-				generators.modelOutput);
-		ResourceLocation resourceLocation2 = ModelTemplates.TWO_CANDLES.createWithSuffix(
+		Identifier Identifier = ModelTemplates.CANDLE.createWithSuffix(block, "_one_candle", textureMapping, generators.modelOutput);
+		Identifier resourceLocation2 = ModelTemplates.TWO_CANDLES.createWithSuffix(
 				block,
 				"_two_candles",
 				textureMapping,
 				generators.modelOutput);
-		ResourceLocation resourceLocation3 = ModelTemplates.THREE_CANDLES.createWithSuffix(
+		Identifier resourceLocation3 = ModelTemplates.THREE_CANDLES.createWithSuffix(
 				block,
 				"_three_candles",
 				textureMapping,
 				generators.modelOutput);
-		ResourceLocation resourceLocation4 = ModelTemplates.FOUR_CANDLES.createWithSuffix(
+		Identifier resourceLocation4 = ModelTemplates.FOUR_CANDLES.createWithSuffix(
 				block,
 				"_four_candles",
 				textureMapping,
 				generators.modelOutput);
-		ResourceLocation resourceLocation5 = ModelTemplates.CANDLE.createWithSuffix(
+		Identifier resourceLocation5 = ModelTemplates.CANDLE.createWithSuffix(
 				block,
 				"_one_candle_lit",
 				textureMapping2,
 				generators.modelOutput);
-		ResourceLocation resourceLocation6 = ModelTemplates.TWO_CANDLES.createWithSuffix(
+		Identifier resourceLocation6 = ModelTemplates.TWO_CANDLES.createWithSuffix(
 				block,
 				"_two_candles_lit",
 				textureMapping2,
 				generators.modelOutput);
-		ResourceLocation resourceLocation7 = ModelTemplates.THREE_CANDLES.createWithSuffix(
+		Identifier resourceLocation7 = ModelTemplates.THREE_CANDLES.createWithSuffix(
 				block,
 				"_three_candles_lit",
 				textureMapping2,
 				generators.modelOutput);
-		ResourceLocation resourceLocation8 = ModelTemplates.FOUR_CANDLES.createWithSuffix(
+		Identifier resourceLocation8 = ModelTemplates.FOUR_CANDLES.createWithSuffix(
 				block,
 				"_four_candles_lit",
 				textureMapping2,
 				generators.modelOutput);
-		generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
-				.with(PropertyDispatch.properties(BlockStateProperties.CANDLES, BlockStateProperties.LIT)
-						.select(
-								1,
-								false,
-								Variant.variant().with(VariantProperties.MODEL, resourceLocation))
-						.select(
-								2,
-								false,
-								Variant.variant().with(VariantProperties.MODEL, resourceLocation2))
-						.select(
-								3,
-								false,
-								Variant.variant().with(VariantProperties.MODEL, resourceLocation3))
-						.select(
-								4,
-								false,
-								Variant.variant().with(VariantProperties.MODEL, resourceLocation4))
-						.select(
-								1,
-								true,
-								Variant.variant().with(VariantProperties.MODEL, resourceLocation5))
-						.select(
-								2,
-								true,
-								Variant.variant().with(VariantProperties.MODEL, resourceLocation6))
-						.select(3, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation7))
-						.select(4, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation8))));
+		generators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(
+						BlockStateProperties.CANDLES,
+						BlockStateProperties.LIT)
+				.select(1, false, plainVariant(Identifier))
+				.select(2, false, plainVariant(resourceLocation2))
+				.select(3, false, plainVariant(resourceLocation3))
+				.select(4, false, plainVariant(resourceLocation4))
+				.select(1, true, plainVariant(resourceLocation5))
+				.select(2, true, plainVariant(resourceLocation6))
+				.select(3, true, plainVariant(resourceLocation7))
+				.select(4, true, plainVariant(resourceLocation8))));
 	}
 
 	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {
 		FruitType fruitType = block.type.get();
-		ResourceLocation typeId = FFRegistries.FRUIT_TYPE.getKey(fruitType);
-		ResourceLocation model01;
+		Identifier typeId = Objects.requireNonNull(FFRegistries.FRUIT_TYPE.getKey(fruitType));
+		Identifier model01;
 		if (CoreModule.APPLE_LEAVES.is(block)) {
 			model01 = ModelLocationUtils.getModelLocation(Blocks.OAK_LEAVES);
 		} else {
 			model01 = TexturedModel.LEAVES.create(block, generators.modelOutput);
 		}
-		ResourceLocation flowersTexture = tex("%s_flowers".formatted(typeId.getPath()));
-		ResourceLocation model2 = FFModelTemplates.FLOWERING_LEAVES.create(
-				block, new TextureMapping()
-						.put(FFModelTemplates.FLOWERS, flowersTexture),
+		Material flowersTexture = new Material(tex("%s_flowers".formatted(typeId.getPath())));
+		Identifier model2 = FFModelTemplates.FLOWERING_LEAVES.create(
+				block,
+				new TextureMapping().put(FFModelTemplates.FLOWERS, flowersTexture),
 				generators.modelOutput);
-		MultiPartGenerator generator = MultiPartGenerator.multiPart(block)
-				.with(Variant.variant()
-						.with(VariantProperties.MODEL, model01)
-						.with(VariantProperties.UV_LOCK, true))
-				.with(
-						Condition.condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.BLOOMING), Variant.variant()
-								.with(VariantProperties.MODEL, model2));
-		if (scale != FruitScale.NONE) {
-			List<Variant> variants = Lists.newArrayList(Variant.variant().with(VariantProperties.MODEL, scale.model));
+		MultiPartGenerator generator = MultiPartGenerator.multiPart(block).with(variant(plainModel(model01).withUvLock(true))).with(
+				condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.BLOOMING),
+				plainVariant(model2));
+		if (scale.model != null) {
+			WeightedList.Builder<Variant> variants = WeightedList.builder();
+			variants.add(plainModel(scale.model));
 			if (scale.randomRotation) {
-				variants.add(Variant.variant()
-						.with(VariantProperties.MODEL, scale.model)
-						.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90));
-				variants.add(Variant.variant()
-						.with(VariantProperties.MODEL, scale.model)
-						.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180));
+				variants.add(plainModel(scale.model).withYRot(Quadrant.R90));
+				variants.add(plainModel(scale.model).withYRot(Quadrant.R180));
 			}
-			generator.with(Condition.condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.FRUITING), variants);
+			generator.with(condition().term(FruitLeavesBlock.AGE, FruitLeavesBlock.FRUITING), new MultiVariant(variants.build()));
 		}
 		generators.blockStateOutput.accept(generator);
-		ResourceLocation baseTexture = TextureMapping.getBlockTexture(CoreModule.APPLE_LEAVES.is(block) ? Blocks.OAK_LEAVES : block);
+		Material baseTexture = TextureMapping.getBlockTexture(CoreModule.APPLE_LEAVES.is(block) ? Blocks.OAK_LEAVES : block);
 		FFModelTemplates.FLOWERING_INVENTORY.create(
 				ModelLocationUtils.getModelLocation(block.asItem()),
 				new TextureMapping().put(FFModelTemplates.LEAVES, baseTexture).put(FFModelTemplates.FLOWERS, flowersTexture),
@@ -203,49 +195,62 @@ public class FFModelProvider extends FabricModelProvider {
 	}
 
 	public static void createRedloveLeaves(BlockModelGenerators generators, FruitLeavesBlock block) {
-		ResourceLocation model012;
+		Identifier model012;
 		if (CherryModule.CHERRY_LEAVES.is(block)) {
 			model012 = ModelLocationUtils.getModelLocation(Blocks.CHERRY_LEAVES);
 		} else {
 			model012 = TexturedModel.LEAVES.create(block, generators.modelOutput);
 		}
-		ResourceLocation model3 = ModelTemplates.LEAVES.createWithSuffix(
-				block, "_2", TextureMapping.cube(TextureMapping.getBlockTexture(block, "_2")), generators.modelOutput);
-		MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block)
-				.with(PropertyDispatch.property(FruitLeavesBlock.AGE).generateList(age -> {
+		Identifier model3 = ModelTemplates.LEAVES.createWithSuffix(
+				block,
+				"_2",
+				TextureMapping.cube(TextureMapping.getBlockTexture(block, "_2")),
+				generators.modelOutput);
+		MultiVariantGenerator generator = MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(FruitLeavesBlock.AGE)
+				.generate(age -> {
 					if (age < 3) {
-						return List.of(Variant.variant().with(VariantProperties.MODEL, model012));
+						return plainVariant(model012);
 					}
 					if (age == 3) {
-						return List.of(Variant.variant().with(VariantProperties.MODEL, model3));
+						return plainVariant(model3);
 					}
 					throw new IllegalStateException("Unexpected value: " + age);
 				}));
 		generators.blockStateOutput.accept(generator);
-		generators.delegateItemModel(block, model012);
+		generators.registerSimpleItemModel(block, model012);
 	}
 
-	@Override
-	public void generateItemModels(ItemModelGenerators itemModelGenerator) {
-
-	}
-
-	public static ResourceLocation tex(String path) {
+	public static Identifier tex(String path) {
 		return FruitfulFun.id("block/" + path);
 	}
 
 	public enum FruitScale {
-		NONE(null, false),
-		SMALL("template_leaves_fruit_sm", true),
-		MIDDLE("template_leaves_fruit_md", true),
-		LARGE("template_leaves_fruit_lg", false);
+		NONE(null, false), SMALL("template_leaves_fruit_sm", true), MIDDLE("template_leaves_fruit_md", true), LARGE(
+				"template_leaves_fruit_lg",
+				false);
 
-		public final ResourceLocation model;
+		public final @Nullable Identifier model;
 		public final boolean randomRotation;
 
-		FruitScale(String model, boolean randomRotation) {
+		FruitScale(@Nullable String model, boolean randomRotation) {
 			this.model = model == null ? null : FruitfulFun.id("block/" + model);
 			this.randomRotation = randomRotation;
 		}
+	}
+
+	public static Variant plainModel(final Identifier model) {
+		return BlockModelGenerators.plainModel(model);
+	}
+
+	public static MultiVariant plainVariant(final Identifier model) {
+		return BlockModelGenerators.plainVariant(model);
+	}
+
+	public static MultiVariant variant(final Variant variant) {
+		return BlockModelGenerators.variant(variant);
+	}
+
+	public static ConditionBuilder condition() {
+		return new ConditionBuilder();
 	}
 }

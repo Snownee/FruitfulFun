@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -18,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,11 +29,11 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
@@ -47,7 +46,7 @@ import net.minecraft.world.phys.Vec3;
 import snownee.fruits.gadget.network.CGunShotPacket;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.fruits.util.CommonProxy;
-import snownee.fruits.util.PreventUpdateAnimation;
+import snownee.kiwi.util.PreventUpdateAnimation;
 
 public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAnimation {
 	public static final int MAX_ITEM_COUNT = 16;
@@ -203,8 +202,8 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 	}
 
 	@Override
-	public UseAnim getUseAnimation(ItemStack itemStack) {
-		return UseAnim.SPYGLASS;
+	public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
+		return ItemUseAnimation.SPYGLASS;
 	}
 
 	@Override

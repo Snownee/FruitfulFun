@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
@@ -16,16 +16,13 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.VibrationParticleOption;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -35,9 +32,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Saddleable;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -45,7 +42,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -70,8 +66,8 @@ import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.mixin.EntityAccess;
-import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
+import snownee.kiwi.util.KUtil;
 
 public final class Hooks {
 
@@ -148,15 +144,15 @@ public final class Hooks {
 		if (!(player instanceof ServerPlayer serverPlayer)) {
 			return;
 		}
-		Advancement advancement = advancement(serverPlayer.serverLevel(), id);
+		AdvancementHolder advancement = advancement(serverPlayer.level(), id);
 		if (advancement != null) {
 			serverPlayer.getAdvancements().award(advancement, "_");
 		}
 	}
 
 	@Nullable
-	public static Advancement advancement(ServerLevel level, String id) {
-		return level.getServer().getAdvancements().getAdvancement(new ResourceLocation("husbandry/fruitfulfun/" + id));
+	public static AdvancementHolder advancement(ServerLevel level, String id) {
+		return level.getServer().getAdvancements().get(Identifier.parse("husbandry/fruitfulfun/" + id));
 	}
 
 	private static void hornHarvest(
@@ -194,7 +190,6 @@ public final class Hooks {
 
 	public static InteractionResult playerInteractBee(Player player, InteractionHand hand, Bee bee) {
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		Saddleable saddleable = (Saddleable) bee;
 		ItemStack held = player.getItemInHand(hand);
 		if (BeeModule.INSPECTOR.is(held)) {
 			return InteractionResult.PASS;
@@ -205,7 +200,7 @@ public final class Hooks {
 				boolean hasPink = attributes.hasTrait(Trait.PINK);
 				boolean hasGhost = attributes.hasTrait(Trait.GHOST);
 				// add debug code here
-//				attributes.setTexture(new ResourceLocation(FruitfulFun.ID, "pink_bee"));
+//				attributes.setTexture(new Identifier(FruitfulFun.ID, "pink_bee"));
 				attributes.getLocus(Allele.FANCY).setData((byte) 0x11);
 				attributes.getLocus(Allele.FEAT1).setData((byte) 0x22);
 				attributes.getLocus(Allele.FEAT2).setData((byte) 0x22);
@@ -224,9 +219,9 @@ public final class Hooks {
 			}
 			return InteractionResult.CONSUME;
 		}
-		if (saddleable.isSaddled()) {
+		if (bee.isSaddled()) {
 			boolean trusted = player.isCreative() || attributes.trusts(player.getUUID());
-			if (CommonProxy.isShears(held)) {
+			if (Platform.isShearsRightClickable(held)) {
 				if (!trusted) {
 					((FFBee) bee).fruits$roll();
 					return InteractionResult.FAIL;
@@ -248,7 +243,7 @@ public final class Hooks {
 				}
 				return InteractionResult.sidedSuccess(isClientSide);
 			}
-		} else if (held.is(Items.SADDLE) && saddleable.isSaddleable()) {
+		} else if (held.is(Items.SADDLE) && bee.canUseSlot(EquipmentSlot.SADDLE)) {
 			if (!isClientSide) {
 				saddleable.equipSaddle(SoundSource.NEUTRAL);
 				attributes.setSaddle(held.split(1));
@@ -256,7 +251,7 @@ public final class Hooks {
 			}
 			return InteractionResult.sidedSuccess(isClientSide);
 		}
-		if (FFCommonConfig.hauntingEnabled && attributes.hasTrait(Trait.GHOST) && !CommonProxy.isFakePlayer(player)) {
+		if (FFCommonConfig.hauntingEnabled && attributes.hasTrait(Trait.GHOST) && !Platform.isFakePlayer(player)) {
 			if (!isClientSide && (FFCommonConfig.hauntingCooldownSeconds <= 0 || !bee.hasEffect(CoreModule.FRAGILITY.get()))) {
 				FFPlayer.of(player).fruits$setHauntingTarget(bee);
 			}
@@ -284,7 +279,7 @@ public final class Hooks {
 		double y = 0;
 		if (!ghost && tooFarFromSurface(level, bee.blockPosition())) {
 			y = -0.07;
-		} else if (player.isLocalPlayer() && ((LocalPlayer) player).input.jumping) {
+		} else if (player.isLocalPlayer() && ((LocalPlayer) player).input.keyPresses.jump()) {
 			y = 0.1;
 		} else if (x != 0 || z != 0) {
 			y = Mth.clamp(player.getLookAngle().y * 0.5, -0.1, 0.1);
@@ -410,10 +405,6 @@ public final class Hooks {
 			return;
 		}
 		String stackTrace = ExceptionUtils.getStackTrace(new Throwable());
-		player.displayClientMessage(
-				Component.literal(msg)
-						.withStyle(Style.EMPTY
-								.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(stackTrace)))
-								.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stackTrace))), false);
+		player.sendSystemMessage(KUtil.clickToCopy(Component.literal(msg), Component.literal(stackTrace), stackTrace));
 	}
 }

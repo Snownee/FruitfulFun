@@ -1,11 +1,11 @@
 package snownee.fruits.compat.jade;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
@@ -31,11 +31,11 @@ import snownee.kiwi.loader.Platform;
 @WailaPlugin
 public class JadeCompat implements IWailaPlugin {
 
-	public static final ResourceLocation INSPECTOR = FruitfulFun.id("inspector");
-	public static final ResourceLocation INSPECTOR_BLOCK = FruitfulFun.id("inspector_block");
-	public static final ResourceLocation CROP_PROGRESS = FruitfulFun.id("crop_progress");
-	public static final ResourceLocation WAXED = FruitfulFun.id("waxed");
-	public static final ResourceLocation CRAFTER = FruitfulFun.id("crafter");
+	public static final Identifier INSPECTOR = FruitfulFun.id("inspector");
+	public static final Identifier INSPECTOR_BLOCK = FruitfulFun.id("inspector_block");
+	public static final Identifier CROP_PROGRESS = FruitfulFun.id("crop_progress");
+	public static final Identifier WAXED = FruitfulFun.id("waxed");
+	public static final Identifier CRAFTER = FruitfulFun.id("crafter");
 
 	public static void ensureVisibility(boolean fromEntity) {
 		IWailaConfig.IConfigGeneral config = IWailaConfig.get().getGeneral();
@@ -74,7 +74,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.addRayTraceCallback((hit, accessor, original) -> override(original, registration));
 		if (Hooks.bee) {
 			registration.registerEntityComponent(new InspectorProvider(), Bee.class);
-			registration.registerBlockIcon(new BeehiveWaxProvider(), BeehiveBlock.class);
+			registration.registerBlockIcon(new BeehiveWaxProvider.Client(), BeehiveBlock.class);
 			if (Hooks.supplementaries) {
 				SupplementariesJadeCompat.registerClient(registration);
 			}

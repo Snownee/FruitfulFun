@@ -32,7 +32,7 @@ public abstract class ItemInHandRendererMixin {
 
 	@Inject(
 			method = "renderArmWithItem",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;"))
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"))
 	private void renderArmWithItem(
 			AbstractClientPlayer player,
 			float f,

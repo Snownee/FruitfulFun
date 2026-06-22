@@ -4,17 +4,18 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
+
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -29,10 +30,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -43,6 +43,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -58,9 +59,8 @@ import snownee.fruits.FruitType;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.util.CommonProxy;
-import snownee.kiwi.KiwiModule;
+import snownee.kiwi.loader.Platform;
 
-@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
 public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, EntityBlock {
 
 	public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
@@ -71,27 +71,27 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	public final Supplier<FruitType> type;
 
-	public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
-		super(properties
-				.isValidSpawn(Blocks::ocelotOrParrot)
-				.isSuffocating(Blocks::never)
-				.isViewBlocking(Blocks::never)
-				.isRedstoneConductor(Blocks::never));
+	public FruitLeavesBlock(Supplier<FruitType> type, float leafParticleChance, Properties properties) {
+		super(
+				leafParticleChance,
+				properties.isValidSpawn(Blocks::ocelotOrParrot)
+						.isSuffocating(Blocks::never)
+						.isViewBlocking(Blocks::never)
+						.isRedstoneConductor(Blocks::never));
 		this.type = type;
-		registerDefaultState(
-				stateDefinition.any().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, YOUNG).setValue(WATERLOGGED, false));
+		registerDefaultState(stateDefinition.any()
+				.setValue(DISTANCE, 7)
+				.setValue(PERSISTENT, false)
+				.setValue(AGE, YOUNG)
+				.setValue(WATERLOGGED, false));
 	}
 
 	@Nullable
-	public ItemEntity dropFruit(
-			ServerLevel level,
-			BlockPos pos,
-			BlockState state,
-			@Nullable FruitTreeBlockEntity core) {
+	public ItemEntity dropFruit(ServerLevel level, BlockPos pos, BlockState state, @Nullable FruitTreeBlockEntity core) {
 		if (state.getValue(AGE) != FRUITING) {
 			return null;
 		}
-		if (!level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
+		if (!level.getGameRules().get(GameRules.BLOCK_DROPS)) {
 			return null;
 		}
 		gotoDeadOrYoung(level, pos, state, core);
@@ -109,7 +109,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		Item item = Items.AIR;
 		if (Hooks.hauntedHarvest && FFCommonConfig.rottenAppleChance > 0 && FFFruitTypes.APPLE.is(fruitType) &&
 				level.getRandom().nextFloat() < FFCommonConfig.rottenAppleChance) {
-			item = BuiltInRegistries.ITEM.get(new ResourceLocation("hauntedharvest", "rotten_apple"));
+			item = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("hauntedharvest", "rotten_apple"));
 		}
 		if (item == Items.AIR) {
 			item = fruitType.fruit.get();
@@ -119,9 +119,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	public static ItemEntity createItemEntity(ServerLevel level, BlockPos pos, ItemStack stack) {
 		float f = EntityType.ITEM.getHeight() / 2.0F;
-		double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
-		double d1 = pos.getY() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D) - f;
-		double d2 = pos.getZ() + 0.5F + Mth.nextDouble(level.random, -0.25D, 0.25D);
+		double d0 = pos.getX() + 0.5F + Mth.nextDouble(level.getRandom(), -0.25D, 0.25D);
+		double d1 = pos.getY() + 0.5F + Mth.nextDouble(level.getRandom(), -0.25D, 0.25D) - f;
+		double d2 = pos.getZ() + 0.5F + Mth.nextDouble(level.getRandom(), -0.25D, 0.25D);
 		ItemEntity itemEntity = new ItemEntity(level, d0, d1, d2, stack);
 		itemEntity.setDefaultPickUpDelay();
 		itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().x, 0, itemEntity.getDeltaMovement().z);
@@ -134,7 +134,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
 		if (state.getValue(AGE) == YOUNG) {
 			return true;
 		}
@@ -163,8 +163,10 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Nullable
 	public FruitTreeBlockEntity findCore(ServerLevel level, BlockPos pos) {
-		return level.getPoiManager().findClosest(type.get().poiType::equals, pos, 10, PoiManager.Occupancy.ANY)
-				.flatMap(core -> level.getBlockEntity(core, CoreModule.FRUIT_TREE.get())).orElse(null);
+		return level.getPoiManager()
+				.findClosest(type.get().poiType::equals, pos, 10, PoiManager.Occupancy.ANY)
+				.flatMap(core -> level.getBlockEntity(core, CoreModule.FRUIT_TREE.get()))
+				.orElse(null);
 	}
 
 	@Override
@@ -235,6 +237,16 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
+	protected void spawnFallingLeavesParticle(Level level, BlockPos pos, RandomSource random) {
+//TODO
+	}
+
+	@Override
+	public MapCodec<? extends LeavesBlock> codec() {
+		return null; //TODO
+	}
+
+	@Override
 	public boolean isRandomlyTicking(BlockState state) {
 		if (hasBlockEntity(state)) {
 			return true;
@@ -259,15 +271,17 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public BlockState updateShape(
+	protected BlockState updateShape(
 			BlockState state,
-			Direction facing,
-			BlockState facingState,
-			LevelAccessor worldIn,
-			BlockPos currentPos,
-			BlockPos facingPos) {
+			LevelReader level,
+			ScheduledTickAccess ticks,
+			BlockPos pos,
+			Direction directionToNeighbour,
+			BlockPos neighbourPos,
+			BlockState neighbourState,
+			RandomSource random) {
 		if (canGrow(state) || state.getValue(AGE) == DEAD) {
-			return super.updateShape(state, facing, facingState, worldIn, currentPos, facingPos);
+			return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
 		}
 		return state;
 	}
@@ -290,13 +304,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public void fallOn(Level worldIn, BlockState stateIn, BlockPos pos, Entity entityIn, float fallDistance) {
-		super.fallOn(worldIn, stateIn, pos, entityIn, fallDistance);
-		if (fallDistance >= 1 && worldIn instanceof ServerLevel serverLevel &&
-				(entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
+	public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, double fallDistance) {
+		super.fallOn(level, state, pos, entity, fallDistance);
+		if (fallDistance >= 1 && level instanceof ServerLevel serverLevel &&
+				(entity instanceof LivingEntity || entity instanceof FallingBlockEntity)) {
 			Iterable<BlockPos> posList = BlockPos.betweenClosed(pos.offset(-1, -2, -1), pos.offset(1, 0, 1));
 			MutableBoolean success = new MutableBoolean(false);
-			rangeDrop(serverLevel, posList, null, itemEntity -> success.setTrue());
+			rangeDrop(serverLevel, posList, null, _ -> success.setTrue());
 			if (success.booleanValue()) {
 				//FIXME sound
 			}
@@ -320,13 +334,13 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult ray) {
-		if (hasFruit(state, worldIn, pos)) {
-			giveItemTo(playerIn, ray, type.get().fruit.get().getDefaultInstance());
-			if (!worldIn.isClientSide()) {
-				gotoDeadOrYoung((ServerLevel) worldIn, pos, state, null);
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		if (hasFruit(state, level, pos)) {
+			giveItemTo(player, hitResult, type.get().fruit.get().getDefaultInstance());
+			if (!level.isClientSide()) {
+				gotoDeadOrYoung((ServerLevel) level, pos, state, null);
 			}
-			return InteractionResult.sidedSuccess(worldIn.isClientSide());
+			return InteractionResult.SUCCESS_SERVER;
 		}
 		return InteractionResult.PASS;
 	}
@@ -336,9 +350,15 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (level.isClientSide()) {
 			return;
 		}
-		if (!CommonProxy.isFakePlayer(player) && player.addItem(stack)) {
+		if (!Platform.isFakePlayer(player) && player.addItem(stack)) {
 			level.playSound(
-					null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, player.getSoundSource(), 0.2F,
+					null,
+					player.getX(),
+					player.getY(),
+					player.getZ(),
+					SoundEvents.ITEM_PICKUP,
+					player.getSoundSource(),
+					0.2F,
 					((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		} else {
 			popResourceFromFace(level, hit.getBlockPos(), hit.getDirection(), stack);

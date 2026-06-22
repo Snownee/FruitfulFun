@@ -2,7 +2,7 @@ package snownee.fruits.gadget.client;
 
 import java.util.Map;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 

@@ -8,15 +8,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.CherryLeavesBlock;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import snownee.fruits.FFClientConfig;
 import snownee.fruits.cherry.CherryModule;
 
-@Mixin(CherryLeavesBlock.class)
-public class CherryLeavesBlockMixin {
-	@Inject(method = "animateTick", at = @At("HEAD"), cancellable = true)
-	private void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
+@Mixin(UntintedParticleLeavesBlock.class)
+public class UntintedParticleLeavesBlockMixin {
+	@Inject(method = "spawnFallingLeavesParticle", at = @At("HEAD"), cancellable = true)
+	private void spawnFallingLeavesParticle(Level level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+		if ((Object) this != Blocks.CHERRY_LEAVES) {
+			return;
+		}
 		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Disabled) {
 			ci.cancel();
 		}

@@ -7,10 +7,8 @@ import static snownee.fruits.pomegranate.PomegranateModule.POMEGRANATE_ITEM;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -19,16 +17,16 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.kiwi.AbstractModule;
 
-public class SeasonalItemTagsProvider extends FabricTagProvider.ItemTagProvider {
+public class SeasonalItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 	static final TagKey<Item> SPRING_CROPS = AbstractModule.itemTag(SERENESEASONS, "spring_crops");
 	static final TagKey<Item> SUMMER_CROPS = AbstractModule.itemTag(SERENESEASONS, "summer_crops");
 	static final TagKey<Item> AUTUMN_CROPS = AbstractModule.itemTag(SERENESEASONS, "autumn_crops");
 	static final TagKey<Item> WINTER_CROPS = AbstractModule.itemTag(SERENESEASONS, "winter_crops");
 
 	public SeasonalItemTagsProvider(
-			FabricDataOutput output,
+			FabricPackOutput output,
 			CompletableFuture<HolderLookup.Provider> completableFuture,
-			@Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
+			FabricTagsProvider.BlockTagsProvider blockTagProvider) {
 		super(output, completableFuture, blockTagProvider);
 	}
 
@@ -47,11 +45,11 @@ public class SeasonalItemTagsProvider extends FabricTagProvider.ItemTagProvider 
 				.map(t -> t.fruit.get())
 				.toArray(Item[]::new);
 
-		getOrCreateTagBuilder(SPRING_CROPS)
+		valueLookupBuilder(SPRING_CROPS)
 				.add(CHERRY.get());
-		getOrCreateTagBuilder(SUMMER_CROPS)
+		valueLookupBuilder(SUMMER_CROPS)
 				.add(Items.APPLE, REDLOVE.get());
-		getOrCreateTagBuilder(AUTUMN_CROPS)
+		valueLookupBuilder(AUTUMN_CROPS)
 				.add(Items.APPLE, REDLOVE.get(), POMEGRANATE_ITEM.get())
 				.add(citrus);
 	}

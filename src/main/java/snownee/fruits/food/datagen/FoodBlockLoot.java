@@ -2,8 +2,8 @@ package snownee.fruits.food.datagen;
 
 import java.util.Objects;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -17,7 +17,7 @@ import snownee.kiwi.util.Util;
 
 public class FoodBlockLoot extends KiwiBlockLoot {
 
-	public FoodBlockLoot(FabricDataOutput dataOutput) {
+	public FoodBlockLoot(FabricPackOutput dataOutput) {
 		super(Util.RL("fruitfulfun:food"), dataOutput);
 	}
 

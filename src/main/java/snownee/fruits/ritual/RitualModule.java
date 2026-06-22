@@ -1,19 +1,19 @@
 package snownee.fruits.ritual;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.PowerParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,12 +25,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Interaction;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SkullBlock;
@@ -54,22 +56,22 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.loader.event.InitEvent;
-import snownee.lychee.LycheeLootContextParams;
-import snownee.lychee.core.recipe.LycheeRecipe;
-import snownee.lychee.core.recipe.type.LycheeRecipeType;
+import snownee.lychee.LootContextKeys;
 import snownee.lychee.mixin.LootContextParamSetsAccess;
+import snownee.lychee.util.recipe.LycheeRecipeType;
 
 @KiwiModule("ritual")
 @KiwiModule.Optional
 public class RitualModule extends AbstractModule {
-	public static final KiwiGO<SkyDarken.Type> SKY_DARKEN = go(SkyDarken.Type::new);
 	@KiwiModule.Name("dragon_ritual")
-	public static final KiwiGO<LycheeRecipeType<DragonRitualContext, DragonRitualRecipe>> RECIPE_TYPE = go(() -> new LycheeRecipeType<>(
+	public static final KiwiGO<LycheeRecipeType<DragonRitualRecipe>> RECIPE_TYPE = go(() -> new LycheeRecipeType<>(
 			"fruitfulfun:dragon_ritual",
 			DragonRitualRecipe.class,
 			null));
 	@KiwiModule.Name("dragon_ritual")
-	public static final KiwiGO<LycheeRecipe.Serializer<DragonRitualRecipe>> SERIALIZER = go(DragonRitualRecipe.Serializer::new);
+	public static final KiwiGO<RecipeSerializer<DragonRitualRecipe>> SERIALIZER = go(() -> new RecipeSerializer<>(
+			DragonRitualRecipe.CODEC,
+			DragonRitualRecipe.STREAM_CODEC));
 	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(
 			() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.ritual.finish")));
 	public static final Supplier<BlockPattern> RITUAL = Suppliers.memoize(() -> BlockPatternBuilder.start()
@@ -94,11 +96,12 @@ public class RitualModule extends AbstractModule {
 
 	public RitualModule() {
 		Hooks.ritual = true;
-		LootContextParamSetsAccess.callRegister("fruitfulfun:dragon_ritual", $ -> {
-			$.required(LootContextParams.ORIGIN)
-					.required(LootContextParams.THIS_ENTITY)
-					.required(LycheeLootContextParams.BLOCK_POS);
-		});
+		LootContextParamSetsAccess.callRegister(
+				"fruitfulfun:dragon_ritual", $ -> {
+					$.required(LootContextParams.ORIGIN)
+							.required(LootContextParams.THIS_ENTITY)
+							.required(LootContextKeys.BLOCK_POS);
+				});
 	}
 
 	@Override
@@ -117,7 +120,7 @@ public class RitualModule extends AbstractModule {
 		for (BlockPos head : heads) {
 			level.playSound(null, head, SoundEvents.ENDER_DRAGON_AMBIENT, SoundSource.AMBIENT, 1.0F, 1.0F);
 		}
-		Interaction interaction = Objects.requireNonNull(EntityType.INTERACTION.create(level));
+		Interaction interaction = new Interaction(EntityType.INTERACTION, level);
 		interaction.setPos(Vec3.atCenterOf(pos));
 		interaction.setCustomName(Component.literal(INTERACTION_NAME));
 		level.addFreshEntity(interaction);
@@ -193,9 +196,9 @@ public class RitualModule extends AbstractModule {
 		motion = motion.yRot(-0.1f);
 		double power = Mth.clamp((interaction.tickCount + 20) / 100d, 0.25, 1);
 		for (int i = 0; i < 3; ++i) {
-			double dx = (motion.x * 0.08 + level.random.nextGaussian() * 0.005) * power;
-			double dy = (motion.y * 0.08 + level.random.nextGaussian() * 0.005) * power;
-			double dz = (motion.z * 0.08 + level.random.nextGaussian() * 0.005) * power;
+			double dx = (motion.x * 0.08 + level.getRandom().nextGaussian() * 0.005) * power;
+			double dy = (motion.y * 0.08 + level.getRandom().nextGaussian() * 0.005) * power;
+			double dz = (motion.z * 0.08 + level.getRandom().nextGaussian() * 0.005) * power;
 			for (int k = 2; k < 6; ++k) {
 				level.addParticle(ParticleTypes.DRAGON_BREATH, x, y, z, dx * k, dy * k, dz * k);
 			}
@@ -269,9 +272,9 @@ public class RitualModule extends AbstractModule {
 			}
 			AABB aabb = shape.bounds();
 			for (int i = 0; i < 24; i++) {
-				double x = Mth.lerp(level.random.nextDouble(), aabb.minX, aabb.maxX) + pos.getX();
-				double y = Mth.lerp(level.random.nextDouble(), aabb.minY, aabb.maxY) + pos.getY();
-				double z = Mth.lerp(level.random.nextDouble(), aabb.minZ, aabb.maxZ) + pos.getZ();
+				double x = Mth.lerp(level.getRandom().nextDouble(), aabb.minX, aabb.maxX) + pos.getX();
+				double y = Mth.lerp(level.getRandom().nextDouble(), aabb.minY, aabb.maxY) + pos.getY();
+				double z = Mth.lerp(level.getRandom().nextDouble(), aabb.minZ, aabb.maxZ) + pos.getZ();
 				level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0, 0, 0);
 			}
 			return;
@@ -285,13 +288,13 @@ public class RitualModule extends AbstractModule {
 		AreaEffectCloud flame = new AreaEffectCloud(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 		flame.setRadius(0.5f * breathCount);
 		flame.setDuration(200);
-		flame.setParticle(ParticleTypes.DRAGON_BREATH);
-		flame.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
-		flame.ownerUUID = DUMMY_UUID;
+		flame.setCustomParticle(PowerParticleOption.create(ParticleTypes.DRAGON_BREATH, 1.0F));
+		flame.addEffect(new MobEffectInstance(MobEffects.INSTANT_DAMAGE, 1, 1));
+		flame.owner = EntityReference.of(DUMMY_UUID);
 		level.addFreshEntity(flame);
 		level.playSound(null, pos, SoundEvents.ENDER_DRAGON_GROWL, SoundSource.AMBIENT, 1.0F, 1.0F);
 		ServerLevel serverLevel = (ServerLevel) level;
-		Advancement advancement = Hooks.advancement(serverLevel, "ritual");
+		AdvancementHolder advancement = Hooks.advancement(serverLevel, "ritual");
 		if (advancement != null) {
 			for (ServerPlayer player : serverLevel.players()) {
 				if (player.distanceToSqr(interaction) > 256) {
@@ -320,6 +323,9 @@ public class RitualModule extends AbstractModule {
 	}
 
 	public static boolean isDragonBreath(AreaEffectCloud cloud) {
-		return RitualModule.DUMMY_UUID.equals(cloud.ownerUUID) || cloud.getOwner() instanceof EnderDragon;
+		if (cloud.owner != null && RitualModule.DUMMY_UUID.equals(cloud.owner.getUUID())) {
+			return true;
+		}
+		return cloud.getOwner() instanceof EnderDragon;
 	}
 }

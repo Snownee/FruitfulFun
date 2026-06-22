@@ -6,8 +6,8 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.animal.bee.Bee;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
@@ -20,7 +20,7 @@ import snownee.jade.api.config.IPluginConfig;
 
 public class BeeDebugProvider implements IEntityComponentProvider, IServerDataProvider<EntityAccessor> {
 
-	public static final ResourceLocation UID = FruitfulFun.id("bee_debug");
+	public static final Identifier UID = FruitfulFun.id("bee_debug");
 
 	@Override
 	public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
@@ -28,7 +28,7 @@ public class BeeDebugProvider implements IEntityComponentProvider, IServerDataPr
 			return;
 		}
 		CompoundTag data = accessor.getServerData();
-		if (data.getBoolean("Trusted")) {
+		if (data.getBooleanOr("Trusted", false)) {
 			tooltip.add(Component.literal("Trusted"));
 		}
 //		if (data.getBoolean("Rolling")) {
@@ -62,7 +62,7 @@ public class BeeDebugProvider implements IEntityComponentProvider, IServerDataPr
 	}
 
 	@Override
-	public ResourceLocation getUid() {
+	public Identifier getUid() {
 		return UID;
 	}
 

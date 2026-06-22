@@ -9,7 +9,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,20 +21,20 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 
 	protected final ParticleOptions particleType;
 
-	public CherryLeavesBlock(Supplier<FruitType> type, Properties properties, ParticleOptions particleType) {
-		super(type, properties);
+	public CherryLeavesBlock(Supplier<FruitType> type, ParticleOptions particleType, Properties properties) {
+		super(type, 0.1F, properties);
 		this.particleType = particleType;
 	}
 
-	@Override
-	public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-		return 0;
-	}
-
-	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
-		return true;
-	}
+//	@Override
+//	protected int getLightDampening(BlockState state) {
+//		return 0;
+//	}
+//
+//	@Override
+//	protected boolean propagatesSkylightDown(BlockState state) {
+//		return true;
+//	}
 
 	@Override
 	public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
@@ -76,13 +75,13 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 	}
 
 	public static void spawnDestroyParticles(Level level, Player player, BlockPos pos, ParticleOptions particleType) {
-		if (level.isClientSide() && FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded &&
-				pos.distToCenterSqr(player.position()) < 81) {
-			int times = Mth.randomBetweenInclusive(level.random, 6, 12);
+		if (level.isClientSide() && FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded && pos.distToCenterSqr(
+				player.position()) < 81) {
+			int times = Mth.randomBetweenInclusive(level.getRandom(), 6, 12);
 			for (int i = 0; i < times; ++i) {
-				double x = level.random.nextGaussian() * 0.3D;
-				double y = level.random.nextGaussian() * 0.3D;
-				double z = level.random.nextGaussian() * 0.3D;
+				double x = level.getRandom().nextGaussian() * 0.3D;
+				double y = level.getRandom().nextGaussian() * 0.3D;
+				double z = level.getRandom().nextGaussian() * 0.3D;
 				x += pos.getX() + .5;
 				y += pos.getY() + .5;
 				z += pos.getZ() + .5;
