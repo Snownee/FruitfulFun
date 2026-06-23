@@ -14,10 +14,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.ColoredFallingBlock;
 import net.minecraft.world.level.block.ConcretePowderBlock;
 import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.GravelBlock;
-import net.minecraft.world.level.block.SandBlock;
 import snownee.fruits.util.ClientProxy;
 
 public class ItemProjectileColors {
@@ -57,7 +56,7 @@ public class ItemProjectileColors {
 			return;
 		}
 		if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof FallingBlock block) {
-			if (block instanceof SandBlock || block instanceof GravelBlock || block instanceof ConcretePowderBlock) {
+			if (block instanceof ColoredFallingBlock || block instanceof ConcretePowderBlock) {
 				register(item, new ItemProjectileColor.FallingBlock(block));
 				return;
 			}

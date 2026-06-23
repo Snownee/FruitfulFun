@@ -1,9 +1,8 @@
 package snownee.fruits.cherry.block;
 
-import java.util.function.Supplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
@@ -21,7 +20,7 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 
 	protected final ParticleOptions particleType;
 
-	public CherryLeavesBlock(Supplier<FruitType> type, ParticleOptions particleType, Properties properties) {
+	public CherryLeavesBlock(Holder<FruitType> type, ParticleOptions particleType, Properties properties) {
 		super(type, 0.1F, properties);
 		this.particleType = particleType;
 	}

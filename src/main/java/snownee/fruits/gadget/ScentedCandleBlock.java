@@ -14,7 +14,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.EntityBlock;
@@ -22,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.BlockHitResult;
 import snownee.kiwi.block.IKiwiBlock;
 
@@ -72,7 +72,7 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 				be.setCreative(!be.isCreative());
 				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.candleCreative." + (be.isCreative() ? "on" : "off")));
 			}
-			return InteractionResult.sidedSuccess(level.isClientSide());
+			return InteractionResult.SUCCESS_SERVER;
 		}
 		if (!level.isClientSide() && !state.getValue(LIT) && !itemInHand.isEmpty() && !itemInHand.is(asItem()) && !be.power().hasLife()) {
 			player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.notEnoughPower"));
@@ -96,12 +96,13 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 	}
 
 	@Override
-	public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
 		if (!level.isClientSide() && player.isCreative() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) &&
 				level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be && !be.power().isEmpty()) {
 			dropResources(state, level, pos, be);
 		}
 		super.playerWillDestroy(level, pos, state, player);
+		return state;
 	}
 
 	@Override

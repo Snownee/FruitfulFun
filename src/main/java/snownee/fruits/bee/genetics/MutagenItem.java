@@ -5,18 +5,20 @@ import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +27,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
@@ -73,24 +74,24 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 		if (code == null) {
 			return InteractionResult.FAIL;
 		}
-		if (!player.level().isClientSide()) {
-			Allele allele = Allele.byCode(code.charAt(0));
+		if (player.level() instanceof ServerLevel level) {
+			Allele allele = Allele.byCode(code);
 			if (allele == null) {
-				player.displayClientMessage(Component.translatable("tip.fruitfulfun.invalidMutagen"), true);
+				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.invalidMutagen"));
 				return InteractionResult.FAIL;
 			}
 			stack.shrink(1);
 			ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
 			if (!player.addItem(bottle)) {
-				bee.spawnAtLocation(bottle);
+				bee.spawnAtLocation(level, bottle);
 			}
 //				bee.level().playSound(null, bee, TODO, SoundSource.NEUTRAL, 1, 1);
 			bee.gameEvent(GameEvent.DRINK, player);
-			bee.addEffect(new MobEffectInstance(BeeModule.MUTAGEN_EFFECT.get(), 1200, allele.index, true, true, false));
+			bee.addEffect(new MobEffectInstance(BeeModule.MUTAGEN_EFFECT.holderOrThrow(), 1200, allele.index, true, true, false));
 			player.awardStat(Stats.ITEM_USED.get(this));
 			return InteractionResult.SUCCESS;
 		}
-		return InteractionResult.sidedSuccess(player.level().isClientSide());
+		return InteractionResult.SUCCESS_SERVER;
 	}
 
 	public static Optional<String> getCodename(ItemStack stack) {
@@ -116,7 +117,7 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 		ItemStack stack = new ItemStack(this);
 		Allele allele = Util.getRandom(List.copyOf(Allele.values()), random);
 		CompoundTag tag = stack.getOrCreateTag();
-		tag.putString("Type", String.valueOf(allele.codename));
+		tag.putString("Type", allele.codename);
 		tag.putInt("Color", allele.color);
 		return stack;
 	}
@@ -132,9 +133,9 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean bl) {
-		if (entity instanceof ServerPlayer player && !isImperfect(stack) && getCodename(stack).isEmpty()) {
-			stack.shrink(1);
+	public void inventoryTick(ItemStack itemStack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot) {
+		if (owner instanceof ServerPlayer player && !isImperfect(itemStack) && getCodename(itemStack).isEmpty()) {
+			itemStack.shrink(1);
 			player.addItem(randomMutagen(false, player.getRandom()));
 		}
 	}

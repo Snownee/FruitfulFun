@@ -14,6 +14,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -33,7 +35,6 @@ public class BeeAttributes {
 	private final List<String> pollens = Lists.newArrayList();
 	private final GeneData genes = new GeneData();
 	public boolean dirty;
-	private ItemStack saddle = ItemStack.EMPTY;
 	private List<UUID> trusted = List.of();
 	@Nullable
 	private Identifier texture;
@@ -44,9 +45,6 @@ public class BeeAttributes {
 	}
 
 	public void toNBT(CompoundTag data) {
-		if (!saddle.isEmpty()) {
-			data.put("Saddle", saddle.save(new CompoundTag()));
-		}
 		if (!trusted.isEmpty()) {
 			ListTag trustedList = new ListTag();
 			for (UUID uuid : trusted) {
@@ -69,10 +67,6 @@ public class BeeAttributes {
 	}
 
 	public void fromNBT(CompoundTag data, Bee bee) {
-		saddle = ItemStack.EMPTY;
-		if (data.contains("Saddle")) {
-			saddle = ItemStack.of(data.getCompound("Saddle"));
-		}
 		ImmutableList.Builder<UUID> builder = ImmutableList.builder();
 		for (Tag tag : data.getList("Trusted", Tag.TAG_STRING)) {
 			builder.add(UUID.fromString(tag.getAsString()));
@@ -108,28 +102,16 @@ public class BeeAttributes {
 		return pollens;
 	}
 
-	public boolean isSaddled() {
-		return !saddle.isEmpty();
-	}
-
 	public boolean isSaddleable() {
 		return hasTrait(Trait.MOUNTABLE);
 	}
 
-	public void setSaddle(ItemStack saddle) {
-		this.saddle = saddle;
-		dirty = true;
-	}
-
-	public ItemStack getSaddle() {
-		return saddle;
-	}
-
 	public void dropSaddle(Bee bee) {
-		if (isSaddled()) {
+		if (bee.isSaddled() && bee.level() instanceof ServerLevel level) {
 			bee.ejectPassengers();
-			bee.spawnAtLocation(saddle);
-			setSaddle(ItemStack.EMPTY);
+			ItemStack saddle = bee.getItemBySlot(EquipmentSlot.SADDLE);
+			bee.setItemSlot(EquipmentSlot.SADDLE, ItemStack.EMPTY);
+			bee.spawnAtLocation(level, saddle);
 		}
 	}
 

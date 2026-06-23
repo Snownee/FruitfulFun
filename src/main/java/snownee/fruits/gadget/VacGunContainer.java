@@ -1,8 +1,8 @@
 package snownee.fruits.gadget;
 
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
 
 public class VacGunContainer extends SimpleContainer {
 	private int itemCount;
@@ -31,7 +31,7 @@ public class VacGunContainer extends SimpleContainer {
 				i = 0;
 				break;
 			}
-			if (!ItemStack.isSameItemSameTags(thisSlot, itemStack)) {
+			if (!ItemStack.isSameItemSameComponents(thisSlot, itemStack)) {
 				continue;
 			}
 			if (j < getContainerSize() - 1) {
@@ -72,8 +72,8 @@ public class VacGunContainer extends SimpleContainer {
 	}
 
 	@Override
-	public void fromTag(ListTag listTag) {
-		super.fromTag(listTag);
+	public void fromItemList(ValueInput.TypedInputList<ItemStack> items) {
+		super.fromItemList(items);
 		itemCount = items.stream().mapToInt(ItemStack::getCount).sum();
 	}
 

@@ -18,7 +18,7 @@ accessible method net/minecraft/world/level/block/state/properties/BlockSetType 
 accessible field net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer radius Lnet/minecraft/util/valueproviders/IntProvider;
 accessible field net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer offset Lnet/minecraft/util/valueproviders/IntProvider;
 accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer shouldSkipLocation (Lnet/minecraft/util/RandomSource;IIIIZ)Z
-#accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer createFoliage (Lnet/minecraft/world/level/LevelSimulatedReader;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageSetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;ILnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageAttachment;III)V
+accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer createFoliage (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageSetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;ILnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageAttachment;III)V
 
 accessible method net/minecraft/world/entity/ai/village/poi/PoiTypes registerBlockStates (Lnet/minecraft/core/Holder;Ljava/util/Set;)V
 
@@ -39,12 +39,10 @@ accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/wor
 
 accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
 
-#accessible field net/minecraft/world/food/FoodProperties$Builder effects Ljava/util/List;
-
 accessible field net/minecraft/world/level/block/entity/SkullBlockEntity animationTickCount I
 accessible field net/minecraft/world/level/block/entity/SkullBlockEntity isAnimating Z
 
-#accessible field net/minecraft/world/entity/projectile/ThrowableItemProjectile DATA_ITEM_STACK Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/projectile/throwableitemprojectile/ThrowableItemProjectile DATA_ITEM_STACK Lnet/minecraft/network/syncher/EntityDataAccessor;
 
 accessible field net/minecraft/server/level/ServerPlayer containerCounter I
 
@@ -62,4 +60,4 @@ mutable field net/minecraft/world/level/block/entity/BlockEntity type Lnet/minec
 
 accessible field net/minecraft/world/entity/AreaEffectCloud owner Lnet/minecraft/world/entity/EntityReference;
 
-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer createFoliage (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageSetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;ILnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageAttachment;III)V
+accessible field net/minecraft/client/color/block/BlockColors BLANK_LAYER Lnet/minecraft/client/color/block/BlockTintSource;

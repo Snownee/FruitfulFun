@@ -7,6 +7,7 @@ import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,19 +22,20 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.attribute.AttributeTypes;
+import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.villager.AbstractVillager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -79,13 +81,15 @@ public class BeeModule extends AbstractModule {
 			HybridizingRecipe.class,
 			null));
 	@Name("hybridizing")
-	public static final KiwiGO<RecipeSerializer<HybridizingRecipe>> SERIALIZER = go(HybridizingRecipe.Serializer::new);
+	public static final KiwiGO<RecipeSerializer<HybridizingRecipe>> SERIALIZER = go(() -> new RecipeSerializer<>(
+			HybridizingRecipe.CODEC,
+			HybridizingRecipe.STREAM_CODEC));
 	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(
 			BeeHasTrait.Type::new,
-			() -> LycheeRegistries.CONTEXTUAL);
+			LycheeRegistries.CONTEXTUAL.key());
 	public static final KiwiGO<PostActionType<TransformBees>> TRANSFORM_BEES = go(
 			TransformBees.Type::new,
-			() -> LycheeRegistries.POST_ACTION);
+			LycheeRegistries.POST_ACTION.key());
 	public static Identifier BEE_ONE_CM = FruitfulFun.id("bee_one_cm");
 	public static Identifier BEES_BRED = FruitfulFun.id("bees_bred");
 	public static final KiwiGO<SoundEvent> BEE_SHEAR = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("entity.bee.shear")));
@@ -100,10 +104,14 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<SimpleParticleType> GHOST = go(() -> new SimpleParticleType(false));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
-	public static Set<VillagerProfession> BEEKEEPER_PROFESSIONS;
+	public static @Nullable Set<VillagerProfession> BEEKEEPER_PROFESSIONS;
 	public static final TagKey<EntityType<?>> CANNOT_HAUNT = entityTag(FruitfulFun.ID, "cannot_haunt");
 	public static final TagKey<Biome> UNLIMITED_BEE_RIDING = tag(Registries.BIOME, FruitfulFun.ID, "unlimited_bee_riding");
 	private static Set<Item> ALLOGAMOUS_ITEMS = Set.of();
+	@Name("gameplay/bee_rideable")
+	public static final KiwiGO<EnvironmentAttribute<Boolean>> BEE_RIDEABLE = go(() -> EnvironmentAttribute.builder(AttributeTypes.BOOLEAN)
+			.defaultValue(true)
+			.build());
 
 	public BeeModule() {
 		Hooks.bee = true;
@@ -126,18 +134,13 @@ public class BeeModule extends AbstractModule {
 		Level level = display.level();
 		if (level.isClientSide()) {
 			if (display.random.nextInt(50) == 0) {
-				ParticleUtils.spawnParticlesOnBlockFaces(
-						level,
-						display.blockPosition(),
-						ParticleTypes.WAX_ON,
-						UniformInt.of(2, 4));
+				ParticleUtils.spawnParticlesOnBlockFaces(level, display.blockPosition(), ParticleTypes.WAX_ON, UniformInt.of(2, 4));
 			}
 			return;
 		}
 		if (!Hooks.bee || display.tickCount > WAXED_TICKS) {
 			display.discard();
-		} else if (display.tickCount % 20 == 0 &&
-				!(level.getBlockEntity(display.blockPosition()) instanceof BeehiveBlockEntity)) {
+		} else if (display.tickCount % 20 == 0 && !(level.getBlockEntity(display.blockPosition()) instanceof BeehiveBlockEntity)) {
 			display.discard();
 		}
 	}
@@ -148,18 +151,18 @@ public class BeeModule extends AbstractModule {
 		}
 		if (BEEKEEPER_PROFESSIONS == null) {
 			ImmutableSet.Builder<VillagerProfession> builder = ImmutableSet.builder();
-			for (VillagerProfession profession : BuiltInRegistries.VILLAGER_PROFESSION) {
-				if (profession.name().endsWith("beekeeper")) {
-					builder.add(profession);
+			for (Holder<VillagerProfession> profession : BuiltInRegistries.VILLAGER_PROFESSION.asHolderIdMap()) {
+				if (profession.getRegisteredName().endsWith("beekeeper")) {
+					builder.add(profession.value());
 				}
 			}
 			BEEKEEPER_PROFESSIONS = builder.build();
 		}
 		if (villager instanceof Villager v) {
-			if (v.getVillagerData().getLevel() != 1) {
+			if (v.getVillagerData().level() != 1) {
 				return;
 			}
-			if (!BEEKEEPER_PROFESSIONS.contains(v.getVillagerData().getProfession())) {
+			if (!BEEKEEPER_PROFESSIONS.contains(v.getVillagerData().profession().value())) {
 				return;
 			}
 		} else if (villager.getType() == EntityType.WANDERING_TRADER) {
@@ -221,7 +224,6 @@ public class BeeModule extends AbstractModule {
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
 			RecipeTypes.ALL.add(RECIPE_TYPE.get());
-			PotionBrewing.ALLOWED_CONTAINERS.add(Ingredient.of(BeeModule.MUTAGEN.get()));
 
 			ImmutableSet.Builder<Item> allogamousItems = ImmutableSet.builder();
 			for (FruitType fruitType : FFRegistries.FRUIT_TYPE) {

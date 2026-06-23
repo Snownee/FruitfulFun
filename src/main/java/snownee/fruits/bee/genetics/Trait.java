@@ -6,13 +6,17 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 
 public record Trait(String name, int value) {
 	public static final Map<String, Trait> REGISTRY = Maps.newLinkedHashMap();
 	public static final Codec<Trait> CODEC = ExtraCodecs.idResolverCodec(Codec.STRING, REGISTRY::get, Trait::name);
+	public static final StreamCodec<ByteBuf, Trait> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(REGISTRY::get, trait -> trait.name);
 
 	public static Collection<Trait> values() {
 		return REGISTRY.values();

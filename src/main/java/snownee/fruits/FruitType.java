@@ -11,7 +11,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import snownee.fruits.block.FruitLeavesBlock;
 
@@ -24,7 +23,6 @@ public abstract class FruitType {
 	public final Supplier<Item> fruit;
 	public Holder<PoiType> poiType;
 	public boolean allogamous;
-	public TreeGrower grower;
 
 	public FruitType(
 			int tier,
@@ -42,7 +40,7 @@ public abstract class FruitType {
 	public static Item getFruitOrItem(String id) {
 		Block block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(id));
 		if (block instanceof FruitLeavesBlock leavesBlock) {
-			return leavesBlock.type.get().fruit.get();
+			return leavesBlock.type.value().fruit.get();
 		} else {
 			return block.asItem();
 		}
@@ -51,7 +49,7 @@ public abstract class FruitType {
 	public static Either<FruitType, Block> getFruitOrBlock(String id) {
 		Block block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(id));
 		if (block instanceof FruitLeavesBlock leavesBlock) {
-			return Either.left(leavesBlock.type.get());
+			return Either.left(leavesBlock.type.value());
 		} else {
 			return Either.right(block);
 		}

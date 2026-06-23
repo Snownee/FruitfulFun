@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.trinkets;
 
 import dev.emi.trinkets.api.TrinketsApi;
@@ -20,3 +21,4 @@ public class TrinketsCompat {
 				.orElse(null);
 	}
 }
+*/

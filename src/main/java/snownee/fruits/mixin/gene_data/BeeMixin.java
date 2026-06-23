@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.animal.bee.Bee;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.duck.FFBee;
 
@@ -23,14 +25,14 @@ public abstract class BeeMixin implements FFBee {
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-	private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+	private void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
 		CompoundTag data = new CompoundTag();
 		beeAttributes.toNBT(data);
 		compoundTag.put("FruitfulFun", data);
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-	private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+	private void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
 		Bee bee = (Bee) (Object) this;
 		compoundTag = compoundTag.getCompound("FruitfulFun");
 		if (!compoundTag.contains("Genes")) {

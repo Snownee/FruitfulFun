@@ -28,7 +28,7 @@ import snownee.kiwi.util.KUtil;
 
 public class FruitTreeBlockEntity extends ModBlockEntity {
 
-	public Holder<FruitType> type = FFFruitTypes.CITRON.holder().orElseThrow();
+	public Holder<FruitType> type = FFFruitTypes.CITRON.holderOrThrow();
 	private int lifespan = 20;
 	private int maxLifespan = 30;
 	private int fruitProduced = 0;

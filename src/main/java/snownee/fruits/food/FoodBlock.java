@@ -70,7 +70,7 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 				player.drop(stack, false);
 			}
 		}
-		return InteractionResult.sidedSuccess(level.isClientSide());
+		return InteractionResult.SUCCESS_SERVER;
 	}
 
 	@Override

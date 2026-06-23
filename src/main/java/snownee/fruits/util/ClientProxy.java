@@ -13,33 +13,31 @@ import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
-import org.jspecify.annotations.Nullable;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import org.jspecify.annotations.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.BeeRenderer;
-import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -48,16 +46,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GrassColor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
-import net.minecraft.world.phys.Vec3;
 import snownee.fruits.CoreModule;
-import snownee.fruits.FFClientConfig;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -70,22 +64,25 @@ import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.GhostParticle;
 import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
-import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
-import snownee.fruits.gadget.AirVortexParticleOption;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.client.AirVortexParticle;
 import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileRenderer;
-import snownee.kiwi.util.ColorProviderUtil;
-import snownee.lychee.client.core.post.PostActionRenderer;
+import snownee.kiwi.BlockObject;
+import snownee.kiwi.util.client.ColorProviderUtil;
+import snownee.lychee.util.action.ActionRenderer;
 
 public class ClientProxy implements ClientModInitializer {
+	private static final ExtraModelKey<BlockStateModel> CHERRY_CROWN_MODEL = ExtraModelKey.create();
+	private static final ExtraModelKey<BlockStateModel> REDLOVE_CROWN_MODEL = ExtraModelKey.create();
+
+	@SuppressWarnings("unchecked")
 	@Nullable
-	public static BakedModel getModel(ModelManager modelManager, Identifier id) {
-		return modelManager.getModel(id);
+	public static BlockStateModel getModel(ModelManager modelManager, Object key) {
+		return modelManager.getModel((ExtraModelKey<BlockStateModel>) key);
 	}
 
 	public static boolean poseArm(LivingEntity entity, ModelPart arm, ModelPart head, boolean rightArm) {
@@ -121,32 +118,32 @@ public class ClientProxy implements ClientModInitializer {
 
 	public static void renderVacGunInHand(
 			LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean leftHand, PoseStack poseStack) {
-		Vector3f vec = new Vector3f(0f, 0f, 0f);
-		poseStack.last().pose().transformPosition(vec);
-		Matrix4f screenToWorld = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
-
-		Matrix4f rotation = new Matrix4f(RenderSystem.getInverseViewRotationMatrix());
-		screenToWorld = rotation.mul(screenToWorld);
-
-		Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-		Vec3 cameraPos = camera.getPosition();
-//		screenToWorld.translate((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
-
-//		Vector3f worldPos = screenToWorld.transformPosition(vec);
-//		FruitfulFun.LOGGER.info(worldPos.toString(NumberFormat.getInstance()));
-
-		screenToWorld.transformPosition(vec);
-
-//		Vec3 entityPos = livingEntity.getEyePosition();
-//		vec.add((float) entityPos.x, (float) entityPos.y, (float) entityPos.z);
-		vec.add((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
-
-//		Vector3f worldPos = screenToWorld.transformPosition(new Vector3f());
-//		worldPos.add((float) entityPos.x, (float) entityPos.y, (float) entityPos.z);
-//		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), true), worldPos.x(), worldPos.y(), worldPos.z(), 0, 0, 0);
-
-		boolean mainArm = (livingEntity.getMainArm() == HumanoidArm.LEFT) == leftHand;
-		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), mainArm), vec.x(), vec.y(), vec.z(), 0, 0, 0);
+//		Vector3f vec = new Vector3f(0f, 0f, 0f);
+//		poseStack.last().pose().transformPosition(vec);
+//		Matrix4f screenToWorld = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
+//
+//		Matrix4f rotation = new Matrix4f(RenderSystem.getInverseViewRotationMatrix());
+//		screenToWorld = rotation.mul(screenToWorld);
+//
+//		Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+//		Vec3 cameraPos = camera.getPosition();
+////		screenToWorld.translate((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
+//
+////		Vector3f worldPos = screenToWorld.transformPosition(vec);
+////		FruitfulFun.LOGGER.info(worldPos.toString(NumberFormat.getInstance()));
+//
+//		screenToWorld.transformPosition(vec);
+//
+////		Vec3 entityPos = livingEntity.getEyePosition();
+////		vec.add((float) entityPos.x, (float) entityPos.y, (float) entityPos.z);
+//		vec.add((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
+//
+////		Vector3f worldPos = screenToWorld.transformPosition(new Vector3f());
+////		worldPos.add((float) entityPos.x, (float) entityPos.y, (float) entityPos.z);
+////		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), true), worldPos.x(), worldPos.y(), worldPos.z(), 0, 0, 0);
+//
+//		boolean mainArm = (livingEntity.getMainArm() == HumanoidArm.LEFT) == leftHand;
+//		livingEntity.level().addParticle(new AirVortexParticleOption(livingEntity.getId(), mainArm), vec.x(), vec.y(), vec.z(), 0, 0, 0);
 	}
 
 	@Nullable
@@ -158,48 +155,40 @@ public class ClientProxy implements ClientModInitializer {
 	public void onInitializeClient() {
 		EntityRendererRegistry.register(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
 
-		BlockColor oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES);
-		ColorProviderRegistry.BLOCK.register(
-				(state, world, pos, i) -> {
-					if (i == 0) {
-						return oakBlockColor.getColor(Blocks.OAK_LEAVES.defaultBlockState(), world, pos, i);
-					}
-					if (i == 1) {
-						if (CITRON_LEAVES.is(state)) {
-							return 0xDDCC58;
-						}
-						if (GRAPEFRUIT_LEAVES.is(state)) {
-							return 0xF7B144;
-						}
-						if (LEMON_LEAVES.is(state)) {
-							return 0xEBCA4B;
-						}
-						if (LIME_LEAVES.is(state)) {
-							return 0xCADA76;
-						}
-						if (TANGERINE_LEAVES.is(state)) {
-							return 0xF08A19;
-						}
-						if (ORANGE_LEAVES.is(state)) {
-							return 0xF08A19;
-						}
-						if (POMELO_LEAVES.is(state)) {
-							return 0xF7F67E;
-						}
-						if (APPLE_LEAVES.is(state)) {
-							return 0xFC1C2A;
-						}
-					}
-					return -1;
-				},
-				TANGERINE_LEAVES.getOrCreate(),
-				LIME_LEAVES.getOrCreate(),
-				CITRON_LEAVES.getOrCreate(),
-				POMELO_LEAVES.getOrCreate(),
-				ORANGE_LEAVES.getOrCreate(),
-				LEMON_LEAVES.getOrCreate(),
-				GRAPEFRUIT_LEAVES.getOrCreate(),
-				APPLE_LEAVES.getOrCreate());
+		BlockTintSource oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES, 0);
+		List<BlockObject<?>> citrusLeaves = List.of(
+				TANGERINE_LEAVES,
+				LIME_LEAVES,
+				CITRON_LEAVES,
+				POMELO_LEAVES,
+				ORANGE_LEAVES,
+				LEMON_LEAVES,
+				GRAPEFRUIT_LEAVES,
+				APPLE_LEAVES);
+		for (BlockObject<?> blockObject : citrusLeaves) {
+			Block block = blockObject.getOrCreate();
+			int fruitColor;
+			if (CITRON_LEAVES.is(block)) {
+				fruitColor = 0xDDCC58;
+			} else if (GRAPEFRUIT_LEAVES.is(block)) {
+				fruitColor = 0xF7B144;
+			} else if (LEMON_LEAVES.is(block)) {
+				fruitColor = 0xEBCA4B;
+			} else if (LIME_LEAVES.is(block)) {
+				fruitColor = 0xCADA76;
+			} else if (TANGERINE_LEAVES.is(block)) {
+				fruitColor = 0xF08A19;
+			} else if (ORANGE_LEAVES.is(block)) {
+				fruitColor = 0xF08A19;
+			} else if (POMELO_LEAVES.is(block)) {
+				fruitColor = 0xF7F67E;
+			} else if (APPLE_LEAVES.is(block)) {
+				fruitColor = 0xFC1C2A;
+			} else {
+				throw new IllegalStateException("Unknown block: " + block);
+			}
+			BlockColorRegistry.register(List.of(oakBlockColor, BlockTintSources.constant(fruitColor)), block);
+		}
 
 		ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
 		ItemColor oakItemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
@@ -217,7 +206,7 @@ public class ClientProxy implements ClientModInitializer {
 		ParticleProviderRegistry.getInstance().register(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
 		ParticleProviderRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
 
-		BlockColor birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES);
+		BlockTintSource birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES, 0);
 		ColorProviderRegistry.BLOCK.register(
 				(state, world, pos, i) -> {
 					if (i == 1) {
@@ -229,21 +218,11 @@ public class ClientProxy implements ClientModInitializer {
 					return -1;
 				}, REDLOVE_LEAVES.getOrCreate());
 
-		ColorProviderRegistry.BLOCK.register(
-				(state, world, pos, i) -> {
-					if (i != 0) {
-						if (world == null || pos == null) {
-							return GrassColor.getDefaultColor();
-						}
-						return BiomeColors.getAverageGrassColor(world, pos);
-					}
-					return -1;
-				}, PEACH_PINK_PETALS.getOrCreate());
+		BlockColorRegistry.register(List.of(BlockColors.BLANK_LAYER, BlockTintSources.grass()), PEACH_PINK_PETALS.getOrCreate());
 
 		ModelLoadingPlugin.register(ctx -> {
-			ctx.addModels(
-					FruitfulFun.id("block/cherry_crown"),
-					FruitfulFun.id("block/redlove_crown"));
+			ctx.addModel(CHERRY_CROWN_MODEL, SimpleUnbakedExtraModel.blockStateModel(FruitfulFun.id("block/cherry_crown")));
+			ctx.addModel(REDLOVE_CROWN_MODEL, SimpleUnbakedExtraModel.blockStateModel(FruitfulFun.id("block/redlove_crown")));
 		});
 
 		if (Hooks.bee) {
@@ -263,15 +242,7 @@ public class ClientProxy implements ClientModInitializer {
 				InspectorClientHandler.tick(client);
 			});
 
-			ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-				if (FFClientConfig.beehiveTooltipDisplayBees && CommonProxy.isBeehive(stack)) {
-					CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
-					if (blockEntityData == null) {
-						return;
-					}
-					int bees = blockEntityData.getList(BeehiveBlockEntity.BEES, 10).size();
-					lines.add(Component.translatable("tip.fruitfulfun.bees", bees).withStyle(ChatFormatting.GRAY));
-				}
+			ItemTooltipCallback.EVENT.register((stack, context, flag, lines) -> {
 				if (Hooks.bee && FFCommonConfig.allogamousTrees && BeeModule.isAllogamous(stack)) {
 					lines.add(Component.translatable("tip.fruitfulfun.allogamy").withStyle(ChatFormatting.GRAY));
 				}
@@ -295,7 +266,7 @@ public class ClientProxy implements ClientModInitializer {
 		}
 
 		if (CommonProxy.trinkets) {
-			TrinketsCompat.init();
+//			TrinketsCompat.init();
 		}
 
 		if (Hooks.gadget) {
@@ -314,7 +285,7 @@ public class ClientProxy implements ClientModInitializer {
 		}
 
 		if (Hooks.ritual) {
-			PostActionRenderer.register(BeeModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
+			ActionRenderer.register(BeeModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
 		}
 	}
 }

@@ -1,44 +1,59 @@
 package snownee.fruits.gadget.network;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-
-import org.jspecify.annotations.Nullable;
+import java.util.Objects;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.gadget.BuzzyCrafterBlock;
+import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
-import snownee.kiwi.network.PacketHandler;
+import snownee.kiwi.network.PayloadContext;
+import snownee.kiwi.network.PlayPacketHandler;
 
-@KiwiPacket(value = "click_crafter", dir = KiwiPacket.Direction.PLAY_TO_SERVER)
-public class CClickCrafterPacket extends PacketHandler {
-	public static CClickCrafterPacket I;
+@KiwiPacket
+public record CClickCrafterPacket(BlockHitResult hit) implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<CClickCrafterPacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("click_crafter"));
 
-	public static void send(BlockHitResult hit) {
-		I.sendToServer(buf -> {
-			buf.writeBlockHitResult(hit);
-		});
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, CClickCrafterPacket> STREAM_CODEC = StreamCodec.composite(
+			StreamCodec.of(FriendlyByteBuf::writeBlockHitResult, FriendlyByteBuf::readBlockHitResult),
+			CClickCrafterPacket::hit,
+			CClickCrafterPacket::new);
 
 	@Override
-	public @Nullable CompletableFuture<FriendlyByteBuf> receive(
-			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
-			FriendlyByteBuf buf,
-			@Nullable ServerPlayer player) {
-		BlockHitResult hit = buf.readBlockHitResult();
-		BlockPos pos = hit.getBlockPos();
-		if (player == null || pos.distToCenterSqr(player.position()) > 256) {
-			return null;
+	public CustomPacketPayload.Type<CClickCrafterPacket> type() {
+		return TYPE;
+	}
+
+	public static class Handler implements PlayPacketHandler<CClickCrafterPacket> {
+		@Override
+		public void handle(CClickCrafterPacket packet, PayloadContext context) {
+			context.execute(() -> {
+				ServerPlayer player = Objects.requireNonNull(context.serverPlayer());
+				BlockPos pos = packet.hit().getBlockPos();
+				if (pos.distToCenterSqr(player.position()) > 256) {
+					return;
+				}
+				BlockState blockState = player.level().getBlockState(pos);
+				if (blockState.getBlock() instanceof BuzzyCrafterBlock block) {
+					block.click(blockState, player.level(), pos, player, packet.hit());
+				}
+			});
 		}
-		return executor.apply(() -> {
-			BlockState blockState = player.level().getBlockState(pos);
-			if (blockState.getBlock() instanceof BuzzyCrafterBlock block) {
-				block.click(blockState, player.level(), pos, player, hit);
-			}
-		});
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, CClickCrafterPacket> streamCodec() {
+			return STREAM_CODEC;
+		}
+	}
+
+	public static void send(BlockHitResult hit) {
+		KPacketSender.sendToServer(new CClickCrafterPacket(hit));
 	}
 }

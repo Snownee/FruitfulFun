@@ -20,8 +20,13 @@ import snownee.kiwi.network.PlayPacketHandler;
 
 @KiwiPacket
 public record SHauntingParticlesPacket(Vec3 pos) implements CustomPacketPayload {
-	public static final CustomPacketPayload.Type<SHauntingParticlesPacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id(
-			"haunting_particles"));
+	public static final CustomPacketPayload.Type<SHauntingParticlesPacket> TYPE = new CustomPacketPayload.Type<>(
+			FruitfulFun.id("haunting_particles"));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, SHauntingParticlesPacket> STREAM_CODEC = StreamCodec.composite(
+			Vec3.STREAM_CODEC,
+			SHauntingParticlesPacket::pos,
+			SHauntingParticlesPacket::new);
 
 	@Override
 	public CustomPacketPayload.Type<SHauntingParticlesPacket> type() {
@@ -29,11 +34,6 @@ public record SHauntingParticlesPacket(Vec3 pos) implements CustomPacketPayload 
 	}
 
 	public static class Handler implements PlayPacketHandler<SHauntingParticlesPacket> {
-		public static final StreamCodec<RegistryFriendlyByteBuf, SHauntingParticlesPacket> STREAM_CODEC = StreamCodec.composite(
-				Vec3.STREAM_CODEC,
-				SHauntingParticlesPacket::pos,
-				SHauntingParticlesPacket::new);
-
 		@Override
 		public void handle(SHauntingParticlesPacket packet, PayloadContext context) {
 			if (!FFCommonConfig.hauntingInteractionParticles) {

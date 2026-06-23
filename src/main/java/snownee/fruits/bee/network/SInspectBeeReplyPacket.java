@@ -1,63 +1,87 @@
 package snownee.fruits.bee.network;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
-import org.jspecify.annotations.Nullable;
-
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.Locus;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
-import snownee.kiwi.network.PacketHandler;
+import snownee.kiwi.network.PayloadContext;
+import snownee.kiwi.network.PlayPacketHandler;
 
-@KiwiPacket(value = "inspect_bee_reply", dir = KiwiPacket.Direction.PLAY_TO_CLIENT)
-public class SInspectBeeReplyPacket extends PacketHandler {
-	public static SInspectBeeReplyPacket I;
+@KiwiPacket
+public record SInspectBeeReplyPacket(List<Trait> traits, List<String> pollens, List<GeneRecord> genes)
+		implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<SInspectBeeReplyPacket> TYPE = new CustomPacketPayload.Type<>(
+			FruitfulFun.id("inspect_bee_reply"));
 
-	public static void send(ServerPlayer player, BeeAttributes attributes) {
-		SInspectBeeReplyPacket.I.send(player, buf0 -> {
-			buf0.writeCollection(attributes.getGenes().getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
-			buf0.writeCollection(attributes.getPollens(), FriendlyByteBuf::writeUtf);
-			buf0.writeVarInt(Allele.sortedByCode().size());
-			for (Allele allele : Allele.sortedByCode()) {
-				Locus locus = attributes.getLocus(allele);
-				buf0.writeChar(allele.codename);
-				buf0.writeVarInt(locus.getHigh());
-				buf0.writeVarInt(locus.getLow());
-			}
-		});
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, SInspectBeeReplyPacket> STREAM_CODEC = StreamCodec.composite(
+			Trait.STREAM_CODEC.apply(ByteBufCodecs.list()),
+			SInspectBeeReplyPacket::traits,
+			ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
+			SInspectBeeReplyPacket::pollens,
+			GeneRecord.STREAM_CODEC.apply(ByteBufCodecs.list()),
+			SInspectBeeReplyPacket::genes,
+			SInspectBeeReplyPacket::new);
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(
-			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
-			FriendlyByteBuf buf,
-			@Nullable ServerPlayer player) {
-		List<String> traits = buf.readList(FriendlyByteBuf::readUtf);
-		List<String> pollens = buf.readList(FriendlyByteBuf::readUtf);
-		List<GeneRecord> genes = buf.readList($ -> new GeneRecord($.readChar(), $.readVarInt() + 1, $.readVarInt() + 1));
-		return executor.apply(() -> {
-			Minecraft mc = Minecraft.getInstance();
-			if (mc.player == null) {
-				return;
-			}
-			List<Trait> realTraits = traits.stream()
-					.sorted()
-					.map(Trait.REGISTRY::get)
-					.filter(Objects::nonNull)
-					.toList();
-			InspectorClientHandler.writeToBook(mc.player, realTraits, pollens, genes);
-		});
+	public CustomPacketPayload.Type<SInspectBeeReplyPacket> type() {
+		return TYPE;
 	}
 
-	public record GeneRecord(char code, int high, int low) {
+	public static class Handler implements PlayPacketHandler<SInspectBeeReplyPacket> {
+		@Override
+		public void handle(SInspectBeeReplyPacket packet, PayloadContext context) {
+			context.execute(() -> {
+				Minecraft mc = Minecraft.getInstance();
+				if (mc.player == null) {
+					return;
+				}
+				List<Trait> realTraits = packet.traits().stream().sorted().toList();
+				InspectorClientHandler.writeToBook(mc.player, realTraits, packet.pollens(), packet.genes());
+			});
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, SInspectBeeReplyPacket> streamCodec() {
+			return STREAM_CODEC;
+		}
+	}
+
+	public static void send(ServerPlayer player, BeeAttributes attributes) {
+		List<GeneRecord> genes = new ArrayList<>();
+		for (Allele allele : Allele.sortedByCode()) {
+			Locus locus = attributes.getLocus(allele);
+			genes.add(new GeneRecord(allele.codename, locus.getHigh(), locus.getLow()));
+		}
+		KPacketSender.send(
+				new SInspectBeeReplyPacket(
+						List.copyOf(attributes.getGenes().getTraits()),
+						attributes.getPollens(),
+						List.copyOf(genes)),
+				player);
+	}
+
+	public record GeneRecord(String code, int high, int low) {
+		public static final StreamCodec<ByteBuf, GeneRecord> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.STRING_UTF8,
+				GeneRecord::code,
+				ByteBufCodecs.VAR_INT,
+				GeneRecord::high,
+				ByteBufCodecs.VAR_INT,
+				GeneRecord::low,
+				GeneRecord::new);
 	}
 }

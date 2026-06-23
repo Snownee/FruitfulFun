@@ -1,6 +1,7 @@
 package snownee.fruits.gadget;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import com.mojang.serialization.Codec;
@@ -8,6 +9,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -23,7 +25,6 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -36,7 +37,6 @@ import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModules;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
-import snownee.kiwi.util.KiwiEntityTypeBuilder;
 
 @KiwiModule("gadget")
 @KiwiModule.Optional
@@ -46,7 +46,6 @@ public class GadgetModule extends AbstractModule {
 	@KiwiModule.Name("buzzy_crafter")
 	public static final KiwiGO<BlockEntityType<BuzzyCrafterBlockEntity>> BUZZY_CRAFTER_ENTITY = blockEntity(
 			BuzzyCrafterBlockEntity::new,
-			null,
 			BuzzyCrafterBlock.class);
 	@KiwiModule.Name("buzzy_crafter")
 	public static final KiwiGO<PoiType> BUZZY_CRAFTER_POI = go(() -> new PoiType(
@@ -65,7 +64,7 @@ public class GadgetModule extends AbstractModule {
 	public static final TagKey<Block> VCD_PERFORM_USING = blockTag(FruitfulFun.ID, "vcd_perform_using");
 	public static final TagKey<Block> VCD_PERFORM_BREAKING = blockTag(FruitfulFun.ID, "vcd_perform_breaking");
 	public static final TagKey<EntityType<?>> VCD_MOVABLE = entityTag(FruitfulFun.ID, "vcd_movable");
-	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = go(() -> KiwiEntityTypeBuilder.<VacItemProjectile>create()
+	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = entity($ -> KiwiEntityTypeBuilder.<VacItemProjectile>create()
 			.dimensions(EntityDimensions.scalable(0.25f, 0.25f))
 			.trackRangeChunks(4)
 			.trackedUpdateRate(10)
@@ -82,7 +81,7 @@ public class GadgetModule extends AbstractModule {
 
 	@KiwiModule.Category(value = Categories.COMBAT, after = "shield")
 	public static final KiwiGO<BuzzyShieldItem> BUZZY_SHIELD = go(() -> new BuzzyShieldItem(itemProp().stacksTo(1)));
-	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = go(() -> KiwiEntityTypeBuilder.<SummonedBee>createMob()
+	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = entity($ -> KiwiEntityTypeBuilder.<SummonedBee>createMob()
 			.dimensions(EntityDimensions.scalable(0.525f, 0.45f))
 			.trackRangeChunks(8)
 			.defaultAttributes(SummonedBee::createAttributes)
@@ -94,14 +93,14 @@ public class GadgetModule extends AbstractModule {
 	public static final KiwiGO<MobEffect> WEAK_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xAAAAAA));
 	//	public static final KiwiGO<MobEffect> HEAVY_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0x555555));
 	public static final KiwiGO<ScentType> PHANTOM = go(() -> new ScentType(List.of(new MobEffectInstance(
-			PHANTOM_SCENT.getOrCreate(),
+			PHANTOM_SCENT.holderOrThrow(),
 			600,
 			0,
 			true,
 			false,
 			false))));
 	public static final KiwiGO<ScentType> WANDERING_TRADER = go(() -> new ScentType(List.of(new MobEffectInstance(
-			WANDERING_TRADER_SCENT.getOrCreate(),
+			WANDERING_TRADER_SCENT.holderOrThrow(),
 			600,
 			0,
 			true,
@@ -109,9 +108,9 @@ public class GadgetModule extends AbstractModule {
 			false))));
 	public static final KiwiGO<ScentType> ENDER = go(() -> new ScentType(List.of()));
 	public static final KiwiGO<ScentType> WEAK = go(() -> new ScentType(List.of(
-			new MobEffectInstance(WEAK_SCENT.getOrCreate(), 600, 0, true, false, false),
+			new MobEffectInstance(WEAK_SCENT.holderOrThrow(), 600, 0, true, false, false),
 			new MobEffectInstance(MobEffects.WEAKNESS, 600),
-			new MobEffectInstance(CoreModule.FRAGILITY.getOrCreate(), 600))));
+			new MobEffectInstance(CoreModule.FRAGILITY.holderOrThrow(), 600))));
 	//	public static final KiwiGO<ScentType> HEAVY = go(() -> new ScentType(List.of(new MobEffectInstance(
 //			HEAVY_SCENT.getOrCreate(),
 //			600,
@@ -150,7 +149,7 @@ public class GadgetModule extends AbstractModule {
 	@Override
 	protected void preInit() {
 		CommonProxy.initGadgetModule();
-		Hooks.scentEffects.addAll(KiwiModules.get(uid).getRegistries(BuiltInRegistries.MOB_EFFECT));
+		Hooks.scentEffects.addAll(KiwiModules.get(Objects.requireNonNull(uid)).getRegistries(Registries.MOB_EFFECT));
 	}
 
 	@Override

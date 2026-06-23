@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.trinkets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -52,3 +53,4 @@ public class FlowerCrownRenderer implements TrinketRenderer {
 		poseStack.popPose();
 	}
 }
+*/

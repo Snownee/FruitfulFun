@@ -16,6 +16,7 @@ import snownee.fruits.bee.genetics.GeneticSavedData;
 public class DebugAllelesCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("debug_alleles")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.argument("seed", LongArgumentType.longArg())
 						.executes(context -> {
 							GeneticSavedData data = new GeneticSavedData();

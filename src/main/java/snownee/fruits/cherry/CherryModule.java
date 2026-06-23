@@ -11,8 +11,9 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -42,7 +43,6 @@ import snownee.fruits.FFTreeGrowers;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.SlidingDoorBlock;
-import snownee.fruits.block.grower.FruitTreeGrower;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.cherry.item.RedloveItem;
@@ -60,7 +60,7 @@ import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule("cherry")
+@KiwiModule(value = "cherry", dependencies = "fruit_types")
 public class CherryModule extends AbstractModule {
 
 	public static final BlockSetType REDLOVE_SET_TYPE = new BlockSetType(
@@ -135,41 +135,48 @@ public class CherryModule extends AbstractModule {
 	public static final KiwiGO<SimpleParticleType> PETAL_CHERRY = go(() -> new SimpleParticleType(false));
 	public static final KiwiGO<SimpleParticleType> PETAL_REDLOVE = go(() -> new SimpleParticleType(false));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
-	public static final BlockObject<FruitLeavesBlock> CHERRY_LEAVES = block($ -> new CherryLeavesBlock(
-			FFFruitTypes.CHERRY,
-			PETAL_CHERRY.getOrCreate(),
-			blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_PINK)));
-	public static final BlockObject<FruitLeavesBlock> REDLOVE_LEAVES = block($ -> new CherryLeavesBlock(
-			FFFruitTypes.REDLOVE,
-			PETAL_REDLOVE.getOrCreate(),
-			blockProp(Blocks.CHERRY_LEAVES).mapColor(MapColor.CRIMSON_NYLIUM)));
+	public static final BlockObject<FruitLeavesBlock> CHERRY_LEAVES = block(
+			$ -> new CherryLeavesBlock(
+					FFFruitTypes.CHERRY.holderOrThrow(),
+					PETAL_CHERRY.getOrCreate(),
+					$.mapColor(MapColor.COLOR_PINK)),
+			() -> Blocks.CHERRY_LEAVES);
+	public static final BlockObject<FruitLeavesBlock> REDLOVE_LEAVES = block(
+			$ -> new CherryLeavesBlock(
+					FFFruitTypes.REDLOVE.holderOrThrow(),
+					PETAL_REDLOVE.getOrCreate(),
+					$.mapColor(MapColor.CRIMSON_NYLIUM)),
+			() -> Blocks.CHERRY_LEAVES);
 	@Category(value = Categories.NATURAL_BLOCKS, after = "pink_petals")
 	public static final BlockObject<FlowerBedBlock> PEACH_PINK_PETALS = block(FlowerBedBlock::new, () -> Blocks.PINK_PETALS);
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
-	public static final BlockObject<SaplingBlock> CHERRY_SAPLING = block($ -> new SaplingBlock(
-			new FruitTreeGrower(FFFruitTypes.CHERRY.getOrCreate()),
-			blockProp(Blocks.CHERRY_SAPLING).mapColor(MapColor.COLOR_PINK)));
+	public static final BlockObject<SaplingBlock> CHERRY_SAPLING = block(
+			$ -> new SaplingBlock(
+					FFTreeGrowers.CHERRY,
+					$.mapColor(MapColor.COLOR_PINK)), () -> Blocks.CHERRY_SAPLING);
 	public static final BlockObject<SaplingBlock> REDLOVE_SAPLING = block(
 			$ -> new SaplingBlock(
 					FFTreeGrowers.REDLOVE,
 					$.mapColor(MapColor.CRIMSON_NYLIUM)), () -> Blocks.CHERRY_SAPLING);
 	@NoItem
-	public static final BlockObject<Block> POTTED_CHERRY = block($ -> new FlowerPotBlock(
-			CHERRY_SAPLING.getOrCreate(),
-			blockProp(Blocks.POTTED_CHERRY_SAPLING)));
+	public static final BlockObject<Block> POTTED_CHERRY = block(
+			$ -> new FlowerPotBlock(CHERRY_SAPLING.getOrCreate(), $),
+			() -> Blocks.POTTED_CHERRY_SAPLING);
 	@NoItem
-	public static final BlockObject<Block> POTTED_REDLOVE = block($ -> new FlowerPotBlock(
-			REDLOVE_SAPLING.getOrCreate(),
-			blockProp(Blocks.POTTED_CHERRY_SAPLING)));
+	public static final BlockObject<Block> POTTED_REDLOVE = block(
+			$ -> new FlowerPotBlock(REDLOVE_SAPLING.getOrCreate(), $),
+			() -> Blocks.POTTED_CHERRY_SAPLING);
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final ItemObject<Item> CHERRY = item($ -> new ModItem(itemProp().food(Foods.CHERRY)));
-	public static final ItemObject<Item> REDLOVE = item($ -> new RedloveItem(itemProp().food(Foods.REDLOVE)));
-	public static final KiwiGO<BannerPattern> HEART = go(() -> new BannerPattern("hrt"));
+	public static final ItemObject<Item> REDLOVE = item($ -> new RedloveItem(itemProp().food(
+			Foods.REDLOVE,
+			Consumable.builder()
+					.onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.REGENERATION, 50)))
+					.build())));
+	public static final KiwiGO<BannerPattern> HEART = go(() -> CoreModule.bannerPattern("heart"));
 	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/heart");
 	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
-	public static final ItemObject<Item> HEART_BANNER_PATTERN = go(() -> new Item(
-			HEART_TAG,
-			itemProp().stacksTo(Items.MOJANG_BANNER_PATTERN.getDefaultMaxStackSize()).rarity(Rarity.UNCOMMON)));
+	public static final ItemObject<Item> HEART_BANNER_PATTERN = CoreModule.bannerPatternItem(HEART_TAG);
 	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
 	public static final ItemObject<Item> CHERRY_CROWN = item($ -> new FlowerCrownItem(itemProp(), PETAL_CHERRY.getOrCreate()));
 	public static final ItemObject<Item> REDLOVE_CROWN = item($ -> new FlowerCrownItem(itemProp(), PETAL_REDLOVE.getOrCreate()));
@@ -196,9 +203,6 @@ public class CherryModule extends AbstractModule {
 
 	public static final class Foods {
 		public static final FoodProperties CHERRY = new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).build();
-		public static final FoodProperties REDLOVE = new FoodProperties.Builder().nutrition(4)
-				.saturationModifier(0.6f)
-				.effect(new MobEffectInstance(MobEffects.REGENERATION, 50), 1)
-				.build();
+		public static final FoodProperties REDLOVE = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6f).build();
 	}
 }

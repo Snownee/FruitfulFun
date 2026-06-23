@@ -29,12 +29,11 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
-import snownee.jade.api.Identifiers;
+import snownee.jade.api.JadeIds;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.theme.IThemeHelper;
-import snownee.jade.api.ui.IElement;
-import snownee.jade.api.ui.IElementHelper;
-import snownee.jade.impl.ui.ScaledTextElement;
+import snownee.jade.api.ui.Element;
+import snownee.jade.api.ui.JadeUI;
 
 public class InspectorProvider implements IEntityComponentProvider, IBlockComponentProvider, IServerDataProvider<EntityAccessor> {
 
@@ -76,19 +75,18 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 		CompoundTag data = accessor.getServerData();
 		if (InspectorClientHandler.isAnalyzing()) {
 			tooltip.add(Component.translatable("tip.fruitfulfun.analyzing"));
-			IElementHelper elements = IElementHelper.get();
-			IElement icon = elements.smallItem(Items.HONEYCOMB.getDefaultInstance()).message(null);
+			Element icon = JadeUI.smallItem(Items.HONEYCOMB.getDefaultInstance()).message(null);
 			int i = InspectorClientHandler.getHoverTicks() / 4 % 3;
-			tooltip.append(elements.spacer(2 + i * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
+			tooltip.append(JadeUI.spacer(2 + i * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
 			tooltip.append(icon);
-			tooltip.append(elements.spacer((2 - i) * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
+			tooltip.append(JadeUI.spacer((2 - i) * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
 			return;
 		}
 		if (!data.contains("Loci")) {
 			return;
 		}
-		tooltip.remove(Identifiers.MC_ENTITY_HEALTH);
-		tooltip.remove(Identifiers.MC_ENTITY_ARMOR);
+		tooltip.remove(JadeIds.MC_ENTITY_HEALTH);
+		tooltip.remove(JadeIds.MC_ENTITY_ARMOR);
 		switch (InspectorClientHandler.getPageNow()) {
 			case 0:
 				showPollens(tooltip, data);
@@ -100,8 +98,9 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 				showGenes(tooltip, data, FFPlayer.of(accessor.getPlayer()));
 				break;
 		}
-		tooltip.add(new ScaledTextElement(Component.translatable("tip.fruitfulfun.pressAlt")
-				.withStyle(IThemeHelper.get().isLightColorScheme() ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), 0.75f));
+		tooltip.add(new ScaledTextElement(
+				Component.translatable("tip.fruitfulfun.pressAlt")
+						.withStyle(IThemeHelper.get().isLightColorScheme() ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), 0.75f));
 	}
 
 	public static void showPollens(ITooltip tooltip, CompoundTag data) {

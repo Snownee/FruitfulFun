@@ -4,13 +4,12 @@ import java.util.Set;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LimitCount;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import snownee.fruits.gadget.BuzzyPowerStorage;
@@ -20,6 +19,11 @@ import snownee.fruits.gadget.ScentedCandleBlockEntity;
 public class SetBuzzyPowerFunction extends LootItemConditionalFunction {
 	public SetBuzzyPowerFunction(LootItemCondition[] lootItemConditions) {
 		super(lootItemConditions);
+	}
+
+	@Override
+	public MapCodec<? extends LootItemConditionalFunction> codec() {
+		return null;
 	}
 
 	@Override

@@ -111,6 +111,6 @@ public class BeehiveBlockMixin {
 		if (!level.isClientSide()) {
 			level.playSound(null, pos, SoundEvents.LEASH_KNOT_PLACE, player.getSoundSource(), 1, 1);
 		}
-		cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
+		cir.setReturnValue(InteractionResult.SUCCESS_SERVER);
 	}
 }

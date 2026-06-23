@@ -1,41 +1,56 @@
 package snownee.fruits.bee.network;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-
-import org.jspecify.annotations.Nullable;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.duck.FFLivingEntity;
+import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
-import snownee.kiwi.network.PacketHandler;
+import snownee.kiwi.network.PayloadContext;
+import snownee.kiwi.network.PlayPacketHandler;
 
-@KiwiPacket(value = "set_pink_glow", dir = KiwiPacket.Direction.PLAY_TO_CLIENT)
-public class SSetPinkGlowPacket extends PacketHandler {
-	public static SSetPinkGlowPacket I;
+@KiwiPacket
+public record SSetPinkGlowPacket(IntList affectedEntities) implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<SSetPinkGlowPacket> TYPE = new CustomPacketPayload.Type<>(
+			FruitfulFun.id("set_pink_glow"));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, SSetPinkGlowPacket> STREAM_CODEC = StreamCodec.composite(
+			StreamCodec.of(RegistryFriendlyByteBuf::writeIntIdList, RegistryFriendlyByteBuf::readIntIdList),
+			SSetPinkGlowPacket::affectedEntities,
+			SSetPinkGlowPacket::new);
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(
-			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
-			FriendlyByteBuf buf,
-			@Nullable ServerPlayer player) {
-		IntList affectedEntities = buf.readIntIdList();
-		return executor.apply(() -> {
-			ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-			affectedEntities.intStream().mapToObj(level::getEntity).filter(Objects::nonNull).forEach(entity -> {
-				if (entity instanceof FFLivingEntity living) {
-					living.fruits$setPinkGlowing();
-				}
+	public CustomPacketPayload.Type<SSetPinkGlowPacket> type() {
+		return TYPE;
+	}
+
+	public static class Handler implements PlayPacketHandler<SSetPinkGlowPacket> {
+		@Override
+		public void handle(SSetPinkGlowPacket packet, PayloadContext context) {
+			context.execute(() -> {
+				ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
+				packet.affectedEntities().intStream().mapToObj(level::getEntity).filter(Objects::nonNull).forEach(entity -> {
+					if (entity instanceof FFLivingEntity living) {
+						living.fruits$setPinkGlowing();
+					}
+				});
 			});
-		});
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, SSetPinkGlowPacket> streamCodec() {
+			return STREAM_CODEC;
+		}
 	}
 
 	public static void send(ServerPlayer player, IntList affectedEntities) {
-		I.send(player, buf -> buf.writeIntIdList(affectedEntities));
+		KPacketSender.send(new SSetPinkGlowPacket(affectedEntities), player);
 	}
 }

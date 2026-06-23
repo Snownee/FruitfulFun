@@ -1,9 +1,11 @@
 package snownee.fruits.ritual;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.google.gson.JsonObject;
 
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -11,6 +13,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
@@ -48,6 +51,11 @@ public class BeehiveIngredient implements CustomIngredient {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Stream<Holder<Item>> items() {
+		return Stream.empty();
 	}
 
 	@Override

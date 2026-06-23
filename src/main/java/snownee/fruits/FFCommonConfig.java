@@ -38,8 +38,8 @@ public final class FFCommonConfig {
 	public static int beeNaturalHealingInterval = 900;
 	@KiwiConfig.Path("beeRiding.heightLimit")
 	public static boolean beeRidingHeightLimit = true;
-	@KiwiConfig.Path("beeRiding.ultraWarmDimensionLimit")
-	public static boolean beeRidingUltraWarmDimensionLimit = true;
+	@KiwiConfig.Path("beeRiding.beeRidingEnvironmentAttrRules")
+	public static boolean beeRidingEnvironmentAttrRules = true;
 	@KiwiConfig.Path("beeRiding.rainingLimit")
 	public static boolean beeRidingRainingLimit = true;
 	@KiwiConfig.Path("beeRiding.horizontalSpeedMultiplier")

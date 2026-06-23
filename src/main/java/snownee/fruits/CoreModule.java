@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -15,8 +16,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.food.FoodProperties;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
+import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -72,7 +74,7 @@ import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule
+@KiwiModule(dependencies = "fruit_types")
 public final class CoreModule extends AbstractModule {
 
 	public static final BlockSetType CITRUS_SET_TYPE = new BlockSetType("fruitfulfun:citrus");
@@ -109,35 +111,51 @@ public final class CoreModule extends AbstractModule {
 	public static final ItemObject<Item> CITRON = item($ -> new ModItem($.food(Foods.CITRON)));
 	public static final ItemObject<Item> POMELO = item($ -> new ModItem($.food(Foods.POMELO)));
 	public static final ItemObject<Item> ORANGE = item($ -> new ModItem($.food(Foods.ORANGE)));
-	public static final ItemObject<Item> LEMON = item($ -> new ModItem($.food(Foods.LEMON)));
+	public static final ItemObject<Item> LEMON = item($ -> new ModItem($.food(
+			Foods.LEMON,
+			Consumables.defaultFood().consumeSeconds(0.6F).build())));
 	public static final ItemObject<Item> GRAPEFRUIT = item($ -> new ModItem($.food(Foods.GRAPEFRUIT)));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final BlockObject<FruitLeavesBlock> TANGERINE_LEAVES = block(
-			$ -> new FruitLeavesBlock(FFFruitTypes.TANGERINE, 0.01F, $),
-			() -> Blocks.OAK_LEAVES);
+			$ -> new FruitLeavesBlock(
+					FFFruitTypes.TANGERINE.holderOrThrow(),
+					0.01F,
+					$), () -> Blocks.OAK_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> LIME_LEAVES = block(
-			$ -> new FruitLeavesBlock(FFFruitTypes.LIME, 0.01F, $),
-			() -> Blocks.OAK_LEAVES);
+			$ -> new FruitLeavesBlock(
+					FFFruitTypes.LIME.holderOrThrow(),
+					0.01F,
+					$), () -> Blocks.OAK_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> CITRON_LEAVES = block(
-			$ -> new FruitLeavesBlock(FFFruitTypes.CITRON, 0.01F, $),
-			() -> Blocks.OAK_LEAVES);
+			$ -> new FruitLeavesBlock(
+					FFFruitTypes.CITRON.holderOrThrow(),
+					0.01F,
+					$), () -> Blocks.OAK_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> POMELO_LEAVES = block(
-			$ -> new FruitLeavesBlock(FFFruitTypes.POMELO, 0.01F, $),
-			() -> Blocks.OAK_LEAVES);
+			$ -> new FruitLeavesBlock(
+					FFFruitTypes.POMELO.holderOrThrow(),
+					0.01F,
+					$), () -> Blocks.OAK_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> ORANGE_LEAVES = block(
-			$ -> new FruitLeavesBlock(FFFruitTypes.ORANGE, 0.01F, $),
-			() -> Blocks.OAK_LEAVES);
+			$ -> new FruitLeavesBlock(
+					FFFruitTypes.ORANGE.holderOrThrow(),
+					0.01F,
+					$), () -> Blocks.OAK_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> LEMON_LEAVES = block(
-			$ -> new FruitLeavesBlock(FFFruitTypes.LEMON, 0.01F, $),
-			() -> Blocks.OAK_LEAVES);
+			$ -> new FruitLeavesBlock(
+					FFFruitTypes.LEMON.holderOrThrow(),
+					0.01F,
+					$), () -> Blocks.OAK_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> GRAPEFRUIT_LEAVES = block(
 			$ -> new FruitLeavesBlock(
-					FFFruitTypes.GRAPEFRUIT,
+					FFFruitTypes.GRAPEFRUIT.holderOrThrow(),
 					0.01F,
 					$), () -> Blocks.OAK_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> APPLE_LEAVES = block(
-			$ -> new FruitLeavesBlock(FFFruitTypes.APPLE, 0.01F, $),
-			() -> Blocks.OAK_LEAVES);
+			$ -> new FruitLeavesBlock(
+					FFFruitTypes.APPLE.holderOrThrow(),
+					0.01F,
+					$), () -> Blocks.OAK_LEAVES);
 	@Category(value = {Categories.BUILDING_BLOCKS, Categories.NATURAL_BLOCKS}, after = {"cherry_button", "cherry_log"})
 	public static final BlockObject<Block> CITRUS_LOG = block(RotatedPillarBlock::new, () -> Blocks.OAK_LOG);
 	@Category(value = Categories.BUILDING_BLOCKS, after = "fruitfulfun:citrus_log")
@@ -218,26 +236,24 @@ public final class CoreModule extends AbstractModule {
 			() -> Blocks.POTTED_OAK_SAPLING);
 	public static final TagKey<Block> ALL_LEAVES = blockTag(FruitfulFun.ID, "leaves");
 	public static final KiwiGO<FoliagePlacerType<Fruitify>> FRUITIFY = go(() -> new FoliagePlacerType<>(Fruitify.CODEC));
-	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> new BannerPattern("sno"));
+	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> bannerPattern("snowflake"));
 	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/snowflake");
 	public static final KiwiGO<BlockEntityType<FruitTreeBlockEntity>> FRUIT_TREE = blockEntity(
 			FruitTreeBlockEntity::new,
-			null,
 			FruitLeavesBlock.class);
 	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
-	public static final ItemObject<Item> SNOWFLAKE_BANNER_PATTERN = item($ -> new Item(
-			SNOWFLAKE_TAG,
-			$.stacksTo(Items.MOJANG_BANNER_PATTERN.getDefaultMaxStackSize()).rarity(Rarity.UNCOMMON)));
+	public static final ItemObject<Item> SNOWFLAKE_BANNER_PATTERN = bannerPatternItem(SNOWFLAKE_TAG);
 	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.wooden_door.open")));
 	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"block.wooden_door.close")));
 	/* off */
-	public static final KiwiGO<EntityType<SlidingDoorEntity>> SLIDING_DOOR = entity($ -> KiwiEntityTypeBuilder.<SlidingDoorEntity>create()
-			.entityFactory(SlidingDoorEntity::new)
-			.dimensions(EntityDimensions.scalable(0.01f, 0.01f))
+	public static final KiwiGO<EntityType<SlidingDoorEntity>> SLIDING_DOOR = entity($ -> EntityType.Builder.of(
+					SlidingDoorEntity::new,
+					MobCategory.MISC)
+			.sized(0.01f, 0.01f)
 			.fireImmune()
-			.disableSummon()
-			.build());
+			.noSummon()
+			.build($));
 	/* on */
 	public static final TagKey<PoiType> POI_TYPE = tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
 	public static final TagKey<Block> CANDLES = blockTag(FruitfulFun.ID, "candles");
@@ -250,18 +266,19 @@ public final class CoreModule extends AbstractModule {
 	}
 
 	public static void createPoiTypes(AbstractModule module) {
-		KiwiModuleContainer info = KiwiModules.get(Objects.requireNonNull(module.uid));
-		info.getRegistryEntries(Registries.BLOCK).filter($ -> $.getOrCreate() instanceof FruitLeavesBlock).forEach($ -> {
+		KiwiModuleContainer container = KiwiModules.get(Objects.requireNonNull(module.uid));
+		container.getRegistryEntries(Registries.BLOCK).filter($ -> $.getOrCreate() instanceof FruitLeavesBlock).forEach($ -> {
 			Preconditions.checkArgument($.key().getPath().endsWith("_leaves"));
 			Identifier id = $.key().withPath($.key().getPath().substring(0, $.key().getPath().length() - 7));
 			FruitLeavesBlock block = (FruitLeavesBlock) $.get();
-			info.register(
-					new PoiType(
-							block.getStateDefinition()
-									.getPossibleStates()
-									.stream()
-									.filter(BlockBehaviour.BlockStateBase::hasBlockEntity)
-									.collect(Collectors.toSet()), 0, 3), id, BuiltInRegistries.POINT_OF_INTEREST_TYPE, null);
+			KiwiGO<PoiType> go = go(() -> new PoiType(
+					block.getStateDefinition()
+							.getPossibleStates()
+							.stream()
+							.filter(BlockBehaviour.BlockStateBase::hasBlockEntity)
+							.collect(Collectors.toSet()), 0, 3));
+			go.preRegister(id);
+			container.register(go);
 		});
 	}
 
@@ -314,13 +331,26 @@ public final class CoreModule extends AbstractModule {
 		}
 	}
 
+	public static BannerPattern bannerPattern(String path) {
+		Identifier id = FruitfulFun.id(path);
+		return new BannerPattern(id, "block.minecraft.banner." + id.toShortLanguageKey());
+	}
+
+	public static ItemObject<Item> bannerPatternItem(TagKey<BannerPattern> tag) {
+		return item($ -> new Item($.stacksTo(Items.MOJANG_BANNER_PATTERN.getDefaultMaxStackSize())
+				.rarity(Rarity.UNCOMMON)
+				.delayedComponent(
+						DataComponents.PROVIDES_BANNER_PATTERNS,
+						context -> context.getOrThrow(tag))));
+	}
+
 	public static final class Foods {
 		public static final FoodProperties TANGERINE = new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).build();
 		public static final FoodProperties LIME = new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).build();
 		public static final FoodProperties CITRON = new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).build();
 		public static final FoodProperties POMELO = new FoodProperties.Builder().nutrition(4).saturationModifier(0.3f).build();
 		public static final FoodProperties ORANGE = new FoodProperties.Builder().nutrition(3).saturationModifier(0.5f).build();
-		public static final FoodProperties LEMON = new FoodProperties.Builder().nutrition(2).saturationModifier(1f).fast().build();
+		public static final FoodProperties LEMON = new FoodProperties.Builder().nutrition(2).saturationModifier(1f).build();
 		public static final FoodProperties GRAPEFRUIT = new FoodProperties.Builder().nutrition(6).saturationModifier(0.4f).build();
 	}
 }

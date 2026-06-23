@@ -1,10 +1,9 @@
 package snownee.fruits.pomegranate.block;
 
-import java.util.function.Supplier;
-
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +20,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 
 public class HangingFruitLeavesBlock extends FruitLeavesBlock {
-	public HangingFruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
+	public HangingFruitLeavesBlock(Holder<FruitType> type, Properties properties) {
 		super(type, 0.01F, properties);
 	}
 
@@ -33,14 +32,14 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 	@Override
 	public boolean hasFruit(BlockState state, Level level, BlockPos pos) {
 		return state.getValue(AGE) == FruitLeavesBlock.FRUITING &&
-				level.getBlockState(pos.below()).getBlock().asItem() == type.get().fruit.get();
+				level.getBlockState(pos.below()).getBlock().asItem() == type.value().fruit.get();
 	}
 
 	@Override
 	public @Nullable ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state) {
 		BlockPos below = pos.below();
 		level.removeBlock(below, false);
-		return createItemEntity(level, below, type.get().fruit.get().getDefaultInstance());
+		return createItemEntity(level, below, type.value().fruit.get().getDefaultInstance());
 	}
 
 	@Override
@@ -72,7 +71,7 @@ public class HangingFruitLeavesBlock extends FruitLeavesBlock {
 			}
 			BlockPos below = pos.below();
 			if (world.getBlockState(below).canBeReplaced()) {
-				Block block = Block.byItem(type.get().fruit.get());
+				Block block = Block.byItem(type.value().fruit.get());
 				world.setBlockAndUpdate(below, block.defaultBlockState());
 			}
 		}

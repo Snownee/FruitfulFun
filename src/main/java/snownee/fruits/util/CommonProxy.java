@@ -318,7 +318,7 @@ public class CommonProxy implements ModInitializer {
 						manager.storeBee(bee);
 					}
 				}
-				return InteractionResult.sidedSuccess(level.isClientSide());
+				return InteractionResult.SUCCESS_SERVER;
 			}
 			return InteractionResult.PASS;
 		});

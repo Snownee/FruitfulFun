@@ -32,7 +32,7 @@ public class HangingFruitBlock extends HangingRootsBlock {
 		if (!level.isClientSide()) {
 			BlockPos up = pos.above();
 			BlockState upState = level.getBlockState(up);
-			if (upState.getBlock() instanceof FruitLeavesBlock leavesBlock && leavesBlock.type.get().fruit.get() == asItem() &&
+			if (upState.getBlock() instanceof FruitLeavesBlock leavesBlock && leavesBlock.type.value().fruit.get() == asItem() &&
 					upState.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.FRUITING) {
 				leavesBlock.gotoDeadOrYoung((ServerLevel) level, up, upState, null);
 			}

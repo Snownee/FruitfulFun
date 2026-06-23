@@ -227,12 +227,12 @@ public final class Hooks {
 					return InteractionResult.FAIL;
 				}
 				if (!isClientSide) {
-					held.hurtAndBreak(1, player, $ -> $.broadcastBreakEvent(hand));
+					held.hurtAndBreak(1, player, hand);
 					attributes.dropSaddle(bee);
 					bee.gameEvent(GameEvent.SHEAR, player);
 					bee.level().playSound(null, bee, BeeModule.BEE_SHEAR.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 				}
-				return InteractionResult.sidedSuccess(isClientSide);
+				return InteractionResult.SUCCESS_SERVER;
 			} else if (!bee.isVehicle() && !player.isSecondaryUseActive()) {
 				if (!trusted) {
 					((FFBee) bee).fruits$roll();
@@ -241,21 +241,16 @@ public final class Hooks {
 				if (!isClientSide) {
 					player.startRiding(bee);
 				}
-				return InteractionResult.sidedSuccess(isClientSide);
+				return InteractionResult.SUCCESS_SERVER;
 			}
-		} else if (held.is(Items.SADDLE) && bee.canUseSlot(EquipmentSlot.SADDLE)) {
-			if (!isClientSide) {
-				saddleable.equipSaddle(SoundSource.NEUTRAL);
-				attributes.setSaddle(held.split(1));
-				player.level().gameEvent(bee, GameEvent.EQUIP, bee.position());
-			}
-			return InteractionResult.sidedSuccess(isClientSide);
+		} else if (bee.isEquippableInSlot(held, EquipmentSlot.SADDLE)) {
+			return held.interactLivingEntity(player, bee, hand);
 		}
 		if (FFCommonConfig.hauntingEnabled && attributes.hasTrait(Trait.GHOST) && !Platform.isFakePlayer(player)) {
-			if (!isClientSide && (FFCommonConfig.hauntingCooldownSeconds <= 0 || !bee.hasEffect(CoreModule.FRAGILITY.get()))) {
+			if (!isClientSide && (FFCommonConfig.hauntingCooldownSeconds <= 0 || !bee.hasEffect(CoreModule.FRAGILITY.holderOrThrow()))) {
 				FFPlayer.of(player).fruits$setHauntingTarget(bee);
 			}
-			return InteractionResult.sidedSuccess(isClientSide);
+			return InteractionResult.SUCCESS_SERVER;
 		}
 		return InteractionResult.PASS;
 	}
@@ -264,7 +259,9 @@ public final class Hooks {
 		Level level = bee.level();
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		boolean ghost = attributes.hasTrait(Trait.GHOST);
-		if (FFCommonConfig.beeRidingUltraWarmDimensionLimit && !ghost && level.dimensionType().ultraWarm()) {
+		if (FFCommonConfig.beeRidingEnvironmentAttrRules && !ghost && level.environmentAttributes().getValue(
+				BeeModule.BEE_RIDEABLE.get(),
+				bee.position())) {
 			return new Vec3(0, -0.07, 0);
 		}
 		if (FFCommonConfig.beeRidingRainingLimit && !attributes.hasTrait(Trait.RAIN_CAPABLE) && level.isRainingAt(bee.blockPosition())) {
@@ -346,7 +343,7 @@ public final class Hooks {
 	}
 
 	private static @Nullable Allele mutagenAffectedAllele(Bee bee) {
-		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.get());
+		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.holderOrThrow());
 		if (effect == null) {
 			return null;
 		}
@@ -379,11 +376,8 @@ public final class Hooks {
 		}
 		FoodProperties properties = item.getFoodProperties();
 		if (FFClientConfig.foodStatusEffectTooltip && properties != null) {
-			List<MobEffectInstance> effects = properties.getEffects()
-					.stream()
-					.filter($ -> $.getFirst() != null && $.getSecond() > 0)
-					.map(Pair::getFirst)
-					.toList();
+			List<MobEffectInstance> effects = properties.getEffects().stream().filter($ -> $.getFirst() != null && $.getSecond() > 0).map(
+					Pair::getFirst).toList();
 			if (!effects.isEmpty()) {
 				PotionUtils.addPotionTooltip(effects, tooltip, 1.0F);
 			}
@@ -396,7 +390,10 @@ public final class Hooks {
 
 	public static Vec3 calculateViewVector(Entity entity1, Entity entity2, float partialTicks) {
 		return ((EntityAccess) entity1).callCalculateViewVector(
-				Mth.clamp(entity1.getViewXRot(partialTicks) + entity2.getViewXRot(partialTicks), -90F, 90F),
+				Mth.clamp(
+						entity1.getViewXRot(partialTicks) + entity2.getViewXRot(partialTicks),
+						-90F,
+						90F),
 				entity1.getViewYRot(partialTicks) + entity2.getViewYRot(partialTicks));
 	}
 

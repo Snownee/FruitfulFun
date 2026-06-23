@@ -44,7 +44,7 @@ public class RedloveItem extends ModItem {
 		animal.setAge(Math.max(0, age - skip));
 		animal.eat(animal.level(), stack);
 		player.awardStat(Stats.ITEM_USED.get(this));
-		return InteractionResult.sidedSuccess(player.level().isClientSide());
+		return InteractionResult.SUCCESS_SERVER;
 	}
 
 	@Override

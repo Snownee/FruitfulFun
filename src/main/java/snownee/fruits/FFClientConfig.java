@@ -19,10 +19,6 @@ public final class FFClientConfig {
 	public static boolean foodStatusEffectTooltip = true;
 	@KiwiConfig.Path("food.specialEffectTooltip")
 	public static boolean foodSpecialEffectTooltip = true;
-	//TODO: remove this in 1.22.
-	// Due to the data component change, this will not work in 1.21.
-	// But it becomes a vanilla feature in 1.22. So maybe we should skip to 1.22?
-	public static boolean beehiveTooltipDisplayBees = true;
 
 	public static boolean renderServerSideHitbox;
 }

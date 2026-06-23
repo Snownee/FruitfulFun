@@ -14,7 +14,7 @@ import net.minecraft.world.entity.ai.memory.WalkTarget;
 
 public class EyeBasedSetWalkTargetFromAttackTarget {
 	public static BehaviorControl<Mob> create(float speedModifier) {
-		return EyeBasedSetWalkTargetFromAttackTarget.create(livingEntity -> speedModifier);
+		return EyeBasedSetWalkTargetFromAttackTarget.create(_ -> speedModifier);
 	}
 
 	public static BehaviorControl<Mob> create(Function<LivingEntity, Float> speedModifier) {

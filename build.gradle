@@ -78,10 +78,10 @@ dependencies {
     compileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 
-    //implementation "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
-    //annotationProcessor "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
-    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+    implementation "libs:Kiwi-mc26.1-Fabric-26.0.4"
+    annotationProcessor "libs:Kiwi-mc26.1-Fabric-26.0.4"
+//    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+//    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
     //implementation "libs:Lychee-1.20.1-fabric:${project.lychee_version}"
     implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
     implementation "maven.modrinth:jade:${project.jade_version}+fabric"

@@ -281,7 +281,11 @@ public class RitualModule extends AbstractModule {
 		}
 		level.removeBlock(pos, false);
 		int breathCount = heads.size() + 1;
-		if (interaction.getFirstPassenger() instanceof ItemEntity itemEntity && DragonRitualRecipe.on(itemEntity, pos, heads.size())) {
+		if (interaction.getFirstPassenger() instanceof ItemEntity itemEntity && DragonRitualRecipe.on(
+				itemEntity,
+				pos,
+				heads.size(),
+				state)) {
 			breathCount = 1;
 		}
 		interaction.discard();

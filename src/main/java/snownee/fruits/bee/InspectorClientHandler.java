@@ -82,7 +82,7 @@ public class InspectorClientHandler {
 		}
 		inspectingTarget = target;
 		if (++hoverTicks == ANALYZE_TICKS) {
-			CInspectTargetPacket.I.sendToServer(inspectingTarget::toNetwork);
+			CInspectTargetPacket.send(inspectingTarget);
 			if (Hooks.jade) {
 				JadeCompat.ensureVisibility(target.getClass() == InspectTarget.EntityTarget.class);
 			}

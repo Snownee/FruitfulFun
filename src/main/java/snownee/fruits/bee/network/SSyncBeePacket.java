@@ -3,78 +3,94 @@ package snownee.fruits.bee.network;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.bee.Bee;
-import net.minecraft.world.item.ItemStack;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
-import snownee.kiwi.network.KPacketTarget;
+import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
-import snownee.kiwi.network.PacketHandler;
+import snownee.kiwi.network.PayloadContext;
+import snownee.kiwi.network.PlayPacketHandler;
 
-@KiwiPacket(value = "sync_bee", dir = KiwiPacket.Direction.PLAY_TO_CLIENT)
-public class SSyncBeePacket extends PacketHandler {
-	public static SSyncBeePacket I;
+@KiwiPacket
+public record SSyncBeePacket(int id, List<UUID> trusted, String texture, List<String> traits, long mutagenEndsIn)
+		implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<SSyncBeePacket> TYPE = new CustomPacketPayload.Type<>(
+			FruitfulFun.id("sync_bee"));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, SSyncBeePacket> STREAM_CODEC = StreamCodec.of(
+			(buf, packet) -> {
+				buf.writeVarInt(packet.id());
+				buf.writeCollection(packet.trusted(), RegistryFriendlyByteBuf::writeUUID);
+				buf.writeUtf(packet.texture());
+				buf.writeCollection(packet.traits(), RegistryFriendlyByteBuf::writeUtf);
+				buf.writeLong(packet.mutagenEndsIn());
+			},
+			buf -> new SSyncBeePacket(
+					buf.readVarInt(),
+					buf.readList(RegistryFriendlyByteBuf::readUUID),
+					buf.readUtf(),
+					buf.readList(RegistryFriendlyByteBuf::readUtf),
+					buf.readLong()));
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(
-			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
-			FriendlyByteBuf buf,
-			@Nullable ServerPlayer serverPlayer) {
-		int id = buf.readVarInt();
-		ItemStack saddle = buf.readItem();
-		List<UUID> trusted = buf.readList(FriendlyByteBuf::readUUID);
-		String texture = buf.readUtf();
-		List<String> traits = buf.readList(FriendlyByteBuf::readUtf);
-		long mutagenEndsIn = buf.readLong();
-		return executor.apply(() -> {
-			Entity entity = Objects.requireNonNull(Minecraft.getInstance().level).getEntity(id);
-			if (entity instanceof Bee) {
-				BeeAttributes attributes = BeeAttributes.of(entity);
-				attributes.setSaddle(saddle);
-				attributes.setTrusted(trusted);
-				if (texture.isEmpty()) {
-					attributes.setTexture(null);
-				} else {
-					attributes.setTexture(Identifier.tryParse(texture));
+	public CustomPacketPayload.Type<SSyncBeePacket> type() {
+		return TYPE;
+	}
+
+	public static class Handler implements PlayPacketHandler<SSyncBeePacket> {
+		@Override
+		public void handle(SSyncBeePacket packet, PayloadContext context) {
+			context.execute(() -> {
+				Entity entity = Objects.requireNonNull(Minecraft.getInstance().level).getEntity(packet.id());
+				if (entity instanceof Bee) {
+					BeeAttributes attributes = BeeAttributes.of(entity);
+					attributes.setTrusted(packet.trusted());
+					if (packet.texture().isEmpty()) {
+						attributes.setTexture(null);
+					} else {
+						attributes.setTexture(Identifier.tryParse(packet.texture()));
+					}
+					attributes.getGenes().setTraits(packet.traits().stream()
+							.map(Trait.REGISTRY::get)
+							.filter(Objects::nonNull)
+							.toList());
+					attributes.setMutagenEndsIn(packet.mutagenEndsIn(), entity.level().getGameTime());
 				}
-				attributes.getGenes().setTraits(traits.stream()
-						.map(Trait.REGISTRY::get)
-						.filter(Objects::nonNull)
-						.toList());
-				attributes.setMutagenEndsIn(mutagenEndsIn, entity.level().getGameTime());
-			}
-		});
+			});
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, SSyncBeePacket> streamCodec() {
+			return STREAM_CODEC;
+		}
 	}
 
 	public static void send(Bee bee) {
-		I.send(KPacketTarget.tracking(bee), putData(bee));
+		SSyncBeePacket packet = create(bee);
+		KPacketSender.sendToTracking(packet, bee);
 	}
 
 	public static void send(Bee bee, ServerPlayer player) {
-		I.send(player, putData(bee));
+		KPacketSender.send(create(bee), player);
 	}
 
-	private static Consumer<FriendlyByteBuf> putData(Bee bee) {
+	private static SSyncBeePacket create(Bee bee) {
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		return buf -> {
-			buf.writeVarInt(bee.getId());
-			buf.writeItem(attributes.getSaddle());
-			buf.writeCollection(attributes.getTrusted(), FriendlyByteBuf::writeUUID);
-			Identifier texture = attributes.getTexture();
-			buf.writeUtf(texture == null ? "" : texture.toString());
-			buf.writeCollection(attributes.getGenes().getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
-			buf.writeLong(attributes.getMutagenEndsIn());
-		};
+		Identifier texture = attributes.getTexture();
+		return new SSyncBeePacket(
+				bee.getId(),
+				attributes.getTrusted(),
+				texture == null ? "" : texture.toString(),
+				attributes.getGenes().getTraits().stream().map(Trait::name).toList(),
+				attributes.getMutagenEndsIn());
 	}
 }

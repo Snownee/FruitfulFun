@@ -3,22 +3,20 @@ package snownee.fruits.bee;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,29 +24,66 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.kiwi.util.KUtil;
 import snownee.lychee.util.context.LycheeContext;
+import snownee.lychee.util.context.LycheeContextKey;
 import snownee.lychee.util.json.JsonPointer;
 import snownee.lychee.util.recipe.BlockKeyableRecipe;
 import snownee.lychee.util.recipe.ILycheeRecipe;
 import snownee.lychee.util.recipe.LycheeRecipe;
+import snownee.lychee.util.recipe.LycheeRecipeCommonProperties;
 
 public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements BlockKeyableRecipe {
+	public static final MapCodec<HybridizingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			LycheeRecipeCommonProperties.SIMPLE_MAP_CODEC.forGetter(HybridizingRecipe::commonProperties),
+			Codec.STRING.sizeLimitedListOf(4).optionalFieldOf("pollens", List.of()).forGetter($ -> $.pollens),
+			Codec.STRING.sizeLimitedListOf(4).optionalFieldOf("ending_step", List.of()).forGetter($ -> $.endingStep),
+			Codec.BOOL.optionalFieldOf("reset", true).forGetter($ -> $.resetPollens)
+	).apply(instance, HybridizingRecipe::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf, HybridizingRecipe> STREAM_CODEC = StreamCodec.composite(
+			LycheeRecipeCommonProperties.STREAM_CODEC,
+			HybridizingRecipe::commonProperties,
+			ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list(4)),
+			$ -> $.pollens,
+			ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list(4)),
+			$ -> $.endingStep,
+			ByteBufCodecs.BOOL,
+			$ -> $.resetPollens,
+			HybridizingRecipe::new
+	);
 
-	public Collection<String> pollens = List.of();
-	public Collection<String> endingStep = List.of();
-	public NonNullList<Ingredient> ingredients;
-	public boolean resetPollens;
+	private final List<String> pollens;
+	private final List<String> endingStep;
+	private final boolean resetPollens;
+	private final NonNullList<Ingredient> ingredients = NonNullList.create();
 
-	public HybridizingRecipe(Identifier id) {
-		super(id);
+	public HybridizingRecipe(
+			LycheeRecipeCommonProperties commonProperties,
+			List<String> pollens,
+			List<String> endingStep,
+			boolean resetPollens) {
+		super(commonProperties);
+		this.pollens = pollens.stream().map(KUtil::trimRL).toList();
+		this.endingStep = endingStep.stream().map(KUtil::trimRL).toList();
+		this.resetPollens = resetPollens;
+		for (String pollen : pollens) {
+			Item item = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(pollen)).asItem();
+			if (item != Items.AIR) {
+				ingredients.add(Ingredient.of(item));
+			}
+		}
+		for (String pollen : endingStep) {
+			if (!pollens.contains(pollen)) {
+				throw new IllegalArgumentException("Ending step must be in pollens");
+			}
+		}
 	}
 
 	@Override
 	public boolean matches(LycheeContext ctx, Level worldIn) {
-		BeeAttributes attributes = BeeAttributes.of(ctx.getParam(LootContextParams.THIS_ENTITY));
+		BeeAttributes attributes = BeeAttributes.of(ctx.get(LycheeContextKey.LOOT_PARAMS).get(LootContextParams.THIS_ENTITY));
 		return attributes.getPollens().size() >= pollens.size() && attributes.getPollens().containsAll(pollens);
 	}
 
@@ -81,21 +116,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 
 	@Override
 	public NonNullList<Ingredient> getIngredients() {
-		refreshIngredients();
 		return ingredients;
-	}
-
-	public void refreshIngredients() {
-		if (ingredients != null) {
-			return;
-		}
-		ingredients = NonNullList.create();
-		for (String pollen : pollens) {
-			Item item = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen)).asItem();
-			if (item != Items.AIR) {
-				ingredients.add(Ingredient.of(item));
-			}
-		}
 	}
 
 	@Override
@@ -105,7 +126,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 
 	public void addInvisibleInputs(Consumer<ItemStack> acceptor) {
 		for (String pollen : pollens) {
-			Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen));
+			Block block = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(pollen));
 			if (block instanceof FruitLeavesBlock leavesBlock) {
 				acceptor.accept(new ItemStack(leavesBlock.type.get().sapling.get()));
 			}
@@ -113,63 +134,11 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 	}
 
 	public void addInvisibleOutputs(Consumer<ItemStack> acceptor) {
-		ILycheeRecipe.filterHidden(getAllActions())
-				.flatMap($ -> $.getItemOutputs().stream())
-				.map(ItemStack::getItem)
-				.distinct()
-				.map($ -> {
-					if (Block.byItem($) instanceof FruitLeavesBlock block) {
-						return new ItemStack(block.type.get().sapling.get());
-					}
-					return null;
-				})
-				.filter(Objects::nonNull)
-				.forEach(acceptor);
-	}
-
-	public static class Serializer extends LycheeRecipe.Serializer<HybridizingRecipe> {
-		public Serializer() {
-			super(HybridizingRecipe::new);
-		}
-
-		@Override
-		public void fromJson(HybridizingRecipe recipe, JsonObject jsonObject) {
-			JsonArray ingredients = GsonHelper.getAsJsonArray(jsonObject, "pollens");
-			Preconditions.checkArgument(!ingredients.isEmpty() && ingredients.size() <= 4, "Size of pollens has to be in [1, 4]");
-			recipe.pollens = Sets.newLinkedHashSetWithExpectedSize(ingredients.size());
-			for (JsonElement element : ingredients) {
-				String s = element.getAsString();
-				Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(s));
-				Preconditions.checkArgument(block != Blocks.AIR, "Unknown block: " + s);
-				recipe.pollens.add(Util.trimRL(s));
+		ILycheeRecipe.filterHidden(getAllActions()).flatMap($ -> $.getItemOutputs().stream()).map(ItemStack::getItem).distinct().map($ -> {
+			if (Block.byItem($) instanceof FruitLeavesBlock block) {
+				return new ItemStack(block.type.get().sapling.get());
 			}
-			Preconditions.checkArgument(recipe.pollens.size() == Set.copyOf(recipe.pollens).size(), "Pollens must be unique");
-			JsonArray endingStep = GsonHelper.getAsJsonArray(jsonObject, "ending_step", null);
-			if (endingStep != null) {
-				Preconditions.checkArgument(!endingStep.isEmpty() && endingStep.size() <= 4, "Size of ending_step has to be in [1, 4]");
-				recipe.endingStep = Sets.newLinkedHashSetWithExpectedSize(endingStep.size());
-				for (JsonElement element : endingStep) {
-					String s = element.getAsString();
-					Preconditions.checkArgument(recipe.pollens.contains(s), "Ending step must be in pollens");
-					recipe.endingStep.add(Util.trimRL(s));
-				}
-			}
-			recipe.resetPollens = GsonHelper.getAsBoolean(jsonObject, "reset", true);
-		}
-
-		@Override
-		public void fromNetwork(HybridizingRecipe recipe, FriendlyByteBuf buf) {
-			recipe.pollens = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
-			recipe.endingStep = List.copyOf(buf.readList(FriendlyByteBuf::readUtf));
-			recipe.resetPollens = buf.readBoolean();
-		}
-
-		@Override
-		public void toNetwork0(FriendlyByteBuf buf, HybridizingRecipe recipe) {
-			buf.writeCollection(recipe.pollens, FriendlyByteBuf::writeUtf);
-			buf.writeCollection(recipe.endingStep, FriendlyByteBuf::writeUtf);
-			buf.writeBoolean(recipe.resetPollens);
-		}
+			return null;
+		}).filter(Objects::nonNull).forEach(acceptor);
 	}
-
 }

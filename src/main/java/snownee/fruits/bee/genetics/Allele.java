@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.jspecify.annotations.Nullable;
+
 import com.google.common.collect.Maps;
 
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
@@ -40,7 +42,7 @@ public class Allele {
 	public final byte defaultData;
 	public final IntList allowedValues;
 	public final float mutationRate;
-	public char codename = '0';
+	public String codename = "0";
 	public int index = -1;
 	public int color;
 
@@ -52,7 +54,7 @@ public class Allele {
 		this.allowedValues = IntImmutableList.toList(IntStream.range(0, allowedValues));
 	}
 
-	public static Allele byIndex(int i) {
+	public static @Nullable Allele byIndex(int i) {
 		for (Allele allele : values()) {
 			if (allele.index == i) {
 				return allele;
@@ -61,9 +63,9 @@ public class Allele {
 		return null;
 	}
 
-	public static Allele byCode(char c) {
+	public static @Nullable Allele byCode(String c) {
 		for (Allele allele : values()) {
-			if (allele.codename == c) {
+			if (allele.codename.equals(c)) {
 				return allele;
 			}
 		}

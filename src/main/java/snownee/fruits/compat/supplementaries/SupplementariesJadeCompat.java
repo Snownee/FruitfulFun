@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CageBlock;
@@ -24,3 +25,4 @@ public class SupplementariesJadeCompat {
 		registration.registerBlockComponent(provider, JarBlock.class);
 	}
 }
+*/

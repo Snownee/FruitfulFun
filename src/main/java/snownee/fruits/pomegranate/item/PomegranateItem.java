@@ -4,7 +4,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,13 +35,13 @@ public class PomegranateItem extends ModBlockItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+	public InteractionResult use(Level level, Player player, InteractionHand interactionHand) {
 		ItemStack itemStack = player.getItemInHand(interactionHand);
-		player.getCooldowns().addCooldown(itemStack.getItem(), 10);
+		player.getCooldowns().addCooldown(itemStack, 10);
 		if (!level.isClientSide()) {
 			Vec3 eye = player.getEyePosition();
 			ItemEntity fruit = new ItemEntity(level, eye.x, eye.y, eye.z, itemStack.copyWithCount(1));
-			fruit.setThrower(player.getUUID());
+			fruit.setThrower(player);
 			fruit.setPickUpDelay(5 * 20);
 			shootFromRotation(player, fruit, player.getXRot(), player.getYRot(), 0.0f, 1.5f, 0.5f);
 			level.addFreshEntity(fruit);
@@ -51,7 +50,7 @@ public class PomegranateItem extends ModBlockItem {
 		if (!player.getAbilities().instabuild) {
 			itemStack.shrink(1);
 		}
-		return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
+		return InteractionResult.SUCCESS_SERVER;
 	}
 
 	private static void shootFromRotation(Entity thrower, Entity fruit, float f, float g, float h, float i, float j) {

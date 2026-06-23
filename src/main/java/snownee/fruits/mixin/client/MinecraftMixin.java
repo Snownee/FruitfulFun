@@ -44,7 +44,7 @@ public class MinecraftMixin {
 	@Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
 	private void startAttackHaunting(CallbackInfoReturnable<Boolean> cir) {
 		if (Hooks.bee && player != null && CHauntingActionPacket.canDoAction(player)) {
-			CHauntingActionPacket.I.sendToServer(buf -> {});
+			CHauntingActionPacket.send();
 			cir.setReturnValue(true);
 		}
 	}

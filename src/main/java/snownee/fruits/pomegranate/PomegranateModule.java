@@ -23,13 +23,13 @@ import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.lychee.LycheeRegistries;
 
-@KiwiModule("pomegranate")
+@KiwiModule(value = "pomegranate", dependencies = "fruit_types")
 public class PomegranateModule extends AbstractModule {
 	public static final KiwiGO<FFExplodeAction.Type> EXPLODE = go(FFExplodeAction.Type::new, () -> LycheeRegistries.POST_ACTION.key());
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final BlockObject<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = block(
 			$ -> new HangingFruitLeavesBlock(
-					FFFruitTypes.POMEGRANATE,
+					FFFruitTypes.POMEGRANATE.holderOrThrow(),
 					$), () -> Blocks.JUNGLE_LEAVES);
 	@KiwiModule.NoItem
 	public static final BlockObject<HangingFruitBlock> POMEGRANATE = block($ -> new HangingFruitBlock($.instabreak()

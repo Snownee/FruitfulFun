@@ -7,16 +7,19 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.jspecify.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import snownee.fruits.util.CommonProxy;
 
 // 每只蜜蜂平均每天可以采4次蜜，每次采蜜获得10000能量
@@ -34,19 +37,15 @@ public class ScentedCandleBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public void load(CompoundTag tag) {
-		if (tag.contains("power")) {
-			power = BuzzyPowerStorage.read(tag.getCompound("power")).result().orElse(power);
-		}
-		creative = tag.getBoolean("creative");
+	protected void loadAdditional(ValueInput input) {
+		power = input.read("power", BuzzyPowerStorage.CODEC).orElse(power);
+		creative = input.getBooleanOr("creative", false);
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		tag.put("power", power.save());
-		if (creative) {
-			tag.putBoolean("creative", true);
-		}
+	protected void saveAdditional(ValueOutput output) {
+		output.store("power", BuzzyPowerStorage.CODEC, power);
+		output.putBoolean("creative", creative);
 	}
 
 	public void updateChunks() {
@@ -68,14 +67,14 @@ public class ScentedCandleBlockEntity extends BlockEntity {
 			return Stream.of(level.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false)).filter(Objects::nonNull);
 		}
 		return StreamSupport.stream(
-				new Spliterators.AbstractSpliterator<ChunkAccess>(
+				new Spliterators.AbstractSpliterator<@Nullable ChunkAccess>(
 						range * 8L,
 						Spliterator.SIZED) {
 					int x = -range;
 					int z = -range;
 
 					@Override
-					public boolean tryAdvance(Consumer<? super ChunkAccess> action) {
+					public boolean tryAdvance(Consumer<? super @Nullable ChunkAccess> action) {
 						while (x <= range) {
 							if (Math.abs(x) == range) {
 								action.accept(level.getChunk(chunkX + x, chunkZ + z, ChunkStatus.FULL, false));

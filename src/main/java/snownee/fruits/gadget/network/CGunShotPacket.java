@@ -1,32 +1,49 @@
 package snownee.fruits.gadget.network;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
-import org.jspecify.annotations.Nullable;
-
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.gadget.VacGunItem;
+import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
-import snownee.kiwi.network.PacketHandler;
+import snownee.kiwi.network.PayloadContext;
+import snownee.kiwi.network.PlayPacketHandler;
 
-@KiwiPacket("gun_shot")
-public class CGunShotPacket extends PacketHandler {
-	public static CGunShotPacket I;
+@KiwiPacket
+public record CGunShotPacket() implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<CGunShotPacket> TYPE = new CustomPacketPayload.Type<>(
+			FruitfulFun.id("gun_shot"));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, CGunShotPacket> STREAM_CODEC = StreamCodec.unit(new CGunShotPacket());
 
 	@Override
-	public CompletableFuture<FriendlyByteBuf> receive(
-			Function<Runnable, CompletableFuture<FriendlyByteBuf>> executor,
-			FriendlyByteBuf buf,
-			@Nullable ServerPlayer player) {
-		return executor.apply(() -> {
-			Objects.requireNonNull(player);
-			if (!player.isRemoved() && !player.isSpectator() && player.getMainHandItem().getItem() instanceof VacGunItem) {
-				VacGunItem.shoot(player, InteractionHand.MAIN_HAND);
-			}
-		});
+	public CustomPacketPayload.Type<CGunShotPacket> type() {
+		return TYPE;
+	}
+
+	public static class Handler implements PlayPacketHandler<CGunShotPacket> {
+		@Override
+		public void handle(CGunShotPacket packet, PayloadContext context) {
+			context.execute(() -> {
+				ServerPlayer player = Objects.requireNonNull(context.serverPlayer());
+				if (!player.isRemoved() && !player.isSpectator() && player.getMainHandItem().getItem() instanceof VacGunItem) {
+					VacGunItem.shoot(player, InteractionHand.MAIN_HAND);
+				}
+			});
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, CGunShotPacket> streamCodec() {
+			return STREAM_CODEC;
+		}
+	}
+
+	public static void send() {
+		KPacketSender.sendToServer(new CGunShotPacket());
 	}
 }

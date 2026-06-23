@@ -19,7 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -28,16 +28,16 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import snownee.fruits.util.CommonProxy;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileColors;
+import snownee.fruits.util.CommonProxy;
 
 public class VacItemProjectile extends ThrowableItemProjectile {
 	public final float bobOffs;
@@ -81,7 +81,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 			}
 			Entity owner = getOwner();
 			if (owner != null) {
-				itemEntity.setThrower(owner.getUUID());
+				itemEntity.setThrower(owner);
 			}
 			level().addFreshEntity(itemEntity);
 			discard();
@@ -95,7 +95,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 		if (!level().isClientSide() && !item.isEmpty() && !isRemoved()) {
 			BlockPos pos = blockHitResult.getBlockPos();
 			BlockState blockState = level().getBlockState(pos);
-			if (blockState.getBlock() instanceof FarmBlock) {
+			if (blockState.getBlock() instanceof FarmlandBlock) {
 				Block block = Block.byItem(item.getItem());
 				if (block != Blocks.AIR && block.defaultBlockState().is(BlockTags.CROPS)) {
 					ItemStack itemCopy = item.copy();

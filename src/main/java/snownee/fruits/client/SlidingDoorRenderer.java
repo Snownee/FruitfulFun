@@ -1,39 +1,18 @@
 package snownee.fruits.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.client.renderer.entity.state.BlockDisplayEntityRenderState;
 import snownee.fruits.block.entity.SlidingDoorEntity;
 
-public class SlidingDoorRenderer extends EntityRenderer<SlidingDoorEntity> {
+public class SlidingDoorRenderer extends EntityRenderer<SlidingDoorEntity, BlockDisplayEntityRenderState> {
 
 	public SlidingDoorRenderer(EntityRendererProvider.Context renderManager) {
 		super(renderManager);
 	}
 
 	@Override
-	public void render(
-			SlidingDoorEntity entityIn,
-			float entityYaw,
-			float partialTicks,
-			PoseStack matrixStackIn,
-			MultiBufferSource bufferIn,
-			int packedLightIn) {
+	public BlockDisplayEntityRenderState createRenderState() {
+		return null;
 	}
-
-	@Override
-	public boolean shouldRender(SlidingDoorEntity livingEntityIn, Frustum camera, double camX, double camY, double camZ) {
-		return entityRenderDispatcher.shouldRenderHitBoxes();
-	}
-
-	@Override
-	public Identifier getTextureLocation(SlidingDoorEntity entity) {
-		return InventoryMenu.BLOCK_ATLAS;
-	}
-
 }

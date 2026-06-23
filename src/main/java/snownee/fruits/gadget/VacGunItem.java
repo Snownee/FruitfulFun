@@ -18,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -85,8 +86,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 			// TODO
 		}
 		if (player.isLocalPlayer()) {
-			CGunShotPacket.I.sendToServer($ -> {
-			});
+			CGunShotPacket.send();
 		} else {
 			gun.getOrCreateTag().putLong("LastShot", player.level().getGameTime());
 		}
@@ -197,7 +197,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 	}
 
 	@Override
-	public int getUseDuration(ItemStack itemStack) {
+	public int getUseDuration(ItemStack itemStack, LivingEntity user) {
 		return 72000;
 	}
 
@@ -361,7 +361,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		return ItemUtils.startUsingInstantly(level, player, hand);
 	}
 

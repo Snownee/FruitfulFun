@@ -1,7 +1,6 @@
 package snownee.fruits.block;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jspecify.annotations.Nullable;
@@ -10,6 +9,7 @@ import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -69,9 +69,9 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public static final int BLOOMING = 2;
 	public static final int FRUITING = 3;
 
-	public final Supplier<FruitType> type;
+	public final Holder<FruitType> type;
 
-	public FruitLeavesBlock(Supplier<FruitType> type, float leafParticleChance, Properties properties) {
+	public FruitLeavesBlock(Holder<FruitType> type, float leafParticleChance, Properties properties) {
 		super(
 				leafParticleChance,
 				properties.isValidSpawn(Blocks::ocelotOrParrot)
@@ -105,7 +105,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Nullable
 	public ItemEntity doDropFruit(ServerLevel level, BlockPos pos, BlockState state) {
-		FruitType fruitType = type.get();
+		FruitType fruitType = type.value();
 		Item item = Items.AIR;
 		if (Hooks.hauntedHarvest && FFCommonConfig.rottenAppleChance > 0 && FFFruitTypes.APPLE.is(fruitType) &&
 				level.getRandom().nextFloat() < FFCommonConfig.rottenAppleChance) {
@@ -138,7 +138,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 		if (state.getValue(AGE) == YOUNG) {
 			return true;
 		}
-		if (FFCommonConfig.allogamousTrees && type.get().allogamous && state.getValue(AGE) == BLOOMING) {
+		if (FFCommonConfig.allogamousTrees && type.value().allogamous && state.getValue(AGE) == BLOOMING) {
 			return false;
 		}
 		return canGrow(state) && state.getValue(AGE) < FRUITING;
@@ -164,7 +164,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	@Nullable
 	public FruitTreeBlockEntity findCore(ServerLevel level, BlockPos pos) {
 		return level.getPoiManager()
-				.findClosest(type.get().poiType::equals, pos, 10, PoiManager.Occupancy.ANY)
+				.findClosest(type.value().poiType::equals, pos, 10, PoiManager.Occupancy.ANY)
 				.flatMap(core -> level.getBlockEntity(core, CoreModule.FRUIT_TREE.get()))
 				.orElse(null);
 	}
@@ -189,7 +189,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 					core.setOnlyItem(itemEntity);
 				}
 				gotoDeadOrYoung(world, pos, state, core);
-			} else if (FFCommonConfig.allogamousTrees && type.get().allogamous && state.getValue(AGE) == BLOOMING) {
+			} else if (FFCommonConfig.allogamousTrees && type.value().allogamous && state.getValue(AGE) == BLOOMING) {
 				boolean def = rand.nextInt(100) > (99 - FFCommonConfig.treeGrowingSpeed);
 				if (def) {
 					FruitTreeBlockEntity core = findCore(world, pos);
@@ -336,7 +336,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 		if (hasFruit(state, level, pos)) {
-			giveItemTo(player, hitResult, type.get().fruit.get().getDefaultInstance());
+			giveItemTo(player, hitResult, type.value().fruit.get().getDefaultInstance());
 			if (!level.isClientSide()) {
 				gotoDeadOrYoung((ServerLevel) level, pos, state, null);
 			}
@@ -372,7 +372,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState state) {
 		if (hasBlockEntity(state)) {
-			return new FruitTreeBlockEntity(pPos, state, type.get());
+			return new FruitTreeBlockEntity(pPos, state, type);
 		}
 		return null;
 	}

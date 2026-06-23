@@ -18,7 +18,7 @@ public class CherryBlockLoot extends CoreBlockLoot {
 		super.addTables();
 		handle(SlidingDoorBlock.class, this::createDoorTable);
 		handle(CherryLeavesBlock.class, this::createFruitLeaves);
-		add(CherryModule.PEACH_PINK_PETALS.get(), this::createPetalsDrops);
+		add(CherryModule.PEACH_PINK_PETALS.get(), this::createSegmentedBlockDrops);
 	}
 
 }

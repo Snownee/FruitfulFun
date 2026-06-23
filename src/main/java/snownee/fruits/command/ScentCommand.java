@@ -17,10 +17,13 @@ import snownee.fruits.gadget.ScentType;
 
 public class ScentCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
-		return Commands.literal("scent").requires($ -> $.hasPermission(2)).executes($ -> show($.getSource())).then(Commands.literal("clear")
-				.executes($ -> clear(0, $.getSource()))
-				.then(Commands.argument("range", IntegerArgumentType.integer(0, 99))
-						.executes($ -> clear(IntegerArgumentType.getInteger($, "range"), $.getSource()))));
+		return Commands.literal("scent")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.executes($ -> show($.getSource()))
+				.then(Commands.literal("clear")
+						.executes($ -> clear(0, $.getSource()))
+						.then(Commands.argument("range", IntegerArgumentType.integer(0, 99))
+								.executes($ -> clear(IntegerArgumentType.getInteger($, "range"), $.getSource()))));
 	}
 
 	private static int clear(int range, CommandSourceStack source) {
