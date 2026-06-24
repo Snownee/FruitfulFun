@@ -2,6 +2,7 @@ package snownee.fruits.mixin.bee;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +15,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,8 +43,8 @@ public class BeehiveBlockMixin {
 			method = "angerNearbyBees",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/entity/animal/Bee;getTarget()Lnet/minecraft/world/entity/LivingEntity;"))
-	private LivingEntity angerNearbyBees(LivingEntity original, @Local Bee bee) {
+					target = "Lnet/minecraft/world/entity/animal/bee/Bee;getTarget()Lnet/minecraft/world/entity/LivingEntity;"))
+	private @Nullable LivingEntity angerNearbyBees(@Nullable LivingEntity original, @Local(name = "bee") Bee bee) {
 		if (original == null && BeeAttributes.of(bee).hasTrait(Trait.MILD)) {
 			return bee; // return anything nonnull to continue the loop
 		}
@@ -52,38 +54,39 @@ public class BeehiveBlockMixin {
 	@WrapOperation(
 			method = "playerDestroy", at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getItemEnchantmentLevel(Lnet/minecraft/world/item/enchantment/Enchantment;Lnet/minecraft/world/item/ItemStack;)I"))
-	private int playerDestroy(
-			Enchantment enchantment,
-			ItemStack itemStack,
-			Operation<Integer> original,
-			@Local BeehiveBlockEntity be) {
-		if (((FFBeehiveBlockEntity) be).fruits$isWaxed()) {
-			((FFBeehiveBlockEntity) be).fruits$setWaxed(false);
-			return Math.max(original.call(enchantment, itemStack), 1);
+			target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;hasTag(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/tags/TagKey;)Z"))
+	private boolean playerDestroy(
+			ItemStack item,
+			TagKey<Enchantment> tag,
+			Operation<Boolean> original,
+			@Local(name = "beehiveBlockEntity") BeehiveBlockEntity beehiveBlockEntity) {
+		boolean result = original.call(item, tag);
+		if (!result && ((FFBeehiveBlockEntity) beehiveBlockEntity).fruits$isWaxed()) {
+			((FFBeehiveBlockEntity) beehiveBlockEntity).fruits$setWaxed(false);
+			return true;
 		}
-		return original.call(enchantment, itemStack);
+		return result;
 	}
 
 	@Inject(method = "getDrops", at = @At("HEAD"))
-	private void getDrops(BlockState blockState, LootParams.Builder builder, CallbackInfoReturnable<List<ItemStack>> cir) {
-		if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof FFBeehiveBlockEntity be && be.fruits$isWaxed()) {
+	private void getDrops(BlockState state, LootParams.Builder params, CallbackInfoReturnable<List<ItemStack>> cir) {
+		if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof FFBeehiveBlockEntity be && be.fruits$isWaxed()) {
 			// EnderMan.dropCustomDeathLoot
-			ItemStack itemStack = builder.getParameter(LootContextParams.TOOL);
-			itemStack = itemStack.isEmpty() ? Items.DIAMOND_AXE.getDefaultInstance() : itemStack.copy();
-			itemStack.enchant(Enchantments.SILK_TOUCH, 1);
-			builder.withParameter(LootContextParams.TOOL, itemStack);
+			ItemStack fakeTool = Items.DIAMOND_AXE.getDefaultInstance();
+			fakeTool.enchant(params.getLevel().registryAccess().getOrThrow(Enchantments.SILK_TOUCH), 1);
+			params.withParameter(LootContextParams.TOOL, fakeTool);
 		}
 	}
 
-	@Inject(method = "use", at = @At("HEAD"), cancellable = true)
-	private void use(
-			BlockState blockState,
+	@Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
+	private void useItemOn(
+			ItemStack itemStack,
+			BlockState state,
 			Level level,
 			BlockPos pos,
 			Player player,
 			InteractionHand hand,
-			BlockHitResult hit,
+			BlockHitResult hitResult,
 			CallbackInfoReturnable<InteractionResult> cir) {
 		if (!(level.getBlockEntity(pos) instanceof BeehiveBlockEntity be)) {
 			return;
@@ -100,8 +103,8 @@ public class BeehiveBlockMixin {
 				continue;
 			}
 			if (!level.isClientSide() && !be.isFull()) {
-				bee.dropLeash(true, true);
-				be.addOccupant(bee, bee.hasNectar());
+				bee.dropLeash();
+				be.addOccupant(bee);
 			}
 			bl = true;
 		}
@@ -109,7 +112,7 @@ public class BeehiveBlockMixin {
 			return;
 		}
 		if (!level.isClientSide()) {
-			level.playSound(null, pos, SoundEvents.LEASH_KNOT_PLACE, player.getSoundSource(), 1, 1);
+			level.playSound(null, pos, SoundEvents.LEAD_TIED, player.getSoundSource(), 1, 1);
 		}
 		cir.setReturnValue(InteractionResult.SUCCESS_SERVER);
 	}

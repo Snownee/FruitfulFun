@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -66,14 +67,14 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 		}
 		fruits$getHauntedBy(); // remove invalid spectatedBy
 		if (this instanceof FFPlayer player && player.fruits$isHaunting()) {
-			if (isControlledByLocalInstance()) {
+			if (isLocalInstanceAuthoritative()) {
 				lerpSteps = 0;
 				syncPacketPositionCodec(getX(), getY(), getZ());
 			}
 			if (!isImmobile() && isEffectiveAi()) {
-				level().getProfiler().push("newAi");
+				Profiler.get().push("newAi");
 				serverAiStep();
-				level().getProfiler().pop();
+				Profiler.get().pop();
 			}
 			ci.cancel();
 		}

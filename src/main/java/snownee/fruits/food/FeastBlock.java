@@ -1,11 +1,13 @@
 package snownee.fruits.food;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -64,12 +67,13 @@ public class FeastBlock extends FoodBlock {
 			consumeServing(level, pos, state, player);
 		} else if (remainder == null) {
 			// has no container. eat serving item directly
-			FoodProperties food = servingItem.getItem().getFoodProperties();
-			if (food == null || !player.canEat(food.canAlwaysEat())) {
+			FoodProperties food = servingItem.get(DataComponents.FOOD);
+			Consumable consumable = servingItem.get(DataComponents.CONSUMABLE);
+			if (food == null || consumable == null || !player.canEat(food.canAlwaysEat())) {
 				return InteractionResult.PASS;
 			}
 			consumeServing(level, pos, state, player);
-			player.eat(level, servingItem);
+			consumable.onConsume(level, player, servingItem);
 		} else if (ItemStack.isSameItem(held, remainder.create())) {
 			// has container. give serving item
 			if (!level.isClientSide()) {
@@ -91,7 +95,7 @@ public class FeastBlock extends FoodBlock {
 			}
 		} else {
 			if (level.isClientSide()) {
-				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.useContainer", remainder.getHoverName()));
+				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.useContainer", remainder.create().getStyledHoverName()));
 			}
 			return InteractionResult.PASS;
 		}
@@ -146,7 +150,7 @@ public class FeastBlock extends FoodBlock {
 
 	@Override
 	public BlockItem createItem(Item.Properties builder) {
-		return super.createItem(builder.craftRemainder(servingItem.get().getCraftingRemainingItem()));
+		return super.createItem(builder.craftRemainder(Objects.requireNonNull(servingItem.get().getCraftingRemainder()).item().value()));
 	}
 
 }

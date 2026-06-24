@@ -4,7 +4,10 @@ import java.util.function.Predicate;
 
 import org.jspecify.annotations.Nullable;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -12,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.kiwi.util.PreventUpdateAnimation;
 
 public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAnimation {
@@ -19,8 +23,8 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 	private static final int ITEM_BAR_COLOR = Mth.color(0.4F, 1.0F, 0.4F);
 	private static final ThreadLocal<ItemEntity> DUMMY_ITEM_ENTITY = new ThreadLocal<>();
 
-	public VacGunItem() {
-		super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+	public VacGunItem(Item.Properties properties) {
+		super(properties.stacksTo(1).rarity(Rarity.RARE));
 	}
 
 //	public static void shoot(Player player, InteractionHand hand) {
@@ -419,14 +423,14 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 //			// TODO
 //		}
 //	}
-//
-//	public static void playContainerAnimation(@Nullable BlockEntity blockEntity) {
-//		if (blockEntity instanceof Container && blockEntity instanceof MenuProvider menuProvider) {
-//			ContainerOpenerFakePlayer player = ContainerOpenerFakePlayer.getOrCreate(
-//					(ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos());
-//			player.openMenu(menuProvider);
-//		}
-//	}
+	public static void playContainerAnimation(@Nullable BlockEntity blockEntity) {
+		if (blockEntity instanceof Container && blockEntity instanceof MenuProvider menuProvider) {
+			ContainerOpenerFakePlayer player = ContainerOpenerFakePlayer.getOrCreate(
+					(ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos());
+			player.openMenu(menuProvider);
+		}
+	}
+
 	@Override
 	public Predicate<ItemStack> getAllSupportedProjectiles() {
 		return $ -> true;

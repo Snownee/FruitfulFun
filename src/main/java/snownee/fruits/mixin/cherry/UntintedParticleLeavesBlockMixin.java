@@ -24,7 +24,7 @@ public class UntintedParticleLeavesBlockMixin {
 			ci.cancel();
 		}
 		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Modded) {
-			CherryModule.CHERRY_LEAVES.get().animateTick(blockState, level, blockPos, randomSource);
+			CherryModule.CHERRY_LEAVES.get().spawnFallingLeavesParticle(level, pos, random);
 			ci.cancel();
 		}
 	}

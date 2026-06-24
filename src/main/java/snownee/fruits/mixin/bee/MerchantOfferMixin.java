@@ -4,47 +4,33 @@ import java.util.List;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.fruits.util.CommonProxy;
 
 @Mixin(MerchantOffer.class)
 public class MerchantOfferMixin {
-	@Inject(
-			method = "isRequiredItem",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;copy()Lnet/minecraft/world/item/ItemStack;"),
-			cancellable = true)
-	private void isRequiredItem(ItemStack offer, ItemStack cost, CallbackInfoReturnable<Boolean> cir) {
-		if (!BeeModule.isBeehiveTrade((MerchantOffer) (Object) this)) {
-			return;
+	@WrapOperation(
+			method = "satisfiedBy",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/trading/ItemCost;test(Lnet/minecraft/world/item/ItemStack;)Z"))
+	private boolean satisfiedBy(ItemCost itemCost, ItemStack itemStack, Operation<Boolean> original) {
+		boolean result = original.call(itemCost, itemStack);
+		if (BeeModule.isBeehiveTrade((MerchantOffer) (Object) this) && CommonProxy.isBeehive(itemStack)) {
+			return result && BeehiveIngredient.TRUE.test(itemStack);
 		}
-		if (!CommonProxy.isBeehive(offer)) {
-			cir.setReturnValue(false);
-			return;
-		}
-		CompoundTag blockEntityData = BlockItem.getBlockEntityData(offer);
-		if (blockEntityData == null) {
-			cir.setReturnValue(false);
-			return;
-		}
-		ListTag list = blockEntityData.getList(BeehiveBlockEntity.BEES, Tag.TAG_COMPOUND);
-		cir.setReturnValue(!list.isEmpty());
+		return result;
 	}
 
 	@WrapMethod(method = "getCostA")

@@ -51,7 +51,9 @@ public class FoodBlockLoot extends KiwiBlockLoot {
 									)
 									.otherwise(EntryGroup.list(
 											LootItem.lootTableItem(Items.BONE_MEAL),
-											LootItem.lootTableItem(Objects.requireNonNull($.asItem().getCraftingRemainingItem())))))
+											LootItem.lootTableItem(Objects.requireNonNull($.asItem().getCraftingRemainder())
+													.item()
+													.value()))))
 					);
 				});
 		/* on */

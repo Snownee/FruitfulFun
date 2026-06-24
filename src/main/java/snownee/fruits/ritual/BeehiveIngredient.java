@@ -1,66 +1,47 @@
 package snownee.fruits.ritual;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import com.google.gson.JsonObject;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
+import net.minecraft.world.item.component.Bees;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.util.CommonProxy;
-import snownee.fruits.util.CustomIngredient;
-import snownee.fruits.util.CustomIngredientSerializer;
+import snownee.kiwi.recipe.CustomIngredient;
+import snownee.kiwi.recipe.CustomIngredientSerializer;
 
-public class BeehiveIngredient implements CustomIngredient {
+public record BeehiveIngredient(boolean requireBees) implements CustomIngredient {
+	public static final BeehiveIngredient TRUE = new BeehiveIngredient(true);
+	public static final BeehiveIngredient FALSE = new BeehiveIngredient(false);
 	public static final CustomIngredientSerializer<BeehiveIngredient> SERIALIZER = new Serializer();
-	private final boolean requireBees;
-	private final List<ItemStack> matchingStacks = List.of(Items.BEEHIVE.getDefaultInstance(), Items.BEE_NEST.getDefaultInstance());
-
-	public BeehiveIngredient(boolean requireBees) {
-		this.requireBees = requireBees;
-	}
+	private static final Supplier<List<Holder<Item>>> ITEMS = Suppliers.memoize(() -> Stream.of(Items.BEEHIVE, Items.BEE_NEST)
+			.map(BuiltInRegistries.ITEM::wrapAsHolder)
+			.toList());
 
 	@Override
 	public boolean test(ItemStack stack) {
 		if (!CommonProxy.isBeehive(stack)) {
 			return false;
 		}
-		if (requireBees) {
-			CompoundTag tag = stack.getTag();
-			if (tag == null) {
-				return false;
-			}
-			CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
-			if (blockEntityData == null) {
-				return false;
-			}
-			ListTag list = blockEntityData.getList(BeehiveBlockEntity.BEES, Tag.TAG_COMPOUND);
-			if (list.isEmpty()) {
-				return false;
-			}
-		}
-		return true;
+		return !requireBees || !stack.getOrDefault(DataComponents.BEES, Bees.EMPTY).bees().isEmpty();
 	}
 
 	@Override
 	public Stream<Holder<Item>> items() {
-		return Stream.empty();
-	}
-
-	@Override
-	public List<ItemStack> getMatchingStacks() {
-		return matchingStacks;
+		return ITEMS.get().stream();
 	}
 
 	@Override
@@ -73,9 +54,12 @@ public class BeehiveIngredient implements CustomIngredient {
 		return SERIALIZER;
 	}
 
-	public static class Serializer implements CustomIngredientSerializer<BeehiveIngredient> {
-		public static final BeehiveIngredient TRUE = new BeehiveIngredient(true);
-		public static final BeehiveIngredient FALSE = new BeehiveIngredient(false);
+	public record Serializer() implements CustomIngredientSerializer<BeehiveIngredient> {
+		public static final MapCodec<BeehiveIngredient> CODEC = Codec.BOOL.xmap($ -> $ ? TRUE : FALSE, BeehiveIngredient::requireBees)
+				.fieldOf("require_bees");
+		public static final StreamCodec<RegistryFriendlyByteBuf, BeehiveIngredient> STREAM_CODEC = StreamCodec.of(
+				(buf, $) -> buf.writeBoolean($.requireBees),
+				buf -> buf.readBoolean() ? TRUE : FALSE);
 
 		@Override
 		public Identifier getIdentifier() {
@@ -83,25 +67,13 @@ public class BeehiveIngredient implements CustomIngredient {
 		}
 
 		@Override
-		public BeehiveIngredient read(JsonObject json) {
-			return GsonHelper.getAsBoolean(json, "require_bees", false) ? TRUE : FALSE;
+		public MapCodec<BeehiveIngredient> getCodec() {
+			return CODEC;
 		}
 
 		@Override
-		public void write(JsonObject json, BeehiveIngredient ingredient) {
-			if (ingredient.requireBees) {
-				json.addProperty("require_bees", true);
-			}
-		}
-
-		@Override
-		public BeehiveIngredient read(FriendlyByteBuf buf) {
-			return buf.readBoolean() ? TRUE : FALSE;
-		}
-
-		@Override
-		public void write(FriendlyByteBuf buf, BeehiveIngredient ingredient) {
-			buf.writeBoolean(ingredient.requireBees);
+		public StreamCodec<RegistryFriendlyByteBuf, BeehiveIngredient> getStreamCodec() {
+			return STREAM_CODEC;
 		}
 	}
 }

@@ -7,8 +7,6 @@ import org.jspecify.annotations.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -74,11 +72,6 @@ public class FoodItem extends ModItem {
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
 		return finishUsing(stack, level, entity);
-	}
-
-	@Override
-	public SoundEvent getEatingSound() {
-		return FoodModule.HONEY_POMELO_TEA.is(this) ? SoundEvents.GENERIC_DRINK : SoundEvents.GENERIC_EAT;
 	}
 
 	@Override

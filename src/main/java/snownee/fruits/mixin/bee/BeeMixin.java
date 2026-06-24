@@ -162,4 +162,12 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		}
 		return original.call(effect, duration, amplifier);
 	}
+
+	@Inject(method = "wantsToEnterHive", at = @At("HEAD"), cancellable = true)
+	private void wantsToEnterHive(CallbackInfoReturnable<Boolean> cir) {
+		Bee bee = (Bee) (Object) this;
+		if (Hooks.bee && bee.getControllingPassenger() != null) {
+			cir.setReturnValue(false);
+		}
+	}
 }

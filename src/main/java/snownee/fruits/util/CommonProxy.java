@@ -50,7 +50,6 @@ import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Util;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,7 +58,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.AbstractCandleBlock;
@@ -83,7 +81,6 @@ import snownee.fruits.bee.genetics.GeneticSavedData;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
-import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentType;
@@ -119,12 +116,7 @@ public class CommonProxy implements ModInitializer {
 			addBuiltinPack(modContainer, "gadget");
 		}
 		if (Hooks.farmersdelight) {
-			String mode = FarmersDelightModule.getMode();
-			if ("vectorwing".equals(mode)) {
-				addBuiltinPack(modContainer, "farmersdelight");
-			} else {
-				addBuiltinPack(modContainer, "farmersdelight_" + mode);
-			}
+			addBuiltinPack(modContainer, "farmersdelight");
 		}
 		if (FFCommonConfig.villageAppleTreeWorldGen) {
 			addBuiltinPack(modContainer, "apple_tree_in_village");
@@ -235,31 +227,11 @@ public class CommonProxy implements ModInitializer {
 		addFeature("citron");
 		addFeature("tangerine");
 		addFeature("lime");
-		TradeOfferHelper.registerWanderingTraderOffers(
-				1, trades -> {
-					if (FFCommonConfig.wanderingTraderSaplingPrice == 0) {
-						return;
-					}
-					trades.add((entity, random) -> {
-						ItemStack sapling = Util.getRandom(
-										FFRegistries.FRUIT_TYPE.stream()
-												.filter($ -> $.tier == 0)
-												.map($ -> $.sapling.get())
-												.toList(), random)
-								.asItem()
-								.getDefaultInstance();
-						ItemStack emeralds = new ItemStack(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice);
-						return new MerchantOffer(emeralds, sapling, 5, 1, 1);
-					});
-				});
 
 		ServerLevelEvents.LOAD.register((server, world) -> {
 			if (world == server.overworld()) {
 				long seed = world.getSeed();
-				GeneticSavedData data = world.getDataStorage().computeIfAbsent(
-						GeneticSavedData::load,
-						GeneticSavedData::new,
-						"fruitfulfun_genetics");
+				GeneticSavedData data = world.getDataStorage().computeIfAbsent(GeneticSavedData.TYPE);
 				data.initAlleles(seed);
 			}
 		});

@@ -12,8 +12,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -39,7 +39,7 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 	}
 
 	public static void addConfiguredFeatures(FabricDynamicRegistryProvider.Entries entries) {
-		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.holders().toList()) {
+		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.listElements().toList()) {
 			FruitType type = holder.value();
 			Identifier id = holder.key().identifier();
 			type.makeFeatures(
@@ -55,14 +55,14 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 			if (type.tier == 0) {
 				ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(id.withSuffix("_random").toString());
 				ConfiguredFeature<?, ?> cf = cf(
-						Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(features, features.remove(0).feature));
+						Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(features, features.removeFirst().feature));
 				entries.add(key, cf);
 			}
 		}
 	}
 
 	public static void addPlacedFeatures(FabricDynamicRegistryProvider.Entries entries) {
-		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.holders().toList()) {
+		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.listElements().toList()) {
 			if (!(holder.value() instanceof CoreFruitType type)) {
 				continue;
 			}

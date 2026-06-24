@@ -40,14 +40,12 @@ import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
@@ -256,13 +254,6 @@ public class ClientProxy implements ClientModInitializer {
 			ParticleProviderRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
 			ClientPlatform.registerEntityRenderer(GadgetModule.SUMMONED_BEE.getOrCreate(), BeeRenderer::new);
 			ClientPlatform.registerBlockEntityRenderer(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
-
-			Identifier blocking = new Identifier("blocking");
-			if (ItemProperties.getProperty(Items.SHIELD, blocking) instanceof ClampedItemPropertyFunction function) {
-				ItemProperties.register(GadgetModule.BUZZY_SHIELD.getOrCreate(), blocking, function);
-			} else {
-				FruitfulFun.LOGGER.warn("Failed to register shield blocking property");
-			}
 		}
 
 		if (Hooks.ritual) {

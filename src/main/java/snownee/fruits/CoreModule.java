@@ -17,20 +17,27 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.HangingSignItem;
+import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
+import net.minecraft.world.item.trading.ItemCost;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -79,7 +86,7 @@ import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule(dependencies = "fruit_types")
+@KiwiModule(modId = FruitfulFun.ID, dependencies = "fruit_types")
 public final class CoreModule extends AbstractModule {
 
 	public static final BlockSetType CITRUS_SET_TYPE = new BlockSetType("fruitfulfun:citrus");
@@ -237,10 +244,10 @@ public final class CoreModule extends AbstractModule {
 	public static final BlockObject<Block> POTTED_APPLE = block(
 			$ -> new FlowerPotBlock(APPLE_SAPLING.getOrCreate(), $),
 			() -> Blocks.POTTED_OAK_SAPLING);
-	public static final TagKey<Block> ALL_LEAVES = blockTag(FruitfulFun.ID, "leaves");
+	public static final TagKey<Block> ALL_LEAVES = blockTag("leaves");
 	public static final KiwiGO<FoliagePlacerType<Fruitify>> FRUITIFY = go(() -> new FoliagePlacerType<>(Fruitify.CODEC));
 	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> bannerPattern("snowflake"));
-	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/snowflake");
+	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registries.BANNER_PATTERN, "pattern_item/snowflake");
 	public static final KiwiGO<BlockEntityType<FruitTreeBlockEntity>> FRUIT_TREE = blockEntity(
 			FruitTreeBlockEntity::new,
 			FruitLeavesBlock.class);
@@ -254,12 +261,13 @@ public final class CoreModule extends AbstractModule {
 			SlidingDoorEntity::new,
 			MobCategory.MISC).sized(0.01f, 0.01f).fireImmune().noSummon().build($));
 	/* on */
-	public static final TagKey<PoiType> POI_TYPE = tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
-	public static final TagKey<Block> CANDLES = blockTag(FruitfulFun.ID, "candles");
+	public static final TagKey<PoiType> POI_TYPE = tag(Registries.POINT_OF_INTEREST_TYPE, "trees");
+	public static final TagKey<Block> CANDLES = blockTag("candles");
 	public static final KiwiGO<MobEffect> FRAGILITY = go(() -> new MobEffect(MobEffectCategory.HARMFUL, 0x875A49));
 	public static final KiwiGO<ConsumeEffect.Type<ExtinguishFireConsumeEffect>> EXTINGUISH_FIRE = go(() -> new ConsumeEffect.Type<>(
 			ExtinguishFireConsumeEffect.CODEC,
 			ExtinguishFireConsumeEffect.STREAM_CODEC));
+	public static final TagKey<Instrument> HORN_HARVESTING_INSTRUMENT = tag(Registries.INSTRUMENT, "horn_harvesting_instrument");
 
 	@Override
 	protected void addEntries() {
@@ -355,6 +363,17 @@ public final class CoreModule extends AbstractModule {
 			builderConsumer.accept(builder);
 		}
 		return item($ -> new ModItem($.food(foodProperties, builder.build())));
+	}
+
+	public static void addWanderingTraderTrades(MerchantOffers offers, WanderingTrader trader) {
+		ItemStack sapling = Util.getRandom(
+						FFRegistries.FRUIT_TYPE.stream()
+								.filter($ -> $.tier == 0)
+								.map($ -> $.sapling.get())
+								.toList(), trader.getRandom())
+				.asItem()
+				.getDefaultInstance();
+		offers.add(new MerchantOffer(new ItemCost(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice), sapling, 5, 1, 1));
 	}
 
 	public static final class Foods {

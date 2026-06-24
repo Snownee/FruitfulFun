@@ -47,7 +47,6 @@ import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -57,7 +56,6 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -109,10 +107,9 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 
 	@Override
 	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
-		return new RecipeProvider() {
+		return new RecipeProvider(registries, output) {
 			@Override
 			public void buildRecipes() {
-				HolderLookup.RegistryLookup<Item> lookup = registries.lookupOrThrow(Registries.ITEM);
 				oneToOneConversionRecipe(Items.PINK_DYE, CherryModule.PEACH_PINK_PETALS.get().asItem(), "pink_dye");
 				generateRecipes(CITRUS_PLANKS_FAMILY, FeatureFlagSet.of());
 				generateRecipes(REDLOVE_PLANKS_FAMILY, FeatureFlagSet.of());
@@ -173,25 +170,25 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						output,
 						new ModuleLoadedCondition(FruitfulFun.id("food")),
 						ResourceConditions.not(new ModuleLoadedCondition(FruitfulFun.id("farmersdelight"))));
-				KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.DONAUWELLE.get())
+				shapeless(RecipeCategory.FOOD, FoodModule.DONAUWELLE.get())
 						.requires(CherryModule.REDLOVE.get())
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add(DefaultCustomIngredients.any(
-										Ingredient.of(AbstractModule.itemTag("c", "chocolates")),
-										Ingredient.of(AbstractModule.itemTag("c", "chocolatebar")))
+										tag(AbstractModule.itemTag("c", "chocolates")),
+										tag(AbstractModule.itemTag("c", "chocolatebar")))
 								)
 								.add(Items.COCOA_BEANS)
 								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:cream")
 								.add("#c:milk")
 								.add(Items.MILK_BUCKET)
 								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:eggs")
 								.add(Items.EGG)
 								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:flour")
 								.add("#c:grain/wheat")
 								.add(Items.WHEAT)
@@ -209,11 +206,11 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						hasRice,
 						new ModuleLoadedCondition(FruitfulFun.id("food")),
 						ResourceConditions.not(new ModuleLoadedCondition(FruitfulFun.id("farmersdelight"))));
-				KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.RICE_WITH_FRUITS.get())
+				shapeless(RecipeCategory.FOOD, FoodModule.RICE_WITH_FRUITS.get())
 						.requires(AbstractModule.itemTag("c", "fruits/tangerine"))
 						.requires(AbstractModule.itemTag("c", "fruits/apple"))
 						.requires(AbstractModule.itemTag("c", "fruits"))
-						.requires(AlternativesIngredientBuilder.of()
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:grain/rice")
 								.add("#c:seeds/rice")
 								.build().toVanilla())
@@ -221,46 +218,46 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/tangerine")))
 						.save(riceWithFruitsExporter);
 
-				KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.GRAPEFRUIT_PANNA_COTTA.get())
+				shapeless(RecipeCategory.FOOD, FoodModule.GRAPEFRUIT_PANNA_COTTA.get())
 						.requires(AbstractModule.itemTag("c", "fruits/grapefruit"))
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:cream")
 								.add("#c:milk")
 								.add(Items.MILK_BUCKET)
 								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:eggs")
 								.add(Items.EGG)
 								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:gelatin")
 								.add("#c:gelatine")
 								.add("#c:slime_balls")
 								.add(Items.SLIME_BALL)
 								.build().toVanilla())
 						.requires(Items.SUGAR)
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:vannila")
 								.add("#c:crops/vanilla")
-								.add(Ingredient.EMPTY)
+//								.add(Ingredient.EMPTY)
 								.build().toVanilla())
 						.unlockedBy("has_item", has(CoreModule.GRAPEFRUIT.get()))
 						.save(foodExporterNoFD);
 
-				KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.HONEY_POMELO_TEA.get())
+				shapeless(RecipeCategory.FOOD, FoodModule.HONEY_POMELO_TEA.get())
 						.requires(AbstractModule.itemTag("c", "fruits/pomelo"))
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:crops/mint")
 								.add("#c:leaves/mint")
-								.add(Ingredient.EMPTY)
+//								.add(Ingredient.EMPTY)
 								.build().toVanilla())
 						.requires(Items.HONEY_BOTTLE)
 						.requires(Items.SUGAR)
-						.noContainers()
+//						.noContainers()
 						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/pomelo")))
 						.save(foodExporterNoFD);
 
-				KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.CHORUS_FRUIT_PIE.get())
+				shapeless(RecipeCategory.FOOD, FoodModule.CHORUS_FRUIT_PIE.get())
 						.requires(Items.CHORUS_FRUIT)
 						.requires(Items.CHORUS_FRUIT)
 						.requires(Items.EGG)
@@ -272,16 +269,16 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						.define('#', FoodModule.CHORUS_FRUIT_PIE_SLICE.get())
 						.pattern("##")
 						.pattern("##")
-						.unlockedBy("has_item", RecipeProvider.has(FoodModule.CHORUS_FRUIT_PIE_SLICE.get()))
+						.unlockedBy("has_item", has(FoodModule.CHORUS_FRUIT_PIE_SLICE.get()))
 						.save(foodExporter, "chorus_fruit_pie_packing");
 
-				KiwiShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get())
+				shapeless(RecipeCategory.FOOD, FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get())
 						.requires(AbstractModule.itemTag("c", "fruits/lemon"))
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:flowers/lavender")
 								.add("#c:fruits/lemon")
 								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(lookup)
+						.requires(AlternativesIngredientBuilder.of(items)
 								.add("#c:vegetables/onion")
 								.add(Items.POTATO)
 								.build().toVanilla())
@@ -336,34 +333,34 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						.define('C', Items.HONEYCOMB)
 						.unlockedBy("has_item", has(Items.HONEYCOMB))
 						.save(gadgetExporter);
-				scentedCandle(gadgetExporter, Ingredient.of(FFItemTagsProvider.TULIPS), GadgetModule.WEAK_CANDLE);
+				scentedCandle(gadgetExporter, tag(FFItemTagsProvider.TULIPS), GadgetModule.WEAK_CANDLE);
 				scentedCandle(gadgetExporter, Ingredient.of(CherryModule.CHERRY.get()), GadgetModule.WANDERING_TRADER_CANDLE);
 				scentedCandle(gadgetExporter, Ingredient.of(Items.SUNFLOWER), GadgetModule.PHANTOM_CANDLE);
 				scentedCandle(gadgetExporter, Ingredient.of(Items.PITCHER_PLANT), GadgetModule.ENDER_CANDLE);
 
 				SmithingTransformRecipeBuilder.smithing(
-								Ingredient.of(FFItemTagsProvider.GADGET_TOKEN),
+								tag(FFItemTagsProvider.GADGET_TOKEN),
 								Ingredient.of(Items.SHIELD),
 								Ingredient.of(Items.HONEYCOMB_BLOCK),
 								RecipeCategory.TOOLS,
 								GadgetModule.BUZZY_SHIELD.get())
 						.unlocks("has_crafter", has(GadgetModule.BUZZY_CRAFTER.get()))
-						.save(gadgetExporter, BuiltInRegistries.ITEM.getKey(GadgetModule.BUZZY_SHIELD.get()));
+						.save(gadgetExporter, getSimpleRecipeName(GadgetModule.BUZZY_SHIELD.get()));
 			}
 
 			public void scentedCandle(RecipeOutput output, Ingredient addition, KiwiGO<? extends ItemLike> result) {
 				SmithingTransformRecipeBuilder.smithing(
-								Ingredient.of(FFItemTagsProvider.GADGET_TOKEN),
-								Ingredient.of(ItemTags.CANDLES),
+								tag(FFItemTagsProvider.GADGET_TOKEN),
+								tag(ItemTags.CANDLES),
 								addition,
 								RecipeCategory.DECORATIONS,
 								result.get().asItem())
 						.unlocks("has_crafter", has(GadgetModule.BUZZY_CRAFTER.get()))
-						.save(output, BuiltInRegistries.ITEM.getKey(result.get().asItem()));
+						.save(output, getSimpleRecipeName(result.get()));
 			}
 
 			public void sapling(RecipeOutput output, KiwiGO<? extends ItemLike> result, ItemLike... inputs) {
-				ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result.get());
+				ShapelessRecipeBuilder builder = shapeless(RecipeCategory.MISC, result.get());
 				for (ItemLike input : inputs) {
 					builder.requires(input);
 					String id = BuiltInRegistries.ITEM.getKey(input.asItem()).getPath();

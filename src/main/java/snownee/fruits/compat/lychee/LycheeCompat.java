@@ -32,10 +32,9 @@ public class LycheeCompat {
 	public static final Supplier<BlockPredicate> pieBlockPredicate = Suppliers.memoize(() -> {
 		PieBlock pieBlock = FoodModule.CHORUS_FRUIT_PIE.get();
 		return BlockPredicate.Builder.block()
-				.of(pieBlock)
+				.of(BuiltInRegistries.BLOCK, pieBlock)
 				.setProperties(StatePropertiesPredicate.Builder.properties()
-						.hasProperty(pieBlock.getServingsProperty(), pieBlock.getMaxServings())
-						.build())
+						.hasProperty(pieBlock.getServingsProperty(), pieBlock.getMaxServings()))
 				.build();
 	});
 
@@ -100,9 +99,9 @@ public class LycheeCompat {
 	}
 
 	public static List<Input> getInputs(HybridizingRecipe recipe) {
-		List<Input> inputs = Lists.newArrayListWithExpectedSize(recipe.pollens.size());
-		for (String pollen : recipe.pollens) {
-			Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen));
+		List<Input> inputs = Lists.newArrayListWithExpectedSize(recipe.pollens().size());
+		for (String pollen : recipe.pollens()) {
+			Block block = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(pollen));
 			Item item = block.asItem();
 			if (item == Items.AIR) {
 				inputs.add(new Input(block));

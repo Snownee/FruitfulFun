@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
@@ -41,7 +42,7 @@ import snownee.fruits.util.CommonProxy;
 
 public class VacItemProjectile extends ThrowableItemProjectile {
 	public final float bobOffs;
-	private ItemProjectileColor colorProvider;
+	private @Nullable ItemProjectileColor colorProvider;
 
 	public VacItemProjectile(EntityType<? extends VacItemProjectile> type, Level level) {
 		super(type, level);
@@ -51,11 +52,6 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 	@Override
 	protected Item getDefaultItem() {
 		return Items.AIR;
-	}
-
-	@Override
-	public ItemStack getItem() {
-		return getItemRaw();
 	}
 
 	@Override
@@ -130,37 +126,38 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 	@Override
 	protected void onHitEntity(EntityHitResult entityHitResult) {
 		super.onHitEntity(entityHitResult);
-		DamageSource damageSource;
-		Entity owner = getOwner();
-		Entity entity = entityHitResult.getEntity();
-		if (owner == null) {
-			damageSource = damageSources().thrown(this, this);
-		} else {
-			damageSource = damageSources().thrown(this, owner);
-			if (owner instanceof LivingEntity livingEntity) {
-				livingEntity.setLastHurtMob(entity);
+		if (level() instanceof ServerLevel level) {
+			DamageSource damageSource;
+			Entity owner = getOwner();
+			Entity entity = entityHitResult.getEntity();
+			if (owner == null) {
+				damageSource = damageSources().thrown(this, this);
+			} else {
+				damageSource = damageSources().thrown(this, owner);
+				if (owner instanceof LivingEntity livingEntity) {
+					livingEntity.setLastHurtMob(entity);
+				}
 			}
-		}
-		boolean enderman = entity.getType() == EntityType.ENDERMAN;
-		if (this.isOnFire() && !enderman) {
-			entity.setSecondsOnFire(5);
-		}
-		if (!entity.hurt(damageSource, 1f) || enderman) {
-			return;
-		}
-		if (entity instanceof LivingEntity livingEntity) {
-			double dx = 0;
-			double dz = 0;
-			if (livingEntity.onGround()) {
-				dx = getDeltaMovement().x * 0.05;
-				dz = getDeltaMovement().z * 0.05;
+			boolean enderman = entity.getType() == EntityType.ENDERMAN;
+			if (this.isOnFire() && !enderman) {
+				entity.igniteForSeconds(5);
 			}
-			livingEntity.push(dx, 0.1, dz);
-			if (!level().isClientSide() && owner instanceof LivingEntity) {
-				EnchantmentHelper.doPostHurtEffects(livingEntity, owner);
-				EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingEntity);
+			if (!entity.hurtServer(level, damageSource, 1f) || enderman) {
+				return;
 			}
-			livingEntity.invulnerableTime = 0;
+			if (entity instanceof LivingEntity livingEntity) {
+				double dx = 0;
+				double dz = 0;
+				if (livingEntity.onGround()) {
+					dx = getDeltaMovement().x * 0.05;
+					dz = getDeltaMovement().z * 0.05;
+				}
+				livingEntity.push(dx, 0.1, dz);
+				if (owner instanceof LivingEntity) {
+					EnchantmentHelper.doPostAttackEffects(level, livingEntity, damageSource);
+				}
+				livingEntity.invulnerableTime = 0;
+			}
 		}
 	}
 
@@ -177,7 +174,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 			double y = deltaMovement.y;
 			double z = deltaMovement.z;
 			float l = Mth.sin(getAge() / 10.0f) * 0.1f + 0.2f;
-			DustParticleOptions particleOptions = new DustParticleOptions(Vec3.fromRGB24(color).toVector3f(), 1f);
+			DustParticleOptions particleOptions = new DustParticleOptions(color, 1f);
 			for (int i = 0; i < 4; ++i) {
 				level().addParticle(
 						particleOptions, getX() - x * (double) i / 4.0, getY() + l - y * (double) i / 4.0, getZ() - z * (double) i / 4.0,
@@ -200,7 +197,7 @@ public class VacItemProjectile extends ThrowableItemProjectile {
 		if (component != null) {
 			return component;
 		}
-		return Component.translatable(this.getItem().getDescriptionId());
+		return getItem().getDisplayName();
 	}
 
 	@Nullable

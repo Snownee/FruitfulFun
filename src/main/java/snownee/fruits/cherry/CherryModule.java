@@ -64,7 +64,7 @@ import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule(value = "cherry", dependencies = "fruit_types")
+@KiwiModule(value = "cherry", modId = FruitfulFun.ID, dependencies = "fruit_types")
 public class CherryModule extends AbstractModule {
 
 	public static final BlockSetType REDLOVE_SET_TYPE = new BlockSetType(
@@ -176,7 +176,7 @@ public class CherryModule extends AbstractModule {
 					.onConsume(SpeedUpBreedingCooldownConsumeEffect.INSTANCE)
 					.build())));
 	public static final KiwiGO<BannerPattern> HEART = go(() -> CoreModule.bannerPattern("heart"));
-	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/heart");
+	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, "pattern_item/heart");
 	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
 	public static final ItemObject<Item> HEART_BANNER_PATTERN = CoreModule.bannerPatternItem(HEART_TAG);
 	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(

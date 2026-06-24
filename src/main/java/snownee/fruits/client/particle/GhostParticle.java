@@ -1,37 +1,36 @@
 package snownee.fruits.client.particle;
 
+import org.jspecify.annotations.Nullable;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.RisingParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.Mth;
+import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.util.RandomSource;
 
 public class GhostParticle extends RisingParticle {
 	private final SpriteSet sprites;
 	protected boolean isGlowing;
 
-	GhostParticle(ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, SpriteSet spriteSet) {
-		super(clientLevel, d, e, f, g, h, i);
-		this.sprites = spriteSet;
-		this.setSpriteFromAge(spriteSet);
+	GhostParticle(ClientLevel level, double x, double y, double z, double xd, double yd, double zd, SpriteSet sprites) {
+		super(level, x, y, z, xd, yd, zd, sprites.first());
+		this.sprites = sprites;
+		this.scale(1.5F);
+		this.setSpriteFromAge(sprites);
 	}
 
 	@Override
-	public int getLightColor(float partialTick) {
-		int light = super.getLightColor(partialTick);
-		if (this.isGlowing) {
-			int blockLight = (light >> 4) & 15;
-			light = (light & 0xFFFF00) | Mth.clamp(blockLight + 4, 6, 15) << 4;
-		}
-		return light;
+	public int getLightCoords(float a) {
+		return this.isGlowing ? LightCoordsUtil.withBlock(super.getLightCoords(a), 15) : super.getLightCoords(a);
 	}
 
 	@Override
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	public SingleQuadParticle.Layer getLayer() {
+		return SingleQuadParticle.Layer.TRANSLUCENT;
 	}
 
 	@Override
@@ -48,16 +47,17 @@ public class GhostParticle extends RisingParticle {
 		}
 
 		@Override
-		public Particle createParticle(
-				SimpleParticleType type,
+		public @Nullable Particle createParticle(
+				SimpleParticleType options,
 				ClientLevel level,
 				double x,
 				double y,
 				double z,
-				double xSpeed,
-				double ySpeed,
-				double zSpeed) {
-			GhostParticle particle = new GhostParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprite);
+				double xAux,
+				double yAux,
+				double zAux,
+				RandomSource random) {
+			GhostParticle particle = new GhostParticle(level, x, y, z, xAux, yAux, zAux, this.sprite);
 			particle.setAlpha(0.5f);
 			particle.isGlowing = true;
 			return particle;
@@ -72,16 +72,17 @@ public class GhostParticle extends RisingParticle {
 		}
 
 		@Override
-		public Particle createParticle(
-				SimpleParticleType type,
+		public @Nullable Particle createParticle(
+				SimpleParticleType options,
 				ClientLevel level,
 				double x,
 				double y,
 				double z,
-				double xSpeed,
-				double ySpeed,
-				double zSpeed) {
-			GhostParticle particle = new GhostParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprite);
+				double xAux,
+				double yAux,
+				double zAux,
+				RandomSource random) {
+			GhostParticle particle = new GhostParticle(level, x, y, z, xAux, yAux, zAux, this.sprite);
 			particle.setAlpha(0.5f);
 			return particle;
 		}

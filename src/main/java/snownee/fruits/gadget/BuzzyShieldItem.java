@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 import com.google.common.collect.Sets;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +23,8 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.phys.Vec3;
 
 public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFiller {
@@ -33,7 +36,7 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 
 	public static float onBlock(LivingEntity self, DamageSource source, float damage, ItemStack shield) {
 		BuzzyPowerStorage storage = getPowerStorage(shield);
-		if (shield.getTag() == null || !shield.getTag().getBoolean("Unbreakable")) {
+		if (!shield.has(DataComponents.UNBREAKABLE)) {
 			storage.useLife(200); // durability is 120000 / 200 = 600
 			BuzzyPowerStorage.write(shield, storage);
 		}
@@ -75,6 +78,7 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 				b1 = new Vec3(1 - a * viewVector.x * viewVector.x, b, -viewVector.x);
 				b2 = new Vec3(b, 1 - a * viewVector.y * viewVector.y, -viewVector.y);
 			}
+			PathfindingContext context = new PathfindingContext(bee.level(), bee);
 			for (int attempts = 0; attempts < 10; attempts++) {
 				double angle = entity.random.nextDouble() * Mth.TWO_PI;
 				Vec3 normal = b1.scale(Math.cos(angle)).add(b2.scale(Math.sin(angle)));
@@ -82,11 +86,12 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 				if (!level.noCollision(bee)) {
 					continue;
 				}
-				BlockPathTypes pathType = bee.getNavigation().getNodeEvaluator().getBlockPathType(
-						level,
+				PathType pathType = bee.getNavigation().getNodeEvaluator().getPathTypeOfMob(
+						context,
 						bee.getBlockX(),
 						bee.getBlockY(),
-						bee.getBlockZ());
+						bee.getBlockZ(),
+						bee);
 				if (bee.getPathfindingMalus(pathType) != 0) {
 					continue;
 				}
@@ -100,11 +105,6 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 				break;
 			}
 		}
-	}
-
-	@Override
-	public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
-		return false;
 	}
 
 	public static ItemStack getItemInHand(LivingEntity entity) {

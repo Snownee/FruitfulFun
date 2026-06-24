@@ -1,5 +1,6 @@
 package snownee.fruits.mixin;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
@@ -12,19 +13,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Maps;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetCameraPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.Allele;
+import snownee.fruits.bee.genetics.GeneNameRecord;
 import snownee.fruits.bee.network.SHauntPacket;
 import snownee.fruits.bee.network.SSyncPlayerPacket;
 import snownee.fruits.duck.FFLivingEntity;
@@ -41,46 +41,39 @@ public abstract class PlayerMixin implements FFPlayer {
 	private @Nullable HauntingManager hauntingManager;
 
 	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-	private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+	private void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
 		if (!geneNames.isEmpty()) {
-			ListTag list = new ListTag();
-			for (Map.Entry<String, GeneName> entry : geneNames.entrySet()) {
-				ListTag nameTag = new ListTag();
-				nameTag.add(StringTag.valueOf(entry.getKey()));
-				nameTag.add(StringTag.valueOf(entry.getValue().name()));
-				nameTag.add(StringTag.valueOf(entry.getValue().desc()));
-				list.add(nameTag);
-			}
-			compoundTag.put("FruitfulFun:GeneNames", list);
-			compoundTag.putString("FruitfulFun:GeneticsDifficulty", FFCommonConfig.geneticsDifficulty.name());
+			List<GeneNameRecord> records = geneNames.entrySet().stream().map(entry -> new GeneNameRecord(
+					entry.getKey(),
+					entry.getValue().name(),
+					entry.getValue().desc())).toList();
+			output.store("FruitfulFun:GeneNames", GeneNameRecord.LIST_CODEC, records);
+			output.putString("FruitfulFun:GeneticsDifficulty", FFCommonConfig.geneticsDifficulty.name());
 		}
 		if (hauntingManager != null && hauntingManager.storedBee != null) {
-			compoundTag.put("FruitfulFun:StoredBee", hauntingManager.storedBee);
+			output.put("FruitfulFun:StoredBee", hauntingManager.storedBee);
 		}
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-	private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-		if (compoundTag.contains("FruitfulFun:GeneNames")) {
-			for (Tag e : compoundTag.getList("FruitfulFun:GeneNames", Tag.TAG_LIST)) {
-				ListTag nameTag = (ListTag) e;
-				String code = nameTag.getString(0);
-				String name = nameTag.getString(1);
-				String desc = nameTag.getString(2);
-				fruits$setGeneName(code, new GeneName(name, desc));
+	private void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+		if (input.contains("FruitfulFun:GeneNames")) {
+			List<GeneNameRecord> records = input.read("FruitfulFun:GeneNames", GeneNameRecord.LIST_CODEC).orElse(List.of());
+			for (GeneNameRecord record : records) {
+				fruits$setGeneName(record.code(), new GeneName(record.name(), record.desc()));
 			}
 		}
 		if (FFCommonConfig.geneticsDifficulty == FFCommonConfig.GeneticsDifficulty.Easy) {
 			FFCommonConfig.GeneticsDifficulty difficulty = null;
-			if (compoundTag.contains("FruitfulFun:GeneticsDifficulty")) {
+			if (input.contains("FruitfulFun:GeneticsDifficulty")) {
 				try {
-					difficulty = FFCommonConfig.GeneticsDifficulty.valueOf(compoundTag.getString("FruitfulFun:GeneticsDifficulty"));
+					difficulty = FFCommonConfig.GeneticsDifficulty.valueOf(input.getStringOr("FruitfulFun:GeneticsDifficulty", ""));
 				} catch (Throwable ignored) {
 				}
 			}
 			if (difficulty != FFCommonConfig.geneticsDifficulty) {
 				for (Allele allele : Allele.sortedByCode()) {
-					String code = String.valueOf(allele.codename);
+					String code = allele.codename;
 					GeneName geneName = geneNames.get(code);
 					if (geneName != null && geneName.name().equals(code)) {
 						fruits$setGeneName(code, new GeneName(allele.name, ""));
@@ -88,9 +81,9 @@ public abstract class PlayerMixin implements FFPlayer {
 				}
 			}
 		}
-		if (compoundTag.contains("FruitfulFun:StoredBee")) {
+		if (input.contains("FruitfulFun:StoredBee")) {
 			hauntingManager = new HauntingManager(null);
-			hauntingManager.storedBee = compoundTag.getCompound("FruitfulFun:StoredBee");
+			hauntingManager.storedBee = input.get("FruitfulFun:StoredBee");
 		}
 	}
 

@@ -18,7 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -55,17 +56,11 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 	}
 
 	@Override
-	public InteractionResult use(
-			BlockState pState,
-			Level pLevel,
-			BlockPos pPos,
-			Player pPlayer,
-			InteractionHand pHand,
-			BlockHitResult pHit) {
-		if (doesHitTop(pHit)) {
-			return useTop(pState, pLevel, pPos, pPlayer, pHand, pHit);
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		if (doesHitTop(hitResult)) {
+			return useTop(state, level, pos, player, InteractionHand.MAIN_HAND, hitResult);
 		} else {
-			return useSide(pState, pLevel, pPos, pPlayer, pHand, pHit);
+			return useSide(state, level, pos, player, InteractionHand.MAIN_HAND, hitResult);
 		}
 	}
 
@@ -87,7 +82,7 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 			}
 			return InteractionResult.SUCCESS;
 		}
-		return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+		return InteractionResult.PASS;
 	}
 
 	protected InteractionResult useTop(
@@ -137,7 +132,7 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 			return false;
 		}
 		ItemStack displayed = container.getItem(0);
-		if (displayed.isEmpty() || ItemStack.isSameItemSameTags(displayed, itemStack)) {
+		if (displayed.isEmpty() || ItemStack.isSameItemSameComponents(displayed, itemStack)) {
 			int maxSize = Math.min(itemStack.getMaxStackSize(), container.getMaxStackSize());
 			int transferAmount = Math.min(itemStack.getCount(), maxSize - displayed.getCount());
 			if (transferAmount > 0) {
@@ -184,22 +179,24 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 	}
 
 	public boolean canBeDestroyed(BlockState blockState, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-		return !(level.getBlockEntity(pos) instanceof ContainerSingleItem container) || container.getFirstItem().isEmpty();
+		return !(level.getBlockEntity(pos) instanceof ContainerSingleItem container) || container.getTheItem().isEmpty();
 	}
 
 	@Override
-	public BlockState updateShape(
+	protected BlockState updateShape(
 			BlockState state,
-			Direction direction,
-			BlockState neighborState,
-			LevelAccessor level,
+			LevelReader level,
+			ScheduledTickAccess ticks,
 			BlockPos pos,
-			BlockPos neighborPos) {
-		if (direction == Direction.UP && level.getBlockEntity(pos) instanceof BuzzyCrafterBlockEntity be) {
-			be.setBlocked(blocksContainer(neighborState));
+			Direction directionToNeighbour,
+			BlockPos neighbourPos,
+			BlockState neighbourState,
+			RandomSource random) {
+		if (directionToNeighbour == Direction.UP && level.getBlockEntity(pos) instanceof BuzzyCrafterBlockEntity be) {
+			be.setBlocked(blocksContainer(neighbourState));
 			be.updateBlockPowerReceiver();
 		}
-		return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+		return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
 	}
 
 	public static boolean blocksContainer(BlockState blockState) {
@@ -210,7 +207,7 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
 		if (!(level.getBlockEntity(pos) instanceof BuzzyCrafterBlockEntity be)) {
 			return 0;
 		}

@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.bee.Bee;
@@ -54,6 +55,14 @@ public class RideableBeeLivingEntityMixin {
 	private void dropEquipment(CallbackInfo ci) {
 		if ((Object) this instanceof Bee bee) {
 			BeeAttributes.of(bee).dropSaddle(bee);
+		}
+	}
+
+	@Inject(method = "canUseSlot", at = @At("HEAD"), cancellable = true)
+	private void canUseSlot(EquipmentSlot slot, CallbackInfoReturnable<Boolean> cir) {
+		LivingEntity entity = (LivingEntity) (Object) this;
+		if (Hooks.bee && slot == EquipmentSlot.SADDLE && entity instanceof Bee bee) {
+			cir.setReturnValue(bee.isAlive() && !bee.isBaby() && BeeAttributes.of(bee).isSaddleable());
 		}
 	}
 }

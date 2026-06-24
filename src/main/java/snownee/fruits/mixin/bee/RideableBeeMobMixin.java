@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.bee.Bee;
@@ -20,11 +21,8 @@ import snownee.fruits.duck.FFLivingEntity;
 public class RideableBeeMobMixin {
 	@Inject(method = "getControllingPassenger", at = @At("HEAD"), cancellable = true)
 	private void getControllingPassenger(CallbackInfoReturnable<LivingEntity> cir) {
-		if (!Hooks.bee) {
-			return;
-		}
 		Mob mob = (Mob) (Object) this;
-		if (!mob.isNoAi() && mob instanceof Bee bee) {
+		if (Hooks.bee && !mob.isNoAi() && mob instanceof Bee bee) {
 			BeeAttributes attributes = BeeAttributes.of(bee);
 			if (bee.isSaddled() && bee.getFirstPassenger() instanceof Player player &&
 					(player.isCreative() || attributes.trusts(player.getUUID()))) {
@@ -41,15 +39,20 @@ public class RideableBeeMobMixin {
 
 	@Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
 	private void mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> ci) {
-		if (!Hooks.bee) {
-			return;
-		}
 		Mob mob = (Mob) (Object) this;
-		if (mob instanceof Bee bee && !bee.isDeadOrDying()) {
+		if (Hooks.bee && mob instanceof Bee bee && !bee.isDeadOrDying()) {
 			InteractionResult result = Hooks.playerInteractBee(player, hand, bee);
 			if (result.consumesAction()) {
 				ci.setReturnValue(result);
 			}
+		}
+	}
+
+	@Inject(method = "canDispenserEquipIntoSlot", at = @At("HEAD"), cancellable = true)
+	protected void canDispenserEquipIntoSlot(final EquipmentSlot slot, CallbackInfoReturnable<Boolean> cir) {
+		Mob mob = (Mob) (Object) this;
+		if (Hooks.bee && slot == EquipmentSlot.SADDLE && mob instanceof Bee) {
+			cir.setReturnValue(true);
 		}
 	}
 }

@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.genetics.Allele;
+import snownee.fruits.bee.genetics.GeneNameRecord;
 import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
@@ -15,11 +16,11 @@ import snownee.kiwi.network.PayloadContext;
 import snownee.kiwi.network.PlayPacketHandler;
 
 @KiwiPacket
-public record CSetGeneNamePacket(SSyncPlayerPacket.GeneNameRecord gene) implements CustomPacketPayload {
+public record CSetGeneNamePacket(GeneNameRecord gene) implements CustomPacketPayload {
 	public static final CustomPacketPayload.Type<CSetGeneNamePacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("set_gene_name"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, CSetGeneNamePacket> STREAM_CODEC = StreamCodec.composite(
-			SSyncPlayerPacket.GeneNameRecord.STREAM_CODEC,
+			GeneNameRecord.STREAM_CODEC,
 			CSetGeneNamePacket::gene,
 			CSetGeneNamePacket::new);
 
@@ -32,7 +33,7 @@ public record CSetGeneNamePacket(SSyncPlayerPacket.GeneNameRecord gene) implemen
 		@Override
 		public void handle(CSetGeneNamePacket packet, PayloadContext context) {
 			ServerPlayer player = context.serverPlayer();
-			SSyncPlayerPacket.GeneNameRecord nameRecord = packet.gene();
+			GeneNameRecord nameRecord = packet.gene();
 			if (Allele.byCode(nameRecord.code()) == null) {
 				return;
 			}
@@ -54,6 +55,6 @@ public record CSetGeneNamePacket(SSyncPlayerPacket.GeneNameRecord gene) implemen
 	}
 
 	public static void send(String codename, String name, String desc) {
-		KPacketSender.sendToServer(new CSetGeneNamePacket(new SSyncPlayerPacket.GeneNameRecord(codename, name, desc)));
+		KPacketSender.sendToServer(new CSetGeneNamePacket(new GeneNameRecord(codename, name, desc)));
 	}
 }

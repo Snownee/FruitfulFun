@@ -31,7 +31,7 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 
 	@Inject(method = "randomTeleport", at = @At("HEAD"), cancellable = true)
-	private void randomTeleport(double x, double y, double z, boolean broadcastTeleport, CallbackInfoReturnable<Boolean> cir) {
+	private void randomTeleport(double xx, double yy, double zz, boolean showParticles, CallbackInfoReturnable<Boolean> cir) {
 		if (Hooks.gadget && GadgetModule.ENDER.get().isActiveAt(Objects.requireNonNull(level()).getChunkAt(blockPosition()))) {
 			cir.setReturnValue(false);
 		}
@@ -44,13 +44,12 @@ public abstract class LivingEntityMixin extends Entity {
 					target = "Lnet/minecraft/world/entity/LivingEntity;canBeAffected(Lnet/minecraft/world/effect/MobEffectInstance;)Z"))
 	private boolean canBeAffected(
 			LivingEntity entity,
-			MobEffectInstance effectInstance,
+			MobEffectInstance newEffect,
 			Operation<Boolean> original,
 			@Local(argsOnly = true) MobEffectInstance effect) {
-		boolean result = original.call(entity, effectInstance);
-		if (result && Hooks.gadget && !Hooks.scentEffects.contains(effect.getEffect()) && !effect.isInfiniteDuration() &&
-				!effect.getEffect().isInstantenous() && entity.hasEffect(GadgetModule.WEAK_SCENT.get())) {
-			//noinspection UnstableApiUsage
+		boolean result = original.call(entity, newEffect);
+		if (result && Hooks.gadget && !Hooks.scentEffects.contains(effect.getEffect().value()) && !effect.isInfiniteDuration() &&
+				!effect.getEffect().value().isInstantenous() && entity.hasEffect(GadgetModule.WEAK_SCENT.holderOrThrow())) {
 			effect.duration = IntMath.saturatedAdd(effect.getDuration(), effect.getDuration());
 		}
 		return result;

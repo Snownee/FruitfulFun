@@ -84,12 +84,8 @@ public class ServerGamePacketListenerImplMixin {
 		if (!Hooks.bee || !FFPlayer.of(player).fruits$isHaunting()) {
 			return;
 		}
-		ServerboundInteractPacket.ActionType actionType = ((ServerboundInteractPacketActionAccess) packet.action).callGetType();
 		boolean hauntingNormalEntity = BeeModule.isHauntingNormalEntity(player, null);
-		if (actionType == ServerboundInteractPacket.ActionType.INTERACT_AT && !hauntingNormalEntity) {
-			return;
-		} else if (!FFCommonConfig.hauntingInteraction && hauntingNormalEntity &&
-				actionType != ServerboundInteractPacket.ActionType.ATTACK) {
+		if (!FFCommonConfig.hauntingInteraction && hauntingNormalEntity) {
 			GhostFakePlayer fakePlayer = null;
 			try {
 				fakePlayer = GhostFakePlayer.getOrCreate(player);
@@ -156,19 +152,16 @@ public class ServerGamePacketListenerImplMixin {
 			ServerPlayerGameMode instance,
 			ServerPlayer player,
 			Level level,
-			ItemStack stack,
+			ItemStack itemStack,
 			InteractionHand hand,
 			BlockHitResult hitResult,
 			Operation<InteractionResult> original) {
-		InteractionResult result = original.call(instance, player, level, stack, hand, hitResult);
+		InteractionResult result = original.call(instance, player, level, itemStack, hand, hitResult);
 		if (FFCommonConfig.hauntingInteractionParticles && result.consumesAction() && player instanceof GhostFakePlayer fakePlayer) {
-			if (fakePlayer.getOwnerUUID() != null) {
-				Player owner = player.serverLevel().getPlayerByUUID(fakePlayer.getOwnerUUID());
-				if (owner != null) {
-					Hooks.awardSimpleAdvancement(owner, "haunting_interaction");
-				}
+			if (fakePlayer.getOwner() instanceof Player owner) {
+				Hooks.awardSimpleAdvancement(owner, "haunting_interaction");
 			}
-			SHauntingParticlesPacket.send(player.serverLevel(), hitResult.getLocation());
+			SHauntingParticlesPacket.send(player.level(), hitResult.getLocation());
 		}
 		return result;
 	}
@@ -187,7 +180,7 @@ public class ServerGamePacketListenerImplMixin {
 	@WrapOperation(
 			method = "handleMoveVehicle", at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;absMoveTo(DDDFF)V"))
+			target = "Lnet/minecraft/world/entity/Entity;absSnapTo(DDDFF)V"))
 	private void handleMoveVehicleMovePlayer(
 			Entity entity,
 			double x,
@@ -197,7 +190,7 @@ public class ServerGamePacketListenerImplMixin {
 			float xRot,
 			Operation<Void> original) {
 		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
-			player.absMoveTo(x, y, z, yRot, xRot);
+			player.absSnapTo(x, y, z, yRot, xRot);
 		}
 		original.call(entity, x, y, z, yRot, xRot);
 	}

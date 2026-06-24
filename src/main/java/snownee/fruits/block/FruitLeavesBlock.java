@@ -237,7 +237,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	}
 
 	@Override
-	protected void spawnFallingLeavesParticle(Level level, BlockPos pos, RandomSource random) {
+	public void spawnFallingLeavesParticle(Level level, BlockPos pos, RandomSource random) {
 //TODO
 	}
 

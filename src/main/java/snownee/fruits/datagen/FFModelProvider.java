@@ -15,7 +15,6 @@ import net.minecraft.client.data.models.blockstates.ConditionBuilder;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
@@ -109,6 +108,7 @@ public class FFModelProvider extends FabricModelProvider {
 	@Override
 	public void generateItemModels(ItemModelGenerators generators) {
 		generators.generateItemWithTintedOverlay(BeeModule.MUTAGEN.get(), MutagenTintSource.INSTANCE);
+		generators.generateShield(GadgetModule.BUZZY_SHIELD.get());
 	}
 
 	public static void createCandle(BlockModelGenerators generators, ScentedCandleBlock block) {

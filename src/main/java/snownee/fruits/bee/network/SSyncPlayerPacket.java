@@ -2,9 +2,7 @@ package snownee.fruits.bee.network;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,6 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.bee.genetics.GeneNameRecord;
 import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
@@ -62,19 +61,4 @@ public record SSyncPlayerPacket(List<GeneNameRecord> names) implements CustomPac
 		KPacketSender.send(new SSyncPlayerPacket(names), player);
 	}
 
-	public record GeneNameRecord(String code, String name, String desc) {
-		public GeneNameRecord {
-			Objects.requireNonNull(name);
-			Objects.requireNonNull(desc);
-		}
-
-		public static final StreamCodec<ByteBuf, GeneNameRecord> STREAM_CODEC = StreamCodec.composite(
-				ByteBufCodecs.STRING_UTF8,
-				GeneNameRecord::code,
-				ByteBufCodecs.STRING_UTF8,
-				GeneNameRecord::name,
-				ByteBufCodecs.STRING_UTF8,
-				GeneNameRecord::desc,
-				GeneNameRecord::new);
-	}
 }

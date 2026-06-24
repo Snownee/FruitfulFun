@@ -3,7 +3,6 @@ package snownee.fruits.datagen;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
-import net.minecraft.core.registries.Registries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.cherry.datagen.CherryBlockLoot;
 import snownee.fruits.compat.farmersdelight.FarmersDelightBlockLoot;
@@ -20,9 +19,9 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FFAdvancements::new);
 		FabricTagsProvider.BlockTagsProvider ffBlockTagsProvider = pack.addProvider(FFBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new FFItemTagsProvider(output, registriesFuture, ffBlockTagsProvider));
-		pack.addProvider(
-				(output, registriesFuture) -> new FFPoiTypeTagsProvider(output, Registries.POINT_OF_INTEREST_TYPE, registriesFuture));
-		pack.addProvider((output, registriesFuture) -> new FFDamageTypeTagsProvider(output, Registries.DAMAGE_TYPE, registriesFuture));
+		pack.addProvider(FFPoiTypeTagsProvider::new);
+		pack.addProvider(FFDamageTypeTagsProvider::new);
+		pack.addProvider(FFInstrumentTagsProvider::new);
 		pack.addProvider(FFEntityTypeTagsProvider::new);
 		FabricTagsProvider.BlockTagsProvider seasonalBlockTagsProvider = pack.addProvider(SeasonalBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new SeasonalItemTagsProvider(output, registriesFuture, seasonalBlockTagsProvider));

@@ -67,3 +67,5 @@ accessible field net/minecraft/client/color/block/BlockColors BLANK_LAYER Lnet/m
 accessible class net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData
 
 accessible method net/minecraft/world/entity/animal/Animal playEatingSound ()V
+
+accessible field net/minecraft/data/recipes/RecipeProvider items Lnet/minecraft/core/HolderGetter;

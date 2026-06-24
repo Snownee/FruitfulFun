@@ -126,15 +126,15 @@ public final class Hooks {
 		consumer.accept(new BlockHitResult(vec, Direction.UP, pos, false));
 	}
 
-	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
+	public static void hornHarvest(ServerPlayer player) {
 		Vec3 eye = player.getEyePosition();
 		BlockPos eyePos = BlockPos.containing(eye);
 		AtomicInteger count = new AtomicInteger();
-		level.getPoiManager()
+		player.level().getPoiManager()
 				.findAll($ -> $.is(CoreModule.POI_TYPE), Predicates.alwaysTrue(), eyePos, 24, PoiManager.Occupancy.ANY)
-				.flatMap($ -> level.getBlockEntity($, CoreModule.FRUIT_TREE.get()).stream())
+				.flatMap($ -> player.level().getBlockEntity($, CoreModule.FRUIT_TREE.get()).stream())
 				.forEach($ -> {
-					hornHarvest(level, player, $, eyePos, null);
+					hornHarvest(player.level(), player, $, eyePos, null);
 					count.incrementAndGet();
 				});
 		if (count.get() > 0) {

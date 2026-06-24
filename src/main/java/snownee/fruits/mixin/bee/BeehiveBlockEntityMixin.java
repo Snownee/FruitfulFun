@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -22,6 +23,7 @@ import net.minecraft.world.attribute.EnvironmentAttributeSystem;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,7 +36,6 @@ import net.minecraft.world.phys.Vec3;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.Trait;
-import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFBeehiveBlockEntity;
 
 @Mixin(BeehiveBlockEntity.class)
@@ -59,35 +60,34 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 			EnvironmentAttribute<Boolean> environmentAttribute,
 			BlockPos blockPos,
 			Operation<Object> original,
-			@Local(argsOnly = true) BeehiveBlockEntity.BeeData beeData) {
-		return original.call(instance) && !beeData.entityData.getBoolean("RainCapable");
+			@Local(argsOnly = true) BeehiveBlockEntity.Occupant beeData) {
+		return ((Boolean) original.call(instance, environmentAttribute, blockPos)) && !beeData.entityData().contains("RainCapable");
 	}
 
-	@WrapOperation(
-			method = "addOccupantWithPresetTicks", at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/block/entity/BeehiveBlockEntity;storeBee(Lnet/minecraft/nbt/CompoundTag;IZ)V"))
-	private void addOccupantWithPresetTicks(
-			BeehiveBlockEntity instance,
-			CompoundTag compoundTag,
-			int i,
-			boolean bl,
-			Operation<Void> original,
-			@Local(argsOnly = true) Entity entity) {
-		if (entity instanceof FFBee && BeeAttributes.of(entity).hasTrait(Trait.RAIN_CAPABLE)) {
-			compoundTag.putBoolean("RainCapable", true);
+	@Mixin(BeehiveBlockEntity.Occupant.class)
+	public static class OccupantMixin {
+		@Inject(
+				method = "of", at = @At(
+				value = "INVOKE",
+				target = "Lnet/minecraft/nbt/CompoundTag;getBooleanOr(Ljava/lang/String;Z)Z"))
+		private static void addRainCapableMark(
+				Entity entity,
+				CallbackInfoReturnable<BeehiveBlockEntity.Occupant> cir,
+				@Local(name = "entityTag") CompoundTag entityTag) {
+			if (entity instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.RAIN_CAPABLE)) {
+				entityTag.putBoolean("RainCapable", true);
+			}
 		}
-		original.call(instance, compoundTag, i, bl);
 	}
 
 	@Inject(method = "serverTick", at = @At("HEAD"))
 	private static void serverTick(
 			Level level,
 			BlockPos blockPos,
-			BlockState blockState,
-			BeehiveBlockEntity beehiveBlockEntity,
+			BlockState state,
+			BeehiveBlockEntity entity,
 			CallbackInfo ci) {
-		BeehiveBlockEntityMixin self = (BeehiveBlockEntityMixin) (Object) beehiveBlockEntity;
+		BeehiveBlockEntityMixin self = (BeehiveBlockEntityMixin) (Object) entity;
 		if (self.waxedTicks > 0) {
 			self.waxedTicks--;
 		}
@@ -99,15 +99,15 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 			target = "Lnet/minecraft/world/level/block/entity/BeehiveBlockEntity;tickOccupants(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Ljava/util/List;Lnet/minecraft/core/BlockPos;)V"))
 	private static void serverTick_tickOccupants(
 			Level level,
-			BlockPos blockPos,
-			BlockState blockState,
-			List<BeehiveBlockEntity.BeeData> list,
-			@Nullable BlockPos blockPos2,
+			BlockPos pos,
+			BlockState state,
+			List<BeehiveBlockEntity.BeeData> stored,
+			@Nullable BlockPos savedFlowerPos,
 			Operation<Void> original,
 			@Local(argsOnly = true) BeehiveBlockEntity beehive) {
 		FFBeehiveBlockEntity self = (FFBeehiveBlockEntity) beehive;
 		if (!self.fruits$isWaxed()) {
-			original.call(level, blockPos, blockState, list, blockPos2);
+			original.call(level, pos, state, stored, savedFlowerPos);
 		}
 	}
 
@@ -151,7 +151,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 		waxedTicks = waxed ? BeeModule.WAXED_TICKS : 0;
 		Objects.requireNonNull(level);
 		if (waxed) {
-			Display.BlockDisplay display = Objects.requireNonNull(EntityType.BLOCK_DISPLAY.create(level));
+			Display.BlockDisplay display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
 			display.setPos(Vec3.atCenterOf(getBlockPos()));
 			display.setCustomName(Component.literal(BeeModule.WAXED_MARKER_NAME));
 			level.addFreshEntity(display);

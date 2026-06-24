@@ -2,17 +2,17 @@ package snownee.fruits.gadget;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
-import com.mojang.serialization.Dynamic;
-
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -27,11 +27,11 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.bee.Bee;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class SummonedBee extends Bee implements TraceableEntity {
-	protected static final List<SensorType<? extends Sensor<? super SummonedBee>>> SENSOR_TYPES = List.of(SensorType.NEAREST_LIVING_ENTITIES);
 	protected static final List<MemoryModuleType<?>> MEMORY_TYPES = List.of(
 			MemoryModuleType.PATH,
 			MemoryModuleType.LOOK_TARGET,
@@ -41,6 +41,10 @@ public class SummonedBee extends Bee implements TraceableEntity {
 			MemoryModuleType.WALK_TARGET,
 			MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
 
+	protected static final Brain.Provider<SummonedBee> BRAIN_PROVIDER = Brain.provider(
+			List.of(SensorType.NEAREST_LIVING_ENTITIES),
+			_ -> SummonedBeeAi.getActivities());
+
 	public static AttributeSupplier.Builder createAttributes() {
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 5f).add(Attributes.FLYING_SPEED, 0.6f).add(
 				Attributes.MOVEMENT_SPEED,
@@ -48,11 +52,9 @@ public class SummonedBee extends Bee implements TraceableEntity {
 	}
 
 	@Nullable
-	private LivingEntity owner;
-	@Nullable
-	private UUID ownerUUID;
+	private EntityReference<LivingEntity> owner;
 	private int remainingAttacks = 3;
-	private int cantFindTargetTicks;
+	private int lostTargetTicks;
 
 	public SummonedBee(EntityType<? extends SummonedBee> entityType, Level level) {
 		super(entityType, level);
@@ -60,13 +62,8 @@ public class SummonedBee extends Bee implements TraceableEntity {
 	}
 
 	@Override
-	protected Brain.Provider<SummonedBee> brainProvider() {
-		return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
-	}
-
-	@Override
-	protected Brain<?> makeBrain(Dynamic<?> dynamic) {
-		return SummonedBeeAi.makeBrain(brainProvider().makeBrain(dynamic));
+	protected Brain<? extends LivingEntity> makeBrain(Brain.Packed packedBrain) {
+		return BRAIN_PROVIDER.makeBrain(this, packedBrain);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -90,14 +87,13 @@ public class SummonedBee extends Bee implements TraceableEntity {
 	}
 
 	@Override
-	protected void customServerAiStep() {
-		Level level = level();
+	protected void customServerAiStep(ServerLevel level) {
 		if (getAttackTarget() == null) {
-			++cantFindTargetTicks;
+			++lostTargetTicks;
 		} else {
-			cantFindTargetTicks = 0;
+			lostTargetTicks = 0;
 		}
-		if (tickCount >= 200 || cantFindTargetTicks >= 15 || remainingAttacks <= 0 && --remainingAttacks < -10) {
+		if (tickCount >= 200 || lostTargetTicks >= 15 || remainingAttacks <= 0 && --remainingAttacks < -10) {
 			level.broadcastEntityEvent(this, (byte) 60); // spawn poof particles
 			discard();
 			return;
@@ -105,17 +101,18 @@ public class SummonedBee extends Bee implements TraceableEntity {
 		if (tickCount == 1) {
 			level.broadcastEntityEvent(this, (byte) 60); // spawn poof particles
 		}
-		level.getProfiler().push("beeBrain");
-		getBrain().tick((ServerLevel) level, this);
-		level.getProfiler().pop();
-		level.getProfiler().push("beeActivityUpdate");
+		ProfilerFiller profiler = Profiler.get();
+		profiler.push("beeBrain");
+		getBrain().tick(level, this);
+		profiler.pop();
+		profiler.push("beeActivityUpdate");
 		SummonedBeeAi.updateActivity(this);
-		level.getProfiler().pop();
-		super.customServerAiStep();
+		profiler.pop();
+		super.customServerAiStep(level);
 	}
 
 	@Override
-	public boolean canBeLeashed(Player player) {
+	public boolean canBeLeashed() {
 		return false;
 	}
 
@@ -127,8 +124,8 @@ public class SummonedBee extends Bee implements TraceableEntity {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		goalSelector.removeAllGoals($ -> true);
-		targetSelector.removeAllGoals($ -> true);
+		goalSelector.removeAllGoals(_ -> true);
+		targetSelector.removeAllGoals(_ -> true);
 	}
 
 	@Override
@@ -151,17 +148,11 @@ public class SummonedBee extends Bee implements TraceableEntity {
 		return false;
 	}
 
-	@Override
-	protected void sendDebugPackets() {
-		super.sendDebugPackets();
-		DebugPackets.sendEntityBrain(this);
-	}
-
-	protected Optional<? extends LivingEntity> findNearestValidAttackTarget() {
-		return this.getBrain()
+	protected static Optional<? extends LivingEntity> findNearestValidAttackTarget(ServerLevel level, SummonedBee bee) {
+		return bee.getBrain()
 				.getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES)
 				.orElse(NearestVisibleLivingEntities.empty())
-				.findClosest(this::isTargetable);
+				.findClosest(target -> bee.isTargetable(target) && Sensor.isEntityAttackable(level, bee, target));
 	}
 
 	public boolean isTargetable(LivingEntity entity) {
@@ -190,37 +181,25 @@ public class SummonedBee extends Bee implements TraceableEntity {
 
 	@Override
 	public @Nullable Entity getOwner() {
-		Entity entity;
-		if (this.owner == null && this.ownerUUID != null && this.level() instanceof ServerLevel level &&
-				(entity = level.getEntity(this.ownerUUID)) instanceof LivingEntity) {
-			this.owner = (LivingEntity) entity;
-		}
-		return this.owner;
+		return EntityReference.getLivingEntity(owner, level());
 	}
 
 	public void setOwner(@Nullable LivingEntity owner) {
-		this.owner = owner;
-		this.ownerUUID = owner == null ? null : owner.getUUID();
+		this.owner = EntityReference.of(owner);
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
-		super.addAdditionalSaveData(compound);
-		if (ownerUUID != null) {
-			compound.putUUID("owner", ownerUUID);
-		}
-		compound.putInt("remaining_attacks", remainingAttacks);
+	protected void addAdditionalSaveData(ValueOutput output) {
+		super.addAdditionalSaveData(output);
+		EntityReference.store(owner, output, "owner");
+		output.putInt("remaining_attacks", remainingAttacks);
 	}
 
 	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
-		if (compound.hasUUID("owner")) {
-			ownerUUID = compound.getUUID("owner");
-		}
-		if (compound.contains("remaining_attacks")) {
-			remainingAttacks = compound.getInt("remaining_attacks");
-		}
+	public void load(ValueInput input) {
+		super.load(input);
+		owner = EntityReference.read(input, "owner");
+		remainingAttacks = input.getIntOr("remaining_attacks", 1);
 	}
 
 	@Override
@@ -234,8 +213,16 @@ public class SummonedBee extends Bee implements TraceableEntity {
 	}
 
 	@Override
-	public boolean doHurtTarget(Entity target) {
-		this.remainingAttacks--;
-		return super.doHurtTarget(target);
+	protected void actuallyHurt(ServerLevel level, DamageSource source, float dmg) {
+		super.actuallyHurt(level, source, dmg);
+	}
+
+	@Override
+	public boolean doHurtTarget(ServerLevel level, Entity target) {
+		if (super.doHurtTarget(level, target)) {
+			this.remainingAttacks--;
+			return true;
+		}
+		return false;
 	}
 }

@@ -103,7 +103,6 @@ public final class FFCommonConfig {
 	// poisonous potato drop: 0.02
 	@KiwiConfig.Path("integration.hauntedHarvestRottenAppleChance")
 	public static float rottenAppleChance = 0.03f;
-	public static boolean fixRainingStateInNetherAndEnd = true;
 
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();

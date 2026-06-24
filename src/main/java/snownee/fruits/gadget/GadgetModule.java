@@ -33,18 +33,20 @@ import snownee.fruits.Hooks;
 import snownee.fruits.gadget.datagen.SetBuzzyPowerFunction;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.BlockObject;
 import snownee.kiwi.Categories;
+import snownee.kiwi.ItemObject;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModules;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule("gadget")
+@KiwiModule(value = "gadget", modId = FruitfulFun.ID)
 @KiwiModule.Optional
 public class GadgetModule extends AbstractModule {
 	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS, after = "beehive")
-	public static final KiwiGO<Block> BUZZY_CRAFTER = go(() -> new BuzzyCrafterBlock(blockProp(Blocks.BEEHIVE)));
+	public static final BlockObject<Block> BUZZY_CRAFTER = block(BuzzyCrafterBlock::new, () -> Blocks.BEEHIVE);
 	@KiwiModule.Name("buzzy_crafter")
 	public static final KiwiGO<BlockEntityType<BuzzyCrafterBlockEntity>> BUZZY_CRAFTER_ENTITY = blockEntity(
 			BuzzyCrafterBlockEntity::new,
@@ -54,25 +56,21 @@ public class GadgetModule extends AbstractModule {
 			Set.copyOf(BUZZY_CRAFTER.getOrCreate()
 					.getStateDefinition()
 					.getPossibleStates()), 0, 1));
-	public static final TagKey<Block> SUSTAIN_CRAFTER_ITEM = blockTag(FruitfulFun.ID, "sustain_crafter_item");
+	public static final TagKey<Block> SUSTAIN_CRAFTER_ITEM = blockTag("sustain_crafter_item");
 
 	@KiwiModule.Category
-	public static final KiwiGO<Item> VAC_GUN_CASING = go(() -> new ModItem(itemProp().stacksTo(1).rarity(Rarity.RARE)));
-	public static final KiwiGO<VacGunItem> VAC_GUN = go(VacGunItem::new);
+	public static final ItemObject<Item> VAC_GUN_CASING = item($ -> new ModItem($.stacksTo(1).rarity(Rarity.RARE)));
+	public static final ItemObject<VacGunItem> VAC_GUN = item(VacGunItem::new);
 	public static final KiwiGO<SoundEvent> GUN_SHOOT_ITEM = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"item.gun.shoot_item")));
 	public static final KiwiGO<SoundEvent> GUN_WORKING = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("item.gun.working")));
 	public static final KiwiGO<SoundEvent> GUN_STOP = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("item.gun.stop")));
-	public static final TagKey<Block> VCD_PERFORM_USING = blockTag(FruitfulFun.ID, "vcd_perform_using");
-	public static final TagKey<Block> VCD_PERFORM_BREAKING = blockTag(FruitfulFun.ID, "vcd_perform_breaking");
-	public static final TagKey<EntityType<?>> VCD_MOVABLE = entityTag(FruitfulFun.ID, "vcd_movable");
+	public static final TagKey<Block> VCD_PERFORM_USING = blockTag("vcd_perform_using");
+	public static final TagKey<Block> VCD_PERFORM_BREAKING = blockTag("vcd_perform_breaking");
+	public static final TagKey<EntityType<?>> VCD_MOVABLE = entityTag("vcd_movable");
 	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = entity($ -> EntityType.Builder.of(
-					VacItemProjectile::new,
-					MobCategory.MISC)
-			.sized(0.25f, 0.25f)
-			.clientTrackingRange(4)
-			.updateInterval(10)
-			.build($));
+			VacItemProjectile::new,
+			MobCategory.MISC).sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(10).build($));
 	public static final KiwiGO<ParticleType<AirVortexParticleOption>> AIR_VORTEX = go(() -> new ParticleType<>(true) {
 		@Override
 		public MapCodec<AirVortexParticleOption> codec() {
@@ -86,13 +84,10 @@ public class GadgetModule extends AbstractModule {
 	});
 
 	@KiwiModule.Category(value = Categories.COMBAT, after = "shield")
-	public static final KiwiGO<BuzzyShieldItem> BUZZY_SHIELD = go(() -> new BuzzyShieldItem(itemProp().stacksTo(1)));
+	public static final ItemObject<BuzzyShieldItem> BUZZY_SHIELD = item($ -> new BuzzyShieldItem($.stacksTo(1)));
 	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = entity($ -> EntityType.Builder.of(
-					SummonedBee::new,
-					MobCategory.CREATURE)
-			.sized(0.525f, 0.45f)
-			.clientTrackingRange(8)
-			.build($));
+			SummonedBee::new,
+			MobCategory.CREATURE).sized(0.525f, 0.45f).clientTrackingRange(8).build($));
 
 	public static final KiwiGO<MobEffect> PHANTOM_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xAAAAFF));
 	public static final KiwiGO<MobEffect> WANDERING_TRADER_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xFFAA00));
@@ -125,21 +120,21 @@ public class GadgetModule extends AbstractModule {
 //			false,
 //			false))));
 	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS)
-	public static final KiwiGO<ScentedCandleBlock> PHANTOM_CANDLE = go(() -> new ScentedCandleBlock(
-			blockProp(Blocks.CANDLE),
-			PHANTOM.getOrCreate()));
-	public static final KiwiGO<ScentedCandleBlock> WANDERING_TRADER_CANDLE = go(() -> new ScentedCandleBlock(
-			blockProp(Blocks.CANDLE),
-			WANDERING_TRADER.getOrCreate()));
-	public static final KiwiGO<ScentedCandleBlock> ENDER_CANDLE = go(() -> new ScentedCandleBlock(
-			blockProp(Blocks.CANDLE),
-			ENDER.getOrCreate()));
-	public static final KiwiGO<ScentedCandleBlock> WEAK_CANDLE = go(() -> new ScentedCandleBlock(
-			blockProp(Blocks.CANDLE),
-			WEAK.getOrCreate()));
-	//	public static final KiwiGO<ScentedCandleBlock> HEAVY_CANDLE = go(() -> new ScentedCandleBlock(
-//			blockProp(Blocks.CANDLE),
-//			HEAVY.getOrCreate()));
+	public static final BlockObject<ScentedCandleBlock> PHANTOM_CANDLE = block(
+			$ -> new ScentedCandleBlock($, PHANTOM.getOrCreate()),
+			() -> Blocks.CANDLE);
+	public static final BlockObject<ScentedCandleBlock> WANDERING_TRADER_CANDLE = block(
+			$ -> new ScentedCandleBlock($, WANDERING_TRADER.getOrCreate()),
+			() -> Blocks.CANDLE);
+	public static final BlockObject<ScentedCandleBlock> ENDER_CANDLE = block(
+			$ -> new ScentedCandleBlock($, ENDER.getOrCreate()),
+			() -> Blocks.CANDLE);
+	public static final BlockObject<ScentedCandleBlock> WEAK_CANDLE = block(
+			$ -> new ScentedCandleBlock($, WEAK.getOrCreate()),
+			() -> Blocks.CANDLE);
+	//	public static final BlockObject<ScentedCandleBlock> HEAVY_CANDLE = block($ -> new ScentedCandleBlock(
+	//			$,
+	//			HEAVY.getOrCreate()), () -> Blocks.CANDLE);
 	public static final KiwiGO<MapCodec<? extends SetBuzzyPowerFunction>> SET_BUZZY_POWER = go(
 			() -> SetBuzzyPowerFunction.CODEC,
 			Registries.LOOT_FUNCTION_TYPE);

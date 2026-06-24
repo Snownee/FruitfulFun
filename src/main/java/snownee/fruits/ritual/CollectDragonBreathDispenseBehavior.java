@@ -47,16 +47,9 @@ public class CollectDragonBreathDispenseBehavior extends DefaultDispenseItemBeha
 		if (!list.isEmpty()) {
 			AreaEffectCloud areaEffectCloud2 = list.getFirst();
 			areaEffectCloud2.setRadius(areaEffectCloud2.getRadius() - 0.5f);
-			itemStack.shrink(1);
 			ItemStack dragonBreath = new ItemStack(Items.DRAGON_BREATH);
-			if (itemStack.isEmpty()) {
-				level.gameEvent(null, GameEvent.FLUID_PICKUP, blockPos);
-				return dragonBreath;
-			}
-			if (blockSource.blockEntity().addItem(dragonBreath.copy()) < 0) {
-				super.dispense(blockSource, dragonBreath.copy());
-			}
-			return itemStack;
+			level.gameEvent(null, GameEvent.FLUID_PICKUP, blockPos);
+			return consumeWithRemainder(blockSource, itemStack, dragonBreath);
 		}
 		return original.dispense(blockSource, itemStack);
 	}

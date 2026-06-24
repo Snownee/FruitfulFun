@@ -5,11 +5,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -51,18 +48,7 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 	}
 
 	@Override
-	public BlockItem createItem(Item.Properties builder) {
-		return new FoodBlockItem(this, builder);
-	}
-
-	@Override
-	public InteractionResult use(
-			BlockState state,
-			Level level,
-			BlockPos pos,
-			Player player,
-			InteractionHand p_60507_,
-			BlockHitResult p_60508_) {
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 		if (!level.isClientSide() && !(this instanceof FeastBlock)) {
 			level.removeBlock(pos, false);
 			ItemStack stack = new ItemStack(this);
@@ -98,7 +84,7 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 			double x = pos.getX() + 0.5 + random.nextDouble() * (random.nextBoolean() ? 0.2 : -0.2);
 			double y = pos.getY() + 0.5;
 			double z = pos.getZ() + 0.5 + random.nextDouble() * (random.nextBoolean() ? 0.2 : -0.2);
-			level.addParticle(FoodModule.SMOKE.get(), true, x, y, z, 0.0, 0.003, 0.0);
+			level.addParticle(FoodModule.SMOKE.get(), x, y, z, 0.0, 0.003, 0.0);
 		}
 	}
 

@@ -72,7 +72,7 @@ import snownee.lychee.mixin.LootContextParamSetsAccess;
 import snownee.lychee.util.action.PostActionType;
 import snownee.lychee.util.contextual.ContextualConditionType;
 
-@KiwiModule("bee")
+@KiwiModule(value = "bee", modId = FruitfulFun.ID)
 @KiwiModule.Optional
 public class BeeModule extends AbstractModule {
 
@@ -112,8 +112,8 @@ public class BeeModule extends AbstractModule {
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
 	public static @Nullable Set<VillagerProfession> BEEKEEPER_PROFESSIONS;
-	public static final TagKey<EntityType<?>> CANNOT_HAUNT = entityTag(FruitfulFun.ID, "cannot_haunt");
-	public static final TagKey<Biome> UNLIMITED_BEE_RIDING = tag(Registries.BIOME, FruitfulFun.ID, "unlimited_bee_riding");
+	public static final TagKey<EntityType<?>> CANNOT_HAUNT = entityTag("cannot_haunt");
+	public static final TagKey<Biome> UNLIMITED_BEE_RIDING = tag(Registries.BIOME, "unlimited_bee_riding");
 	private static Set<Item> ALLOGAMOUS_ITEMS = Set.of();
 	@Name("gameplay/bee_rideable")
 	public static final KiwiGO<EnvironmentAttribute<Boolean>> BEE_RIDEABLE = go(() -> EnvironmentAttribute.builder(AttributeTypes.BOOLEAN)
@@ -152,10 +152,7 @@ public class BeeModule extends AbstractModule {
 		}
 	}
 
-	public static void addBeekeeperTrades(MerchantOffers merchantOffers, AbstractVillager villager) {
-		if (!Hooks.bee || !FFCommonConfig.beehiveTrade) {
-			return;
-		}
+	public static void addBeekeeperTrades(MerchantOffers offers, AbstractVillager villager) {
 		if (BEEKEEPER_PROFESSIONS == null) {
 			ImmutableSet.Builder<VillagerProfession> builder = ImmutableSet.builder();
 			for (Holder<VillagerProfession> profession : BuiltInRegistries.VILLAGER_PROFESSION.asHolderIdMap()) {
@@ -166,9 +163,6 @@ public class BeeModule extends AbstractModule {
 			BEEKEEPER_PROFESSIONS = builder.build();
 		}
 		if (villager instanceof Villager v) {
-			if (v.getVillagerData().level() != 1) {
-				return;
-			}
 			if (!BEEKEEPER_PROFESSIONS.contains(v.getVillagerData().profession().value())) {
 				return;
 			}
@@ -179,9 +173,12 @@ public class BeeModule extends AbstractModule {
 		} else {
 			return;
 		}
+		if (offers.stream().anyMatch(BeeModule::isBeehiveTrade)) {
+			return;
+		}
 		ItemStack output = Items.EMERALD.getDefaultInstance();
 		output.set(MERCHANT_OFFER.get(), Unit.INSTANCE);
-		merchantOffers.add(new MerchantOffer(new ItemCost(Items.BEEHIVE), output, 1000, 2, 0));
+		offers.add(new MerchantOffer(new ItemCost(Items.BEEHIVE), output, 1000, 2, 0));
 	}
 
 	public static boolean isBeehiveTrade(MerchantOffer offer) {
