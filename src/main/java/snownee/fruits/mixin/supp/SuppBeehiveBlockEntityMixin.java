@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.mixin.supp;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,3 +19,4 @@ public abstract class SuppBeehiveBlockEntityMixin implements IWaxable, FFBeehive
 		fruits$setWaxed(b);
 	}
 }
+*/

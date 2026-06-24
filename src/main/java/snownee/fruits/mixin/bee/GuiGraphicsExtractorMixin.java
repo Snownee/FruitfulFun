@@ -9,16 +9,14 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-
-@Mixin(GuiGraphics.class)
-public class GuiGraphicsMixin {
+@Mixin(GuiGraphicsExtractor.class)
+public class GuiGraphicsExtractorMixin {
 	@Inject(
-			method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
-			at = @At("HEAD"))
+			method = "itemCount", at = @At("HEAD"))
 	private void renderItemDecorationsMixin(
 			Font font,
 			ItemStack stack,

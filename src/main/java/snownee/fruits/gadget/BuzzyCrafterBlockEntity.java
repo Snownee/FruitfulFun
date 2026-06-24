@@ -20,7 +20,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -56,13 +55,13 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	}
 
 	@Override
-	public void addOccupantWithPresetTicks(Entity occupant, boolean hasNectar, int ticksInHive) {
-		if (isFull() || !(occupant instanceof Bee)) {
+	public void addOccupant(Bee bee) {
+		if (isFull()) {
 			return;
 		}
 		List<String> pollens;
 		if (Hooks.bee) {
-			pollens = BeeAttributes.of(occupant).getPollens();
+			pollens = BeeAttributes.of(bee).getPollens();
 		} else {
 			pollens = List.of("*");
 		}
@@ -94,7 +93,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			}
 			setChanged();
 		}
-		super.addOccupantWithPresetTicks(occupant, hasNectar, ticksInHive);
+		super.addOccupant(bee);
 	}
 
 	public void debugAddPower(BuzzyPowerType type, float amount) {

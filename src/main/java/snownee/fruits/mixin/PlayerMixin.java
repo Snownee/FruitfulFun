@@ -38,7 +38,7 @@ public abstract class PlayerMixin implements FFPlayer {
 	@Unique
 	private Map<String, GeneName> geneNames = Map.of();
 	@Unique
-	private HauntingManager hauntingManager;
+	private @Nullable HauntingManager hauntingManager;
 
 	@Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
 	private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {

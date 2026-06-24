@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
@@ -83,7 +84,6 @@ import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
-import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentType;
@@ -309,7 +309,7 @@ public class CommonProxy implements ModInitializer {
 
 		UseEntityCallback.EVENT.register((player, level, hand, target, hitResult) -> {
 			FFPlayer ffPlayer = FFPlayer.of(player);
-			if (target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
+			if (target instanceof LivingEntity && !target.is(BeeModule.CANNOT_HAUNT) &&
 					ffPlayer.fruits$hauntingTarget() instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
 				if (!level.isClientSide()) {
 					ffPlayer.fruits$setHauntingTarget(target);
@@ -357,10 +357,12 @@ public class CommonProxy implements ModInitializer {
 				onScentTypeAdded($.key(), $.get());
 			});
 		}
+
+		FabricDefaultAttributeRegistry.register(GadgetModule.SUMMONED_BEE.getOrCreate(), Bee.createAttributes());
 	}
 
 	public static void onScentTypeAdded(Identifier id, ScentType scentType) {
-		AttachmentType<Long> type = AttachmentRegistry.<Long>builder().persistent(Codec.LONG).buildAndRegister(id.withSuffix("_scent"));
+		AttachmentType<Long> type = AttachmentRegistry.create(id.withSuffix("_scent"), builder -> builder.persistent(Codec.LONG));
 		SCENT_ATTACHMENT_TYPES.put(scentType, type);
 	}
 
@@ -381,7 +383,7 @@ public class CommonProxy implements ModInitializer {
 			return item;
 		}
 		if (trinkets) {
-			return TrinketsCompat.getFlowerCrown(entity);
+//			return TrinketsCompat.getFlowerCrown(entity);
 		}
 		return null;
 	}

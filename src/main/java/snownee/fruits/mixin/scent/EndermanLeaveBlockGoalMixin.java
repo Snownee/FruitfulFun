@@ -25,8 +25,8 @@ public class EndermanLeaveBlockGoalMixin {
 			BlockState blockState,
 			TagKey<Block> tagKey,
 			Operation<Boolean> original,
-			@Local Level level,
-			@Local BlockPos pos) {
+			@Local(name = "level") Level level,
+			@Local(name = "pos") BlockPos pos) {
 		if (Hooks.gadget && GadgetModule.ENDER.get().isActiveAt(level.getChunkAt(pos))) {
 			return false;
 		}

@@ -19,20 +19,23 @@ import snownee.fruits.ritual.RitualModule;
 @Mixin(BottleItem.class)
 public class BottleItemMixin {
 
-	@WrapOperation(method = {"method_7726", "lambda$use$0", "m_289173_"}, constant = @Constant(classValue = EnderDragon.class))
+	@WrapOperation(method = "lambda$use$0", constant = @Constant(classValue = EnderDragon.class))
 	private static boolean allowDummyDragonBreath(
 			Object object,
 			Operation<Boolean> original,
 			@Local(argsOnly = true) AreaEffectCloud cloud) {
-		return RitualModule.DUMMY_UUID.equals(cloud.ownerUUID) || original.call(object);
+		if (cloud.owner != null && RitualModule.DUMMY_UUID.equals(cloud.owner.getUUID())) {
+			return true;
+		}
+		return original.call(object);
 	}
 
 	@Inject(
-			method = "method_7726",
+			method = "lambda$use$0",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;isAlive()Z"),
 			cancellable = true)
-	private static void fixDragonBreathExploit(AreaEffectCloud cloud, CallbackInfoReturnable<Boolean> ci) {
-		if (FFCommonConfig.fixDragonBreathExploit && cloud.getRadius() <= 0) {
+	private static void fixDragonBreathExploit(AreaEffectCloud input, CallbackInfoReturnable<Boolean> ci) {
+		if (FFCommonConfig.fixDragonBreathExploit && input.getRadius() <= 0) {
 			ci.setReturnValue(false);
 		}
 	}

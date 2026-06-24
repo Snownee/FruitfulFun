@@ -13,6 +13,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
@@ -43,7 +45,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@Shadow
-	protected abstract void setHasStung(boolean bl);
+	protected abstract void setHasStung(boolean hasStung);
 
 	@Shadow
 	private int timeSinceSting;
@@ -51,6 +53,11 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	@Override
 	public void fruits$roll() {
 		rollTicks = 6;
+	}
+
+	@Inject(method = "<init>", at = @At("RETURN"))
+	private void init(EntityType<? extends Bee> type, Level level, CallbackInfo ci) {
+		setPathfindingMalus(PathType.FRUITFULFUN_LEAVES, 1);
 	}
 
 	@Inject(at = @At("HEAD"), method = "isFlowerValid", cancellable = true)
@@ -70,7 +77,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 			return;
 		}
 		Bee bee = (Bee) (Object) this;
-		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.get());
+		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.holderOrThrow());
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		long gameTime = level().getGameTime();
 		attributes.setMutagenEndsIn(effect == null ? 0 : gameTime + effect.getDuration(), gameTime);
@@ -147,9 +154,9 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@WrapOperation(method = "doHurtTarget", at = @At(value = "NEW", args = "class=net/minecraft/world/effect/MobEffectInstance"))
-	private MobEffectInstance doHurtTarget(MobEffect effect, int duration, int amplifier, Operation<MobEffectInstance> original) {
+	private MobEffectInstance doHurtTarget(Holder<MobEffect> effect, int duration, int amplifier, Operation<MobEffectInstance> original) {
 		if (BeeAttributes.of(this).hasTrait(Trait.GHOST)) {
-			effect = CoreModule.FRAGILITY.get();
+			effect = CoreModule.FRAGILITY.holderOrThrow();
 			duration *= 2;
 			amplifier = 2;
 		}

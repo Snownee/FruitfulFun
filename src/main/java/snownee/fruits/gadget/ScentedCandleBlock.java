@@ -6,6 +6,7 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,7 +63,14 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	protected InteractionResult useItemOn(
+			ItemStack itemStack,
+			BlockState state,
+			Level level,
+			BlockPos pos,
+			Player player,
+			InteractionHand hand,
+			BlockHitResult hitResult) {
 		if (!(level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be)) {
 			return InteractionResult.FAIL;
 		}
@@ -85,7 +93,7 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 //				level.setBlockAndUpdate(new BlockPos(x, y, z), Blocks.DIAMOND_BLOCK.defaultBlockState());
 //			});
 //		}
-		return super.use(state, level, pos, player, hand, hit);
+		return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
 	}
 
 	@Override
@@ -97,7 +105,8 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 
 	@Override
 	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-		if (!level.isClientSide() && player.isCreative() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) &&
+		if (player.isCreative() && level instanceof ServerLevel serverLevel &&
+				serverLevel.getGameRules().get(GameRules.BLOCK_DROPS) &&
 				level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be && !be.power().isEmpty()) {
 			dropResources(state, level, pos, be);
 		}

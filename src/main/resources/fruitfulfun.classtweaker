@@ -1,4 +1,7 @@
-accessWidener v2 official
+classTweaker v2 official
+
+extend-enum net/minecraft/world/level/pathfinder/PathType FRUITFULFUN_LEAVES
+
 accessible method net/minecraft/world/level/block/LeavesBlock updateDistance (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;
 
 accessible class net/minecraft/world/entity/animal/bee/Bee$BeePollinateGoal
@@ -22,11 +25,10 @@ accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/Foli
 
 accessible method net/minecraft/world/entity/ai/village/poi/PoiTypes registerBlockStates (Lnet/minecraft/core/Holder;Ljava/util/Set;)V
 
-#accessible method net/minecraft/stats/Stats makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/ResourceLocation;
+accessible method net/minecraft/stats/Stats makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/Identifier;
 
 accessible method net/minecraft/world/effect/MobEffect <init> (Lnet/minecraft/world/effect/MobEffectCategory;I)V
 
-#accessible field net/minecraft/world/item/alchemy/PotionBrewing ALLOWED_CONTAINERS Ljava/util/List;
 accessible class net/minecraft/world/inventory/BrewingStandMenu$PotionSlot
 
 accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen pages Ljava/util/List;
@@ -61,3 +63,7 @@ mutable field net/minecraft/world/level/block/entity/BlockEntity type Lnet/minec
 accessible field net/minecraft/world/entity/AreaEffectCloud owner Lnet/minecraft/world/entity/EntityReference;
 
 accessible field net/minecraft/client/color/block/BlockColors BLANK_LAYER Lnet/minecraft/client/color/block/BlockTintSource;
+
+accessible class net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData
+
+accessible method net/minecraft/world/entity/animal/Animal playEatingSound ()V

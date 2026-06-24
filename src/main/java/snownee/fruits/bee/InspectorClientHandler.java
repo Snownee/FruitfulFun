@@ -8,21 +8,21 @@ import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -73,10 +73,10 @@ public class InspectorClientHandler {
 		if (!Objects.equals(target, inspectingTarget)) {
 			hoverTicks = 0;
 			if (action.recommendJade && !Hooks.jade) {
-				mc.player.displayClientMessage(Component.translatable("tip.fruitfulfun.analyzing"), true);
+				mc.player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.analyzing"));
 				if (jadeHint && !mc.player.getOffhandItem().is(Items.WRITABLE_BOOK)) {
 					jadeHint = false;
-					mc.player.displayClientMessage(Component.translatable("tip.fruitfulfun.recommendJade"), false);
+					mc.player.sendSystemMessage(Component.translatable("tip.fruitfulfun.recommendJade"));
 				}
 			}
 		}
@@ -103,9 +103,9 @@ public class InspectorClientHandler {
 		if (!stack.is(Items.WRITABLE_BOOK)) {
 			return;
 		}
-		CompoundTag tag = stack.getTag();
-		if (tag != null && tag.contains("pages") && tag.getList("pages", Tag.TAG_STRING).size() >= 100 - 3) {
-			player.displayClientMessage(Component.translatable("tip.fruitfulfun.bookIsFull"), true);
+		WritableBookContent bookContent = stack.getOrDefault(DataComponents.WRITABLE_BOOK_CONTENT, WritableBookContent.EMPTY);
+		if (bookContent.pages().size() >= 100 - 3) {
+			player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.bookIsFull"));
 			return;
 		}
 		player.openItemGui(stack, InteractionHand.OFF_HAND);
@@ -113,11 +113,10 @@ public class InspectorClientHandler {
 			return;
 		}
 		List<String> pages = screen.pages;
-		if (!pages.isEmpty() && pages.get(pages.size() - 1).isBlank()) {
-			pages.remove(pages.size() - 1);
+		if (!pages.isEmpty() && pages.getLast().isBlank()) {
+			pages.removeLast();
 		}
 		screen.currentPage = pages.size();
-		screen.isModified = true;
 		List<String> lines = Lists.newArrayList();
 //		// Time: %s/%s %s:%s:%s
 //		Calendar calendar = Calendar.getInstance();
@@ -130,7 +129,7 @@ public class InspectorClientHandler {
 
 		lines.add(I18n.get("text.fruitfulfun.pollen"));
 		for (String pollen : pollens) {
-			Block block = BuiltInRegistries.BLOCK.get(Identifier.tryParse(pollen));
+			Block block = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(pollen));
 			if (block == Blocks.AIR) {
 				lines.add("- " + StringUtils.capitalize(pollen.replace('_', ' ')));
 			} else {

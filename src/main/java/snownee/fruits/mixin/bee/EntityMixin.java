@@ -35,8 +35,8 @@ public abstract class EntityMixin {
 		}
 	}
 
-	@Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
-	private void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
+	@Inject(method = "isInvulnerableToBase", at = @At("HEAD"), cancellable = true)
+	private void isInvulnerableToBase(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
 		if (!source.is(DamageTypes.WITHER)) {
 			return;
 		}
@@ -48,13 +48,13 @@ public abstract class EntityMixin {
 		}
 	}
 
-	@Inject(method = "getPassengersRidingOffset", at = @At("HEAD"), cancellable = true)
-	private void getPassengersRidingOffset(CallbackInfoReturnable<Double> ci) {
-		Entity entity = (Entity) (Object) this;
-		if (Hooks.bee && entity instanceof Bee) {
-			ci.setReturnValue(entity.getBbHeight() * 0.6);
-		}
-	}
+//	@Inject(method = "getPassengerAttachmentPoint", at = @At("HEAD"), cancellable = true)
+//	private void getPassengersRidingOffset(Entity passenger, EntityDimensions dimensions, float scale, CallbackInfoReturnable<Vec3> cir) {
+//		Entity entity = (Entity) (Object) this;
+//		if (Hooks.bee && entity instanceof Bee) {
+//			cir.setReturnValue(entity.getBbHeight() * 0.6);
+//		}
+//	}
 
 	@Inject(method = "canRide", at = @At("HEAD"), cancellable = true)
 	private void canRide(Entity vehicle, CallbackInfoReturnable<Boolean> ci) {

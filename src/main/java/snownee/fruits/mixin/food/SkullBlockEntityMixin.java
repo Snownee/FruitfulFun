@@ -18,12 +18,12 @@ public class SkullBlockEntityMixin {
 	@Inject(method = "animation", at = @At("HEAD"), cancellable = true)
 	private static void ritualAnimation(
 			Level level,
-			BlockPos blockPos,
-			BlockState blockState,
-			SkullBlockEntity skullBlockEntity,
+			BlockPos pos,
+			BlockState state,
+			SkullBlockEntity entity,
 			CallbackInfo ci) {
-		if (blockState.is(Blocks.DRAGON_HEAD) || blockState.is(Blocks.DRAGON_WALL_HEAD)) {
-			if (Hooks.food && RitualModule.tickDragonHead(level, blockPos, blockState, skullBlockEntity)) {
+		if (state.is(Blocks.DRAGON_HEAD) || state.is(Blocks.DRAGON_WALL_HEAD)) {
+			if (Hooks.food && RitualModule.tickDragonHead(level, pos, state, entity)) {
 				ci.cancel();
 			}
 		}

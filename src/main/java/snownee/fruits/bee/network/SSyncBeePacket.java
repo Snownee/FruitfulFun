@@ -5,7 +5,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
@@ -21,25 +23,25 @@ import snownee.kiwi.network.PayloadContext;
 import snownee.kiwi.network.PlayPacketHandler;
 
 @KiwiPacket
-public record SSyncBeePacket(int id, List<UUID> trusted, String texture, List<String> traits, long mutagenEndsIn)
-		implements CustomPacketPayload {
-	public static final CustomPacketPayload.Type<SSyncBeePacket> TYPE = new CustomPacketPayload.Type<>(
-			FruitfulFun.id("sync_bee"));
-
-	public static final StreamCodec<RegistryFriendlyByteBuf, SSyncBeePacket> STREAM_CODEC = StreamCodec.of(
-			(buf, packet) -> {
-				buf.writeVarInt(packet.id());
-				buf.writeCollection(packet.trusted(), RegistryFriendlyByteBuf::writeUUID);
-				buf.writeUtf(packet.texture());
-				buf.writeCollection(packet.traits(), RegistryFriendlyByteBuf::writeUtf);
-				buf.writeLong(packet.mutagenEndsIn());
-			},
-			buf -> new SSyncBeePacket(
-					buf.readVarInt(),
-					buf.readList(RegistryFriendlyByteBuf::readUUID),
-					buf.readUtf(),
-					buf.readList(RegistryFriendlyByteBuf::readUtf),
-					buf.readLong()));
+public record SSyncBeePacket(
+		int id,
+		List<UUID> trusted,
+		String texture,
+		List<Trait> traits,
+		long mutagenEndsIn) implements CustomPacketPayload {
+	public static final CustomPacketPayload.Type<SSyncBeePacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("sync_bee"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, SSyncBeePacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_INT,
+			SSyncBeePacket::id,
+			UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()),
+			SSyncBeePacket::trusted,
+			ByteBufCodecs.STRING_UTF8,
+			SSyncBeePacket::texture,
+			Trait.STREAM_CODEC.apply(ByteBufCodecs.list()),
+			SSyncBeePacket::traits,
+			ByteBufCodecs.LONG,
+			SSyncBeePacket::mutagenEndsIn,
+			SSyncBeePacket::new);
 
 	@Override
 	public CustomPacketPayload.Type<SSyncBeePacket> type() {
@@ -59,10 +61,7 @@ public record SSyncBeePacket(int id, List<UUID> trusted, String texture, List<St
 					} else {
 						attributes.setTexture(Identifier.tryParse(packet.texture()));
 					}
-					attributes.getGenes().setTraits(packet.traits().stream()
-							.map(Trait.REGISTRY::get)
-							.filter(Objects::nonNull)
-							.toList());
+					attributes.getGenes().setTraits(packet.traits());
 					attributes.setMutagenEndsIn(packet.mutagenEndsIn(), entity.level().getGameTime());
 				}
 			});
@@ -90,7 +89,7 @@ public record SSyncBeePacket(int id, List<UUID> trusted, String texture, List<St
 				bee.getId(),
 				attributes.getTrusted(),
 				texture == null ? "" : texture.toString(),
-				attributes.getGenes().getTraits().stream().map(Trait::name).toList(),
+				List.copyOf(attributes.getGenes().getTraits()),
 				attributes.getMutagenEndsIn());
 	}
 }

@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.jei;
 
 import java.util.List;
@@ -45,3 +46,4 @@ public class DragonRitualCategory extends ItemAndBlockBaseCategory<DragonRitualC
 		builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(LycheeCompat.pieItem.get());
 	}
 }
+*/

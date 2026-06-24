@@ -15,7 +15,7 @@ import snownee.fruits.gadget.GadgetModule;
 public class PhantomSpawnerMixin {
 	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSpectator()Z"))
 	private boolean tick(ServerPlayer player, Operation<Boolean> original) {
-		if (Hooks.gadget && player.hasEffect(GadgetModule.PHANTOM_SCENT.get())) {
+		if (Hooks.gadget && player.hasEffect(GadgetModule.PHANTOM_SCENT.holderOrThrow())) {
 			return true;
 		}
 		return original.call(player);

@@ -17,6 +17,8 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.attribute.EnvironmentAttribute;
+import net.minecraft.world.attribute.EnvironmentAttributeSystem;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +27,8 @@ import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.bee.BeeAttributes;
@@ -45,10 +49,16 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 		super(blockEntityType, blockPos, blockState);
 	}
 
-	@WrapOperation(method = "releaseOccupant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
-	private static boolean releaseOccupantSuppressDefault(
-			Level instance,
-			Operation<Boolean> original,
+	@WrapOperation(
+			method = "releaseOccupant",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/attribute/EnvironmentAttributeSystem;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;Lnet/minecraft/core/BlockPos;)Ljava/lang/Object;"))
+	private static Object releaseOccupantSuppressDefault(
+			EnvironmentAttributeSystem instance,
+			EnvironmentAttribute<Boolean> environmentAttribute,
+			BlockPos blockPos,
+			Operation<Object> original,
 			@Local(argsOnly = true) BeehiveBlockEntity.BeeData beeData) {
 		return original.call(instance) && !beeData.entityData.getBoolean("RainCapable");
 	}
@@ -113,15 +123,15 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 		return true;
 	}
 
-	@Inject(method = "load", at = @At("TAIL"))
-	private void load(CompoundTag compoundTag, CallbackInfo ci) {
-		waxedTicks = compoundTag.getInt("FruitfulFun:WaxedTicks");
+	@Inject(method = "loadAdditional", at = @At("TAIL"))
+	private void load(ValueInput input, CallbackInfo ci) {
+		waxedTicks = input.getIntOr("FruitfulFun:WaxedTicks", 0);
 	}
 
 	@Inject(method = "saveAdditional", at = @At("TAIL"))
-	private void saveAdditional(CompoundTag compoundTag, CallbackInfo ci) {
+	private void saveAdditional(ValueOutput output, CallbackInfo ci) {
 		if (fruits$isWaxed()) {
-			compoundTag.putInt("FruitfulFun:WaxedTicks", waxedTicks);
+			output.putInt("FruitfulFun:WaxedTicks", waxedTicks);
 		}
 	}
 

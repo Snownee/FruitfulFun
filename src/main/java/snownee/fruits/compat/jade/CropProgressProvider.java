@@ -26,7 +26,7 @@ public class CropProgressProvider implements IBlockComponentProvider {
 		}
 		int age = state.getValue(FruitLeavesBlock.AGE);
 		boolean needsPollination = false;
-		if (FFCommonConfig.allogamousTrees && block.type.get().allogamous) {
+		if (FFCommonConfig.allogamousTrees && block.type.value().allogamous) {
 			needsPollination = age == FruitLeavesBlock.BLOOMING;
 		}
 		addMaturityTooltip(tooltip, (age - 1) / 2.0F, needsPollination);

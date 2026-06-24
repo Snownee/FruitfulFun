@@ -66,7 +66,7 @@ public class FFREICompat implements REIClientPlugin {
 								return false;
 							}
 							ItemStack output = $.castValue();
-							return BeeModule.MUTAGEN.is(output) && output.hasTag();
+							return output.has(BeeModule.MUTAGEN_CONTENT.get());
 						})) {
 					return EventResult.interruptFalse();
 				}
@@ -79,7 +79,7 @@ public class FFREICompat implements REIClientPlugin {
 		}
 
 		LycheeCompat.addInformation((items, component) -> {
-			registry.add(DefaultInformationDisplay.createFromEntries(EntryIngredients.ofItemStacks(items), items.get(0).getHoverName())
+			registry.add(DefaultInformationDisplay.createFromEntries(EntryIngredients.ofItemStacks(items), items.getFirst().getHoverName())
 					.line(component));
 		});
 	}

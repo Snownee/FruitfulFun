@@ -1,11 +1,12 @@
 package snownee.fruits.gadget.datagen;
 
+import java.util.List;
 import java.util.Set;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LimitCount;
@@ -13,22 +14,25 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import snownee.fruits.gadget.BuzzyPowerStorage;
-import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentedCandleBlockEntity;
 
 public class SetBuzzyPowerFunction extends LootItemConditionalFunction {
-	public SetBuzzyPowerFunction(LootItemCondition[] lootItemConditions) {
-		super(lootItemConditions);
+	public static final MapCodec<? extends SetBuzzyPowerFunction> CODEC = RecordCodecBuilder.mapCodec(i -> commonFields(i).apply(
+			i,
+			SetBuzzyPowerFunction::new));
+
+	public SetBuzzyPowerFunction(List<LootItemCondition> predicates) {
+		super(predicates);
 	}
 
 	@Override
-	public MapCodec<? extends LootItemConditionalFunction> codec() {
-		return null;
+	public MapCodec<? extends SetBuzzyPowerFunction> codec() {
+		return CODEC;
 	}
 
 	@Override
 	protected ItemStack run(ItemStack stack, LootContext context) {
-		if (!(context.getParamOrNull(LootContextParams.BLOCK_ENTITY) instanceof ScentedCandleBlockEntity be)) {
+		if (!(context.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof ScentedCandleBlockEntity be)) {
 			return stack;
 		}
 		BuzzyPowerStorage power = be.power();
@@ -49,23 +53,8 @@ public class SetBuzzyPowerFunction extends LootItemConditionalFunction {
 	}
 
 	@Override
-	public LootItemFunctionType getType() {
-		return GadgetModule.SET_BUZZY_POWER.get();
-	}
-
-	@Override
-	public Set<LootContextParam<?>> getReferencedContextParams() {
+	public Set<ContextKey<?>> getReferencedContextParams() {
 		return Set.of(LootContextParams.BLOCK_ENTITY);
-	}
-
-	public static class Serializer extends LootItemConditionalFunction.Serializer<SetBuzzyPowerFunction> {
-		@Override
-		public SetBuzzyPowerFunction deserialize(
-				JsonObject object,
-				JsonDeserializationContext deserializationContext,
-				LootItemCondition[] conditions) {
-			return new SetBuzzyPowerFunction(conditions);
-		}
 	}
 
 	public static LootItemConditionalFunction.Builder<?> create() {

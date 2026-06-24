@@ -5,23 +5,17 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import org.joml.Quaternionf;
 import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,10 +23,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
-import snownee.fruits.bee.BeeAttributes;
-import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipe;
-import snownee.fruits.bee.genetics.BeeHasTrait;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.food.PieBlock;
 
@@ -48,48 +39,48 @@ public class LycheeCompat {
 				.build();
 	});
 
-	public static void renderBee(GuiGraphics graphics, HybridizingRecipe recipe, Bee bee) {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null) {
-			return;
-		}
-		bee.setLevel(mc.level);
-		bee.tickCount = mc.player.tickCount;
-
-		PoseStack matrixStack = graphics.pose();
-		matrixStack.pushPose();
-		matrixStack.translate(85, 24, 20);
-		matrixStack.scale(20, 20, 20);
-
-		float toRad = 0.01745329251F;
-		Quaternionf quaternion = new Quaternionf().rotateXYZ(170 * toRad, 135 * toRad, 0);
-		matrixStack.mulPose(quaternion);
-
-		ILightingSettings.DEFAULT_FLAT.applyLighting();
-		EntityRenderDispatcher renderDispatcher = mc.getEntityRenderDispatcher();
-		quaternion.conjugate();
-		renderDispatcher.overrideCameraOrientation(quaternion);
-		renderDispatcher.setRenderShadow(false);
-		MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-
-		BeeAttributes attributes = BeeAttributes.of(bee);
-		attributes.getGenes().getTraits().clear();
-		for (ContextualCondition condition : recipe.getConditions()) {
-			if (!BeeModule.BEE_HAS_TRAIT.is(condition.getType())) {
-				continue;
-			}
-			BeeHasTrait beeHasTrait = (BeeHasTrait) condition;
-			attributes.getGenes().getTraits().add(beeHasTrait.trait());
-		}
-		attributes.updateTexture();
-		renderDispatcher.render(bee, 0.0D, 0.0D, 0.0D, mc.getFrameTime(), 1, matrixStack, bufferSource, 15728880);
-
-		bufferSource.endBatch();
-		renderDispatcher.setRenderShadow(true);
-		matrixStack.popPose();
-		bee.setLevel(null);
-		ILightingSettings.DEFAULT_3D.applyLighting();
-	}
+//	public static void renderBee(GuiGraphics graphics, HybridizingRecipe recipe, Bee bee) {
+//		Minecraft mc = Minecraft.getInstance();
+//		if (mc.player == null) {
+//			return;
+//		}
+//		bee.setLevel(mc.level);
+//		bee.tickCount = mc.player.tickCount;
+//
+//		PoseStack matrixStack = graphics.pose();
+//		matrixStack.pushPose();
+//		matrixStack.translate(85, 24, 20);
+//		matrixStack.scale(20, 20, 20);
+//
+//		float toRad = 0.01745329251F;
+//		Quaternionf quaternion = new Quaternionf().rotateXYZ(170 * toRad, 135 * toRad, 0);
+//		matrixStack.mulPose(quaternion);
+//
+//		ILightingSettings.DEFAULT_FLAT.applyLighting();
+//		EntityRenderDispatcher renderDispatcher = mc.getEntityRenderDispatcher();
+//		quaternion.conjugate();
+//		renderDispatcher.overrideCameraOrientation(quaternion);
+//		renderDispatcher.setRenderShadow(false);
+//		MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+//
+//		BeeAttributes attributes = BeeAttributes.of(bee);
+//		attributes.getGenes().getTraits().clear();
+//		for (ContextualCondition condition : recipe.getConditions()) {
+//			if (!BeeModule.BEE_HAS_TRAIT.is(condition.getType())) {
+//				continue;
+//			}
+//			BeeHasTrait beeHasTrait = (BeeHasTrait) condition;
+//			attributes.getGenes().getTraits().add(beeHasTrait.trait());
+//		}
+//		attributes.updateTexture();
+//		renderDispatcher.render(bee, 0.0D, 0.0D, 0.0D, mc.getFrameTime(), 1, matrixStack, bufferSource, 15728880);
+//
+//		bufferSource.endBatch();
+//		renderDispatcher.setRenderShadow(true);
+//		matrixStack.popPose();
+//		bee.setLevel(null);
+//		ILightingSettings.DEFAULT_3D.applyLighting();
+//	}
 
 	public static void addInformation(BiConsumer<List<ItemStack>, Component> registrar) {
 		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage || FFCommonConfig.villageAppleTreeWorldGen) {

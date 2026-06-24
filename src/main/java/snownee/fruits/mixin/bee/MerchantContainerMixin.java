@@ -1,7 +1,5 @@
 package snownee.fruits.mixin.bee;
 
-import java.util.Objects;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -9,14 +7,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.inventory.MerchantContainer;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.Bees;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.GeneData;
 
@@ -27,23 +23,18 @@ public class MerchantContainerMixin {
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/world/item/trading/MerchantOffer;assemble()Lnet/minecraft/world/item/ItemStack;"))
-	private ItemStack updateSellItem(MerchantOffer merchantOffer, Operation<ItemStack> original, @Local(ordinal = 0) ItemStack offer) {
-		ItemStack output = original.call(merchantOffer);
-		if (!BeeModule.isBeehiveTrade(merchantOffer)) {
+	private ItemStack updateSellItem(MerchantOffer offer, Operation<ItemStack> original, @Local(name = "buyA") ItemStack buyA) {
+		ItemStack output = original.call(offer);
+		if (!BeeModule.isBeehiveTrade(offer)) {
 			return output;
 		}
-		output.removeTagKey("FFTrade");
-		CompoundTag blockEntityData = BlockItem.getBlockEntityData(offer);
-		if (blockEntityData == null) {
+		Bees bees = buyA.getOrDefault(DataComponents.BEES, Bees.EMPTY);
+		if (bees.bees().isEmpty()) {
 			return ItemStack.EMPTY;
 		}
-		ListTag list = Objects.requireNonNull(blockEntityData).getList(BeehiveBlockEntity.BEES, Tag.TAG_COMPOUND);
-		if (list.isEmpty()) {
-			return ItemStack.EMPTY;
-		}
-		int value = BeeModule.getBeesValue(list.stream().map(tag -> {
-			CompoundTag lociTag = ((CompoundTag) tag)
-					.getCompound(BeehiveBlockEntity.ENTITY_DATA)
+		output.remove(BeeModule.MERCHANT_OFFER.get());
+		int value = BeeModule.getBeesValue(bees.bees().stream().map(occupant -> {
+			CompoundTag lociTag = occupant.entityData().copyTagWithoutId()
 					.getCompound("FruitfulFun")
 					.getCompound("Genes");
 			GeneData geneData = new GeneData();

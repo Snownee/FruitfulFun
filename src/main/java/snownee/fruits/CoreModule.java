@@ -1,7 +1,10 @@
 package snownee.fruits;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Preconditions;
 
@@ -26,7 +29,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SignItem;
-import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -58,6 +62,7 @@ import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
 import snownee.fruits.ritual.CollectDragonBreathDispenseBehavior;
 import snownee.fruits.util.CommonProxy;
+import snownee.fruits.util.ExtinguishFireConsumeEffect;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.Categories;
@@ -106,15 +111,13 @@ public final class CoreModule extends AbstractModule {
 			$.stacksTo(Items.OAK_HANGING_SIGN.getDefaultMaxStackSize())));
 	public static final TagKey<Item> CITRUS_FRUITS = itemTag("c", "fruits/citrus");
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
-	public static final ItemObject<Item> TANGERINE = item($ -> new ModItem($.food(Foods.TANGERINE)));
-	public static final ItemObject<Item> LIME = item($ -> new ModItem($.food(Foods.LIME)));
-	public static final ItemObject<Item> CITRON = item($ -> new ModItem($.food(Foods.CITRON)));
-	public static final ItemObject<Item> POMELO = item($ -> new ModItem($.food(Foods.POMELO)));
-	public static final ItemObject<Item> ORANGE = item($ -> new ModItem($.food(Foods.ORANGE)));
-	public static final ItemObject<Item> LEMON = item($ -> new ModItem($.food(
-			Foods.LEMON,
-			Consumables.defaultFood().consumeSeconds(0.6F).build())));
-	public static final ItemObject<Item> GRAPEFRUIT = item($ -> new ModItem($.food(Foods.GRAPEFRUIT)));
+	public static final ItemObject<Item> TANGERINE = citrusFood(Foods.TANGERINE);
+	public static final ItemObject<Item> LIME = citrusFood(Foods.LIME);
+	public static final ItemObject<Item> CITRON = citrusFood(Foods.CITRON);
+	public static final ItemObject<Item> POMELO = citrusFood(Foods.POMELO);
+	public static final ItemObject<Item> ORANGE = citrusFood(Foods.ORANGE);
+	public static final ItemObject<Item> LEMON = citrusFood(Foods.LEMON, $ -> $.consumeSeconds(0.6F));
+	public static final ItemObject<Item> GRAPEFRUIT = citrusFood(Foods.GRAPEFRUIT);
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final BlockObject<FruitLeavesBlock> TANGERINE_LEAVES = block(
 			$ -> new FruitLeavesBlock(
@@ -248,16 +251,15 @@ public final class CoreModule extends AbstractModule {
 			"block.wooden_door.close")));
 	/* off */
 	public static final KiwiGO<EntityType<SlidingDoorEntity>> SLIDING_DOOR = entity($ -> EntityType.Builder.of(
-					SlidingDoorEntity::new,
-					MobCategory.MISC)
-			.sized(0.01f, 0.01f)
-			.fireImmune()
-			.noSummon()
-			.build($));
+			SlidingDoorEntity::new,
+			MobCategory.MISC).sized(0.01f, 0.01f).fireImmune().noSummon().build($));
 	/* on */
 	public static final TagKey<PoiType> POI_TYPE = tag(Registries.POINT_OF_INTEREST_TYPE, FruitfulFun.ID, "trees");
 	public static final TagKey<Block> CANDLES = blockTag(FruitfulFun.ID, "candles");
 	public static final KiwiGO<MobEffect> FRAGILITY = go(() -> new MobEffect(MobEffectCategory.HARMFUL, 0x875A49));
+	public static final KiwiGO<ConsumeEffect.Type<ExtinguishFireConsumeEffect>> EXTINGUISH_FIRE = go(() -> new ConsumeEffect.Type<>(
+			ExtinguishFireConsumeEffect.CODEC,
+			ExtinguishFireConsumeEffect.STREAM_CODEC));
 
 	@Override
 	protected void addEntries() {
@@ -339,9 +341,20 @@ public final class CoreModule extends AbstractModule {
 	public static ItemObject<Item> bannerPatternItem(TagKey<BannerPattern> tag) {
 		return item($ -> new Item($.stacksTo(Items.MOJANG_BANNER_PATTERN.getDefaultMaxStackSize())
 				.rarity(Rarity.UNCOMMON)
-				.delayedComponent(
-						DataComponents.PROVIDES_BANNER_PATTERNS,
-						context -> context.getOrThrow(tag))));
+				.delayedComponent(DataComponents.PROVIDES_BANNER_PATTERNS, context -> context.getOrThrow(tag))));
+	}
+
+	public static ItemObject<Item> citrusFood(FoodProperties foodProperties) {
+		return citrusFood(foodProperties, null);
+	}
+
+	public static ItemObject<Item> citrusFood(FoodProperties foodProperties, @Nullable Consumer<Consumable.Builder> builderConsumer) {
+		Consumable.Builder builder = Consumable.builder();
+		builder.onConsume(ExtinguishFireConsumeEffect.INSTANCE);
+		if (builderConsumer != null) {
+			builderConsumer.accept(builder);
+		}
+		return item($ -> new ModItem($.food(foodProperties, builder.build())));
 	}
 
 	public static final class Foods {

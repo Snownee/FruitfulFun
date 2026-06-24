@@ -1,7 +1,10 @@
 package snownee.fruits.datagen;
 
+import java.util.concurrent.CompletableFuture;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -20,12 +23,12 @@ import snownee.kiwi.datagen.KiwiBlockLoot;
 
 public class CoreBlockLoot extends KiwiBlockLoot {
 
-	public CoreBlockLoot(FabricPackOutput dataOutput) {
-		this(FruitfulFun.id("core"), dataOutput);
+	public CoreBlockLoot(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+		this(FruitfulFun.id("core"), dataOutput, registryLookup);
 	}
 
-	public CoreBlockLoot(Identifier moduleId, FabricPackOutput dataOutput) {
-		super(moduleId, dataOutput);
+	public CoreBlockLoot(Identifier moduleId, FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+		super(moduleId, dataOutput, registryLookup);
 	}
 
 	@Override
@@ -33,14 +36,14 @@ public class CoreBlockLoot extends KiwiBlockLoot {
 		handleDefault(this::createSingleItemTable);
 		handle(DoorBlock.class, this::createDoorTable);
 		handle(SlabBlock.class, this::createSlabItemTable);
-		handle(FlowerPotBlock.class, $ -> createPotFlowerItemTable($.getContent()));
+		handle(FlowerPotBlock.class, $ -> createPotFlowerItemTable($.getPotted()));
 		handle(FruitLeavesBlock.class, this::createFruitLeaves);
 	}
 
 	protected static final float[] NORMAL_LEAVES_SAPLING_CHANCES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
 
 	public LootTable.Builder createFruitLeaves(FruitLeavesBlock block) {
-		FruitType type = block.type.get();
+		FruitType type = block.type.value();
 		Block dropBlock = block;
 		if (CherryModule.CHERRY_LEAVES.is(block)) {
 			dropBlock = Blocks.CHERRY_LEAVES;

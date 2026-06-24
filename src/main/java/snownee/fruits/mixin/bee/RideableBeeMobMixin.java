@@ -26,8 +26,8 @@ public class RideableBeeMobMixin {
 		Mob mob = (Mob) (Object) this;
 		if (!mob.isNoAi() && mob instanceof Bee bee) {
 			BeeAttributes attributes = BeeAttributes.of(bee);
-			if (attributes.isSaddled() && bee.getFirstPassenger() instanceof Player player && (
-					player.isCreative() || attributes.trusts(player.getUUID()))) {
+			if (bee.isSaddled() && bee.getFirstPassenger() instanceof Player player &&
+					(player.isCreative() || attributes.trusts(player.getUUID()))) {
 				cir.setReturnValue(player);
 			}
 			if (attributes.hasTrait(Trait.GHOST)) {

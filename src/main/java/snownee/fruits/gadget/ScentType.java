@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -17,7 +18,11 @@ public class ScentType {
 	}
 
 	public boolean isActiveAt(LevelChunk chunk) {
-		return getTime(chunk) > chunk.getLevel().getGameTime();
+		return isActiveAt(chunk.getLevel(), chunk);
+	}
+
+	public boolean isActiveAt(LevelAccessor level, ChunkAccess chunk) {
+		return getTime(chunk) > level.getGameTime();
 	}
 
 	public long getTime(ChunkAccess chunk) {

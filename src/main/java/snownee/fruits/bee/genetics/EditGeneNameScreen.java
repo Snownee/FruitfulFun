@@ -1,9 +1,12 @@
 package snownee.fruits.bee.genetics;
 
+import java.util.List;
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
@@ -14,9 +17,9 @@ import snownee.fruits.bee.network.CSetGeneNamePacket;
 import snownee.fruits.duck.FFPlayer;
 
 public class EditGeneNameScreen extends Screen {
-	private CycleButton<String> button;
-	private EditBox nameField;
-	private EditBox descField;
+	private @Nullable CycleButton<String> button;
+	private @Nullable EditBox nameField;
+	private @Nullable EditBox descField;
 	private boolean changed;
 
 	public EditGeneNameScreen() {
@@ -28,14 +31,16 @@ public class EditGeneNameScreen extends Screen {
 		FFPlayer player = Objects.requireNonNull(FFPlayer.of(Minecraft.getInstance().player));
 		int x = width / 2;
 		int y = height / 2 - 10;
+		List<String> values = player.fruits$getGeneNames().keySet().stream().sorted().toList();
 		addRenderableWidget(button =
-				CycleButton.builder(Component::literal)
-						.withValues(player.fruits$getGeneNames().keySet().stream().sorted().toList())
+				CycleButton.builder(Component::literal, values.getFirst())
+						.withValues(values)
 						.displayOnlyValue()
-						.create(x - 135, y - 1, 20, 20, Component.translatable("gui.fruitfulfun.cycleGenes"), ($, code) -> {
-							sendPacket();
-							updateValues(code);
-						}));
+						.create(
+								x - 135, y - 1, 20, 20, Component.translatable("gui.fruitfulfun.cycleGenes"), ($, code) -> {
+									sendPacket();
+									updateValues(code);
+								}));
 		addRenderableWidget(nameField =
 				new EditBox(font, x - 105, y, 100, 18, Component.translatable("gui.fruitfulfun.geneName")));
 		addRenderableWidget(descField =
@@ -52,24 +57,17 @@ public class EditGeneNameScreen extends Screen {
 
 	private void updateValues(String code) {
 		FFPlayer player = Objects.requireNonNull(FFPlayer.of(Minecraft.getInstance().player));
-		nameField.setValue(player.fruits$getGeneName(code));
-		descField.setValue(player.fruits$getGeneDesc(code));
+		Objects.requireNonNull(nameField).setValue(player.fruits$getGeneName(code));
+		Objects.requireNonNull(descField).setValue(player.fruits$getGeneDesc(code));
 		changed = false;
 	}
 
 	@Override
-	public void tick() {
-		nameField.tick();
-		descField.tick();
-	}
-
-	@Override
-	public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-		this.renderBackground(guiGraphics);
-		guiGraphics.drawCenteredString(font, title, width / 2, 20, 0xFFFFFF);
-		guiGraphics.drawString(font, nameField.getMessage(), nameField.getX(), nameField.getY() - 14, 0xFFFFFF);
-		guiGraphics.drawString(font, descField.getMessage(), descField.getX(), descField.getY() - 14, 0xFFFFFF);
-		super.render(guiGraphics, i, j, f);
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		super.extractRenderState(graphics, mouseX, mouseY, a);
+		graphics.centeredText(font, title, width / 2, 20, 0xFFFFFF);
+		graphics.text(font, Objects.requireNonNull(nameField).getMessage(), nameField.getX(), nameField.getY() - 14, 0xFFFFFF);
+		graphics.text(font, Objects.requireNonNull(descField).getMessage(), descField.getX(), descField.getY() - 14, 0xFFFFFF);
 	}
 
 	@Override
@@ -81,6 +79,9 @@ public class EditGeneNameScreen extends Screen {
 		if (!changed) {
 			return;
 		}
-		CSetGeneNamePacket.send(button.getValue(), nameField.getValue(), descField.getValue());
+		CSetGeneNamePacket.send(
+				Objects.requireNonNull(button).getValue(),
+				Objects.requireNonNull(nameField).getValue(),
+				Objects.requireNonNull(descField).getValue());
 	}
 }

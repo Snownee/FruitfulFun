@@ -1,16 +1,17 @@
 package snownee.fruits.bee;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.entity.animal.bee.Bee;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -30,13 +34,17 @@ import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
+import snownee.kiwi.util.KUtil;
 import snownee.lychee.LootContextKeys;
-import snownee.lychee.util.CommonProxy;
+import snownee.lychee.context.LootParamsContext;
 import snownee.lychee.util.context.LycheeContext;
-import snownee.lychee.util.recipe.BlockKeyableRecipeType;
+import snownee.lychee.util.context.LycheeContextKey;
+import snownee.lychee.util.recipe.LycheeRecipeType;
 
-public class HybridizingRecipeType extends BlockKeyableRecipeType<HybridizingRecipe> {
-	public HybridizingRecipeType(String name, Class<HybridizingRecipe> clazz, @Nullable LootContextParamSet paramSet) {
+public class HybridizingRecipeType extends LycheeRecipeType<HybridizingRecipe> {
+	protected final Map<Block, List<RecipeHolder<HybridizingRecipe>>> recipesByBlock = Maps.newHashMap();
+
+	public HybridizingRecipeType(String name, Class<HybridizingRecipe> clazz, @Nullable ContextKeySet paramSet) {
 		super(name, clazz, paramSet);
 	}
 
@@ -46,36 +54,32 @@ public class HybridizingRecipeType extends BlockKeyableRecipeType<HybridizingRec
 		if (pollens.size() > 3) {
 			int toRemove = pollens.size() - 3;
 			while (toRemove-- > 0) {
-				pollens.remove(0);
+				pollens.removeFirst();
 			}
 		}
 	}
 
 	@Override
-	public void buildCache() {
-		super.buildCache();
+	public void refreshCache(RecipeMap recipeMap) {
+		super.refreshCache(recipeMap);
 		this.recipesByBlock.clear();
-		Stream<HybridizingRecipe> stream = CommonProxy.recipes(this).stream().filter($ -> !$.ghost);
-		if (clazz.isAssignableFrom(Comparable.class)) {
-			stream = stream.sorted();
-		}
-		recipes = stream.toList();
-		Multimap<Block, HybridizingRecipe> multimap = HashMultimap.create();
+		Multimap<Block, RecipeHolder<HybridizingRecipe>> multimap = HashMultimap.create();
 		LinkedHashSet<Block> pollenBlocks = new LinkedHashSet<>();
-		for (HybridizingRecipe recipe : recipes) {
-			recipe.endingStep().stream()
-					.map(Identifier::new)
-					.map(BuiltInRegistries.BLOCK::get)
+		for (RecipeHolder<HybridizingRecipe> recipe : recipes) {
+			recipe.value().endingStep().stream()
+					.map(Identifier::parse)
+					.map(BuiltInRegistries.BLOCK::getValue)
 					.forEach($ -> multimap.put($, recipe));
-			recipe.pollens.stream()
-					.map(Identifier::new)
-					.map(BuiltInRegistries.BLOCK::get)
+			recipe.value().pollens().stream()
+					.map(Identifier::parse)
+					.map(BuiltInRegistries.BLOCK::getValue)
 					.forEach(pollenBlocks::add);
 		}
 
-		for (Map.Entry<Block, Collection<HybridizingRecipe>> entry : multimap.asMap().entrySet()) {
-			List<HybridizingRecipe> list = Lists.newArrayList(entry.getValue());
-			list.sort(null);
+		Comparator<RecipeHolder<HybridizingRecipe>> comparator = comparator();
+		for (Map.Entry<Block, Collection<RecipeHolder<HybridizingRecipe>>> entry : multimap.asMap().entrySet()) {
+			List<RecipeHolder<HybridizingRecipe>> list = Lists.newArrayList(entry.getValue());
+			list.sort(comparator);
 			recipesByBlock.put(entry.getKey(), list);
 		}
 
@@ -86,15 +90,23 @@ public class HybridizingRecipeType extends BlockKeyableRecipeType<HybridizingRec
 		}
 	}
 
+	@Override
+	public Comparator<RecipeHolder<HybridizingRecipe>> comparator() {
+		return super.comparator().thenComparing(recipe -> recipe.value().pollens().size());
+	}
+
 	public void onPollinateComplete(Bee bee) {
 		BlockPos flowerPos = bee.getSavedFlowerPos();
+		if (flowerPos == null) {
+			return;
+		}
 		ServerLevel level = (ServerLevel) bee.level();
 		BlockState blockState = level.getBlockState(flowerPos);
 		if (blockState.isAir()) {
 			return;
 		}
-		Pair<LycheeContext, HybridizingRecipe> result = process(bee, flowerPos, blockState);
-		if (result == null && blockState.getBlock() instanceof FruitLeavesBlock leaves
+		Optional<RecipeHolder<HybridizingRecipe>> result = process(bee, flowerPos, blockState);
+		if (result.isEmpty() && blockState.getBlock() instanceof FruitLeavesBlock leaves
 				&& blockState.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING
 				&& leaves.canGrowWithContext(blockState, level, flowerPos)) {
 			FruitTreeBlockEntity core = leaves.findCore(level, flowerPos);
@@ -102,22 +114,22 @@ public class HybridizingRecipeType extends BlockKeyableRecipeType<HybridizingRec
 				core.consumeLifespan(-2);
 			}
 			leaves.performBonemeal(level, bee.getRandom(), flowerPos, blockState);
-			level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos, 0);
+			level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos, 0);
 		}
 	}
 
-	public Pair<LycheeContext, HybridizingRecipe> process(Bee bee, BlockPos flowerPos, BlockState blockState) {
+	public Optional<RecipeHolder<HybridizingRecipe>> process(Bee bee, BlockPos flowerPos, BlockState blockState) {
 		if (isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 		Block block = blockState.getBlock();
-		String newPollen = Util.trimRL(BuiltInRegistries.BLOCK.getKey(block));
+		String newPollen = KUtil.trimRL(BuiltInRegistries.BLOCK.getKey(block));
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		List<String> pollens = attributes.getPollens();
 		pollens.remove(newPollen);
 		pollens.add(newPollen);
 		if (!has(blockState)) {
-			return null;
+			return Optional.empty();
 		}
 		boolean isBigFlowerUpper = false;
 		Level level = bee.level();
@@ -126,32 +138,32 @@ public class HybridizingRecipeType extends BlockKeyableRecipeType<HybridizingRec
 			flowerPos = flowerPos.below();
 			blockState = level.getBlockState(flowerPos);
 			if (block != blockState.getBlock()) {
-				return null;
+				return Optional.empty();
 			}
 			isBigFlowerUpper = true;
 		}
-		Pair<LycheeContext, HybridizingRecipe> result = process(bee.level(), blockState, buildContext(bee, flowerPos, blockState));
-		if (result != null) {
-			level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos, 0);
+		LycheeContext ctx = new LycheeContext();
+		ctx.put(LycheeContextKey.RANDOM, bee.getRandom());
+		LootParamsContext lootParams = ctx.initLootParams(this);
+		lootParams.set(LootContextParams.THIS_ENTITY, bee);
+		lootParams.set(LootContextParams.BLOCK_STATE, blockState);
+		lootParams.set(LootContextParams.ORIGIN, Vec3.atBottomCenterOf(flowerPos));
+		lootParams.set(LootContextKeys.BLOCK_POS, flowerPos);
+		Optional<RecipeHolder<HybridizingRecipe>> result = findFirst(ctx, level);
+		if (result.isPresent()) {
+			ctx.put(result.get());
+			level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos, 0);
 			if (isBigFlowerUpper) {
-				level.levelEvent(LevelEvent.PARTICLES_PLANT_GROWTH, flowerPos.above(), 0);
+				level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos.above(), 0);
 			}
-			if (result.getSecond().resetPollens) {
+			if (result.get().value().resetPollens()) {
 				pollens.clear();
 			}
 		}
 		return result;
 	}
 
-	public Supplier<LycheeContext> buildContext(Bee bee, BlockPos flowerPos, BlockState state) {
-		return () -> {
-			LycheeContext.Builder<LycheeContext> builder = new LycheeContext.Builder<>(bee.level());
-			builder.withRandom(bee.getRandom());
-			builder.withParameter(LootContextParams.THIS_ENTITY, bee);
-			builder.withParameter(LootContextParams.BLOCK_STATE, state);
-			builder.withParameter(LootContextParams.ORIGIN, Vec3.atBottomCenterOf(flowerPos));
-			builder.withParameter(LootContextKeys.BLOCK_POS, flowerPos);
-			return builder.create(BeeModule.RECIPE_TYPE.get().contextParamSet);
-		};
+	public boolean has(BlockState state) {
+		return recipesByBlock.containsKey(state.getBlock());
 	}
 }

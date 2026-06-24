@@ -23,6 +23,7 @@ public class HauntingManager {
 	@Nullable
 	public final Entity target;
 	public final boolean isGhostBee;
+	@Nullable
 	public CompoundTag storedBee;
 	private ImmutableSet<Trait> traits = ImmutableSet.of();
 	private int fireCounter;
@@ -65,7 +66,7 @@ public class HauntingManager {
 		}
 		int ticks = FFCommonConfig.hauntingCooldownSeconds * 20;
 		entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, ticks, 1));
-		entity.addEffect(new MobEffectInstance(CoreModule.FRAGILITY.get(), ticks, 1));
+		entity.addEffect(new MobEffectInstance(CoreModule.FRAGILITY.holderOrThrow(), ticks, 1));
 	}
 
 	public void tick(ServerPlayer player) {
@@ -90,7 +91,7 @@ public class HauntingManager {
 		EntityType.create(storedBee, player.level()).ifPresent(entity -> {
 			entity.setPos(player.getX(), player.getY() + 0.7, player.getZ());
 			addNegativeEffects((LivingEntity) entity);
-			player.serverLevel().addWithUUID(entity);
+			player.level().addWithUUID(entity);
 		});
 		storedBee = null;
 		traits = ImmutableSet.of();

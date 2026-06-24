@@ -15,6 +15,7 @@ import net.minecraft.client.data.models.blockstates.ConditionBuilder;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
@@ -29,6 +30,8 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.genetics.MutagenTintSource;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
@@ -43,29 +46,29 @@ public class FFModelProvider extends FabricModelProvider {
 
 	@Override
 	public void generateBlockStateModels(BlockModelGenerators generators) {
-		createCitrusLeaves(generators, CoreModule.TANGERINE_LEAVES.get(), FruitScale.SMALL);
+		createFruitLeaves(generators, CoreModule.TANGERINE_LEAVES.get(), FruitScale.SMALL);
 		generators.createPlant(
 				CoreModule.TANGERINE_SAPLING.get(),
 				CoreModule.POTTED_TANGERINE.get(),
 				BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, CoreModule.CITRON_LEAVES.get(), FruitScale.SMALL);
+		createFruitLeaves(generators, CoreModule.CITRON_LEAVES.get(), FruitScale.SMALL);
 		generators.createPlant(CoreModule.CITRON_SAPLING.get(), CoreModule.POTTED_CITRON.get(), BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, CoreModule.GRAPEFRUIT_LEAVES.get(), FruitScale.MIDDLE);
+		createFruitLeaves(generators, CoreModule.GRAPEFRUIT_LEAVES.get(), FruitScale.MIDDLE);
 		generators.createPlant(
 				CoreModule.GRAPEFRUIT_SAPLING.get(),
 				CoreModule.POTTED_GRAPEFRUIT.get(),
 				BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, CoreModule.LEMON_LEAVES.get(), FruitScale.MIDDLE);
+		createFruitLeaves(generators, CoreModule.LEMON_LEAVES.get(), FruitScale.MIDDLE);
 		generators.createPlant(CoreModule.LEMON_SAPLING.get(), CoreModule.POTTED_LEMON.get(), BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, CoreModule.LIME_LEAVES.get(), FruitScale.MIDDLE);
+		createFruitLeaves(generators, CoreModule.LIME_LEAVES.get(), FruitScale.MIDDLE);
 		generators.createPlant(CoreModule.LIME_SAPLING.get(), CoreModule.POTTED_LIME.get(), BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, CoreModule.ORANGE_LEAVES.get(), FruitScale.MIDDLE);
+		createFruitLeaves(generators, CoreModule.ORANGE_LEAVES.get(), FruitScale.MIDDLE);
 		generators.createPlant(CoreModule.ORANGE_SAPLING.get(), CoreModule.POTTED_ORANGE.get(), BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, CoreModule.APPLE_LEAVES.get(), FruitScale.MIDDLE);
+		createFruitLeaves(generators, CoreModule.APPLE_LEAVES.get(), FruitScale.MIDDLE);
 		generators.createPlant(CoreModule.APPLE_SAPLING.get(), CoreModule.POTTED_APPLE.get(), BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, CoreModule.POMELO_LEAVES.get(), FruitScale.LARGE);
+		createFruitLeaves(generators, CoreModule.POMELO_LEAVES.get(), FruitScale.LARGE);
 		generators.createPlant(CoreModule.POMELO_SAPLING.get(), CoreModule.POTTED_POMELO.get(), BlockModelGenerators.PlantType.NOT_TINTED);
-		createCitrusLeaves(generators, PomegranateModule.POMEGRANATE_LEAVES.get(), FruitScale.NONE);
+		createFruitLeaves(generators, PomegranateModule.POMEGRANATE_LEAVES.get(), FruitScale.NONE);
 		generators.createPlant(
 				PomegranateModule.POMEGRANATE_SAPLING.get(),
 				PomegranateModule.POTTED_POMEGRANATE.get(),
@@ -104,7 +107,8 @@ public class FFModelProvider extends FabricModelProvider {
 	}
 
 	@Override
-	public void generateItemModels(ItemModelGenerators itemModelGenerators) {
+	public void generateItemModels(ItemModelGenerators generators) {
+		generators.generateItemWithTintedOverlay(BeeModule.MUTAGEN.get(), MutagenTintSource.INSTANCE);
 	}
 
 	public static void createCandle(BlockModelGenerators generators, ScentedCandleBlock block) {
@@ -160,8 +164,8 @@ public class FFModelProvider extends FabricModelProvider {
 				.select(4, true, plainVariant(resourceLocation8))));
 	}
 
-	public static void createCitrusLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {
-		FruitType fruitType = block.type.get();
+	public static void createFruitLeaves(BlockModelGenerators generators, FruitLeavesBlock block, FruitScale scale) {
+		FruitType fruitType = block.type.value();
 		Identifier typeId = Objects.requireNonNull(FFRegistries.FRUIT_TYPE.getKey(fruitType));
 		Identifier model01;
 		if (CoreModule.APPLE_LEAVES.is(block)) {
@@ -192,6 +196,7 @@ public class FFModelProvider extends FabricModelProvider {
 				ModelLocationUtils.getModelLocation(block.asItem()),
 				new TextureMapping().put(FFModelTemplates.LEAVES, baseTexture).put(FFModelTemplates.FLOWERS, flowersTexture),
 				generators.modelOutput);
+//		generators.registerSimpleTintedItemModel(block, blockModel, ItemModelUtils.constantTint(-12012264));
 	}
 
 	public static void createRedloveLeaves(BlockModelGenerators generators, FruitLeavesBlock block) {

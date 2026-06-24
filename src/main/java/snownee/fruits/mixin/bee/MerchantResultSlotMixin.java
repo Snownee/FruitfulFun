@@ -19,11 +19,11 @@ public class MerchantResultSlotMixin {
 	private Player player;
 
 	@Inject(method = "checkTakeAchievements", at = @At("HEAD"))
-	private void checkTakeAchievements(ItemStack stack, CallbackInfo ci) {
-		if (stack.getCount() >= 50 && stack.getTag() != null && stack.getTag().getBoolean("FFTradeAdvancement")) {
-			stack.getTag().remove("FFTradeAdvancement");
-			if (stack.getTag().isEmpty()) {
-				stack.setTag(null);
+	private void checkTakeAchievements(ItemStack carried, CallbackInfo ci) {
+		if (carried.getCount() >= 50 && carried.getTag() != null && carried.getTag().getBoolean("FFTradeAdvancement")) {
+			carried.getTag().remove("FFTradeAdvancement");
+			if (carried.getTag().isEmpty()) {
+				carried.setTag(null);
 			}
 			Hooks.awardSimpleAdvancement(player, "apiarist");
 		}

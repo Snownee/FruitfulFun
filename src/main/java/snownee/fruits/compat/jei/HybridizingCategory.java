@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.jei;
 
 import java.util.List;
@@ -86,3 +87,4 @@ public class HybridizingCategory extends BaseJEICategory<LycheeContext, Hybridiz
 		});
 	}
 }
+*/

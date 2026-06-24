@@ -15,6 +15,7 @@ import net.minecraft.world.item.Items;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.genetics.Mutagen;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.compat.lychee.LycheeCompat;
 
@@ -46,7 +47,8 @@ public class FFJEICompat implements IModPlugin {
 					BeeModule.MUTAGEN.key(),
 					List.of(new ItemStack(MutagenItem.BREWING_ITEM)),
 					List.of(Items.POTION.getDefaultInstance()),
-					new ItemStack(BeeModule.MUTAGEN.get()), 1);
+					new ItemStack(BeeModule.MUTAGEN.get()),
+					1);
 			registration.addRecipes(RecipeTypes.BREWING, List.of(brewingRecipe));
 		}
 
@@ -57,10 +59,9 @@ public class FFJEICompat implements IModPlugin {
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
 		if (FFCommonConfig.isMutagenRecipeEnabled()) {
 			IRecipeLookup<IJeiBrewingRecipe> recipeLookup = jeiRuntime.getRecipeManager().createRecipeLookup(RecipeTypes.BREWING);
-			List<IJeiBrewingRecipe> recipes = recipeLookup.get().filter($ -> {
-				ItemStack output = $.getPotionOutput();
-				return BeeModule.MUTAGEN.is(output) && MutagenItem.getCodename(output).isPresent();
-			}).toList();
+			List<IJeiBrewingRecipe> recipes = recipeLookup.get().filter($ -> !$.getPotionOutput()
+					.getOrDefault(BeeModule.MUTAGEN_CONTENT.get(), Mutagen.IMPERFECT)
+					.isImperfect()).toList();
 			jeiRuntime.getRecipeManager().hideRecipes(RecipeTypes.BREWING, recipes);
 		}
 	}

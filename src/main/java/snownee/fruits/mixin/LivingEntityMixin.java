@@ -10,13 +10,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import snownee.fruits.CoreModule;
 
@@ -28,7 +28,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@Shadow
 	@Nullable
-	public abstract MobEffectInstance getEffect(MobEffect effect);
+	public abstract MobEffectInstance getEffect(Holder<MobEffect> effect);
 
 	@Inject(method = "getDamageAfterMagicAbsorb", at = @At("HEAD"))
 	private void getDamageAfterMagicAbsorb(
@@ -36,17 +36,9 @@ public abstract class LivingEntityMixin extends Entity {
 			float damageAmount,
 			CallbackInfoReturnable<Float> cir,
 			@Local(argsOnly = true) LocalFloatRef damageAmountRef) {
-		MobEffectInstance effect = getEffect(CoreModule.FRAGILITY.get());
+		MobEffectInstance effect = getEffect(CoreModule.FRAGILITY.holderOrThrow());
 		if (effect != null) {
 			damageAmountRef.set(damageAmountRef.get() * (1.2F + effect.getAmplifier() * 0.2F));
-		}
-	}
-
-	@Inject(method = "eat", at = @At("HEAD"))
-	private void eat(Level level, ItemStack food, CallbackInfoReturnable<ItemStack> cir) {
-		if (food.isEdible() && food.is(CoreModule.CITRUS_FRUITS)) {
-			LivingEntity self = (LivingEntity) (Object) this;
-			self.extinguishFire();
 		}
 	}
 }

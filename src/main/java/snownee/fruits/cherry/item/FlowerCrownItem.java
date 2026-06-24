@@ -2,23 +2,15 @@ package snownee.fruits.cherry.item;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Equipable;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFClientConfig;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.item.ModItem;
 
-public class FlowerCrownItem extends ModItem implements Equipable {
+public class FlowerCrownItem extends ModItem {
 	private final ParticleOptions particle;
 
 	public FlowerCrownItem(Properties builder, ParticleOptions particle) {
@@ -54,21 +46,6 @@ public class FlowerCrownItem extends ModItem implements Equipable {
 		double motionY = deltaMovement.y() - lookAngle.y() * 0.03;
 		double motionZ = deltaMovement.z() - lookAngle.z() * 0.03;
 		entity.level().addParticle(item.getParticle(), x, y, z, motionX, motionY, motionZ);
-	}
-
-	@Override
-	public EquipmentSlot getEquipmentSlot() {
-		return EquipmentSlot.HEAD;
-	}
-
-	@Override
-	public SoundEvent getEquipSound() {
-		return CherryModule.EQUIP_CROWN.get();
-	}
-
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
-		return swapWithEquipmentSlot(this, level, player, interactionHand);
 	}
 
 	public ParticleOptions getParticle() {

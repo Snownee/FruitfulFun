@@ -1,18 +1,25 @@
 package snownee.fruits.block.entity;
 
+import org.jspecify.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.CoreModule;
 import snownee.fruits.block.SlidingDoorBlock;
@@ -31,18 +38,6 @@ public class SlidingDoorEntity extends Entity {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-	}
-
-	@Override
-	protected void readAdditionalSaveData(CompoundTag compound) {
-	}
-
-	@Override
-	protected void addAdditionalSaveData(CompoundTag compound) {
-	}
-
-	@Override
 	public void tick() {
 		if (getBoundingBox().getYsize() < 2 || tickCount % 20 == 1) {
 			setPos(getX(), getY(), getZ());
@@ -53,22 +48,26 @@ public class SlidingDoorEntity extends Entity {
 	}
 
 	@Override
+	public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+		return false;
+	}
+
+	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
 		return Platform.defaultAddEntityPacket(this, serverEntity);
 	}
 
 	@Override
-	protected AABB makeBoundingBox() {
+	protected AABB makeBoundingBox(Vec3 position) {
 		BlockPos pos = blockPosition();
 		BlockState state = level().getBlockState(pos);
 		if (!(state.getBlock() instanceof SlidingDoorBlock)) {
 			return INITIAL_AABB;
 		}
 		VoxelShape shape = state.getShape(level(), pos).move(pos.getX(), pos.getY(), pos.getZ());
-		AABB aabb = new AABB(
+		return new AABB(
 				shape.min(Direction.Axis.X), shape.min(Direction.Axis.Y), shape.min(Direction.Axis.Z), shape.max(Direction.Axis.X),
 				shape.max(Direction.Axis.Y) + 1, shape.max(Direction.Axis.Z));
-		return aabb;
 	}
 
 	@Override
@@ -82,13 +81,8 @@ public class SlidingDoorEntity extends Entity {
 	}
 
 	@Override
-	public boolean canBeCollidedWith() {
+	public boolean canBeCollidedWith(@Nullable Entity other) {
 		return isAlive();
-	}
-
-	@Override
-	public boolean canChangeDimensions() {
-		return false;
 	}
 
 	@Override
@@ -96,8 +90,19 @@ public class SlidingDoorEntity extends Entity {
 		return !isRemoved();
 	}
 
+
 	@Override
-	public void kill() {
+	protected void defineSynchedData(SynchedEntityData.Builder entityData) {
+		//NOOP
+	}
+
+	@Override
+	protected void readAdditionalSaveData(ValueInput input) {
+		//NOOP
+	}
+
+	@Override
+	protected void addAdditionalSaveData(ValueOutput output) {
 		//NOOP
 	}
 

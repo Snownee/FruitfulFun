@@ -1,5 +1,6 @@
 package snownee.fruits.cherry;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
@@ -7,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
@@ -14,6 +16,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -136,10 +140,7 @@ public class CherryModule extends AbstractModule {
 	public static final KiwiGO<SimpleParticleType> PETAL_REDLOVE = go(() -> new SimpleParticleType(false));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final BlockObject<FruitLeavesBlock> CHERRY_LEAVES = block(
-			$ -> new CherryLeavesBlock(
-					FFFruitTypes.CHERRY.holderOrThrow(),
-					PETAL_CHERRY.getOrCreate(),
-					$.mapColor(MapColor.COLOR_PINK)),
+			$ -> new CherryLeavesBlock(FFFruitTypes.CHERRY.holderOrThrow(), PETAL_CHERRY.getOrCreate(), $.mapColor(MapColor.COLOR_PINK)),
 			() -> Blocks.CHERRY_LEAVES);
 	public static final BlockObject<FruitLeavesBlock> REDLOVE_LEAVES = block(
 			$ -> new CherryLeavesBlock(
@@ -172,16 +173,20 @@ public class CherryModule extends AbstractModule {
 			Foods.REDLOVE,
 			Consumable.builder()
 					.onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.REGENERATION, 50)))
+					.onConsume(SpeedUpBreedingCooldownConsumeEffect.INSTANCE)
 					.build())));
 	public static final KiwiGO<BannerPattern> HEART = go(() -> CoreModule.bannerPattern("heart"));
 	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, FruitfulFun.ID, "pattern_item/heart");
 	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
 	public static final ItemObject<Item> HEART_BANNER_PATTERN = CoreModule.bannerPatternItem(HEART_TAG);
-	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
-	public static final ItemObject<Item> CHERRY_CROWN = item($ -> new FlowerCrownItem(itemProp(), PETAL_CHERRY.getOrCreate()));
-	public static final ItemObject<Item> REDLOVE_CROWN = item($ -> new FlowerCrownItem(itemProp(), PETAL_REDLOVE.getOrCreate()));
 	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"item.armor.equip_crown")));
+	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
+	public static final ItemObject<FlowerCrownItem> CHERRY_CROWN = flowerCrown(PETAL_CHERRY);
+	public static final ItemObject<FlowerCrownItem> REDLOVE_CROWN = flowerCrown(PETAL_REDLOVE);
+	public static final KiwiGO<ConsumeEffect.Type<SpeedUpBreedingCooldownConsumeEffect>> SPEED_UP_BREEDING_COOLDOWN = go(() -> new ConsumeEffect.Type<>(
+			SpeedUpBreedingCooldownConsumeEffect.CODEC,
+			SpeedUpBreedingCooldownConsumeEffect.STREAM_CODEC));
 
 	@Override
 	protected void addEntries() {
@@ -199,6 +204,14 @@ public class CherryModule extends AbstractModule {
 			Platform.registerCompostable(0.3F, PEACH_PINK_PETALS.get());
 			Platform.setFireInfo(PEACH_PINK_PETALS.get(), 60, 100);
 		});
+	}
+
+	public static ItemObject<FlowerCrownItem> flowerCrown(KiwiGO<SimpleParticleType> particle) {
+		return item($ -> new FlowerCrownItem(
+				$.delayedComponent(
+						DataComponents.EQUIPPABLE,
+						_ -> Equippable.builder(EquipmentSlot.HEAD).setEquipSound(EQUIP_CROWN.holderOrThrow()).build()),
+				particle.getOrCreate()));
 	}
 
 	public static final class Foods {

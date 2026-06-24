@@ -19,13 +19,10 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.Categories;
 import snownee.kiwi.ItemObject;
-import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
-import snownee.lychee.LycheeRegistries;
 
 @KiwiModule(value = "pomegranate", dependencies = "fruit_types")
 public class PomegranateModule extends AbstractModule {
-	public static final KiwiGO<FFExplodeAction.Type> EXPLODE = go(FFExplodeAction.Type::new, () -> LycheeRegistries.POST_ACTION.key());
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final BlockObject<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = block(
 			$ -> new HangingFruitLeavesBlock(

@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -21,7 +22,14 @@ import snownee.fruits.duck.FFPlayer;
 @Mixin(BaseFireBlock.class)
 public class BaseFireBlockMixin {
 	@Inject(method = "entityInside", at = @At("HEAD"))
-	private void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
+	private void entityInside(
+			BlockState state,
+			Level level,
+			BlockPos pos,
+			Entity entity,
+			InsideBlockEffectApplier effectApplier,
+			boolean isPrecise,
+			CallbackInfo ci) {
 		Player hauntedBy;
 		if (Hooks.bee && !level.isClientSide() && state.is(Blocks.SOUL_FIRE) && entity instanceof FFLivingEntity living &&
 				(hauntedBy = living.fruits$getHauntedBy()) != null) {

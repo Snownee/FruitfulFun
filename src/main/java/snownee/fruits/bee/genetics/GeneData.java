@@ -150,7 +150,7 @@ public class GeneData {
 		for (Allele allele : Allele.REGISTRY.values()) {
 			Locus locus = new Locus(allele);
 			if (lociTag.contains(allele.name)) {
-				locus.setData(lociTag.getByte(allele.name));
+				locus.setData(lociTag.getByteOr(allele.name, (byte) 0));
 			}
 			loci.put(allele, locus);
 		}

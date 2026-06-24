@@ -1,10 +1,9 @@
 package snownee.fruits.bee;
 
-import java.util.List;
-
-import org.jspecify.annotations.Nullable;
+import java.util.function.Consumer;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,6 +14,8 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,10 +47,9 @@ public class InspectorItem extends ModItem {
 			if (!InspectorClientHandler.canUse()
 					&& hand == InteractionHand.MAIN_HAND
 					&& offhandItem.is(Items.WRITABLE_BOOK)
-					&& offhandItem.getTag() != null
-					&& offhandItem.getTag().contains("pages")) {
+					&& !offhandItem.getOrDefault(DataComponents.WRITABLE_BOOK_CONTENT, WritableBookContent.EMPTY).pages().isEmpty()) {
 				Items.WRITABLE_BOOK.use(level, player, InteractionHand.OFF_HAND);
-				return InteractionResultHolder.consume(player.getItemInHand(hand));
+				return InteractionResult.CONSUME;
 			}
 		}
 		return ItemUtils.startUsingInstantly(level, player, hand);
@@ -65,7 +65,7 @@ public class InspectorItem extends ModItem {
 					return InteractionResult.FAIL;
 				}
 				if (FFPlayer.of(player).fruits$getGeneNames().isEmpty()) {
-					player.displayClientMessage(Component.translatable("tip.fruitfulfun.noGeneNames"), true);
+					player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.noGeneNames"));
 					return InteractionResult.FAIL;
 				}
 				ClientProxy.openEditGeneNameScreen();
@@ -75,15 +75,20 @@ public class InspectorItem extends ModItem {
 		return InteractionResult.PASS;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		tooltip.add(Component.empty());
-		tooltip.add(Component.translatable("tip.fruitfulfun.whenUseOnBookshelf").withStyle(ChatFormatting.GRAY));
-		tooltip.add(Component.translatable("tip.fruitfulfun.renameGenes").withStyle(ChatFormatting.BLUE));
+	public void appendHoverText(
+			ItemStack itemStack,
+			TooltipContext context,
+			TooltipDisplay display,
+			Consumer<Component> builder,
+			TooltipFlag tooltipFlag) {
+		builder.accept(Component.empty());
+		builder.accept(Component.translatable("tip.fruitfulfun.whenUseOnBookshelf").withStyle(ChatFormatting.GRAY));
+		builder.accept(Component.translatable("tip.fruitfulfun.renameGenes").withStyle(ChatFormatting.BLUE));
 		if (Hooks.gadget) {
-			tooltip.add(Component.translatable("tip.fruitfulfun.whenUseOnBlock").withStyle(ChatFormatting.GRAY));
-			tooltip.add(Component.translatable("tip.fruitfulfun.viewScents").withStyle(ChatFormatting.BLUE));
+			builder.accept(Component.translatable("tip.fruitfulfun.whenUseOnBlock").withStyle(ChatFormatting.GRAY));
+			builder.accept(Component.translatable("tip.fruitfulfun.viewScents").withStyle(ChatFormatting.BLUE));
 		}
-		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 }

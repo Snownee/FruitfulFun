@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.rei;
 
 import java.util.List;
@@ -41,3 +42,4 @@ public class DragonRitualCategory extends ItemAndBlockBaseCategory<DragonRitualC
 	}
 
 }
+*/

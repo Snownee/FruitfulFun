@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.npc.WanderingTraderSpawner;
+import net.minecraft.world.entity.npc.wanderingtrader.WanderingTraderSpawner;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
@@ -19,8 +19,8 @@ public class WanderingTraderSpawnerMixin {
 			method = "spawn",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;blockPosition()Lnet/minecraft/core/BlockPos;"),
 			cancellable = true)
-	private void spawn(ServerLevel serverLevel, CallbackInfoReturnable<Boolean> cir, @Local Player player) {
-		if (Hooks.gadget && player.hasEffect(GadgetModule.WANDERING_TRADER_SCENT.get())) {
+	private void spawn(ServerLevel level, CallbackInfoReturnable<Boolean> cir, @Local(name = "player") Player player) {
+		if (Hooks.gadget && player.hasEffect(GadgetModule.WANDERING_TRADER_SCENT.holderOrThrow())) {
 			cir.setReturnValue(false);
 		}
 	}

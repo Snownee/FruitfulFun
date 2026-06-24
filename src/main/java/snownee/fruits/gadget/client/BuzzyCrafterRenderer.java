@@ -5,12 +5,12 @@ import java.util.Objects;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -21,12 +21,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import snownee.fruits.gadget.BuzzyCrafterBlockEntity;
 
-public final class BuzzyCrafterRenderer implements BlockEntityRenderer<BuzzyCrafterBlockEntity> {
-	private final ItemRenderer itemRenderer;
+public final class BuzzyCrafterRenderer implements BlockEntityRenderer<BuzzyCrafterBlockEntity, BuzzyCrafterRenderState> {
+	private final ItemModelResolver itemRenderer;
 	private final RandomSource random = RandomSource.create();
 
 	public BuzzyCrafterRenderer(BlockEntityRendererProvider.Context context) {
-		this.itemRenderer = Minecraft.getInstance().getItemRenderer();
+		this.itemRenderer = context.itemModelResolver();
 	}
 
 	@Override
@@ -122,5 +122,19 @@ public final class BuzzyCrafterRenderer implements BlockEntityRenderer<BuzzyCraf
 		}
 
 		return i;
+	}
+
+	@Override
+	public BuzzyCrafterRenderState createRenderState() {
+		return null;
+	}
+
+	@Override
+	public void submit(
+			BuzzyCrafterRenderState state,
+			PoseStack poseStack,
+			SubmitNodeCollector submitNodeCollector,
+			CameraRenderState camera) {
+
 	}
 }

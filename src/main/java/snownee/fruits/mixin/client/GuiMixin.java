@@ -12,7 +12,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.level.GameType;
 import snownee.fruits.Hooks;
@@ -26,25 +26,29 @@ public class GuiMixin {
 	private Minecraft minecraft;
 
 	@WrapOperation(
-			method = "render", at = @At(
+			method = "extractHotbarAndDecorations", at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;getPlayerMode()Lnet/minecraft/world/level/GameType;"))
-	private GameType getPlayerMode(MultiPlayerGameMode gameMode, Operation<GameType> original) {
+	private GameType extractHotbarAndDecorations(MultiPlayerGameMode gameMode, Operation<GameType> original) {
 		if (Hooks.bee && minecraft.player instanceof FFPlayer player && player.fruits$isHaunting()) {
 			return GameType.SPECTATOR;
 		}
 		return original.call(gameMode);
 	}
 
-	@Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
-	private void renderExperienceBar(GuiGraphics guiGraphics, int yShift, CallbackInfo ci) {
+	@WrapOperation(
+			method = "extractHotbarAndDecorations", at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasExperience()Z"))
+	private boolean extractExperienceLevel(MultiPlayerGameMode instance, Operation<Boolean> original) {
 		if (Hooks.bee && minecraft.player instanceof FFPlayer player && player.fruits$isHaunting()) {
-			ci.cancel();
+			return false;
 		}
+		return original.call(instance);
 	}
 
-	@Inject(method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true)
-	private void renderSelectedItemName(GuiGraphics guiGraphics, CallbackInfo ci) {
+	@Inject(method = "extractSelectedItemName", at = @At("HEAD"), cancellable = true)
+	private void extractSelectedItemName(GuiGraphicsExtractor graphics, CallbackInfo ci) {
 		if (Hooks.bee && minecraft.player instanceof FFPlayer player && player.fruits$isHaunting()) {
 			ci.cancel();
 		}

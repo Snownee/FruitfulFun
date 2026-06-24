@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Interaction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import snownee.fruits.Hooks;
 import snownee.fruits.ritual.RitualModule;
 
@@ -24,10 +25,10 @@ public class InteractionEntityMixin {
 	}
 
 	@Inject(method = "interact", at = @At("HEAD"), cancellable = true)
-	private void interact(Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
+	private void interact(Player player, InteractionHand hand, Vec3 location, CallbackInfoReturnable<InteractionResult> cir) {
 		Interaction self = (Interaction) (Object) this;
 		if (Hooks.food && RitualModule.isFFInteractionEntity(self)) {
-			RitualModule.rightClickInteraction(self, player, interactionHand);
+			RitualModule.rightClickInteraction(self, player, hand);
 			cir.setReturnValue(InteractionResult.SUCCESS);
 		}
 	}

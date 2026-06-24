@@ -4,20 +4,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.item.Item;
@@ -64,29 +66,33 @@ public class GadgetModule extends AbstractModule {
 	public static final TagKey<Block> VCD_PERFORM_USING = blockTag(FruitfulFun.ID, "vcd_perform_using");
 	public static final TagKey<Block> VCD_PERFORM_BREAKING = blockTag(FruitfulFun.ID, "vcd_perform_breaking");
 	public static final TagKey<EntityType<?>> VCD_MOVABLE = entityTag(FruitfulFun.ID, "vcd_movable");
-	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = entity($ -> KiwiEntityTypeBuilder.<VacItemProjectile>create()
-			.dimensions(EntityDimensions.scalable(0.25f, 0.25f))
-			.trackRangeChunks(4)
-			.trackedUpdateRate(10)
-			.entityFactory(VacItemProjectile::new)
-			.build());
-	public static final KiwiGO<ParticleType<AirVortexParticleOption>> AIR_VORTEX = go(() -> new ParticleType<>(
-			true,
-			AirVortexParticleOption.DESERIALIZER) {
+	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = entity($ -> EntityType.Builder.of(
+					VacItemProjectile::new,
+					MobCategory.MISC)
+			.sized(0.25f, 0.25f)
+			.clientTrackingRange(4)
+			.updateInterval(10)
+			.build($));
+	public static final KiwiGO<ParticleType<AirVortexParticleOption>> AIR_VORTEX = go(() -> new ParticleType<>(true) {
 		@Override
-		public Codec<AirVortexParticleOption> codec() {
+		public MapCodec<AirVortexParticleOption> codec() {
 			return AirVortexParticleOption.CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, AirVortexParticleOption> streamCodec() {
+			return AirVortexParticleOption.STREAM_CODEC;
 		}
 	});
 
 	@KiwiModule.Category(value = Categories.COMBAT, after = "shield")
 	public static final KiwiGO<BuzzyShieldItem> BUZZY_SHIELD = go(() -> new BuzzyShieldItem(itemProp().stacksTo(1)));
-	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = entity($ -> KiwiEntityTypeBuilder.<SummonedBee>createMob()
-			.dimensions(EntityDimensions.scalable(0.525f, 0.45f))
-			.trackRangeChunks(8)
-			.defaultAttributes(SummonedBee::createAttributes)
-			.entityFactory(SummonedBee::new)
-			.build());
+	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = entity($ -> EntityType.Builder.of(
+					SummonedBee::new,
+					MobCategory.CREATURE)
+			.sized(0.525f, 0.45f)
+			.clientTrackingRange(8)
+			.build($));
 
 	public static final KiwiGO<MobEffect> PHANTOM_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xAAAAFF));
 	public static final KiwiGO<MobEffect> WANDERING_TRADER_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xFFAA00));
@@ -134,12 +140,13 @@ public class GadgetModule extends AbstractModule {
 	//	public static final KiwiGO<ScentedCandleBlock> HEAVY_CANDLE = go(() -> new ScentedCandleBlock(
 //			blockProp(Blocks.CANDLE),
 //			HEAVY.getOrCreate()));
-	public static final KiwiGO<LootItemFunctionType> SET_BUZZY_POWER = go(() -> new LootItemFunctionType(new SetBuzzyPowerFunction.Serializer()));
+	public static final KiwiGO<MapCodec<? extends SetBuzzyPowerFunction>> SET_BUZZY_POWER = go(
+			() -> SetBuzzyPowerFunction.CODEC,
+			Registries.LOOT_FUNCTION_TYPE);
 
 	@KiwiModule.Name("scented_candle")
 	public static final KiwiGO<BlockEntityType<ScentedCandleBlockEntity>> SCENTED_CANDLE_ENTITY = blockEntity(
 			ScentedCandleBlockEntity::new,
-			null,
 			ScentedCandleBlock.class);
 
 	public GadgetModule() {
@@ -147,7 +154,7 @@ public class GadgetModule extends AbstractModule {
 	}
 
 	@Override
-	protected void preInit() {
+	protected void addEntries() {
 		CommonProxy.initGadgetModule();
 		Hooks.scentEffects.addAll(KiwiModules.get(Objects.requireNonNull(uid)).getRegistries(Registries.MOB_EFFECT));
 	}

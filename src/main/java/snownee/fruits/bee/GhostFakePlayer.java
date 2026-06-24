@@ -8,11 +8,13 @@ import com.mojang.authlib.GameProfile;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import snownee.fruits.util.FFFakePlayer;
 
 public class GhostFakePlayer extends FFFakePlayer implements OwnableEntity {
-	private UUID ownerUUID;
+	private @Nullable EntityReference<LivingEntity> owner;
 
 	protected GhostFakePlayer(ServerLevel world, GameProfile profile) {
 		super(world, profile);
@@ -20,17 +22,16 @@ public class GhostFakePlayer extends FFFakePlayer implements OwnableEntity {
 
 	public static GhostFakePlayer getOrCreate(ServerPlayer player) {
 		String name = "FruitfulFunGhost " + player.getGameProfile().name();
-		GhostFakePlayer fakePlayer = new GhostFakePlayer(player.serverLevel(), new GameProfile(null, name));
-		fakePlayer.ownerUUID = player.getUUID();
+		GhostFakePlayer fakePlayer = new GhostFakePlayer(player.level(), new GameProfile(UUID.randomUUID(), name));
+		fakePlayer.owner = EntityReference.of(player);
 		fakePlayer.setPos(player.position());
 		fakePlayer.setRot(player.getYRot(), player.getXRot());
 		player.level().addFreshEntity(fakePlayer);
 		return fakePlayer;
 	}
 
-	@Nullable
 	@Override
-	public UUID getOwnerUUID() {
-		return ownerUUID;
+	public @Nullable EntityReference<LivingEntity> getOwnerReference() {
+		return owner;
 	}
 }

@@ -8,11 +8,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.BeeRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.bee.Bee;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
 
@@ -22,15 +23,16 @@ public class LivingEntityRendererMixin {
 			method = "getRenderType",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/RenderType;"))
+					target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/renderer/rendertype/RenderType;"))
 	private RenderType getRenderType(
 			EntityModel instance,
-			Identifier Identifier,
+			Identifier texture,
 			Operation<RenderType> original,
-			@Local(argsOnly = true) LivingEntity entity) {
-		if (entity instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
-			return RenderType.entityTranslucent(Identifier);
+			@Local(argsOnly = true) LivingEntityRenderState state) {
+		//FIXME
+		if (state instanceof BeeRenderState bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+			return RenderTypes.entityTranslucentCullItemTarget(texture);
 		}
-		return original.call(instance, Identifier);
+		return original.call(instance, texture);
 	}
 }

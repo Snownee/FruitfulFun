@@ -8,19 +8,18 @@ import org.jspecify.annotations.Nullable;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Unit;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.attribute.AttributeTypes;
 import net.minecraft.world.attribute.EnvironmentAttribute;
@@ -37,6 +36,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
@@ -51,6 +51,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.BeeHasTrait;
 import snownee.fruits.bee.genetics.GeneData;
+import snownee.fruits.bee.genetics.Mutagen;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.genetics.TransformBees;
@@ -101,6 +102,12 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
 	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
+	@Name("mutagen")
+	public static final KiwiGO<DataComponentType<Mutagen>> MUTAGEN_CONTENT = go(() -> DataComponentType.<Mutagen>builder()
+			.persistent(Mutagen.CODEC)
+			.networkSynchronized(Mutagen.STREAM_CODEC)
+			.build());
+	public static final KiwiGO<DataComponentType<Unit>> MERCHANT_OFFER = go(() -> DataComponentType.<Unit>builder().build());
 	public static final KiwiGO<SimpleParticleType> GHOST = go(() -> new SimpleParticleType(false));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
@@ -172,20 +179,13 @@ public class BeeModule extends AbstractModule {
 		} else {
 			return;
 		}
-		ItemStack input = Items.BEEHIVE.getDefaultInstance();
-		input.setHoverName(Component.translatable("tip.fruitfulfun.beehiveTradeInputName"));
-		input.getOrCreateTag().putBoolean("FFTrade", true);
-		ListTag lore = new ListTag();
-		lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.translatable("tip.fruitfulfun.beehiveTradeInputHint"))));
-		input.getOrCreateTag().getCompound(ItemStack.TAG_DISPLAY).put(ItemStack.TAG_LORE, lore);
 		ItemStack output = Items.EMERALD.getDefaultInstance();
-		output.getOrCreateTag().putBoolean("FFTrade", true);
-		merchantOffers.add(new MerchantOffer(input, output, 1000, 2, 0));
+		output.set(MERCHANT_OFFER.get(), Unit.INSTANCE);
+		merchantOffers.add(new MerchantOffer(new ItemCost(Items.BEEHIVE), output, 1000, 2, 0));
 	}
 
-	public static boolean isBeehiveTrade(MerchantOffer merchantOffer) {
-		ItemStack cost = merchantOffer.getBaseCostA();
-		return cost.is(Items.BEEHIVE) && cost.getTag() != null && cost.getTag().getBoolean("FFTrade");
+	public static boolean isBeehiveTrade(MerchantOffer offer) {
+		return offer.getResult().has(MERCHANT_OFFER.get());
 	}
 
 	public static boolean isHauntingNormalEntity(@Nullable Player player, @Nullable Entity target) {
@@ -216,7 +216,7 @@ public class BeeModule extends AbstractModule {
 	}
 
 	@Override
-	protected void preInit() {
+	protected void addEntries() {
 		CommonProxy.initBeeModule();
 	}
 
@@ -275,15 +275,15 @@ public class BeeModule extends AbstractModule {
 			return;
 		}
 		Player hauntedBy = ((FFLivingEntity) entity).fruits$getHauntedBy();
-		if (hauntedBy == null || !hauntedBy.canChangeDimensions()) {
-			return;
-		}
-		if (hauntedBy.portalEntrancePos == null || destination.dimension() == Level.NETHER) {
-			hauntedBy.portalEntrancePos = entity.portalEntrancePos;
-		}
-		Entity newSpectator = hauntedBy.changeDimension(destination);
-		if (newSpectator instanceof FFPlayer ffPlayer) {
-			ffPlayer.fruits$setHauntingTarget(newEntity);
-		}
+//		if (hauntedBy == null || !hauntedBy.canChangeDimensions()) {
+//			return;
+//		}
+//		if (hauntedBy.portalEntrancePos == null || destination.dimension() == Level.NETHER) {
+//			hauntedBy.portalEntrancePos = entity.portalEntrancePos;
+//		}
+//		Entity newSpectator = hauntedBy.changeDimension(destination);
+//		if (newSpectator instanceof FFPlayer ffPlayer) {
+//			ffPlayer.fruits$setHauntingTarget(newEntity);
+//		}
 	}
 }

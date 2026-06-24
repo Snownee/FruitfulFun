@@ -3,20 +3,20 @@ package snownee.fruits.client.particle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 
-public class FoodSmokeParticle extends TextureSheetParticle {
-	FoodSmokeParticle(ClientLevel clientLevel, double d, double e, double f, double g, double h, double i) {
-		super(clientLevel, d, e, f);
+public class FoodSmokeParticle extends SingleQuadParticle {
+	FoodSmokeParticle(ClientLevel level, double x, double y, double z, double xa, double ya, double za, TextureAtlasSprite sprite) {
+		super(level, x, y, z, sprite);
 		this.setSize(0.25f, 0.25f);
 		this.lifetime = this.random.nextInt(50) + 50;
 		this.gravity = 3.0E-6f;
-		this.xd = g;
-		this.yd = h + (double) (this.random.nextFloat() / 1000.0f);
-		this.zd = i;
+		this.xd = xa;
+		this.yd = ya + (double) (this.random.nextFloat() / 1000.0f);
+		this.zd = za;
 	}
 
 	@Override
@@ -38,12 +38,12 @@ public class FoodSmokeParticle extends TextureSheetParticle {
 	}
 
 	@Override
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	protected Layer getLayer() {
+		return Layer.TRANSLUCENT;
 	}
 
 	public static class Factory implements ParticleProvider<SimpleParticleType> {
-		private final SpriteSet sprites;
+		private SpriteSet sprites;
 
 		public Factory(SpriteSet spriteSet) {
 			this.sprites = spriteSet;

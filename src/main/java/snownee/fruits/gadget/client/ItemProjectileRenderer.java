@@ -6,10 +6,10 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.state.ItemEntityRenderState;
+import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -18,15 +18,20 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.gadget.VacItemProjectile;
 
-public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile> {
-	private final ItemRenderer itemRenderer;
+public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile, ItemEntityRenderState> {
+	private final ItemModelResolver itemModelResolver;
 	private final RandomSource random = RandomSource.create();
 
 	public ItemProjectileRenderer(EntityRendererProvider.Context context) {
 		super(context);
-		this.itemRenderer = context.getItemRenderer();
+		this.itemModelResolver = context.getItemModelResolver();
 		this.shadowRadius = 0.15f;
 		this.shadowStrength = 0.75f;
+	}
+
+	@Override
+	public ItemEntityRenderState createRenderState() {
+		return null;
 	}
 
 	private int getRenderAmount(ItemStack itemStack) {
@@ -51,7 +56,7 @@ public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile> {
 		ItemStack itemStack = itemEntity.getItem();
 		int j = itemStack.isEmpty() ? 187 : Item.getId(itemStack.getItem()) + itemStack.getDamageValue();
 		this.random.setSeed(j);
-		BakedModel bakedModel = this.itemRenderer.getModel(itemStack, itemEntity.level(), null, itemEntity.getId());
+		BakedModel bakedModel = this.itemModelResolver.getModel(itemStack, itemEntity.level(), null, itemEntity.getId());
 		boolean bl = bakedModel.isGui3d();
 		int k = this.getRenderAmount(itemStack);
 		float l = Mth.sin(((float) itemEntity.getAge() + g) / 10.0f) * 0.1f + 0.1f;
@@ -82,7 +87,7 @@ public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile> {
 					poseStack.translate(s, t, 0.0f);
 				}
 			}
-			this.itemRenderer.render(
+			this.itemModelResolver.render(
 					itemStack, ItemDisplayContext.GROUND, false, poseStack, multiBufferSource, i, OverlayTexture.NO_OVERLAY, bakedModel);
 			poseStack.popPose();
 			if (bl) {

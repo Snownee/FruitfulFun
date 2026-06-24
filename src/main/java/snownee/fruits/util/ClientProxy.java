@@ -27,19 +27,18 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -58,6 +57,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.EditGeneNameScreen;
+import snownee.fruits.bee.genetics.MutagenTintSource;
 import snownee.fruits.bee.genetics.TransformBeesRenderer;
 import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.FoodSmokeParticle;
@@ -72,12 +72,14 @@ import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileRenderer;
 import snownee.kiwi.BlockObject;
+import snownee.kiwi.loader.ClientPlatform;
 import snownee.kiwi.util.client.ColorProviderUtil;
 import snownee.lychee.util.action.ActionRenderer;
 
 public class ClientProxy implements ClientModInitializer {
 	private static final ExtraModelKey<BlockStateModel> CHERRY_CROWN_MODEL = ExtraModelKey.create();
 	private static final ExtraModelKey<BlockStateModel> REDLOVE_CROWN_MODEL = ExtraModelKey.create();
+	public static final RenderStateDataKey<ItemStack> SADDLE = RenderStateDataKey.create(() -> "saddle");
 
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -153,7 +155,7 @@ public class ClientProxy implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		EntityRendererRegistry.register(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
+		ClientPlatform.registerEntityRenderer(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
 
 		BlockTintSource oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES, 0);
 		List<BlockObject<?>> citrusLeaves = List.of(
@@ -190,19 +192,6 @@ public class ClientProxy implements ClientModInitializer {
 			BlockColorRegistry.register(List.of(oakBlockColor, BlockTintSources.constant(fruitColor)), block);
 		}
 
-		ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
-		ItemColor oakItemColor = ColorProviderUtil.delegate(Items.OAK_LEAVES);
-		ColorProviderRegistry.ITEM.register(
-				(stack, i) -> oakItemColor.getColor(oakLeaves, i),
-				TANGERINE_LEAVES.get(),
-				LIME_LEAVES.get(),
-				CITRON_LEAVES.get(),
-				POMELO_LEAVES.get(),
-				ORANGE_LEAVES.get(),
-				LEMON_LEAVES.get(),
-				GRAPEFRUIT_LEAVES.get(),
-				APPLE_LEAVES.get());
-
 		ParticleProviderRegistry.getInstance().register(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
 		ParticleProviderRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
 
@@ -226,14 +215,7 @@ public class ClientProxy implements ClientModInitializer {
 		});
 
 		if (Hooks.bee) {
-			ColorProviderRegistry.ITEM.register(
-					(stack, i) -> {
-						if (i == 0) {
-							CompoundTag tag = stack.getTag();
-							return tag != null && tag.contains("Color") ? tag.getInt("Color") : 0xF3DCEB;
-						}
-						return -1;
-					}, BeeModule.MUTAGEN.getOrCreate());
+			ItemTintSources.ID_MAPPER.put(FruitfulFun.id("mutagen"), MutagenTintSource.CODEC);
 
 			ClientTickEvents.START_CLIENT_TICK.register(client -> {
 				if (client.player != null && client.player.isSpectator()) {
@@ -270,11 +252,10 @@ public class ClientProxy implements ClientModInitializer {
 		}
 
 		if (Hooks.gadget) {
-			EntityRendererRegistry.register(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
+			ClientPlatform.registerEntityRenderer(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
 			ParticleProviderRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
-
-			EntityRendererRegistry.register(GadgetModule.SUMMONED_BEE.getOrCreate(), BeeRenderer::new);
-			BlockEntityRenderers.register(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
+			ClientPlatform.registerEntityRenderer(GadgetModule.SUMMONED_BEE.getOrCreate(), BeeRenderer::new);
+			ClientPlatform.registerBlockEntityRenderer(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
 
 			Identifier blocking = new Identifier("blocking");
 			if (ItemProperties.getProperty(Items.SHIELD, blocking) instanceof ClampedItemPropertyFunction function) {

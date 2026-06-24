@@ -13,8 +13,8 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import snownee.kiwi.util.Color;
 import snownee.kiwi.util.MathUtil;
-import snownee.lychee.util.Color;
 
 public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 	public static final String NBT_KEY = "buzzy_power";

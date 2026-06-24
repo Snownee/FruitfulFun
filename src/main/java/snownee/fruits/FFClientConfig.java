@@ -19,6 +19,4 @@ public final class FFClientConfig {
 	public static boolean foodStatusEffectTooltip = true;
 	@KiwiConfig.Path("food.specialEffectTooltip")
 	public static boolean foodSpecialEffectTooltip = true;
-
-	public static boolean renderServerSideHitbox;
 }

@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.rei;
 
 import java.util.List;
@@ -30,3 +31,4 @@ public class HybridizingDisplay extends BaseREIDisplay<HybridizingRecipe> {
 		return entries;
 	}
 }
+*/

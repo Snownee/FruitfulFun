@@ -1,7 +1,7 @@
 package snownee.fruits.gadget;
 
-import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.jspecify.annotations.Nullable;
 
@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -159,12 +160,24 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 		return BuzzyPowerStorage.getBarWidth(stack);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
-		tooltip.add(Component.empty());
-		tooltip.add(Component.translatable("tip.fruitfulfun.whenInHand").withStyle(ChatFormatting.GRAY));
-		tooltip.add(Component.translatable("tip.fruitfulfun.halveAttackCd").withStyle(ChatFormatting.BLUE));
-		tooltip.add(Component.translatable("tip.fruitfulfun.whenPerfectBlock").withStyle(ChatFormatting.GRAY));
-		tooltip.add(Component.translatable("tip.fruitfulfun.summonBees").withStyle(ChatFormatting.BLUE));
+	public void appendHoverText(
+			ItemStack itemStack,
+			TooltipContext context,
+			TooltipDisplay display,
+			Consumer<Component> builder,
+			TooltipFlag tooltipFlag) {
+		builder.accept(Component.empty());
+		builder.accept(Component.translatable("tip.fruitfulfun.whenInHand").withStyle(ChatFormatting.GRAY));
+		builder.accept(Component.translatable("tip.fruitfulfun.halveAttackCd").withStyle(ChatFormatting.BLUE));
+		builder.accept(Component.translatable("tip.fruitfulfun.whenPerfectBlock").withStyle(ChatFormatting.GRAY));
+		builder.accept(Component.translatable("tip.fruitfulfun.summonBees").withStyle(ChatFormatting.BLUE));
 	}
+
+	//TODO
+//	@Override
+//	public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
+//		return super.canBeEnchantedWith(stack, enchantment, context);
+//	}
 }

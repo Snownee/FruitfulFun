@@ -1,5 +1,6 @@
 package snownee.fruits.mixin.bee;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.bee.Bee;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.util.CommonProxy;
@@ -23,17 +24,17 @@ public class TemptGoalMixin {
 	@Unique
 	private boolean isBee;
 
-	@Inject(method = "<init>", at = @At("RETURN"))
-	private void init(PathfinderMob pathfinderMob, double d, Ingredient ingredient, boolean bl, CallbackInfo ci) {
-		isBee = Hooks.bee && pathfinderMob instanceof Bee;
+	@Inject(method = "<init>(Lnet/minecraft/world/entity/Mob;DLjava/util/function/Predicate;ZD)V", at = @At("RETURN"))
+	private void init(Mob mob, double speedModifier, Predicate<ItemStack> items, boolean canScare, double stopDistance, CallbackInfo ci) {
+		isBee = Hooks.bee && mob instanceof Bee;
 	}
 
 	@Inject(method = "shouldFollow", at = @At("HEAD"), cancellable = true)
-	private void shouldFollow(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
+	private void shouldFollow(LivingEntity player, CallbackInfoReturnable<Boolean> cir) {
 		if (!isBee) {
 			return;
 		}
-		if (CommonProxy.getFlowerCrown(entity) != null || Stream.of(entity.getMainHandItem(), entity.getOffhandItem())
+		if (CommonProxy.getFlowerCrown(player) != null || Stream.of(player.getMainHandItem(), player.getOffhandItem())
 				.anyMatch(i -> i.getItem() instanceof FlowerCrownItem)) {
 			cir.setReturnValue(true);
 		}

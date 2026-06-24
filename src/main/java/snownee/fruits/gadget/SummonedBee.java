@@ -42,11 +42,9 @@ public class SummonedBee extends Bee implements TraceableEntity {
 			MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes()
-				.add(Attributes.MAX_HEALTH, 5f)
-				.add(Attributes.FLYING_SPEED, 0.6f)
-				.add(Attributes.MOVEMENT_SPEED, 1f)
-				.add(Attributes.ATTACK_DAMAGE, 2f);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 5f).add(Attributes.FLYING_SPEED, 0.6f).add(
+				Attributes.MOVEMENT_SPEED,
+				1f).add(Attributes.ATTACK_DAMAGE, 2f);
 	}
 
 	@Nullable
@@ -87,7 +85,7 @@ public class SummonedBee extends Bee implements TraceableEntity {
 		};
 		navigation.setCanOpenDoors(false);
 		navigation.setCanFloat(true);
-		navigation.setCanPassDoors(true);
+		navigation.setRequiredPathLength(48.0F);
 		return navigation;
 	}
 

@@ -17,13 +17,13 @@ public class EndermanTakeBlockGoalMixin {
 	@Inject(method = "canPlaceBlock", at = @At("HEAD"), cancellable = true)
 	private void canUse(
 			Level level,
-			BlockPos destinationPos,
-			BlockState carriedState,
-			BlockState destinationState,
-			BlockState belowDestinationState,
-			BlockPos belowDestinationPos,
+			BlockPos pos,
+			BlockState carried,
+			BlockState targetState,
+			BlockState belowState,
+			BlockPos below,
 			CallbackInfoReturnable<Boolean> cir) {
-		if (Hooks.gadget && GadgetModule.ENDER.get().isActiveAt(level.getChunkAt(destinationPos))) {
+		if (Hooks.gadget && GadgetModule.ENDER.get().isActiveAt(level.getChunkAt(pos))) {
 			cir.setReturnValue(false);
 		}
 	}

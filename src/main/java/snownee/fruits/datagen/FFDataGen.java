@@ -2,7 +2,6 @@ package snownee.fruits.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.registries.Registries;
 import snownee.fruits.FruitfulFun;
@@ -17,7 +16,7 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-		pack.addProvider((FabricPackOutput $) -> new CoreBlockLoot($));
+		pack.addProvider(CoreBlockLoot::new);
 		pack.addProvider(FFAdvancements::new);
 		FabricTagsProvider.BlockTagsProvider ffBlockTagsProvider = pack.addProvider(FFBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new FFItemTagsProvider(output, registriesFuture, ffBlockTagsProvider));
@@ -39,8 +38,6 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("gadget"));
 		pack.addProvider(GadgetBlockLoot::new);
 		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("farmersdelight"));
-		pack.addProvider(FarmersDelightBlockLoot::new);
-		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("farmersdelight_nhoryzon"));
 		pack.addProvider(FarmersDelightBlockLoot::new);
 	}
 }

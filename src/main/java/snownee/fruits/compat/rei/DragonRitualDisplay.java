@@ -1,3 +1,4 @@
+/*
 package snownee.fruits.compat.rei;
 
 import java.util.List;
@@ -21,3 +22,4 @@ public class DragonRitualDisplay extends BaseREIDisplay<DragonRitualRecipe> {
 		return entries;
 	}
 }
+*/

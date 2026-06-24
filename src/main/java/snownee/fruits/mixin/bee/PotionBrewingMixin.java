@@ -6,10 +6,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeModule;
@@ -20,15 +21,15 @@ import snownee.fruits.bee.genetics.MutagenItem;
 public class PotionBrewingMixin {
 
 	@Inject(method = "mix", at = @At("HEAD"), cancellable = true)
-	private static void mix(ItemStack ingredient, ItemStack container, CallbackInfoReturnable<ItemStack> ci) {
-		if (matchesMutagenRecipe(ingredient, container)) {
+	private static void mix(ItemStack ingredient, ItemStack source, CallbackInfoReturnable<ItemStack> ci) {
+		if (matchesMutagenRecipe(ingredient, source)) {
 			ci.setReturnValue(BeeModule.MUTAGEN.get().randomMutagen(true, null));
 		}
 	}
 
 	@Inject(method = "hasMix", at = @At("HEAD"), cancellable = true)
-	private static void hasMix(ItemStack container, ItemStack ingredient, CallbackInfoReturnable<Boolean> ci) {
-		if (matchesMutagenRecipe(ingredient, container)) {
+	private static void hasMix(ItemStack source, ItemStack ingredient, CallbackInfoReturnable<Boolean> ci) {
+		if (matchesMutagenRecipe(ingredient, source)) {
 			ci.setReturnValue(true);
 		}
 	}
@@ -48,6 +49,7 @@ public class PotionBrewingMixin {
 		if (!ingredient.is(MutagenItem.BREWING_ITEM)) {
 			return false;
 		}
-		return container.is(Items.POTION) && PotionUtils.getPotion(container) == Potions.WATER;
+		PotionContents potionContents = container.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+		return container.is(Items.POTION) && potionContents.is(Potions.WATER);
 	}
 }

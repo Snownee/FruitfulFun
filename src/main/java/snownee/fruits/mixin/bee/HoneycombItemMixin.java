@@ -26,20 +26,20 @@ public class HoneycombItemMixin {
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/item/HoneycombItem;getWaxed(Lnet/minecraft/world/level/block/state/BlockState;)Ljava/util/Optional;"))
 	private Optional<BlockState> useOn(
-			BlockState blockState,
+			BlockState oldState,
 			Operation<Optional<BlockState>> original,
 			@Local(argsOnly = true) UseOnContext context) {
-		if (!Hooks.bee || !blockState.is(BlockTags.BEEHIVES)) {
-			return original.call(blockState);
+		if (!Hooks.bee || !oldState.is(BlockTags.BEEHIVES)) {
+			return original.call(oldState);
 		}
 		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		if (!(level.getBlockEntity(pos) instanceof FFBeehiveBlockEntity be) || be.fruits$isWaxed()) {
-			return original.call(blockState);
+			return original.call(oldState);
 		}
 		if (!level.isClientSide()) {
 			be.fruits$setWaxed(true);
 		}
-		return Optional.of(blockState);
+		return Optional.of(oldState);
 	}
 }

@@ -1,26 +1,22 @@
 package snownee.fruits.client.particle;
 
-import java.util.Iterator;
-
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockCollisions;
 import net.minecraft.world.level.Level;
@@ -28,9 +24,9 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
-public class PetalParticle extends TextureSheetParticle {
+public class PetalParticle extends SingleQuadParticle {
 
 	private final float rollStepX;
 	private final float rollStepZ;
@@ -40,8 +36,8 @@ public class PetalParticle extends TextureSheetParticle {
 	private final float particleRandom;
 	private int sinceNotInWater;
 
-	private PetalParticle(ClientLevel world, double posX, double posY, double posZ) {
-		super(world, posX, posY, posZ);
+	private PetalParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
+		super(level, x, y, z, sprite);
 		lifetime = 300;
 		particleRandom = this.random.nextFloat();
 		age = random.nextInt(20);
@@ -77,17 +73,17 @@ public class PetalParticle extends TextureSheetParticle {
 	}
 
 	@Override
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-	}
-
-	@Override
 	public float getQuadSize(float pTicks) {
 		if (lifetime - age < 10) {
 			float f = Mth.sin((float) ((lifetime - age - pTicks) / 20 * Math.PI));
 			return Mth.clamp(f, 0, 1);
 		}
 		return 1;
+	}
+
+	@Override
+	protected Layer getLayer() {
+		return Layer.TRANSLUCENT;
 	}
 
 	@Override
@@ -238,65 +234,65 @@ public class PetalParticle extends TextureSheetParticle {
 	}
 
 	// Modified from Entity#collideBoundingBox. Optimize and ignore the collision of leaves
-	public static Vec3 collideBoundingBox(Vec3 vec3, AABB aABB, Level level) {
-		Iterator<VoxelShape> iterator = new BlockCollisions<>(
-				level, null, aABB.expandTowards(vec3), true, (mutableBlockPos, voxelShape) -> voxelShape);
-		return Entity.collideWithShapes(vec3, aABB, ImmutableList.copyOf(iterator));
+	public static Vec3 collideBoundingBox(Vec3 movement, AABB boundingBox, Level level) {
+		var colliders = new BlockCollisions<>(
+				level, CollisionContext.empty(), boundingBox.expandTowards(movement), true, (_, voxelShape) -> voxelShape);
+		return Entity.collideWithShapes(movement, boundingBox, ImmutableList.copyOf(colliders));
 	}
 
-	@Override
-	public void render(VertexConsumer buffer, Camera camera, float partialTicks) {
-		Vec3 vec3d = camera.getPosition();
-		float f = (float) (Mth.lerp(partialTicks, xo, x) - vec3d.x());
-		float f1 = (float) (Mth.lerp(partialTicks, yo, y) - vec3d.y());
-		float f2 = (float) (Mth.lerp(partialTicks, zo, z) - vec3d.z());
-		Vector3f sub = new Vector3f(f, f1, f2);
-		Quaternionf quaternion;
-
-		float rollZ = Mth.lerp(partialTicks, oRoll, roll);
-		if (onGround || inWater || sinceNotInWater > 0 && sinceNotInWater < 5) {
-			quaternion = Axis.XP.rotationDegrees(90);
-			f1 += 0.005f + rollZ % 0.01f;
-		} else {
-			quaternion = new Quaternionf();
-			float rollX = Mth.lerp(partialTicks, oRollX, this.rollX);
-			quaternion.rotateX(rollX);
-			quaternion.rotateY(rollX * 0.2F);
-		}
-		quaternion.rotateZ(rollZ);
-		var quadNormal = new Vector3f(0.0F, 0.0F, 1.0F);
-		quadNormal.rotate(quaternion);
-		Vector3f[] vertex = new Vector3f[]{
-				new Vector3f(-1.0F, -1.0F, 0.0F),
-				new Vector3f(-1.0F, 1.0F, 0.0F),
-				new Vector3f(1.0F, 1.0F, 0.0F),
-				new Vector3f(1.0F, -1.0F, 0.0F)};
-		float[] uv = new float[]{getU0(), getV0(), getU1(), getV1()};
-		if (sub.dot(quadNormal) < 0) {
-			for (int i = 0; i < 4; ++i) {
-				vertex[i].mul(-1, 1, 1);
-			}
-			uv[0] = getU1();
-			uv[2] = getU0();
-		}
-
-		float f4 = getQuadSize(partialTicks);
-		float alpha = f4 * this.alpha;
-		f4 *= quadSize * 0.15f;
-
-		for (int i = 0; i < 4; ++i) {
-			Vector3f vector3f = vertex[i];
-			vector3f.rotate(quaternion);
-			vector3f.mul(f4);
-			vector3f.add(f, f1, f2);
-		}
-
-		int j = getLightColor(partialTicks);
-		buffer.vertex(vertex[0].x(), vertex[0].y(), vertex[0].z()).uv(uv[2], uv[3]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(vertex[1].x(), vertex[1].y(), vertex[1].z()).uv(uv[2], uv[1]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(vertex[2].x(), vertex[2].y(), vertex[2].z()).uv(uv[0], uv[1]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
-		buffer.vertex(vertex[3].x(), vertex[3].y(), vertex[3].z()).uv(uv[0], uv[3]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
-	}
+//	@Override
+//	public void render(VertexConsumer buffer, Camera camera, float partialTicks) {
+//		Vec3 vec3d = camera.position();
+//		float f = (float) (Mth.lerp(partialTicks, xo, x) - vec3d.x());
+//		float f1 = (float) (Mth.lerp(partialTicks, yo, y) - vec3d.y());
+//		float f2 = (float) (Mth.lerp(partialTicks, zo, z) - vec3d.z());
+//		Vector3f sub = new Vector3f(f, f1, f2);
+//		Quaternionf quaternion;
+//
+//		float rollZ = Mth.lerp(partialTicks, oRoll, roll);
+//		if (onGround || inWater || sinceNotInWater > 0 && sinceNotInWater < 5) {
+//			quaternion = Axis.XP.rotationDegrees(90);
+//			f1 += 0.005f + rollZ % 0.01f;
+//		} else {
+//			quaternion = new Quaternionf();
+//			float rollX = Mth.lerp(partialTicks, oRollX, this.rollX);
+//			quaternion.rotateX(rollX);
+//			quaternion.rotateY(rollX * 0.2F);
+//		}
+//		quaternion.rotateZ(rollZ);
+//		var quadNormal = new Vector3f(0.0F, 0.0F, 1.0F);
+//		quadNormal.rotate(quaternion);
+//		Vector3f[] vertex = new Vector3f[]{
+//				new Vector3f(-1.0F, -1.0F, 0.0F),
+//				new Vector3f(-1.0F, 1.0F, 0.0F),
+//				new Vector3f(1.0F, 1.0F, 0.0F),
+//				new Vector3f(1.0F, -1.0F, 0.0F)};
+//		float[] uv = new float[]{getU0(), getV0(), getU1(), getV1()};
+//		if (sub.dot(quadNormal) < 0) {
+//			for (int i = 0; i < 4; ++i) {
+//				vertex[i].mul(-1, 1, 1);
+//			}
+//			uv[0] = getU1();
+//			uv[2] = getU0();
+//		}
+//
+//		float f4 = getQuadSize(partialTicks);
+//		float alpha = f4 * this.alpha;
+//		f4 *= quadSize * 0.15f;
+//
+//		for (int i = 0; i < 4; ++i) {
+//			Vector3f vector3f = vertex[i];
+//			vector3f.rotate(quaternion);
+//			vector3f.mul(f4);
+//			vector3f.add(f, f1, f2);
+//		}
+//
+//		int j = getLightColor(partialTicks);
+//		buffer.vertex(vertex[0].x(), vertex[0].y(), vertex[0].z()).uv(uv[2], uv[3]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+//		buffer.vertex(vertex[1].x(), vertex[1].y(), vertex[1].z()).uv(uv[2], uv[1]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+//		buffer.vertex(vertex[2].x(), vertex[2].y(), vertex[2].z()).uv(uv[0], uv[1]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+//		buffer.vertex(vertex[3].x(), vertex[3].y(), vertex[3].z()).uv(uv[0], uv[3]).color(rCol, gCol, bCol, alpha).uv2(j).endVertex();
+//	}
 
 	public static class Factory implements ParticleProvider<SimpleParticleType> {
 		private final SpriteSet spriteSet;
@@ -306,21 +302,21 @@ public class PetalParticle extends TextureSheetParticle {
 		}
 
 		@Override
-		public Particle createParticle(
-				SimpleParticleType typeIn,
-				ClientLevel worldIn,
+		public @Nullable Particle createParticle(
+				SimpleParticleType options,
+				ClientLevel level,
 				double x,
 				double y,
 				double z,
-				double xSpeed,
-				double ySpeed,
-				double zSpeed) {
-			PetalParticle particle = new PetalParticle(worldIn, x, y, z);
-			particle.pickSprite(spriteSet);
-			particle.xd += xSpeed;
-			particle.yd += ySpeed;
-			particle.zd += zSpeed;
-			if (Math.abs(xSpeed) > 0.5 || Math.abs(ySpeed) > 0.5 || Math.abs(zSpeed) > 0.5) {
+				double xAux,
+				double yAux,
+				double zAux,
+				RandomSource random) {
+			PetalParticle particle = new PetalParticle(level, x, y, z, spriteSet.get(random));
+			particle.xd += xAux;
+			particle.yd += yAux;
+			particle.zd += zAux;
+			if (Math.abs(xAux) > 0.5 || Math.abs(yAux) > 0.5 || Math.abs(zAux) > 0.5) {
 				particle.lifetime = 60;
 			}
 			return particle;

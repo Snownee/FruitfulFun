@@ -13,7 +13,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,19 +22,18 @@ import snownee.fruits.duck.FFBeehiveBlockEntity;
 public class AxeItemMixin {
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	@WrapOperation(
-			method = "useOn",
+			method = "evaluateNewBlockState",
 			at = @At(value = "INVOKE", target = "Ljava/util/Optional;map(Ljava/util/function/Function;)Ljava/util/Optional;"))
 	private Optional<BlockState> useOn(
 			Optional<Block> instance,
 			Function<? super Block, ? extends BlockState> mapper,
 			Operation<Optional<BlockState>> original,
-			@Local(argsOnly = true) UseOnContext context,
-			@Local BlockState blockState) {
-		if (!blockState.is(BlockTags.BEEHIVES)) {
+			@Local(argsOnly = true) Level level,
+			@Local(argsOnly = true) BlockPos pos,
+			@Local(argsOnly = true) BlockState oldState) {
+		if (!oldState.is(BlockTags.BEEHIVES)) {
 			return original.call(instance, mapper);
 		}
-		Level level = context.getLevel();
-		BlockPos pos = context.getClickedPos();
 		if (!(level.getBlockEntity(pos) instanceof FFBeehiveBlockEntity be)) {
 			return original.call(instance, mapper);
 		}
@@ -46,6 +44,6 @@ public class AxeItemMixin {
 			return original.call(instance, mapper);
 		}
 		be.fruits$setWaxed(false);
-		return Optional.of(blockState);
+		return Optional.of(oldState);
 	}
 }

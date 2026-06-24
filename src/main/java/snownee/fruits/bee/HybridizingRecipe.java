@@ -1,16 +1,15 @@
 package snownee.fruits.bee;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -27,15 +26,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.kiwi.util.KUtil;
+import snownee.lychee.util.action.PostAction;
 import snownee.lychee.util.context.LycheeContext;
 import snownee.lychee.util.context.LycheeContextKey;
 import snownee.lychee.util.json.JsonPointer;
-import snownee.lychee.util.recipe.BlockKeyableRecipe;
 import snownee.lychee.util.recipe.ILycheeRecipe;
 import snownee.lychee.util.recipe.LycheeRecipe;
 import snownee.lychee.util.recipe.LycheeRecipeCommonProperties;
 
-public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements BlockKeyableRecipe {
+public class HybridizingRecipe extends LycheeRecipe<LycheeContext> {
 	public static final MapCodec<HybridizingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			LycheeRecipeCommonProperties.SIMPLE_MAP_CODEC.forGetter(HybridizingRecipe::commonProperties),
 			Codec.STRING.sizeLimitedListOf(4).optionalFieldOf("pollens", List.of()).forGetter($ -> $.pollens),
@@ -97,21 +96,19 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 		return BeeModule.RECIPE_TYPE.get();
 	}
 
-	@Override
-	public int compareTo(HybridizingRecipe o) {
-		return Integer.compare(pollens.size(), o.pollens.size());
+	public List<String> pollens() {
+		return pollens;
 	}
 
-	@Override
-	public BlockPredicate blockPredicate() {
-		return BlockPredicate.ANY; // not applicable
-	}
-
-	public Collection<String> endingStep() {
+	public List<String> endingStep() {
 		if (endingStep.isEmpty()) {
 			return pollens;
 		}
 		return endingStep;
+	}
+
+	public boolean resetPollens() {
+		return resetPollens;
 	}
 
 	@Override
@@ -128,17 +125,23 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> implements Bl
 		for (String pollen : pollens) {
 			Block block = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(pollen));
 			if (block instanceof FruitLeavesBlock leavesBlock) {
-				acceptor.accept(new ItemStack(leavesBlock.type.get().sapling.get()));
+				acceptor.accept(new ItemStack(leavesBlock.type.value().sapling.get()));
 			}
 		}
 	}
 
 	public void addInvisibleOutputs(Consumer<ItemStack> acceptor) {
-		ILycheeRecipe.filterHidden(getAllActions()).flatMap($ -> $.getItemOutputs().stream()).map(ItemStack::getItem).distinct().map($ -> {
-			if (Block.byItem($) instanceof FruitLeavesBlock block) {
-				return new ItemStack(block.type.get().sapling.get());
-			}
-			return null;
-		}).filter(Objects::nonNull).forEach(acceptor);
+		allActions().filter(Predicate.not(PostAction::hidden))
+				.flatMap($ -> $.getOutputItems().stream())
+				.map(ItemStack::getItem)
+				.distinct()
+				.map($ -> {
+					if (Block.byItem($) instanceof FruitLeavesBlock block) {
+						return new ItemStack(block.type.value().sapling.get());
+					}
+					return null;
+				})
+				.filter(Objects::nonNull)
+				.forEach(acceptor);
 	}
 }

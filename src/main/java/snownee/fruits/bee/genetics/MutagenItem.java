@@ -1,13 +1,9 @@
 package snownee.fruits.bee.genetics;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,10 +27,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.duck.FFPlayer;
 import snownee.kiwi.item.ItemCategoryFiller;
 import snownee.kiwi.item.ModItem;
-import snownee.kiwi.loader.Platform;
 
 public class MutagenItem extends ModItem implements ItemCategoryFiller {
 	public static final Item BREWING_ITEM = Items.PITCHER_PLANT;
@@ -46,15 +40,14 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 
 	@Override
 	public Component getName(ItemStack stack) {
-		return getCodename(stack)
-				.map(MutagenItem::getClientName)
-				.map(s -> (Component) Component.translatable("item.fruitfulfun.mutagen.stable", s))
-				.orElseGet(() -> {
-					if (isImperfect(stack)) {
-						return Component.translatable("item.fruitfulfun.mutagen.imperfect");
-					}
-					return super.getName(stack);
-				});
+		Mutagen mutagen = stack.get(BeeModule.MUTAGEN_CONTENT.get());
+		if (mutagen == null) {
+			return super.getName(stack);
+		}
+		if (mutagen.isImperfect()) {
+			return Component.translatable("item.fruitfulfun.mutagen.imperfect");
+		}
+		return Component.translatable("item.fruitfulfun.mutagen.stable", mutagen.getClientName());
 	}
 
 	@Override
@@ -70,12 +63,12 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 		if (BeeAttributes.of(bee).getMutagenEndsIn() > player.level().getGameTime()) {
 			return InteractionResult.FAIL;
 		}
-		String code = getCodename(stack).orElse(null);
-		if (code == null) {
+		Mutagen mutagen = stack.get(BeeModule.MUTAGEN_CONTENT.get());
+		if (mutagen == null) {
 			return InteractionResult.FAIL;
 		}
 		if (player.level() instanceof ServerLevel level) {
-			Allele allele = Allele.byCode(code);
+			Allele allele = Allele.byCode(mutagen.type());
 			if (allele == null) {
 				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.invalidMutagen"));
 				return InteractionResult.FAIL;
@@ -94,19 +87,6 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 		return InteractionResult.SUCCESS_SERVER;
 	}
 
-	public static Optional<String> getCodename(ItemStack stack) {
-		return Optional.ofNullable(stack.getTag())
-				.filter(nbt -> nbt.contains("Type", Tag.TAG_STRING))
-				.map(nbt -> nbt.getString("Type"));
-	}
-
-	public static String getClientName(String codename) {
-		if (Platform.isPhysicalClient() && Minecraft.getInstance().player != null) {
-			return FFPlayer.of(Minecraft.getInstance().player).fruits$getGeneName(codename);
-		}
-		return codename;
-	}
-
 	public ItemStack randomMutagen(boolean containsImperfect, @Nullable RandomSource random) {
 		if (random == null) {
 			random = RANDOM;
@@ -114,27 +94,21 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 		if (containsImperfect && random.nextFloat() < FFCommonConfig.imperfectMutagenChance) {
 			return imperfectMutagen();
 		}
-		ItemStack stack = new ItemStack(this);
 		Allele allele = Util.getRandom(List.copyOf(Allele.values()), random);
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putString("Type", allele.codename);
-		tag.putInt("Color", allele.color);
+		ItemStack stack = new ItemStack(this);
+		stack.set(BeeModule.MUTAGEN_CONTENT.get(), new Mutagen(allele.codename, allele.color));
 		return stack;
 	}
 
 	public ItemStack imperfectMutagen() {
 		ItemStack stack = new ItemStack(this);
-		stack.getOrCreateTag().putBoolean("Imperfect", true);
+		stack.set(BeeModule.MUTAGEN_CONTENT.get(), Mutagen.IMPERFECT);
 		return stack;
-	}
-
-	public boolean isImperfect(ItemStack stack) {
-		return stack.getTag() != null && stack.getTag().getBoolean("Imperfect");
 	}
 
 	@Override
 	public void inventoryTick(ItemStack itemStack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot) {
-		if (owner instanceof ServerPlayer player && !isImperfect(itemStack) && getCodename(itemStack).isEmpty()) {
+		if (owner instanceof ServerPlayer player && !itemStack.has(BeeModule.MUTAGEN_CONTENT.get())) {
 			itemStack.shrink(1);
 			player.addItem(randomMutagen(false, player.getRandom()));
 		}

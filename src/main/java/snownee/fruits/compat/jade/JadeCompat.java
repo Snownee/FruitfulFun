@@ -38,7 +38,7 @@ public class JadeCompat implements IWailaPlugin {
 	public static final Identifier CRAFTER = FruitfulFun.id("crafter");
 
 	public static void ensureVisibility(boolean fromEntity) {
-		IWailaConfig.IConfigGeneral config = IWailaConfig.get().getGeneral();
+		IWailaConfig.General config = IWailaConfig.get().general();
 		config.setDisplayTooltip(true);
 		if (fromEntity) {
 			config.setDisplayEntities(true);

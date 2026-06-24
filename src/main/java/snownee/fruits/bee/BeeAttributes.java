@@ -129,9 +129,9 @@ public class BeeAttributes {
 		AttributeInstance speedInstance = Objects.requireNonNull(bee.getAttribute(Attributes.FLYING_SPEED));
 		AttributeInstance healthInstance = Objects.requireNonNull(bee.getAttribute(Attributes.MAX_HEALTH));
 		AttributeInstance damageInstance = Objects.requireNonNull(bee.getAttribute(Attributes.ATTACK_DAMAGE));
-		speedInstance.removePermanentModifier(SPEED_MODIFIER);
-		healthInstance.removePermanentModifier(HEALTH_MODIFIER);
-		damageInstance.removePermanentModifier(DAMAGE_MODIFIER);
+		speedInstance.removeModifier(SPEED_MODIFIER);
+		healthInstance.removeModifier(HEALTH_MODIFIER);
+		damageInstance.removeModifier(DAMAGE_MODIFIER);
 		if (hasTrait(Trait.FASTER)) {
 			speedInstance.addPermanentModifier(
 					new AttributeModifier(SPEED_MODIFIER, "Genetic speed bonus", 0.25, AttributeModifier.Operation.ADDITION));

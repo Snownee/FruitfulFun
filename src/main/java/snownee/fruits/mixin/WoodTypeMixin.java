@@ -13,7 +13,7 @@ import snownee.fruits.cherry.CherryModule;
 @Mixin(WoodType.class)
 public abstract class WoodTypeMixin {
 	@Shadow
-	public static WoodType register(WoodType woodType) {
+	private static WoodType register(WoodType type) {
 		throw new AssertionError();
 	}
 

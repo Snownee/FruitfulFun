@@ -13,13 +13,13 @@ import org.jspecify.annotations.Nullable;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.VibrationParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -37,11 +37,13 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -367,19 +369,26 @@ public final class Hooks {
 		return new Vec3(dx, dy, dz);
 	}
 
-	public static void appendEffectTooltip(Item item, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+	public static void appendEffectTooltip(
+			ItemStack itemStack,
+			Item.TooltipContext context,
+			Consumer<Component> builder,
+			TooltipFlag tooltipFlag) {
 		if (!Platform.isPhysicalClient()) {
 			return; // we don't want to access client config class on server
 		}
-		if (FFClientConfig.foodSpecialEffectTooltip && shouldClearHarmfulEffects(item)) {
-			tooltip.add(Component.translatable("tip.fruitfulfun.clearHarmfulEffects").withStyle(ChatFormatting.BLUE));
+		if (FFClientConfig.foodSpecialEffectTooltip && shouldClearHarmfulEffects(itemStack)) {
+			builder.accept(Component.translatable("tip.fruitfulfun.clearHarmfulEffects").withStyle(ChatFormatting.BLUE));
 		}
-		FoodProperties properties = item.getFoodProperties();
-		if (FFClientConfig.foodStatusEffectTooltip && properties != null) {
-			List<MobEffectInstance> effects = properties.getEffects().stream().filter($ -> $.getFirst() != null && $.getSecond() > 0).map(
-					Pair::getFirst).toList();
+		Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
+		if (FFClientConfig.foodStatusEffectTooltip && consumable != null) {
+			List<MobEffectInstance> effects = consumable.onConsumeEffects()
+					.stream()
+					.filter($ -> $.getClass() == ApplyStatusEffectsConsumeEffect.class)
+					.flatMap($ -> ((ApplyStatusEffectsConsumeEffect) $).effects().stream())
+					.toList();
 			if (!effects.isEmpty()) {
-				PotionUtils.addPotionTooltip(effects, tooltip, 1.0F);
+				PotionContents.addPotionTooltip(effects, builder, 1, context.tickRate());
 			}
 		}
 	}
@@ -390,10 +399,7 @@ public final class Hooks {
 
 	public static Vec3 calculateViewVector(Entity entity1, Entity entity2, float partialTicks) {
 		return ((EntityAccess) entity1).callCalculateViewVector(
-				Mth.clamp(
-						entity1.getViewXRot(partialTicks) + entity2.getViewXRot(partialTicks),
-						-90F,
-						90F),
+				Mth.clamp(entity1.getViewXRot(partialTicks) + entity2.getViewXRot(partialTicks), -90F, 90F),
 				entity1.getViewYRot(partialTicks) + entity2.getViewYRot(partialTicks));
 	}
 
