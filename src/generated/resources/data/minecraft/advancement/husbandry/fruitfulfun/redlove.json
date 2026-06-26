@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/apple",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "items": [
+          {
+            "items": "fruitfulfun:redlove_sapling"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.redlove.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "fruitfulfun:redlove"
+    },
+    "title": {
+      "translate": "advancements.fruitfulfun.redlove.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

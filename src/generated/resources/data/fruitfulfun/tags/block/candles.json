@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "fruitfulfun:phantom_candle",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:wandering_trader_candle",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:ender_candle",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:weak_candle",
+      "required": false
+    },
+    {
+      "id": "#minecraft:candles",
+      "required": false
+    },
+    {
+      "id": "#minecraft:candle_cakes",
+      "required": false
+    },
+    {
+      "id": "#supplementaries:candle_holders",
+      "required": false
+    },
+    {
+      "id": "#the_bumblezone:candles",
+      "required": false
+    }
+  ]
+}

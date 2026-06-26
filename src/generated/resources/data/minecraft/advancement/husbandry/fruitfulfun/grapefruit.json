@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/start",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "items": [
+          {
+            "items": "fruitfulfun:grapefruit_sapling"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.grapefruit.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "fruitfulfun:grapefruit"
+    },
+    "title": {
+      "translate": "advancements.fruitfulfun.grapefruit.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

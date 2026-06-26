@@ -1,0 +1,30 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:ritual"
+    }
+  ],
+  "parent": "minecraft:husbandry/fruitfulfun/ritual",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.haunting_interaction.description"
+    },
+    "icon": {
+      "id": "minecraft:bell"
+    },
+    "title": {
+      "translate": "advancements.fruitfulfun.haunting_interaction.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ]
+}

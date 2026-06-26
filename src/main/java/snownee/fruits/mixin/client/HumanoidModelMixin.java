@@ -9,20 +9,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import snownee.fruits.util.ClientProxy;
 
 @Mixin(HumanoidModel.class)
-public class HumanoidModelMixin<T extends LivingEntity> {
-	@Shadow
-	public HumanoidModel.ArmPose leftArmPose;
-
+public class HumanoidModelMixin<T extends HumanoidRenderState> {
 	@Shadow
 	@Final
 	public ModelPart leftArm;
-
-	@Shadow
-	public HumanoidModel.ArmPose rightArmPose;
 
 	@Shadow
 	@Final
@@ -33,15 +27,15 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 	public ModelPart head;
 
 	@Inject(at = @At("HEAD"), method = "poseLeftArm", cancellable = true)
-	private void poseLeftArm(T entity, CallbackInfo ci) {
-		if (leftArmPose == HumanoidModel.ArmPose.SPYGLASS && ClientProxy.poseArm(entity, leftArm, head, false)) {
+	private void poseLeftArm(T state, CallbackInfo ci) {
+		if (state.leftArmPose == HumanoidModel.ArmPose.SPYGLASS && ClientProxy.poseArm(state, leftArm, head, false)) {
 			ci.cancel();
 		}
 	}
 
 	@Inject(at = @At("HEAD"), method = "poseRightArm", cancellable = true)
-	private void poseRightArm(T entity, CallbackInfo ci) {
-		if (rightArmPose == HumanoidModel.ArmPose.SPYGLASS && ClientProxy.poseArm(entity, rightArm, head, true)) {
+	private void poseRightArm(T state, CallbackInfo ci) {
+		if (state.rightArmPose == HumanoidModel.ArmPose.SPYGLASS && ClientProxy.poseArm(state, rightArm, head, true)) {
 			ci.cancel();
 		}
 	}

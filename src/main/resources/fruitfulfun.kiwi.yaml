@@ -1,0 +1,63 @@
+clientOnly: false
+configs:
+- data: {type: CLIENT}
+  target: snownee.fruits.FFClientConfig
+- data: {}
+  target: snownee.fruits.FFCommonConfig
+modules:
+- data: {dependencies: '@core', modId: fruitfulfun, value: bee}
+  target: snownee.fruits.bee.BeeModule
+- data: {dependencies: '@fruit_types', modId: fruitfulfun, value: cherry}
+  target: snownee.fruits.cherry.CherryModule
+- data: {dependencies: farmersdelight, value: farmersdelight}
+  target: snownee.fruits.compat.farmersdelight.FarmersDelightModule
+- data: {dependencies: '@fruit_types', modId: fruitfulfun}
+  target: snownee.fruits.CoreModule
+- data: {value: creative_tab}
+  target: snownee.fruits.CreativeTabModule
+- data: {value: fruit_types}
+  target: snownee.fruits.FFFruitTypes
+- data: {value: food}
+  target: snownee.fruits.food.FoodModule
+- data: {dependencies: '@core', modId: fruitfulfun, value: gadget}
+  target: snownee.fruits.gadget.GadgetModule
+- data: {dependencies: '@fruit_types', value: pomegranate}
+  target: snownee.fruits.pomegranate.PomegranateModule
+- data: {value: ritual}
+  target: snownee.fruits.ritual.RitualModule
+optionals:
+- data: {}
+  target: snownee.fruits.bee.BeeModule
+- data: {}
+  target: snownee.fruits.compat.farmersdelight.FarmersDelightModule
+- data: {}
+  target: snownee.fruits.CreativeTabModule
+- data: {}
+  target: snownee.fruits.food.FoodModule
+- data: {}
+  target: snownee.fruits.gadget.GadgetModule
+- data: {}
+  target: snownee.fruits.ritual.RitualModule
+packets:
+- data: {}
+  target: snownee.fruits.bee.network.CHauntingActionPacket
+- data: {}
+  target: snownee.fruits.bee.network.CInspectTargetPacket
+- data: {}
+  target: snownee.fruits.bee.network.CSetGeneNamePacket
+- data: {}
+  target: snownee.fruits.bee.network.SHauntingParticlesPacket
+- data: {}
+  target: snownee.fruits.bee.network.SHauntPacket
+- data: {}
+  target: snownee.fruits.bee.network.SInspectBeeReplyPacket
+- data: {}
+  target: snownee.fruits.bee.network.SSetPinkGlowPacket
+- data: {}
+  target: snownee.fruits.bee.network.SSyncBeePacket
+- data: {}
+  target: snownee.fruits.bee.network.SSyncPlayerPacket
+- data: {}
+  target: snownee.fruits.gadget.network.CClickCrafterPacket
+- data: {}
+  target: snownee.fruits.gadget.network.CGunShotPacket

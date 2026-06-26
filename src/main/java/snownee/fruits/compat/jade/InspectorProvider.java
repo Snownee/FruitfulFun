@@ -92,11 +92,11 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 			CompoundTag data = accessor.getServerData();
 			if (InspectorClientHandler.isAnalyzing()) {
 				tooltip.add(Component.translatable("tip.fruitfulfun.analyzing"));
-				Element icon = JadeUI.smallItem(Items.HONEYCOMB.getDefaultInstance()).message(null);
+				Element icon = JadeUI.smallItem(Items.HONEYCOMB.getDefaultInstance()).narration("");
 				int i = InspectorClientHandler.getHoverTicks() / 4 % 3;
-				tooltip.append(JadeUI.spacer(2 + i * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
+				tooltip.append(JadeUI.spacer(2 + i * icon.getWidth(), icon.getHeight()));
 				tooltip.append(icon);
-				tooltip.append(JadeUI.spacer((2 - i) * (int) icon.getCachedSize().x, (int) icon.getCachedSize().y));
+				tooltip.append(JadeUI.spacer((2 - i) * icon.getWidth(), icon.getHeight()));
 				return;
 			}
 			if (!data.contains("Loci")) {
@@ -127,21 +127,21 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 			} else {
 				List<Element> elements = Lists.newArrayList();
 				for (Tag tag : pollens) {
-					elements.add(JadeUI.item(FruitType.getFruitOrItem(tag.getAsString()).getDefaultInstance()));
+					elements.add(JadeUI.item(FruitType.getFruitOrItem(tag.asString().orElseThrow()).getDefaultInstance()));
 				}
 				tooltip.add(elements);
 			}
 		}
 
 		public static void showTraits(ITooltip tooltip, CompoundTag data) {
-			ListTag traits = data.getList("Traits", Tag.TAG_STRING);
+			ListTag traits = data.getListOrEmpty("Traits");
 			title(tooltip, "text.fruitfulfun.trait");
 			if (traits.isEmpty()) {
 				tooltip.add(Component.translatable("text.fruitfulfun.trait.none"));
 			} else {
 				List<String> strings = Lists.newArrayList();
 				for (Tag tag : traits) {
-					Trait trait = Trait.REGISTRY.get(tag.getAsString());
+					Trait trait = Trait.REGISTRY.get(tag.asString().orElseThrow());
 					if (trait != null) {
 						strings.add(trait.getDisplayName().getString());
 					}
@@ -152,17 +152,17 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 
 		public static void showGenes(ITooltip tooltip, CompoundTag data, FFPlayer player) {
 			title(tooltip, "text.fruitfulfun.gene");
-			ListTag loci = data.getList("Loci", Tag.TAG_COMPOUND);
+			ListTag loci = data.getListOrEmpty("Loci");
 			if (loci.isEmpty()) {
 				return;
 			}
 			for (Tag e : loci) {
 				CompoundTag tag = (CompoundTag) e;
-				String code = tag.getString("Code");
+				String code = tag.getString("Code").orElseThrow();
 				String name = player.fruits$getGeneName(code);
 				String desc = player.fruits$getGeneDesc(code);
-				String high = name + (tag.getInt("High") + 1);
-				String low = name + (tag.getInt("Low") + 1);
+				String high = name + (tag.getInt("High").orElseThrow() + 1);
+				String low = name + (tag.getInt("Low").orElseThrow() + 1);
 				if (desc.isEmpty()) {
 					tooltip.add(Component.translatable("text.fruitfulfun.gene.pair", high, low));
 				} else {

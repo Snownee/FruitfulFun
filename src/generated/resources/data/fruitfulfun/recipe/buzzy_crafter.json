@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:gadget"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "minecraft:honeycomb",
+    "H": "minecraft:hopper",
+    "T": "minecraft:crafting_table"
+  },
+  "pattern": [
+    "THT",
+    "CCC",
+    "THT"
+  ],
+  "result": {
+    "id": "fruitfulfun:buzzy_crafter"
+  }
+}

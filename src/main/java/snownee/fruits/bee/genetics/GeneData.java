@@ -2,21 +2,26 @@ package snownee.fruits.bee.genetics;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.MapLike;
+import com.mojang.serialization.RecordBuilder;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 import snownee.fruits.Hooks;
 
 public class GeneData {
+	public static final Codec<GeneData> CODEC = Codec.of(GeneData::encode, GeneData::decode);
+
 	protected final Map<Allele, Locus> loci = Maps.newIdentityHashMap();
 	protected final Set<Trait> traits = Sets.newIdentityHashSet();
 	protected Set<Trait> extraTraits = Set.of();
@@ -132,36 +137,37 @@ public class GeneData {
 		}
 	}
 
-	public void toNBT(CompoundTag lociTag) {
-		for (Map.Entry<Allele, Locus> entry : loci.entrySet()) {
-			lociTag.putByte(entry.getKey().name, entry.getValue().getData());
-		}
-		if (!extraTraits.isEmpty()) {
-			ListTag extraTag = new ListTag();
-			for (Trait trait : extraTraits) {
-				extraTag.add(StringTag.valueOf(trait.name()));
+	private static <T> DataResult<Pair<GeneData, T>> decode(DynamicOps<T> ops, T t) {
+		MapLike<T> map = ops.getMap(t).getOrThrow();
+		GeneData geneData = new GeneData();
+		for (Allele allele : Allele.REGISTRY.values()) {
+			T input = map.get(allele.name);
+			if (input != null) {
+				geneData.getLocus(allele).setData(ops.getNumberValue(input).getOrThrow().byteValue());
 			}
-			lociTag.put("ExtraTraits", extraTag);
 		}
+		T input = map.get("ExtraTraits");
+		if (input != null) {
+			ops.getStream(input)
+					.getOrThrow()
+					.map(ops::getStringValue)
+					.map(DataResult::getOrThrow)
+					.map(Trait.REGISTRY::get)
+					.filter(Objects::nonNull)
+					.forEach(geneData::addExtraTrait);
+		}
+		geneData.updateTraits();
+		return DataResult.success(Pair.of(geneData, t));
 	}
 
-	public void fromNBT(CompoundTag lociTag) {
-		loci.clear();
-		for (Allele allele : Allele.REGISTRY.values()) {
-			Locus locus = new Locus(allele);
-			if (lociTag.contains(allele.name)) {
-				locus.setData(lociTag.getByteOr(allele.name, (byte) 0));
-			}
-			loci.put(allele, locus);
+	private <T> DataResult<T> encode(DynamicOps<T> ops, T t) {
+		RecordBuilder<T> mapBuilder = ops.mapBuilder();
+		for (Map.Entry<Allele, Locus> entry : loci.entrySet()) {
+			mapBuilder.add(entry.getKey().name, ops.createByte(entry.getValue().getData()));
 		}
-		if (lociTag.contains("ExtraTraits")) {
-			extraTraits = Sets.newIdentityHashSet();
-			ListTag extraTag = lociTag.getList("ExtraTraits", Tag.TAG_STRING);
-			for (int i = 0; i < extraTag.size(); i++) {
-				extraTraits.add(Trait.REGISTRY.get(extraTag.getString(i)));
-			}
-		} else {
-			extraTraits = Set.of();
+		if (!extraTraits.isEmpty()) {
+			mapBuilder.add("ExtraTraits", ops.createList(extraTraits.stream().map(Trait::name).map(ops::createString)));
 		}
+		return mapBuilder.build(t);
 	}
 }

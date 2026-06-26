@@ -214,16 +214,16 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 		return be.getAnalogOutput();
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-		if (state.is(newState.getBlock())) {
-			return;
-		}
-		if (level.getBlockEntity(pos) instanceof Container container) {
-			Containers.dropContents(level, pos, container);
-			level.updateNeighbourForOutputSignal(pos, this);
-		}
-		super.onRemove(state, level, pos, newState, movedByPiston);
-	}
+//	@SuppressWarnings("deprecation")
+//	@Override
+//	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+//		if (state.is(newState.getBlock())) {
+//			return;
+//		}
+//		if (level.getBlockEntity(pos) instanceof Container container) {
+//			Containers.dropContents(level, pos, container);
+//			level.updateNeighbourForOutputSignal(pos, this);
+//		}
+//		super.onRemove(state, level, pos, newState, movedByPiston);
+//	}
 }

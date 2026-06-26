@@ -9,12 +9,14 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
@@ -25,7 +27,9 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import snownee.fruits.CoreFruitType;
 import snownee.fruits.FFRegistries;
+import snownee.fruits.FFTreeGrowers;
 import snownee.fruits.FruitType;
+import snownee.fruits.FruitfulFun;
 
 public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 	public FFDynamicRegistryProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
@@ -34,34 +38,47 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 
 	@Override
 	protected void configure(HolderLookup.Provider registries, FabricDynamicRegistryProvider.Entries entries) {
-		addConfiguredFeatures(entries);
-		addPlacedFeatures(entries);
+		entries.addAll(registries.lookupOrThrow(Registries.CONFIGURED_FEATURE));
+		entries.addAll(registries.lookupOrThrow(Registries.PLACED_FEATURE));
+		addBannerPatterns(entries);
 	}
 
-	public static void addConfiguredFeatures(FabricDynamicRegistryProvider.Entries entries) {
+	public static void addBannerPatterns(FabricDynamicRegistryProvider.Entries entries) {
+		for (String path : List.of("heart", "snowflake")) {
+			Identifier id = FruitfulFun.id(path);
+			entries.add(
+					ResourceKey.create(Registries.BANNER_PATTERN, id),
+					new BannerPattern(id, "block.minecraft.banner." + id.toShortLanguageKey()));
+		}
+	}
+
+	public static void configureConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {
 		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.listElements().toList()) {
 			FruitType type = holder.value();
 			Identifier id = holder.key().identifier();
 			type.makeFeatures(
-					id, false, (location, config) -> entries.add(FeatureUtils.createKey(location.toString()), cf(Feature.TREE, config)));
+					id,
+					false,
+					(location, config) -> context.register(FFTreeGrowers.createKey(location), cf(Feature.TREE, config)));
 			List<WeightedPlacedFeature> features = Lists.newArrayList();
 			type.makeFeatures(
 					id, true, (location, config) -> {
-						ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(location.withSuffix("_wg").toString());
+						ResourceKey<ConfiguredFeature<?, ?>> key = FFTreeGrowers.createKey(location.withSuffix("_wg"));
 						ConfiguredFeature<TreeConfiguration, ?> cf = cf(Feature.TREE, config);
-						entries.add(key, cf);
-						features.add(new WeightedPlacedFeature(PlacementUtils.inlinePlaced(entries.ref(key)), 0.333f));
+						Holder<ConfiguredFeature<?, ?>> featureHolder = context.register(key, cf);
+						features.add(new WeightedPlacedFeature(PlacementUtils.inlinePlaced(featureHolder), 0.333f));
 					});
 			if (type.tier == 0) {
-				ResourceKey<ConfiguredFeature<?, ?>> key = FeatureUtils.createKey(id.withSuffix("_random").toString());
+				ResourceKey<ConfiguredFeature<?, ?>> key = FFTreeGrowers.createKey(id.withSuffix("_random"));
 				ConfiguredFeature<?, ?> cf = cf(
-						Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(features, features.removeFirst().feature));
-				entries.add(key, cf);
+						Feature.RANDOM_SELECTOR,
+						new RandomFeatureConfiguration(features, features.removeFirst().feature));
+				context.register(key, cf);
 			}
 		}
 	}
 
-	public static void addPlacedFeatures(FabricDynamicRegistryProvider.Entries entries) {
+	public static void configurePlacedFeatures(BootstrapContext<PlacedFeature> context) {
 		for (Holder.Reference<FruitType> holder : FFRegistries.FRUIT_TYPE.listElements().toList()) {
 			if (!(holder.value() instanceof CoreFruitType type)) {
 				continue;
@@ -71,8 +88,9 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 			}
 			Identifier id = holder.key().identifier();
 			PlacedFeature placedFeature = makePlacedFeature(
-					entries.ref(FeatureUtils.createKey(id.withSuffix("_random").toString())), type.sapling.get());
-			entries.add(PlacementUtils.createKey(id.toString()), placedFeature);
+					context.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(FFTreeGrowers.createKey(id.withSuffix("_random"))),
+					type.sapling.get());
+			context.register(ResourceKey.create(Registries.PLACED_FEATURE, id), placedFeature);
 		}
 	}
 

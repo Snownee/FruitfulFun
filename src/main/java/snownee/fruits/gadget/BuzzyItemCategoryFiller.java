@@ -18,7 +18,7 @@ public interface BuzzyItemCategoryFiller extends ItemCategoryFiller {
 		if (storage != null) {
 			itemStack = itemStack.copy();
 			storage.addLife(storage.maxLife());
-			BuzzyPowerStorage.write(itemStack, storage);
+			itemStack.set(GadgetModule.BUZZY_POWER_STORAGE.get(), storage);
 			list.add(itemStack);
 		}
 	}

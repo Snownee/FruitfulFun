@@ -16,7 +16,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.TooltipDisplay;
 import snownee.fruits.FFCommonConfig;
-import snownee.fruits.Hooks;
 import snownee.kiwi.item.ModItem;
 
 public class RedloveItem extends ModItem {
@@ -54,7 +53,6 @@ public class RedloveItem extends ModItem {
 			TooltipDisplay display,
 			Consumer<Component> builder,
 			TooltipFlag tooltipFlag) {
-		Hooks.appendEffectTooltip(itemStack, context, builder, tooltipFlag);
 		if (FFCommonConfig.redloveFruitUse) {
 			builder.accept(Component.empty());
 			builder.accept(Component.translatable("tip.fruitfulfun.whenUseOnAnimal").withStyle(ChatFormatting.GRAY));

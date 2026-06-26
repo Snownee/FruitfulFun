@@ -1,9 +1,7 @@
 package snownee.fruits.bee;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -26,7 +24,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.kiwi.util.KUtil;
-import snownee.lychee.util.action.PostAction;
 import snownee.lychee.util.context.LycheeContext;
 import snownee.lychee.util.context.LycheeContextKey;
 import snownee.lychee.util.json.JsonPointer;
@@ -131,17 +128,17 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> {
 	}
 
 	public void addInvisibleOutputs(Consumer<ItemStack> acceptor) {
-		allActions().filter(Predicate.not(PostAction::hidden))
-				.flatMap($ -> $.getOutputItems().stream())
-				.map(ItemStack::getItem)
-				.distinct()
-				.map($ -> {
-					if (Block.byItem($) instanceof FruitLeavesBlock block) {
-						return new ItemStack(block.type.value().sapling.get());
-					}
-					return null;
-				})
-				.filter(Objects::nonNull)
-				.forEach(acceptor);
+//		allActions().filter(Predicate.not(PostAction::hidden))
+//				.flatMap($ -> $.getOutputItems().stream())
+//				.map(ItemStack::getItem)
+//				.distinct()
+//				.map($ -> {
+//					if (Block.byItem($) instanceof FruitLeavesBlock block) {
+//						return new ItemStack(block.type.value().sapling.get());
+//					}
+//					return null;
+//				})
+//				.filter(Objects::nonNull)
+//				.forEach(acceptor);
 	}
 }

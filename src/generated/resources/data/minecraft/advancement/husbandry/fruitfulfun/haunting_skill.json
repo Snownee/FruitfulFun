@@ -1,0 +1,31 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:ritual"
+    }
+  ],
+  "parent": "minecraft:husbandry/fruitfulfun/haunting_interaction",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.haunting_skill.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecraft:iron_axe"
+    },
+    "title": {
+      "translate": "advancements.fruitfulfun.haunting_skill.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ]
+}

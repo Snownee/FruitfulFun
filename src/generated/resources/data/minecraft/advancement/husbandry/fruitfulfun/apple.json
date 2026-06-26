@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/start",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:villager",
+              "flags": {
+                "is_baby": true
+              }
+            }
+          }
+        ],
+        "item": {
+          "items": "fruitfulfun:apple_sapling"
+        }
+      },
+      "trigger": "minecraft:thrown_item_picked_up_by_player"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.apple.description"
+    },
+    "icon": {
+      "id": "fruitfulfun:apple_sapling"
+    },
+    "title": {
+      "translate": "advancements.fruitfulfun.apple.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ]
+}

@@ -86,7 +86,7 @@ import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule(modId = FruitfulFun.ID, dependencies = "fruit_types")
+@KiwiModule(modId = FruitfulFun.ID, dependencies = "@fruit_types")
 public final class CoreModule extends AbstractModule {
 
 	public static final BlockSetType CITRUS_SET_TYPE = new BlockSetType("fruitfulfun:citrus");
@@ -102,7 +102,7 @@ public final class CoreModule extends AbstractModule {
 	public static final ItemObject<Item> CITRUS_SIGN_ITEM = item($ -> new SignItem(
 			CITRUS_SIGN.get(),
 			CITRUS_WALL_SIGN.get(),
-			$.stacksTo(Items.OAK_SIGN.getDefaultMaxStackSize())));
+			$.stacksTo(16)));
 	@NoItem
 	public static final BlockObject<Block> CITRUS_HANGING_SIGN = block(
 			$ -> new CeilingHangingSignBlock(CITRUS_WOOD_TYPE, $),
@@ -115,7 +115,7 @@ public final class CoreModule extends AbstractModule {
 	public static final ItemObject<Item> CITRUS_HANGING_SIGN_ITEM = item($ -> new HangingSignItem(
 			CITRUS_HANGING_SIGN.get(),
 			CITRUS_WALL_HANGING_SIGN.get(),
-			$.stacksTo(Items.OAK_HANGING_SIGN.getDefaultMaxStackSize())));
+			$.stacksTo(16)));
 	public static final TagKey<Item> CITRUS_FRUITS = itemTag("c", "fruits/citrus");
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final ItemObject<Item> TANGERINE = citrusFood(Foods.TANGERINE);
@@ -246,13 +246,12 @@ public final class CoreModule extends AbstractModule {
 			() -> Blocks.POTTED_OAK_SAPLING);
 	public static final TagKey<Block> ALL_LEAVES = blockTag("leaves");
 	public static final KiwiGO<FoliagePlacerType<Fruitify>> FRUITIFY = go(() -> new FoliagePlacerType<>(Fruitify.CODEC));
-	public static final KiwiGO<BannerPattern> SNOWFLAKE = go(() -> bannerPattern("snowflake"));
 	public static final TagKey<BannerPattern> SNOWFLAKE_TAG = tag(Registries.BANNER_PATTERN, "pattern_item/snowflake");
 	public static final KiwiGO<BlockEntityType<FruitTreeBlockEntity>> FRUIT_TREE = blockEntity(
 			FruitTreeBlockEntity::new,
 			FruitLeavesBlock.class);
 	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
-	public static final ItemObject<Item> SNOWFLAKE_BANNER_PATTERN = bannerPatternItem(SNOWFLAKE_TAG);
+	public static final ItemObject<Item> SNOWFLAKE_BANNER_PATTERN = bannerPattern(SNOWFLAKE_TAG);
 	public static final KiwiGO<SoundEvent> OPEN_SOUND = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("block.wooden_door.open")));
 	public static final KiwiGO<SoundEvent> CLOSE_SOUND = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"block.wooden_door.close")));
@@ -341,13 +340,8 @@ public final class CoreModule extends AbstractModule {
 		}
 	}
 
-	public static BannerPattern bannerPattern(String path) {
-		Identifier id = FruitfulFun.id(path);
-		return new BannerPattern(id, "block.minecraft.banner." + id.toShortLanguageKey());
-	}
-
-	public static ItemObject<Item> bannerPatternItem(TagKey<BannerPattern> tag) {
-		return item($ -> new Item($.stacksTo(Items.MOJANG_BANNER_PATTERN.getDefaultMaxStackSize())
+	public static ItemObject<Item> bannerPattern(TagKey<BannerPattern> tag) {
+		return item($ -> new Item($.stacksTo(1)
 				.rarity(Rarity.UNCOMMON)
 				.delayedComponent(DataComponents.PROVIDES_BANNER_PATTERNS, context -> context.getOrThrow(tag))));
 	}

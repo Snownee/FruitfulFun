@@ -9,7 +9,6 @@ import org.jspecify.annotations.Nullable;
 import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
@@ -54,12 +53,12 @@ public class InspectorClientHandler {
 			return;
 		}
 		long millis = Util.getMillis();
-		boolean alt = Screen.hasAltDown();
+		boolean alt = mc.hasAltDown();
 		if (!holdAlt && alt) {
 			holdAltStart = millis;
 		} else if (holdAlt && !alt) {
 			if (millis - holdAltStart < 500) {
-				pageNow += Screen.hasControlDown() ? -1 : 1;
+				pageNow += mc.hasControlDown() ? -1 : 1;
 				pageNow = Math.floorMod(pageNow, 3);
 			}
 		}

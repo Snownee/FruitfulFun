@@ -21,7 +21,7 @@ import snownee.kiwi.Categories;
 import snownee.kiwi.ItemObject;
 import snownee.kiwi.KiwiModule;
 
-@KiwiModule(value = "pomegranate", dependencies = "fruit_types")
+@KiwiModule(value = "pomegranate", dependencies = "@fruit_types")
 public class PomegranateModule extends AbstractModule {
 	@KiwiModule.Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
 	public static final BlockObject<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = block(

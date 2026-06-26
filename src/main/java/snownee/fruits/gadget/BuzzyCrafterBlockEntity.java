@@ -20,6 +20,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.bee.Bee;
@@ -30,6 +31,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.util.CommonProxy;
@@ -115,15 +120,15 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	}
 
 	@Override
-	public void load(CompoundTag pTag) {
-		super.load(pTag);
-		readData(pTag);
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		readData(input);
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag pTag) {
-		super.saveAdditional(pTag);
-		writeData(pTag, false);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		writeData(output, false);
 	}
 
 	@Override
@@ -133,24 +138,27 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 
 	@Override
 	public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-		return writeData(new CompoundTag(), true);
+		try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(problemPath(), FruitfulFun.LOGGER)) {
+			TagValueOutput output = TagValueOutput.createWithContext(reporter, registries);
+			writeData(output, true);
+			return output.buildResult();
+		}
 	}
 
-	protected void readData(CompoundTag pTag) {
+	protected void readData(ValueInput input) {
 		item = ItemStack.EMPTY;
-		if (pTag.contains(ITEM_STACK_KEY)) {
-			item = ItemStack.of(pTag.getCompound(ITEM_STACK_KEY));
+		if (input.contains(ITEM_STACK_KEY)) {
+			item = input.read(ITEM_STACK_KEY, ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
 			if (level != null && !level.isClientSide()) {
 				updateItemPowerReceiver();
 			}
 		}
 	}
 
-	protected CompoundTag writeData(CompoundTag pTag, boolean network) {
+	protected void writeData(ValueOutput output, boolean network) {
 		if (network || !item.isEmpty()) {
-			pTag.put(ITEM_STACK_KEY, getTheItem().save(new CompoundTag()));
+			output.store(ITEM_STACK_KEY, ItemStack.OPTIONAL_CODEC, getTheItem());
 		}
-		return pTag;
 	}
 
 	public void refresh() {
@@ -204,7 +212,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			return;
 		}
 		if (!itemPowerReceiver.isEmpty()) {
-			BuzzyPowerStorage.write(item, itemPowerReceiver);
+			item.set(GadgetModule.BUZZY_POWER_STORAGE.get(), itemPowerReceiver);
 		}
 		itemPowerReceiverUpdated = false;
 	}
@@ -282,16 +290,18 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		if (!blockPowerReceiverUpdated) {
 			updateBlockPowerReceiver();
 		}
-		if (itemPowerReceiver == null && blockPowerReceiver == null) {
+		BuzzyPowerStorage itemReceiver = itemPowerReceiver;
+		BuzzyPowerReceiver blockReceiver = blockPowerReceiver;
+		if (itemReceiver == null && blockReceiver == null) {
 			return Stream.empty();
 		}
-		if (itemPowerReceiver == null) {
-			return Stream.of(blockPowerReceiver);
+		if (itemReceiver == null) {
+			return Stream.of(blockReceiver);
 		}
-		if (blockPowerReceiver == null) {
-			return Stream.of(itemPowerReceiver);
+		if (blockReceiver == null) {
+			return Stream.of(itemReceiver);
 		}
-		return Stream.of(blockPowerReceiver, itemPowerReceiver);
+		return Stream.of(blockReceiver, itemReceiver);
 	}
 
 	public int getAnalogOutput() {

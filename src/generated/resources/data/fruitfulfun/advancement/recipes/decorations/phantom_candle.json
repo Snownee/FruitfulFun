@@ -1,0 +1,38 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:gadget"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_crafter": {
+      "conditions": {
+        "items": [
+          {
+            "items": "fruitfulfun:buzzy_crafter"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fruitfulfun:phantom_candle"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_crafter"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fruitfulfun:phantom_candle"
+    ]
+  }
+}

@@ -11,19 +11,8 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class FruitLeavesDebugProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
-
+public class FruitLeavesDebugProvider implements IServerDataProvider<BlockAccessor> {
 	public static final Identifier UID = FruitfulFun.id("fruit_leaves");
-
-	@Override
-	public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-		CompoundTag data = accessor.getServerData();
-		if (!data.contains("Type")) {
-			return;
-		}
-		tooltip.add(Component.literal("%s: %s produced".formatted(data.getString("Type"), data.getInt("Produced"))));
-		tooltip.add(Component.literal("Lifespan: %s/%s".formatted(data.getInt("Lifespan"), data.getInt("MaxLifespan"))));
-	}
 
 	@Override
 	public void appendServerData(CompoundTag data, BlockAccessor accessor) {
@@ -41,8 +30,20 @@ public class FruitLeavesDebugProvider implements IBlockComponentProvider, IServe
 		return UID;
 	}
 
-	@Override
-	public boolean isRequired() {
-		return true;
+	public static class Client extends FruitLeavesDebugProvider implements IBlockComponentProvider {
+		@Override
+		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+			CompoundTag data = accessor.getServerData();
+			if (!data.contains("Type")) {
+				return;
+			}
+			tooltip.add(Component.literal("%s: %s produced".formatted(data.getString("Type"), data.getInt("Produced"))));
+			tooltip.add(Component.literal("Lifespan: %s/%s".formatted(data.getInt("Lifespan"), data.getInt("MaxLifespan"))));
+		}
+
+		@Override
+		public boolean isRequired() {
+			return true;
+		}
 	}
 }

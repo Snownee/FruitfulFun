@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "planks",
+  "ingredients": [
+    "#fruitfulfun:redlove_logs"
+  ],
+  "result": {
+    "count": 4,
+    "id": "fruitfulfun:redlove_planks"
+  }
+}

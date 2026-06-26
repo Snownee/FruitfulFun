@@ -53,12 +53,12 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 				ScentedCandleBlockEntity::serverTick);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Nullable
 	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
 			BlockEntityType<A> serverType,
 			BlockEntityType<E> clientType,
 			BlockEntityTicker<? super E> ticker) {
-		//noinspection unchecked
 		return clientType == serverType ? (BlockEntityTicker<A>) ticker : null;
 	}
 

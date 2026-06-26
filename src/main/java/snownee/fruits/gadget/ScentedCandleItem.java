@@ -30,7 +30,7 @@ public class ScentedCandleItem extends ModBlockItem implements BuzzyItemCategory
 	}
 
 	public static BuzzyPowerStorage getPowerStorage(ItemStack itemStack) {
-		return BuzzyPowerStorage.read(itemStack).orElseGet(() -> new BuzzyPowerStorage(50000f));
+		return BuzzyPowerStorage.of(itemStack).orElseGet(() -> new BuzzyPowerStorage(50000f));
 	}
 
 	@Override

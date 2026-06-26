@@ -200,7 +200,7 @@ public class RitualModule extends AbstractModule {
 			double dy = (motion.y * 0.08 + level.getRandom().nextGaussian() * 0.005) * power;
 			double dz = (motion.z * 0.08 + level.getRandom().nextGaussian() * 0.005) * power;
 			for (int k = 2; k < 6; ++k) {
-				level.addParticle(ParticleTypes.DRAGON_BREATH, x, y, z, dx * k, dy * k, dz * k);
+				level.addParticle(PowerParticleOption.create(ParticleTypes.DRAGON_BREATH, 1), x, y, z, dx * k, dy * k, dz * k);
 			}
 			motion = motion.yRot(0.1f);
 		}

@@ -1,0 +1,15 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:gadget"
+    }
+  ],
+  "type": "minecraft:smithing_transform",
+  "addition": "fruitfulfun:cherry",
+  "base": "#minecraft:candles",
+  "result": {
+    "id": "fruitfulfun:wandering_trader_candle"
+  },
+  "template": "#fruitfulfun:gadget_token"
+}

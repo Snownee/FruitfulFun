@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:husbandry/root",
+  "criteria": {
+    "_": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:fruits"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.start.description"
+    },
+    "icon": {
+      "id": "fruitfulfun:lemon"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.fruitfulfun.start.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ]
+}

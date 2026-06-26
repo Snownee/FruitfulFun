@@ -82,8 +82,8 @@ dependencies {
     annotationProcessor "libs:Kiwi-mc26.1-Fabric-26.0.4"
 //    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
 //    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-    //implementation "libs:Lychee-1.20.1-fabric:${project.lychee_version}"
-    implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
+    implementation "libs:Lychee-mc26.1-Fabric-26.0.1"
+//    implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
     implementation "maven.modrinth:jade:${project.jade_version}+fabric"
 
     // do not upgrade, otherwise it will crash
@@ -101,22 +101,21 @@ dependencies {
 
 loom {
     accessWidenerPath = file("src/main/resources/${project.mod_id}.classtweaker")
+}
 
-    runs {
-        // This adds a new gradle task that runs the datagen API: "gradlew runDatagen"
-        datagen {
-            inherit server
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}"
-            vmArg "-Dfabric-api.datagen.modid=${project.mod_id}"
-
-            runDir "build/datagen"
-        }
+fabricApi {
+    configureDataGeneration {
+        client = true
+        modId = project.mod_id
+        client = true
+        outputDirectory = file("src/generated/resources")
+        createSourceSet = true
+//        strictValidation = true //TODO enable it?
     }
 }
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.WARN
     inputs.property "version", realVersion
 
     filesMatching("fabric.mod.json") {
@@ -155,7 +154,6 @@ jar {
 configurations.all {
     resolutionStrategy {
         force "dev.architectury:architectury-fabric:${project.architectury_version}"
-        force "net.fabricmc:sponge-mixin:0.15.3+mixin.0.8.7"
     }
 }
 

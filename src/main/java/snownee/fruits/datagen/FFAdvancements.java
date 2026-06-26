@@ -23,6 +23,7 @@ import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.advancements.criterion.PickedUpItemTrigger;
 import net.minecraft.advancements.criterion.StartRidingTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentInitializers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -191,6 +192,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 
 		Consumer<AdvancementHolder> foodExporter = withConditions(
 				consumer, new ModuleLoadedCondition(FruitfulFun.id("food")));
+		BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(registryLookup).forEach(DataComponentInitializers.PendingComponents::apply);
 		Item[] foods = GameObjectLookup.all(BuiltInRegistries.ITEM, FruitfulFun.ID)
 				.filter($ -> $.components().has(DataComponents.FOOD))
 				.filter(Predicate.not(FoodModule.RICE_WITH_FRUITS.get().asItem()::equals))

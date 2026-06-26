@@ -6,6 +6,7 @@ import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableSet;
+import com.mojang.serialization.Codec;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
@@ -13,6 +14,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -72,7 +74,7 @@ import snownee.lychee.mixin.LootContextParamSetsAccess;
 import snownee.lychee.util.action.PostActionType;
 import snownee.lychee.util.contextual.ContextualConditionType;
 
-@KiwiModule(value = "bee", modId = FruitfulFun.ID)
+@KiwiModule(value = "bee", modId = FruitfulFun.ID, dependencies = "@core")
 @KiwiModule.Optional
 public class BeeModule extends AbstractModule {
 
@@ -99,15 +101,20 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<SoundEvent> STOP_HAUNTING = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"entity.stop_haunting")));
 	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "shears")
-	public static final KiwiGO<Item> INSPECTOR = go(() -> new InspectorItem(itemProp()));
-	public static final KiwiGO<MutagenItem> MUTAGEN = go(MutagenItem::new);
+	public static final KiwiGO<Item> INSPECTOR = item(InspectorItem::new);
+	public static final KiwiGO<MutagenItem> MUTAGEN = item(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
 	@Name("mutagen")
-	public static final KiwiGO<DataComponentType<Mutagen>> MUTAGEN_CONTENT = go(() -> DataComponentType.<Mutagen>builder()
-			.persistent(Mutagen.CODEC)
-			.networkSynchronized(Mutagen.STREAM_CODEC)
-			.build());
-	public static final KiwiGO<DataComponentType<Unit>> MERCHANT_OFFER = go(() -> DataComponentType.<Unit>builder().build());
+	public static final KiwiGO<DataComponentType<Mutagen>> MUTAGEN_CONTENT = go(
+			() -> DataComponentType.<Mutagen>builder().persistent(
+					Mutagen.CODEC).networkSynchronized(Mutagen.STREAM_CODEC).build(),
+			Registries.DATA_COMPONENT_TYPE);
+	public static final KiwiGO<DataComponentType<Unit>> MERCHANT_OFFER = go(
+			() -> DataComponentType.<Unit>builder().persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC).build(),
+			Registries.DATA_COMPONENT_TYPE);
+	public static final KiwiGO<DataComponentType<String>> MERCHANT_OFFER_ADVANCEMENT = go(
+			() -> DataComponentType.<String>builder().persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build(),
+			Registries.DATA_COMPONENT_TYPE);
 	public static final KiwiGO<SimpleParticleType> GHOST = go(() -> new SimpleParticleType(false));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
@@ -252,7 +259,7 @@ public class BeeModule extends AbstractModule {
 		}
 		combo:
 		if (value > 0 && dataList.size() >= 3) {
-			Set<Trait> first = dataList.get(0).getTraits();
+			Set<Trait> first = dataList.getFirst().getTraits();
 			for (int i = 1; i < dataList.size(); i++) {
 				if (!first.equals(dataList.get(i).getTraits())) {
 					break combo;

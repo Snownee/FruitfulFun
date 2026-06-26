@@ -1,10 +1,6 @@
 package snownee.fruits.mixin.bee;
 
-import java.util.function.Predicate;
-
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 import net.minecraft.world.entity.animal.bee.Bee;
-import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
@@ -26,18 +21,6 @@ public abstract class BeePollinateGoalMixin {
 
 	@Shadow(aliases = {"field_20377", "b"}, remap = false)
 	private Bee this$0;
-
-	@Final
-	@Mutable
-	@Shadow
-	private Predicate<BlockState> VALID_POLLINATION_BLOCKS;
-
-	@Inject(method = "<init>", at = @At("RETURN"))
-	private void init(Bee bee, CallbackInfo ci) {
-		if (Hooks.bee) {
-			VALID_POLLINATION_BLOCKS = Hooks.wrapPollinationPredicate(VALID_POLLINATION_BLOCKS);
-		}
-	}
 
 	@Inject(method = "stop", at = @At("HEAD"))
 	private void stop(CallbackInfo cir) {

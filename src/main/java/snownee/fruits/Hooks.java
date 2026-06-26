@@ -14,12 +14,10 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.VibrationParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -37,13 +35,8 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.component.Consumable;
-import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,7 +59,6 @@ import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFPlayer;
-import snownee.fruits.food.FoodModule;
 import snownee.fruits.mixin.EntityAccess;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.KUtil;
@@ -352,49 +344,21 @@ public final class Hooks {
 		return Allele.byIndex(effect.getAmplifier());
 	}
 
-	public static Vec3 modifyExplosionDeltaMovement(Entity entity, double dx, double dy, double dz, float radius) {
+	public static Vec3 modifyExplosionDeltaMovement(Entity entity, Vec3 impulse, float radius) {
 		Vec3 deltaMovement = entity.getDeltaMovement();
-		dx = dx * radius * 0.5;
+		double dx = impulse.x * radius * 0.5;
 		if (Math.abs(deltaMovement.x + dx) > 3) {
 			dx = Mth.clamp(deltaMovement.x + dx, -3, 3) - deltaMovement.x;
 		}
-		dy = dy * radius * 0.5 + Mth.sign(dy) * 0.1;
+		double dy = impulse.y * radius * 0.5 + Mth.sign(impulse.y) * 0.1;
 		if (Math.abs(deltaMovement.y + dy) > 3) {
 			dy = Mth.clamp(deltaMovement.y + dy, -3, 3) - deltaMovement.y;
 		}
-		dz = dz * radius * 0.5;
+		double dz = impulse.z * radius * 0.5;
 		if (Math.abs(deltaMovement.z + dz) > 3) {
 			dz = Mth.clamp(deltaMovement.z + dz, -3, 3) - deltaMovement.z;
 		}
 		return new Vec3(dx, dy, dz);
-	}
-
-	public static void appendEffectTooltip(
-			ItemStack itemStack,
-			Item.TooltipContext context,
-			Consumer<Component> builder,
-			TooltipFlag tooltipFlag) {
-		if (!Platform.isPhysicalClient()) {
-			return; // we don't want to access client config class on server
-		}
-		if (FFClientConfig.foodSpecialEffectTooltip && shouldClearHarmfulEffects(itemStack)) {
-			builder.accept(Component.translatable("tip.fruitfulfun.clearHarmfulEffects").withStyle(ChatFormatting.BLUE));
-		}
-		Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
-		if (FFClientConfig.foodStatusEffectTooltip && consumable != null) {
-			List<MobEffectInstance> effects = consumable.onConsumeEffects()
-					.stream()
-					.filter($ -> $.getClass() == ApplyStatusEffectsConsumeEffect.class)
-					.flatMap($ -> ((ApplyStatusEffectsConsumeEffect) $).effects().stream())
-					.toList();
-			if (!effects.isEmpty()) {
-				PotionContents.addPotionTooltip(effects, builder, 1, context.tickRate());
-			}
-		}
-	}
-
-	public static boolean shouldClearHarmfulEffects(Item item) {
-		return food && (!farmersdelight || !Platform.isProduction()) && FoodModule.HONEY_POMELO_TEA.get().asItem() == item;
 	}
 
 	public static Vec3 calculateViewVector(Entity entity1, Entity entity2, float partialTicks) {

@@ -12,7 +12,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
@@ -64,7 +63,7 @@ import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule(value = "cherry", modId = FruitfulFun.ID, dependencies = "fruit_types")
+@KiwiModule(value = "cherry", modId = FruitfulFun.ID, dependencies = "@fruit_types")
 public class CherryModule extends AbstractModule {
 
 	public static final BlockSetType REDLOVE_SET_TYPE = new BlockSetType(
@@ -94,7 +93,7 @@ public class CherryModule extends AbstractModule {
 	public static final ItemObject<Item> REDLOVE_SIGN_ITEM = item($ -> new SignItem(
 			REDLOVE_SIGN.get(),
 			REDLOVE_WALL_SIGN.get(),
-			$.stacksTo(Items.CHERRY_SIGN.getDefaultMaxStackSize())));
+			$.stacksTo(16)));
 	@NoItem
 	public static final BlockObject<Block> REDLOVE_HANGING_SIGN = block(
 			$ -> new CeilingHangingSignBlock(REDLOVE_WOOD_TYPE, $),
@@ -107,7 +106,7 @@ public class CherryModule extends AbstractModule {
 	public static final ItemObject<Item> REDLOVE_HANGING_SIGN_ITEM = item($ -> new HangingSignItem(
 			REDLOVE_HANGING_SIGN.get(),
 			REDLOVE_WALL_HANGING_SIGN.get(),
-			$.stacksTo(Items.CHERRY_HANGING_SIGN.getDefaultMaxStackSize())));
+			$.stacksTo(16)));
 	@Category(value = {Categories.BUILDING_BLOCKS, Categories.NATURAL_BLOCKS}, after = {"cherry_button", "cherry_log"})
 	public static final BlockObject<Block> REDLOVE_LOG = block(RotatedPillarBlock::new, () -> Blocks.CHERRY_LOG);
 	@Category(value = Categories.BUILDING_BLOCKS, after = "fruitfulfun:redlove_log")
@@ -168,17 +167,16 @@ public class CherryModule extends AbstractModule {
 			$ -> new FlowerPotBlock(REDLOVE_SAPLING.getOrCreate(), $),
 			() -> Blocks.POTTED_CHERRY_SAPLING);
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
-	public static final ItemObject<Item> CHERRY = item($ -> new ModItem(itemProp().food(Foods.CHERRY)));
-	public static final ItemObject<Item> REDLOVE = item($ -> new RedloveItem(itemProp().food(
+	public static final ItemObject<Item> CHERRY = item($ -> new ModItem($.food(Foods.CHERRY)));
+	public static final ItemObject<Item> REDLOVE = item($ -> new RedloveItem($.food(
 			Foods.REDLOVE,
 			Consumable.builder()
 					.onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.REGENERATION, 50)))
 					.onConsume(SpeedUpBreedingCooldownConsumeEffect.INSTANCE)
 					.build())));
-	public static final KiwiGO<BannerPattern> HEART = go(() -> CoreModule.bannerPattern("heart"));
 	public static final TagKey<BannerPattern> HEART_TAG = tag(Registries.BANNER_PATTERN, "pattern_item/heart");
 	@Category(value = Categories.INGREDIENTS, after = "piglin_banner_pattern")
-	public static final ItemObject<Item> HEART_BANNER_PATTERN = CoreModule.bannerPatternItem(HEART_TAG);
+	public static final ItemObject<Item> HEART_BANNER_PATTERN = CoreModule.bannerPattern(HEART_TAG);
 	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"item.armor.equip_crown")));
 	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")

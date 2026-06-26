@@ -5,38 +5,32 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import snownee.fruits.CoreModule;
 import snownee.fruits.Hooks;
-import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.duck.FFPlayer;
-import snownee.kiwi.loader.Platform;
 
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
-	@Inject(
-			method = "attack", at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/player/Player;attack(Lnet/minecraft/world/entity/Entity;)V"), cancellable = true)
-	private void attack(Entity target, CallbackInfo ci) {
-		ServerPlayer player = (ServerPlayer) (Object) this;
-		if (Hooks.bee && target instanceof LivingEntity && !target.getType().is(BeeModule.CANNOT_HAUNT) &&
-				CoreModule.ORANGE.is(player.getMainHandItem())) {
-			if (!Platform.isProduction()) {
-				FFPlayer.of(player).fruits$setHauntingTarget(target);
-				ci.cancel();
-			}
-		}
-	}
+//	@Inject(
+//			method = "attack", at = @At(
+//			value = "INVOKE",
+//			target = "Lnet/minecraft/world/entity/player/Player;attack(Lnet/minecraft/world/entity/Entity;)V"), cancellable = true)
+//	private void attack(Entity target, CallbackInfo ci) {
+//		ServerPlayer player = (ServerPlayer) (Object) this;
+//		if (Hooks.bee && target instanceof LivingEntity && !target.is(BeeModule.CANNOT_HAUNT) &&
+//				CoreModule.ORANGE.is(player.getMainHandItem())) {
+//			if (!Platform.isProduction()) {
+//				FFPlayer.of(player).fruits$setHauntingTarget(target);
+//				ci.cancel();
+//			}
+//		}
+//	}
 
 	@Inject(method = "setCamera", at = @At("TAIL"))
 	private void setCamera(@Nullable Entity target, CallbackInfo ci) {
@@ -48,10 +42,12 @@ public class ServerPlayerMixin {
 		}
 	}
 
-	@Inject(method = "changeDimension", at = @At("RETURN"))
-	private void changeDimension(ServerLevel destination, CallbackInfoReturnable<Entity> cir) {
-		BeeModule.changeDimension(destination, (ServerPlayer) (Object) this, cir.getReturnValue());
-	}
+//	@Inject(
+//			method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;",
+//			at = @At("RETURN"))
+//	private void changeDimension(ServerLevel destination, CallbackInfoReturnable<Entity> cir) {
+//		BeeModule.changeDimension(destination, (ServerPlayer) (Object) this, cir.getReturnValue());
+//	}
 
 	@Inject(method = "hasChangedDimension", at = @At("HEAD"))
 	private void hasChangedDimension(CallbackInfo ci) {
@@ -61,20 +57,20 @@ public class ServerPlayerMixin {
 		}
 	}
 
-	@Inject(method = "setPlayerInput", at = @At("HEAD"))
-	private void setPlayerInput(float strafe, float forward, boolean jumping, boolean sneaking, CallbackInfo ci) {
-		ServerPlayer player = (ServerPlayer) (Object) this;
-		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
-			if (strafe >= -1.0f && strafe <= 1.0f) {
-				player.xxa = strafe;
-			}
-			if (forward >= -1.0f && forward <= 1.0f) {
-				player.zza = forward;
-			}
-			player.setJumping(jumping);
-			player.setShiftKeyDown(sneaking);
-		}
-	}
+//	@Inject(method = "setPlayerInput", at = @At("HEAD"))
+//	private void setPlayerInput(float strafe, float forward, boolean jumping, boolean sneaking, CallbackInfo ci) {
+//		ServerPlayer player = (ServerPlayer) (Object) this;
+//		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
+//			if (strafe >= -1.0f && strafe <= 1.0f) {
+//				player.xxa = strafe;
+//			}
+//			if (forward >= -1.0f && forward <= 1.0f) {
+//				player.zza = forward;
+//			}
+//			player.setJumping(jumping);
+//			player.setShiftKeyDown(sneaking);
+//		}
+//	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void tick(CallbackInfo ci) {
@@ -85,7 +81,7 @@ public class ServerPlayerMixin {
 		}
 	}
 
-	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;absMoveTo(DDDFF)V"))
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;absSnapTo(DDDFF)V"))
 	private void tick(ServerPlayer player, double x, double y, double z, float yRot, float xRot, Operation<Void> original) {
 		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
 			yRot = player.getYRot();

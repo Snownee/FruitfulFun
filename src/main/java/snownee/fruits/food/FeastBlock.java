@@ -58,7 +58,14 @@ public class FeastBlock extends FoodBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	protected InteractionResult useItemOn(
+			ItemStack itemStack,
+			BlockState state,
+			Level level,
+			BlockPos pos,
+			Player player,
+			InteractionHand hand,
+			BlockHitResult hitResult) {
 		int serves = getServings(state);
 		ItemStack servingItem = new ItemStack(this.servingItem.get());
 		ItemStackTemplate remainder = Platform.getCraftingRemainingItem(servingItem);
@@ -150,7 +157,11 @@ public class FeastBlock extends FoodBlock {
 
 	@Override
 	public BlockItem createItem(Item.Properties builder) {
-		return super.createItem(builder.craftRemainder(Objects.requireNonNull(servingItem.get().getCraftingRemainder()).item().value()));
+		ItemStackTemplate remainder = servingItem.get().getCraftingRemainder();
+		if (remainder != null) {
+			builder.craftRemainder(remainder.item().value());
+		}
+		return super.createItem(builder);
 	}
 
 }

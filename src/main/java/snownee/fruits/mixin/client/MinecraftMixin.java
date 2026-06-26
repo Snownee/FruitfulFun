@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.network.CHauntingActionPacket;
 import snownee.fruits.gadget.BuzzyCrafterBlock;
@@ -74,5 +74,10 @@ public class MinecraftMixin {
 			Objects.requireNonNull(gameMode).stopDestroyBlock();
 			cir.setReturnValue(false);
 		}
+	}
+
+	@Inject(at = @At("RETURN"), method = "pick")
+	private void pick(float partialTicks, CallbackInfo cir) {
+		Hooks.modifyRayTraceResult(hitResult, $ -> hitResult = $);
 	}
 }

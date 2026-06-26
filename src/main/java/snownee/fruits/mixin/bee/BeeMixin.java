@@ -12,7 +12,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -60,18 +59,17 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		setPathfindingMalus(PathType.FRUITFULFUN_LEAVES, 1);
 	}
 
-	@Inject(at = @At("HEAD"), method = "isFlowerValid", cancellable = true)
-	private void isFlowerValid(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		if (!Hooks.bee || !level().isLoaded(pos)) {
+	@Inject(at = @At("HEAD"), method = "attractsBees", cancellable = true)
+	private static void isFlowerValid(BlockState state, CallbackInfoReturnable<Boolean> cir) {
+		if (!Hooks.bee) {
 			return;
 		}
-		BlockState state = level().getBlockState(pos);
 		if (!state.hasBlockEntity() && state.getBlock() instanceof FruitLeavesBlock) {
 			cir.setReturnValue(true);
 		}
 	}
 
-	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Bee;updateRollAmount()V"))
+	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/bee/Bee;updateRollAmount()V"))
 	private void tick(CallbackInfo ci) {
 		if (!Hooks.bee || level().isClientSide()) {
 			return;
@@ -134,11 +132,11 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	public abstract boolean hasStung();
 
 	@Shadow
-	int ticksWithoutNectarSinceExitingHive;
+	private int ticksWithoutNectarSinceExitingHive;
 
 	@ModifyExpressionValue(
 			method = "wantsToEnterHive",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isRaining()Z"))
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/bee/Bee;hasNectar()Z"))
 	private boolean wantsToEnterHive(boolean original) {
 		if (BeeAttributes.of(this).hasTrait(Trait.RAIN_CAPABLE)) {
 			return false;

@@ -3,6 +3,7 @@ package snownee.fruits;
 import java.util.Optional;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -42,6 +43,10 @@ public class FFTreeGrowers {
 	}
 
 	public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String name) {
-		return ResourceKey.create(Registries.CONFIGURED_FEATURE, FruitfulFun.id(name));
+		return createKey(FruitfulFun.id(name));
+	}
+
+	public static ResourceKey<ConfiguredFeature<?, ?>> createKey(Identifier id) {
+		return ResourceKey.create(Registries.CONFIGURED_FEATURE, id);
 	}
 }

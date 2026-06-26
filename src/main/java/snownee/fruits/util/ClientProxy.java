@@ -14,6 +14,8 @@ import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.jspecify.annotations.Nullable;
 
@@ -38,17 +40,30 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.entity.BeeRenderer;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.TooltipProvider;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFClientConfig;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
@@ -78,6 +93,7 @@ public class ClientProxy implements ClientModInitializer {
 	private static final ExtraModelKey<BlockStateModel> CHERRY_CROWN_MODEL = ExtraModelKey.create();
 	private static final ExtraModelKey<BlockStateModel> REDLOVE_CROWN_MODEL = ExtraModelKey.create();
 	public static final RenderStateDataKey<ItemStack> SADDLE = RenderStateDataKey.create(() -> "saddle");
+	public static final RenderStateDataKey<Identifier> TEXTURE = RenderStateDataKey.create(() -> "texture");
 
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -85,19 +101,17 @@ public class ClientProxy implements ClientModInitializer {
 		return modelManager.getModel((ExtraModelKey<BlockStateModel>) key);
 	}
 
-	public static boolean poseArm(LivingEntity entity, ModelPart arm, ModelPart head, boolean rightArm) {
+	public static boolean poseArm(HumanoidRenderState state, ModelPart arm, ModelPart head, boolean rightArm) {
 		if (!Hooks.bee && !Hooks.gadget) {
 			return false;
 		}
-		HumanoidArm mainArm = entity.getMainArm();
-		boolean isMainArm = rightArm ? mainArm == HumanoidArm.RIGHT : mainArm == HumanoidArm.LEFT;
-		ItemStack stack = isMainArm ? entity.getMainHandItem() : entity.getOffhandItem();
+		ItemStack stack = rightArm ? state.rightHandItemStack : state.leftHandItemStack;
 		if (Hooks.bee && BeeModule.INSPECTOR.is(stack)) {
-			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
+			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (state.isCrouching ? 0.2617994f : 0.0f), -2.4f, 3.3f);
 			arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
 			return true;
 		} else if (Hooks.gadget && GadgetModule.VAC_GUN.is(stack)) {
-			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (entity.isCrouching() ? 0.2617994f : 0.0f), -2.4f, 3.3f);
+			arm.xRot = Mth.clamp(head.xRot - 1.5198622f - (state.isCrouching ? 0.2617994f : 0.0f), -2.4f, 3.3f);
 			arm.yRot = head.yRot - 0.2617994f * (rightArm ? 1 : -1);
 			return true;
 		}
@@ -108,7 +122,7 @@ public class ClientProxy implements ClientModInitializer {
 		Minecraft.getInstance().setScreen(new EditGeneNameScreen());
 	}
 
-	public static ItemProjectileColor getItemProjectileColor(ItemStack itemStack) {
+	public static @Nullable ItemProjectileColor getItemProjectileColor(ItemStack itemStack) {
 		ItemProjectileColor color;
 		if (Hooks.supplementaries && (color = SupplementariesCompat.getItemProjectileColor(itemStack)) != null) {
 			return color;
@@ -117,7 +131,11 @@ public class ClientProxy implements ClientModInitializer {
 	}
 
 	public static void renderVacGunInHand(
-			LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, boolean leftHand, PoseStack poseStack) {
+			LivingEntity livingEntity,
+			ItemStack itemStack,
+			ItemDisplayContext itemDisplayContext,
+			boolean leftHand,
+			PoseStack poseStack) {
 //		Vector3f vec = new Vector3f(0f, 0f, 0f);
 //		poseStack.last().pose().transformPosition(vec);
 //		Matrix4f screenToWorld = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
@@ -194,22 +212,20 @@ public class ClientProxy implements ClientModInitializer {
 		ParticleProviderRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
 
 		BlockTintSource birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES, 0);
-		ColorProviderRegistry.BLOCK.register(
-				(state, world, pos, i) -> {
-					if (i == 1) {
-						return 0xC22626;
-					}
-					if (i == 2) {
-						return birchBlockColor.getColor(Blocks.BIRCH_LEAVES.defaultBlockState(), world, pos, i);
-					}
-					return -1;
-				}, REDLOVE_LEAVES.getOrCreate());
+		BlockColorRegistry.register(List.of(BlockTintSources.constant(0xC22626), birchBlockColor), REDLOVE_LEAVES.getOrCreate());
 
 		BlockColorRegistry.register(List.of(BlockColors.BLANK_LAYER, BlockTintSources.grass()), PEACH_PINK_PETALS.getOrCreate());
 
 		ModelLoadingPlugin.register(ctx -> {
 			ctx.addModel(CHERRY_CROWN_MODEL, SimpleUnbakedExtraModel.blockStateModel(FruitfulFun.id("block/cherry_crown")));
 			ctx.addModel(REDLOVE_CROWN_MODEL, SimpleUnbakedExtraModel.blockStateModel(FruitfulFun.id("block/redlove_crown")));
+		});
+
+		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) -> {
+			if (Hooks.bee && FFCommonConfig.allogamousTrees && BeeModule.isAllogamous(stack)) {
+				lines.add(Component.translatable("tip.fruitfulfun.allogamy").withStyle(ChatFormatting.GRAY));
+			}
+			addFoodEffectTooltip(context, lines::add, flag, stack);
 		});
 
 		if (Hooks.bee) {
@@ -220,12 +236,6 @@ public class ClientProxy implements ClientModInitializer {
 					return;
 				}
 				InspectorClientHandler.tick(client);
-			});
-
-			ItemTooltipCallback.EVENT.register((stack, context, flag, lines) -> {
-				if (Hooks.bee && FFCommonConfig.allogamousTrees && BeeModule.isAllogamous(stack)) {
-					lines.add(Component.translatable("tip.fruitfulfun.allogamy").withStyle(ChatFormatting.GRAY));
-				}
 			});
 
 			ClientTickEvents.END_CLIENT_TICK.register(mc -> {
@@ -259,5 +269,36 @@ public class ClientProxy implements ClientModInitializer {
 		if (Hooks.ritual) {
 			ActionRenderer.register(BeeModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
 		}
+	}
+
+	public static void addFoodEffectTooltip(
+			Item.TooltipContext context,
+			Consumer<Component> builder,
+			TooltipFlag flag,
+			DataComponentGetter components) {
+		FoodProperties food = components.get(DataComponents.FOOD);
+		Consumable consumable = components.get(DataComponents.CONSUMABLE);
+		if (food == null || consumable == null) {
+			return;
+		}
+		if (FFClientConfig.foodSpecialEffectTooltip) {
+			consumable.onConsumeEffects()
+					.stream()
+					.map(ClientProxy::getTooltipProvider)
+					.filter(Objects::nonNull)
+					.forEach($ -> $.addToTooltip(context, builder, flag, components));
+		}
+		if (FFClientConfig.foodStatusEffectTooltip) {
+			List<MobEffectInstance> effects = consumable.onConsumeEffects().stream().filter($ -> $.getClass() ==
+					ApplyStatusEffectsConsumeEffect.class).flatMap($ -> ((ApplyStatusEffectsConsumeEffect) $).effects().stream()).toList();
+			if (!effects.isEmpty()) {
+				PotionContents.addPotionTooltip(effects, builder, 1, context.tickRate());
+			}
+		}
+	}
+
+	@Nullable
+	public static TooltipProvider getTooltipProvider(ConsumeEffect effect) {
+		return effect instanceof TooltipProvider provider ? provider : null;
 	}
 }

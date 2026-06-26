@@ -36,9 +36,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -87,6 +89,7 @@ import snownee.fruits.gadget.ScentType;
 import snownee.fruits.gadget.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiModuleContainer;
 import snownee.kiwi.KiwiModules;
 import snownee.kiwi.Mod;
@@ -224,6 +227,7 @@ public class CommonProxy implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		Kiwi.onInitialize();
 		addFeature("citron");
 		addFeature("tangerine");
 		addFeature("lime");
@@ -271,8 +275,8 @@ public class CommonProxy implements ModInitializer {
 
 	public static void initBeeModule() {
 		// map in StatType is an IdentityHashMap, update the reference
-		BeeModule.BEE_ONE_CM = Stats.makeCustomStat(BeeModule.BEE_ONE_CM.toString(), StatFormatter.DISTANCE);
-		BeeModule.BEES_BRED = Stats.makeCustomStat(BeeModule.BEES_BRED.toString(), StatFormatter.DEFAULT);
+		BeeModule.BEE_ONE_CM = makeCustomStat(BeeModule.BEE_ONE_CM, StatFormatter.DISTANCE);
+		BeeModule.BEES_BRED = makeCustomStat(BeeModule.BEES_BRED, StatFormatter.DEFAULT);
 
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
 			Map<String, FFPlayer.GeneName> map = FFPlayer.of(oldPlayer).fruits$getGeneNames();
@@ -339,13 +343,13 @@ public class CommonProxy implements ModInitializer {
 	}
 
 	public static void addFeature(String id) {
-		ResourceKey<PlacedFeature> key = PlacementUtils.createKey(Objects.requireNonNull(KUtil.RL(id, FruitfulFun.ID)).toString());
+		ResourceKey<PlacedFeature> key = ResourceKey.create(
+				Registries.PLACED_FEATURE,
+				Objects.requireNonNull(KUtil.RL(id, FruitfulFun.ID)));
 		BiomeModifications.addFeature(
-				context -> {
-					return context.hasTag(ConventionalBiomeTags.IS_DECIDUOUS_TREE) ||
-							context.hasTag(ConventionalBiomeTags.IS_JUNGLE_TREE) ||
-							context.hasFeature(VegetationFeatures.TREES_PLAINS);
-				}, GenerationStep.Decoration.VEGETAL_DECORATION, key);
+				context -> context.hasTag(ConventionalBiomeTags.IS_DECIDUOUS_TREE) ||
+						context.hasTag(ConventionalBiomeTags.IS_JUNGLE_TREE) ||
+						context.hasFeature(VegetationFeatures.TREES_PLAINS), GenerationStep.Decoration.VEGETAL_DECORATION, key);
 	}
 
 	@Nullable
@@ -376,5 +380,11 @@ public class CommonProxy implements ModInitializer {
 			level.playSound(null, blockPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
 			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
 		}
+	}
+
+	public static Identifier makeCustomStat(Identifier id, StatFormatter formatter) {
+		Registry.register(BuiltInRegistries.CUSTOM_STAT, id, id);
+		Stats.CUSTOM.get(id, formatter);
+		return id;
 	}
 }

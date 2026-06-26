@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "fruitfulfun:redlove"
+  ],
+  "result": {
+    "id": "fruitfulfun:heart_banner_pattern"
+  }
+}

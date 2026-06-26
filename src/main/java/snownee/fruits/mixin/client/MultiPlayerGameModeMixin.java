@@ -1,5 +1,6 @@
 package snownee.fruits.mixin.client;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,9 +24,10 @@ public class MultiPlayerGameModeMixin {
 	private Minecraft minecraft;
 
 	@WrapOperation(
-			method = {"performUseItemOn", "useItem", "attack", "interact", "interactAt"}, at = @At(
+			method = {"performUseItemOn", "useItem", "attack", "interact"/*, "interactAt"*/}, at = @At(
 			value = "FIELD",
-			target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;localPlayerMode:Lnet/minecraft/world/level/GameType;"))
+			target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;localPlayerMode:Lnet/minecraft/world/level/GameType;",
+			opcode = Opcodes.GETFIELD))
 	private GameType performUseItemOn(MultiPlayerGameMode instance, Operation<GameType> original) {
 		if (Hooks.bee && minecraft.player instanceof FFPlayer player && player.fruits$isHaunting()) {
 			return GameType.SPECTATOR;

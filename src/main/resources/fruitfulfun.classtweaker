@@ -25,8 +25,6 @@ accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/Foli
 
 accessible method net/minecraft/world/entity/ai/village/poi/PoiTypes registerBlockStates (Lnet/minecraft/core/Holder;Ljava/util/Set;)V
 
-accessible method net/minecraft/stats/Stats makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/Identifier;
-
 accessible method net/minecraft/world/effect/MobEffect <init> (Lnet/minecraft/world/effect/MobEffectCategory;I)V
 
 accessible class net/minecraft/world/inventory/BrewingStandMenu$PotionSlot

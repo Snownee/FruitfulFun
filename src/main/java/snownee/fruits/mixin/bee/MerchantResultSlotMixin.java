@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MerchantResultSlot;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeModule;
 
 @Mixin(MerchantResultSlot.class)
 public class MerchantResultSlotMixin {
@@ -20,12 +21,10 @@ public class MerchantResultSlotMixin {
 
 	@Inject(method = "checkTakeAchievements", at = @At("HEAD"))
 	private void checkTakeAchievements(ItemStack carried, CallbackInfo ci) {
-		if (carried.getCount() >= 50 && carried.getTag() != null && carried.getTag().getBoolean("FFTradeAdvancement")) {
-			carried.getTag().remove("FFTradeAdvancement");
-			if (carried.getTag().isEmpty()) {
-				carried.setTag(null);
-			}
-			Hooks.awardSimpleAdvancement(player, "apiarist");
+		String advancement = carried.get(BeeModule.MERCHANT_OFFER_ADVANCEMENT.get());
+		if (advancement != null) {
+			carried.remove(BeeModule.MERCHANT_OFFER_ADVANCEMENT.get());
+			Hooks.awardSimpleAdvancement(player, advancement);
 		}
 	}
 }

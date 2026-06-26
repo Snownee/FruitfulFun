@@ -2,22 +2,22 @@ package snownee.fruits.gadget;
 
 import java.util.Optional;
 
-import org.joml.Vector3f;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import snownee.kiwi.util.Color;
-import snownee.kiwi.util.MathUtil;
 
 public class BuzzyPowerStorage implements BuzzyPowerReceiver {
-	public static final String NBT_KEY = "buzzy_power";
+	public static final BuzzyPowerStorage EMPTY = new BuzzyPowerStorage(0, 0, 0, 0, 0);
+
 	public static final Codec<BuzzyPowerStorage> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.FLOAT.optionalFieldOf("max_life", 50000f).forGetter(BuzzyPowerStorage::maxLife),
 			Codec.FLOAT.fieldOf("life").forGetter(BuzzyPowerStorage::life),
@@ -26,26 +26,25 @@ public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 			Codec.FLOAT.fieldOf("blue").forGetter(BuzzyPowerStorage::blue)
 	).apply(instance, BuzzyPowerStorage::new));
 
-	public static Optional<BuzzyPowerStorage> read(ItemStack itemStack) {
-		if (itemStack.getTag() == null || !itemStack.getTag().contains(NBT_KEY, Tag.TAG_COMPOUND)) {
-			return Optional.empty();
-		}
-		DataResult<BuzzyPowerStorage> result = read(itemStack.getTag().getCompound(NBT_KEY));
-		if (result.error().isPresent()) {
-			itemStack.getTag().remove(NBT_KEY);
-			if (itemStack.getTag().isEmpty()) {
-				itemStack.setTag(null);
-			}
-		}
-		return result.result();
-	}
+	public static final StreamCodec<ByteBuf, BuzzyPowerStorage> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.FLOAT,
+			BuzzyPowerStorage::maxLife,
+			ByteBufCodecs.FLOAT,
+			BuzzyPowerStorage::life,
+			ByteBufCodecs.FLOAT,
+			BuzzyPowerStorage::red,
+			ByteBufCodecs.FLOAT,
+			BuzzyPowerStorage::green,
+			ByteBufCodecs.FLOAT,
+			BuzzyPowerStorage::blue,
+			BuzzyPowerStorage::new);
 
 	public static DataResult<BuzzyPowerStorage> read(CompoundTag data) {
 		return CODEC.parse(NbtOps.INSTANCE, data);
 	}
 
-	public static void write(ItemStack itemStack, BuzzyPowerStorage storage) {
-		itemStack.getOrCreateTag().put(NBT_KEY, storage.save());
+	public static Optional<BuzzyPowerStorage> of(DataComponentHolder holder) {
+		return Optional.ofNullable(holder.get(GadgetModule.BUZZY_POWER_STORAGE.get()));
 	}
 
 	private float maxLife;
@@ -67,24 +66,25 @@ public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 	}
 
 	public static boolean isBarVisible(ItemStack stack) {
-		return read(stack).map(BuzzyPowerStorage::hasLife).orElse(false);
+		return of(stack).map(BuzzyPowerStorage::hasLife).orElse(false);
 	}
 
 	public static int getBarColor(ItemStack stack) {
-		return read(stack).map($ -> {
+		return of(stack).map($ -> {
 			float red = $.red();
 			float green = $.green();
 			float blue = $.blue();
 			if (red == 0 && green == 0 && blue == 0) {
 				red = green = blue = 1;
 			}
-			Vector3f hsv = MathUtil.RGBtoHSV(new Color(red, green, blue, 1).getRGB());
-			return Float.isNaN(hsv.x) ? 0xCCCCCC : Mth.hsvToRgb(hsv.x, hsv.y, 0.85f);
+//			Vector3f hsv = KUtil.RGBtoHSV(new Color(red, green, blue, 1).getRGB());
+//			return Float.isNaN(hsv.x) ? 0xCCCCCC : Mth.hsvToRgb(hsv.x, hsv.y, 0.85f);
+			return 0xCCCCCC;
 		}).orElse(0xCCCCCC);
 	}
 
 	public static int getBarWidth(ItemStack stack) {
-		return read(stack).map($ -> Math.round($.life() / $.maxLife() * 13f)).orElse(0);
+		return of(stack).map($ -> Math.round($.life() / $.maxLife() * 13f)).orElse(0);
 	}
 
 	public float maxLife() {
@@ -145,6 +145,10 @@ public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 
 	public CompoundTag save() {
 		return (CompoundTag) CODEC.encodeStart(NbtOps.INSTANCE, this).result().orElseThrow();
+	}
+
+	public BuzzyPowerStorage copy() {
+		return new BuzzyPowerStorage(maxLife, life, red, green, blue);
 	}
 
 	public void useLife(float v) {

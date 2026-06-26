@@ -1,28 +1,19 @@
 package snownee.fruits.mixin.client;
 
-import java.util.Objects;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import snownee.fruits.Hooks;
-import snownee.fruits.bee.BeeModule;
 import snownee.fruits.duck.FFPlayer;
 
 @Mixin(GameRenderer.class)
@@ -30,12 +21,7 @@ public class GameRendererMixin {
 
 	@Final
 	@Shadow
-	Minecraft minecraft;
-
-	@Inject(at = @At("RETURN"), method = "pick")
-	private void pick(float partialTicks, CallbackInfo cir) {
-		Hooks.modifyRayTraceResult(minecraft.hitResult, $ -> minecraft.hitResult = $);
-	}
+	private Minecraft minecraft;
 
 	@WrapOperation(
 			method = "renderItemInHand", at = @At(
@@ -58,37 +44,4 @@ public class GameRendererMixin {
 		}
 		return original.call(minecraft);
 	}
-
-	@WrapOperation(
-			method = "pick", at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;pick(DFZ)Lnet/minecraft/world/phys/HitResult;"))
-	private HitResult pickBlock(Entity entity, double hitDistance, float partialTicks, boolean hitFluids, Operation<HitResult> original) {
-		LocalPlayer localPlayer = minecraft.player;
-		if (BeeModule.isHauntingNormalEntity(localPlayer, entity)) {
-			Vec3 eyePosition = entity.getEyePosition(partialTicks);
-			Vec3 viewVector = Hooks.calculateViewVector(entity, Objects.requireNonNull(localPlayer), partialTicks);
-			Vec3 end = eyePosition.add(viewVector.x * hitDistance, viewVector.y * hitDistance, viewVector.z * hitDistance);
-			return entity.level().clip(new ClipContext(
-					eyePosition,
-					end,
-					ClipContext.Block.OUTLINE,
-					hitFluids ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE,
-					entity));
-		}
-		return original.call(entity, hitDistance, partialTicks, hitFluids);
-	}
-
-	@WrapOperation(
-			method = "pick", at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;getViewVector(F)Lnet/minecraft/world/phys/Vec3;"))
-	private Vec3 pickEntity(Entity entity, float partialTicks, Operation<Vec3> original) {
-		LocalPlayer localPlayer = minecraft.player;
-		if (BeeModule.isHauntingNormalEntity(localPlayer, entity)) {
-			return Hooks.calculateViewVector(entity, Objects.requireNonNull(localPlayer), partialTicks);
-		}
-		return original.call(entity, partialTicks);
-	}
-
 }

@@ -4,13 +4,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
@@ -42,7 +45,7 @@ import snownee.kiwi.KiwiModules;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.event.InitEvent;
 
-@KiwiModule(value = "gadget", modId = FruitfulFun.ID)
+@KiwiModule(value = "gadget", modId = FruitfulFun.ID, dependencies = "@core")
 @KiwiModule.Optional
 public class GadgetModule extends AbstractModule {
 	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS, after = "beehive")
@@ -124,8 +127,9 @@ public class GadgetModule extends AbstractModule {
 			$ -> new ScentedCandleBlock($, PHANTOM.getOrCreate()),
 			() -> Blocks.CANDLE);
 	public static final BlockObject<ScentedCandleBlock> WANDERING_TRADER_CANDLE = block(
-			$ -> new ScentedCandleBlock($, WANDERING_TRADER.getOrCreate()),
-			() -> Blocks.CANDLE);
+			$ -> new ScentedCandleBlock(
+					$,
+					WANDERING_TRADER.getOrCreate()), () -> Blocks.CANDLE);
 	public static final BlockObject<ScentedCandleBlock> ENDER_CANDLE = block(
 			$ -> new ScentedCandleBlock($, ENDER.getOrCreate()),
 			() -> Blocks.CANDLE);
@@ -138,6 +142,14 @@ public class GadgetModule extends AbstractModule {
 	public static final KiwiGO<MapCodec<? extends SetBuzzyPowerFunction>> SET_BUZZY_POWER = go(
 			() -> SetBuzzyPowerFunction.CODEC,
 			Registries.LOOT_FUNCTION_TYPE);
+	public static final KiwiGO<DataComponentType<Long>> LAST_PERFECT_BLOCK = go(
+			() -> DataComponentType.<Long>builder().persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.LONG).build(),
+			Registries.DATA_COMPONENT_TYPE);
+	public static final KiwiGO<DataComponentType<BuzzyPowerStorage>> BUZZY_POWER_STORAGE = go(
+			() -> DataComponentType.<BuzzyPowerStorage>builder()
+					.persistent(BuzzyPowerStorage.CODEC)
+					.networkSynchronized(BuzzyPowerStorage.STREAM_CODEC)
+					.build(), Registries.DATA_COMPONENT_TYPE);
 
 	@KiwiModule.Name("scented_candle")
 	public static final KiwiGO<BlockEntityType<ScentedCandleBlockEntity>> SCENTED_CANDLE_ENTITY = blockEntity(

@@ -54,21 +54,20 @@ public record TransformBees(
 					continue;
 				}
 				CompoundTag entityData = occupant.entityData().copyTagWithoutId();
+				// See Mob.java
 				entityData.putBoolean("PersistenceRequired", true);
-				CompoundTag attributesTag = entityData.getCompound("FruitfulFun");
-				GeneData geneData = new GeneData();
-				geneData.fromNBT(attributesTag.getCompound("Genes"));
-				CompoundTag lociTag = new CompoundTag();
+				CompoundTag attributesTag = entityData.getCompoundOrEmpty("FruitfulFun");
+				if (!attributesTag.contains("Genes")) {
+					continue;
+				}
+				GeneData geneData = attributesTag.read("Genes", GeneData.CODEC).orElseGet(GeneData::new);
 				for (Trait trait : addTraits) {
 					geneData.addExtraTrait(trait);
 				}
 				for (Trait trait : removeTraits) {
 					geneData.removeExtraTrait(trait);
 				}
-				geneData.toNBT(lociTag);
-				if (!lociTag.isEmpty()) {
-					attributesTag.put("Genes", lociTag);
-				}
+				attributesTag.store("Genes", GeneData.CODEC, geneData);
 				entityData.put("FruitfulFun", attributesTag);
 				transformed.add(new BeehiveBlockEntity.Occupant(
 						TypedEntityData.of(EntityType.BEE, entityData),

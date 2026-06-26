@@ -14,6 +14,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import snownee.fruits.gadget.BuzzyPowerStorage;
+import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentedCandleBlockEntity;
 
 public class SetBuzzyPowerFunction extends LootItemConditionalFunction {
@@ -48,7 +49,7 @@ public class SetBuzzyPowerFunction extends LootItemConditionalFunction {
 			float blue = power.blue() / count;
 			power = new BuzzyPowerStorage(maxLife, (int) life, red, green, blue);
 		}
-		BuzzyPowerStorage.write(stack, power);
+		stack.set(GadgetModule.BUZZY_POWER_STORAGE.get(), power);
 		return stack;
 	}
 

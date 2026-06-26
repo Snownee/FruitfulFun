@@ -1,5 +1,7 @@
 package snownee.fruits.mixin.bee;
 
+import java.util.Objects;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -34,17 +36,20 @@ public class MerchantContainerMixin {
 		}
 		output.remove(BeeModule.MERCHANT_OFFER.get());
 		int value = BeeModule.getBeesValue(bees.bees().stream().map(occupant -> {
-			CompoundTag lociTag = occupant.entityData().copyTagWithoutId()
-					.getCompound("FruitfulFun")
-					.getCompound("Genes");
-			GeneData geneData = new GeneData();
-			geneData.fromNBT(lociTag);
-			geneData.updateTraits();
-			return geneData;
-		}).toList());
+			try {
+				CompoundTag data = occupant.entityData().copyTagWithoutId()
+						.getCompoundOrEmpty("FruitfulFun");
+				if (!data.contains("Genes")) {
+					return null;
+				}
+				return data.read("Genes", GeneData.CODEC).orElse(null);
+			} catch (Exception _) {
+				return null;
+			}
+		}).filter(Objects::nonNull).toList());
 		output.setCount(Math.min(output.getMaxStackSize(), value));
 		if (output.getCount() >= 50) {
-			output.getOrCreateTag().putBoolean("FFTradeAdvancement", true);
+			output.set(BeeModule.MERCHANT_OFFER_ADVANCEMENT.get(), "apiarist");
 		}
 		return output;
 	}

@@ -94,6 +94,7 @@ gui.fruitfulfun.geneDesc: Gene Description
 tip.fruitfulfun.appleSaplingFromHeroOfTheVillage: Gift from baby villager when you become hero of the village.
 tip.fruitfulfun.villageAppleTreeWorldGen: Apple trees sometimes grow in villages in plains.
 tip.fruitfulfun.clearHarmfulEffects: Clears Harmful Effects
+tip.fruitfulfun.extinguishFire: Extinguishes Fire
 tip.fruitfulfun.useContainer: You need a %s to eat this.
 tip.fruitfulfun.invalidMutagen: This mutagen is not usable for some reason.
 tip.fruitfulfun.bookIsFull: This book has no enough pages...

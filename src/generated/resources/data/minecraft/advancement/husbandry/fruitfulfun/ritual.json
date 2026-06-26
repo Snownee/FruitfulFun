@@ -1,0 +1,30 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:ritual"
+    }
+  ],
+  "parent": "minecraft:husbandry/fruitfulfun/start",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.ritual.description"
+    },
+    "icon": {
+      "id": "fruitfulfun:chorus_fruit_pie"
+    },
+    "title": {
+      "translate": "advancements.fruitfulfun.ritual.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ]
+}

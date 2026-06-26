@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_grapefruit": {
+      "conditions": {
+        "items": [
+          {
+            "items": "fruitfulfun:grapefruit"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fruitfulfun:snowflake_banner_pattern"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_grapefruit"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fruitfulfun:snowflake_banner_pattern"
+    ]
+  }
+}

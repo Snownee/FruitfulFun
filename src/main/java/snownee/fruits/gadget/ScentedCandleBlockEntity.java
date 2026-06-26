@@ -115,7 +115,7 @@ public class ScentedCandleBlockEntity extends BlockEntity {
 	}
 
 	public void addCandle(ItemStack stack) {
-		BuzzyPowerStorage.read(stack).ifPresentOrElse(
+		BuzzyPowerStorage.of(stack).ifPresentOrElse(
 				$ -> {
 					if (getBlockState().getValue(CandleBlock.CANDLES) == 1) {
 						power = $;

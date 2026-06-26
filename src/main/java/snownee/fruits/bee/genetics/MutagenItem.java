@@ -34,8 +34,8 @@ public class MutagenItem extends ModItem implements ItemCategoryFiller {
 	public static final Item BREWING_ITEM = Items.PITCHER_PLANT;
 	public static final RandomSource RANDOM = RandomSource.create();
 
-	public MutagenItem() {
-		super(new Item.Properties());
+	public MutagenItem(Item.Properties builder) {
+		super(builder);
 	}
 
 	@Override

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "planks",
+  "ingredients": [
+    "#fruitfulfun:citrus_logs"
+  ],
+  "result": {
+    "count": 4,
+    "id": "fruitfulfun:citrus_planks"
+  }
+}

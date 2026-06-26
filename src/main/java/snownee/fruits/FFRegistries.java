@@ -13,6 +13,7 @@ import snownee.kiwi.Kiwi;
 
 public class FFRegistries {
 	public static void init() {
+		Kiwi.registerInstantRegistry(FRUIT_TYPE_KEY);
 	}
 
 	public static final ResourceKey<Registry<FruitType>> FRUIT_TYPE_KEY = ResourceKey.createRegistryKey(FruitfulFun.id("fruit_type"));

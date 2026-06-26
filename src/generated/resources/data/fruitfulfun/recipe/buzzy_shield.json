@@ -1,0 +1,15 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:gadget"
+    }
+  ],
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:honeycomb_block",
+  "base": "minecraft:shield",
+  "result": {
+    "id": "fruitfulfun:buzzy_shield"
+  },
+  "template": "#fruitfulfun:gadget_token"
+}

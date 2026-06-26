@@ -11,7 +11,7 @@ import com.mojang.math.Axis;
 
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,37 +19,39 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.util.ClientProxy;
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.util.ClientProxy;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
 	@Shadow
-	protected abstract void applyItemArmTransform(PoseStack poseStack, HumanoidArm humanoidArm, float f);
+	protected abstract void applyItemArmTransform(PoseStack poseStack, HumanoidArm arm, float inverseArmHeight);
 
 	@Shadow
-	protected abstract void applyItemArmAttackTransform(PoseStack poseStack, HumanoidArm humanoidArm, float f);
+	protected abstract void applyItemArmAttackTransform(PoseStack poseStack, HumanoidArm arm, float attackValue);
 
 	@Inject(
 			method = "renderArmWithItem",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"))
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;"))
 	private void renderArmWithItem(
 			AbstractClientPlayer player,
-			float f,
-			float g,
+			float frameInterp,
+			float xRot,
 			InteractionHand hand,
-			float h,
-			ItemStack stack,
-			float i,
+			float attack,
+			ItemStack itemStack,
+			float inverseArmHeight,
 			PoseStack poseStack,
-			MultiBufferSource multiBufferSource,
-			int j,
+			SubmitNodeCollector submitNodeCollector,
+			int lightCoords,
 			CallbackInfo ci) {
-		if (Hooks.bee && BeeModule.INSPECTOR.is(stack)) {
+		if (Hooks.bee && BeeModule.INSPECTOR.is(itemStack)) {
 			boolean bl = hand == InteractionHand.MAIN_HAND;
 			HumanoidArm humanoidArm = bl ? player.getMainArm() : player.getMainArm().getOpposite();
-			applyItemArmTransform(poseStack, humanoidArm, i);
-			applyItemArmAttackTransform(poseStack, humanoidArm, h);
+			applyItemArmTransform(poseStack, humanoidArm, inverseArmHeight);
+			applyItemArmAttackTransform(poseStack, humanoidArm, attack);
 			int k = humanoidArm == HumanoidArm.RIGHT ? 1 : -1;
 			poseStack.translate(k * -0.641864f, 0.0f, 0.0f);
 			poseStack.mulPose(Axis.YP.rotationDegrees(k * 10.0f));
@@ -58,16 +60,15 @@ public abstract class ItemInHandRendererMixin {
 
 	@Inject(method = "renderItem", at = @At("TAIL"))
 	private void renderItem(
-			LivingEntity livingEntity,
+			LivingEntity mob,
 			ItemStack itemStack,
-			ItemDisplayContext itemDisplayContext,
-			boolean leftHand,
+			ItemDisplayContext type,
 			PoseStack poseStack,
-			MultiBufferSource multiBufferSource,
-			int i,
+			SubmitNodeCollector submitNodeCollector,
+			int lightCoords,
 			CallbackInfo ci) {
 		if (Hooks.gadget && GadgetModule.VAC_GUN.is(itemStack)) {
-			ClientProxy.renderVacGunInHand(livingEntity, itemStack, itemDisplayContext, leftHand, poseStack);
+			ClientProxy.renderVacGunInHand(mob, itemStack, type, type.leftHand(), poseStack);
 		}
 		//Donk.donk(Minecraft.getInstance(), Minecraft.getInstance().getEntityRenderDispatcher(), livingEntity, multiBufferSource);
 	}

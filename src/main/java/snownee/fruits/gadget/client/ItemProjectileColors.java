@@ -3,6 +3,8 @@ package snownee.fruits.gadget.client;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
@@ -40,7 +42,7 @@ public class ItemProjectileColors {
 		COLORS.put(item, color);
 	}
 
-	public static ItemProjectileColor get(ItemStack itemStack) {
+	public static @Nullable ItemProjectileColor get(ItemStack itemStack) {
 		ItemProjectileColor color = COLORS.get(itemStack.getItem());
 		if (color == null) {
 			guessColor(itemStack);
@@ -51,7 +53,7 @@ public class ItemProjectileColors {
 	private static void guessColor(ItemStack itemStack) {
 		Item item = itemStack.getItem();
 		ItemProjectileColor color = ClientProxy.getItemProjectileColor(itemStack);
-		if (color != null && !itemStack.hasTag()) {
+		if (color != null && ItemStack.isSameItemSameComponents(itemStack, new ItemStack(item))) {
 			register(item, color);
 			return;
 		}
@@ -75,7 +77,7 @@ public class ItemProjectileColors {
 		List<Pair<Item, DyeColor>> list = Lists.newArrayListWithExpectedSize(DYE_COLOR_ORDER.length);
 		for (DyeColor dyeColor : DYE_COLOR_ORDER) {
 			id = id.withPath(String.format(palette, dyeColor.getName()));
-			item = BuiltInRegistries.ITEM.get(id);
+			item = BuiltInRegistries.ITEM.getValue(id);
 			if (item == Items.AIR) {
 				return;
 			}

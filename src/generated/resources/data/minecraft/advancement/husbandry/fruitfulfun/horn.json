@@ -1,0 +1,24 @@
+{
+  "parent": "minecraft:husbandry/fruitfulfun/start",
+  "criteria": {
+    "_": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.fruitfulfun.horn.description"
+    },
+    "icon": {
+      "id": "minecraft:goat_horn"
+    },
+    "title": {
+      "translate": "advancements.fruitfulfun.horn.title"
+    }
+  },
+  "requirements": [
+    [
+      "_"
+    ]
+  ]
+}

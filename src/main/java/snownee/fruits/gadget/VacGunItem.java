@@ -5,11 +5,12 @@ import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,14 +21,14 @@ import snownee.kiwi.util.PreventUpdateAnimation;
 
 public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAnimation {
 	public static final int MAX_ITEM_COUNT = 16;
-	private static final int ITEM_BAR_COLOR = Mth.color(0.4F, 1.0F, 0.4F);
+	private static final int ITEM_BAR_COLOR = 0x66FF66;
 	private static final ThreadLocal<ItemEntity> DUMMY_ITEM_ENTITY = new ThreadLocal<>();
 
 	public VacGunItem(Item.Properties properties) {
 		super(properties.stacksTo(1).rarity(Rarity.RARE));
 	}
 
-//	public static void shoot(Player player, InteractionHand hand) {
+	public static void shoot(Player player, InteractionHand hand) {
 //		ItemStack gun = player.getItemInHand(hand);
 //		if (player.getCooldowns().isOnCooldown(gun.getItem())) {
 //			return;
@@ -59,8 +60,9 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 //		} else {
 //			gun.getOrCreateTag().putLong("LastShot", player.level().getGameTime());
 //		}
-//	}
-//
+	}
+
+	//
 //	@Nullable
 //	public static VacItemProjectile shootItem(Player player, ItemStack gun, VacGunContainer container) {
 //		if (player.level().isClientSide()) {
@@ -95,8 +97,8 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 //		}
 //		return gun.getTag().getInt("ItemCount");
 //	}
-//
-//	public static void collectItem(Player player, ItemEntity itemEntity, ItemStack gun, final @Nullable VacGunContainer container) {
+
+	public static void collectItem(Player player, ItemEntity itemEntity, ItemStack gun, final @Nullable VacGunContainer container) {
 //		if (player.level().isClientSide()) {
 //			return;
 //		}
@@ -129,8 +131,8 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 //		if (container == null) {
 //			saveItemContainer(gun, container2);
 //		}
-//	}
-//
+	}
+
 //	public static @Nullable VacGunContainer readItemContainer(ItemStack gun) {
 //		String ammoType = getAmmoType(gun);
 //		if (ammoType != null && !"item".equals(ammoType)) {
@@ -352,23 +354,23 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 //		return 0;
 //	}
 //
-//	@Override
-//	public int getBarColor(ItemStack itemStack) {
-//		return ITEM_BAR_COLOR;
-//	}
-//
-//	@Override
-//	public boolean isBarVisible(ItemStack itemStack) {
+	@Override
+	public int getBarColor(ItemStack itemStack) {
+		return ITEM_BAR_COLOR;
+	}
+
+	@Override
+	public boolean isBarVisible(ItemStack itemStack) {
 //		String ammoType = getAmmoType(itemStack);
 //		if ("item".equals(ammoType)) {
 //			return getItemCount(itemStack) > 0;
 //		} else if ("fluid".equals(ammoType)) {
 //			// TODO
 //		}
-//		return false;
-//	}
-//
-//	@Override
+		return false;
+	}
+
+	//	@Override
 //	public boolean overrideOtherStackedOnMe(
 //			ItemStack gun,
 //			ItemStack itemStack,

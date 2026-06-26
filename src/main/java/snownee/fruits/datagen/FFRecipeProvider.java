@@ -170,92 +170,92 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						output,
 						new ModuleLoadedCondition(FruitfulFun.id("food")),
 						ResourceConditions.not(new ModuleLoadedCondition(FruitfulFun.id("farmersdelight"))));
-				shapeless(RecipeCategory.FOOD, FoodModule.DONAUWELLE.get())
-						.requires(CherryModule.REDLOVE.get())
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add(DefaultCustomIngredients.any(
-										tag(AbstractModule.itemTag("c", "chocolates")),
-										tag(AbstractModule.itemTag("c", "chocolatebar")))
-								)
-								.add(Items.COCOA_BEANS)
-								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:cream")
-								.add("#c:milk")
-								.add(Items.MILK_BUCKET)
-								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:eggs")
-								.add(Items.EGG)
-								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:flour")
-								.add("#c:grain/wheat")
-								.add(Items.WHEAT)
-								.build().toVanilla())
-						.requires(Items.SUGAR)
-						.unlockedBy("has_item", has(CherryModule.REDLOVE.get()))
-						.save(foodExporter);
-
-				ResourceCondition hasRice = ResourceConditions.or(
-						ResourceConditions.tagsPopulated(AbstractModule.itemTag("c", "grain/rice")),
-						ResourceConditions.tagsPopulated(AbstractModule.itemTag("c", "seeds/rice"))
-				);
-				RecipeOutput riceWithFruitsExporter = withConditions(
-						output,
-						hasRice,
-						new ModuleLoadedCondition(FruitfulFun.id("food")),
-						ResourceConditions.not(new ModuleLoadedCondition(FruitfulFun.id("farmersdelight"))));
-				shapeless(RecipeCategory.FOOD, FoodModule.RICE_WITH_FRUITS.get())
-						.requires(AbstractModule.itemTag("c", "fruits/tangerine"))
-						.requires(AbstractModule.itemTag("c", "fruits/apple"))
-						.requires(AbstractModule.itemTag("c", "fruits"))
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:grain/rice")
-								.add("#c:seeds/rice")
-								.build().toVanilla())
-						.requires(Items.BAMBOO)
-						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/tangerine")))
-						.save(riceWithFruitsExporter);
-
-				shapeless(RecipeCategory.FOOD, FoodModule.GRAPEFRUIT_PANNA_COTTA.get())
-						.requires(AbstractModule.itemTag("c", "fruits/grapefruit"))
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:cream")
-								.add("#c:milk")
-								.add(Items.MILK_BUCKET)
-								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:eggs")
-								.add(Items.EGG)
-								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:gelatin")
-								.add("#c:gelatine")
-								.add("#c:slime_balls")
-								.add(Items.SLIME_BALL)
-								.build().toVanilla())
-						.requires(Items.SUGAR)
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:vannila")
-								.add("#c:crops/vanilla")
-//								.add(Ingredient.EMPTY)
-								.build().toVanilla())
-						.unlockedBy("has_item", has(CoreModule.GRAPEFRUIT.get()))
-						.save(foodExporterNoFD);
-
-				shapeless(RecipeCategory.FOOD, FoodModule.HONEY_POMELO_TEA.get())
-						.requires(AbstractModule.itemTag("c", "fruits/pomelo"))
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:crops/mint")
-								.add("#c:leaves/mint")
-//								.add(Ingredient.EMPTY)
-								.build().toVanilla())
-						.requires(Items.HONEY_BOTTLE)
-						.requires(Items.SUGAR)
-//						.noContainers()
-						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/pomelo")))
-						.save(foodExporterNoFD);
+//				shapeless(RecipeCategory.FOOD, FoodModule.DONAUWELLE.get())
+//						.requires(CherryModule.REDLOVE.get())
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add(DefaultCustomIngredients.any(
+//										tag(AbstractModule.itemTag("c", "chocolates")),
+//										tag(AbstractModule.itemTag("c", "chocolatebar")))
+//								)
+//								.add(Items.COCOA_BEANS)
+//								.build().toVanilla())
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:cream")
+//								.add("#c:milk")
+//								.add(Items.MILK_BUCKET)
+//								.build().toVanilla())
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:eggs")
+//								.add(Items.EGG)
+//								.build().toVanilla())
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:flour")
+//								.add("#c:grain/wheat")
+//								.add(Items.WHEAT)
+//								.build().toVanilla())
+//						.requires(Items.SUGAR)
+//						.unlockedBy("has_item", has(CherryModule.REDLOVE.get()))
+//						.save(foodExporter);
+//
+//				ResourceCondition hasRice = ResourceConditions.or(
+//						ResourceConditions.tagsPopulated(AbstractModule.itemTag("c", "grain/rice")),
+//						ResourceConditions.tagsPopulated(AbstractModule.itemTag("c", "seeds/rice"))
+//				);
+//				RecipeOutput riceWithFruitsExporter = withConditions(
+//						output,
+//						hasRice,
+//						new ModuleLoadedCondition(FruitfulFun.id("food")),
+//						ResourceConditions.not(new ModuleLoadedCondition(FruitfulFun.id("farmersdelight"))));
+//				shapeless(RecipeCategory.FOOD, FoodModule.RICE_WITH_FRUITS.get())
+//						.requires(AbstractModule.itemTag("c", "fruits/tangerine"))
+//						.requires(AbstractModule.itemTag("c", "fruits/apple"))
+//						.requires(AbstractModule.itemTag("c", "fruits"))
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:grain/rice")
+//								.add("#c:seeds/rice")
+//								.build().toVanilla())
+//						.requires(Items.BAMBOO)
+//						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/tangerine")))
+//						.save(riceWithFruitsExporter);
+//
+//				shapeless(RecipeCategory.FOOD, FoodModule.GRAPEFRUIT_PANNA_COTTA.get())
+//						.requires(AbstractModule.itemTag("c", "fruits/grapefruit"))
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:cream")
+//								.add("#c:milk")
+//								.add(Items.MILK_BUCKET)
+//								.build().toVanilla())
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:eggs")
+//								.add(Items.EGG)
+//								.build().toVanilla())
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:gelatin")
+//								.add("#c:gelatine")
+//								.add("#c:slime_balls")
+//								.add(Items.SLIME_BALL)
+//								.build().toVanilla())
+//						.requires(Items.SUGAR)
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:vannila")
+//								.add("#c:crops/vanilla")
+////								.add(Ingredient.EMPTY)
+//								.build().toVanilla())
+//						.unlockedBy("has_item", has(CoreModule.GRAPEFRUIT.get()))
+//						.save(foodExporterNoFD);
+//
+//				shapeless(RecipeCategory.FOOD, FoodModule.HONEY_POMELO_TEA.get())
+//						.requires(AbstractModule.itemTag("c", "fruits/pomelo"))
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:crops/mint")
+//								.add("#c:leaves/mint")
+////								.add(Ingredient.EMPTY)
+//								.build().toVanilla())
+//						.requires(Items.HONEY_BOTTLE)
+//						.requires(Items.SUGAR)
+////						.noContainers()
+//						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/pomelo")))
+//						.save(foodExporterNoFD);
 
 				shapeless(RecipeCategory.FOOD, FoodModule.CHORUS_FRUIT_PIE.get())
 						.requires(Items.CHORUS_FRUIT)
@@ -272,20 +272,20 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 						.unlockedBy("has_item", has(FoodModule.CHORUS_FRUIT_PIE_SLICE.get()))
 						.save(foodExporter, "chorus_fruit_pie_packing");
 
-				shapeless(RecipeCategory.FOOD, FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get())
-						.requires(AbstractModule.itemTag("c", "fruits/lemon"))
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:flowers/lavender")
-								.add("#c:fruits/lemon")
-								.build().toVanilla())
-						.requires(AlternativesIngredientBuilder.of(items)
-								.add("#c:vegetables/onion")
-								.add(Items.POTATO)
-								.build().toVanilla())
-						.requires(Items.COOKED_CHICKEN)
-						.requires(Items.BOWL)
-						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/lemon")))
-						.save(foodExporter, "lemon_roast_chicken");
+//				shapeless(RecipeCategory.FOOD, FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get())
+//						.requires(AbstractModule.itemTag("c", "fruits/lemon"))
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:flowers/lavender")
+//								.add("#c:fruits/lemon")
+//								.build().toVanilla())
+//						.requires(AlternativesIngredientBuilder.of(items)
+//								.add("#c:vegetables/onion")
+//								.add(Items.POTATO)
+//								.build().toVanilla())
+//						.requires(Items.COOKED_CHICKEN)
+//						.requires(Items.BOWL)
+//						.unlockedBy("has_item", has(AbstractModule.itemTag("c", "fruits/lemon")))
+//						.save(foodExporter, "lemon_roast_chicken");
 
 				RecipeOutput noBeeExporter = withConditions(
 						output,

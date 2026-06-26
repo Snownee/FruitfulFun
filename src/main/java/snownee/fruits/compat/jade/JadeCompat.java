@@ -66,14 +66,14 @@ public class JadeCompat implements IWailaPlugin {
 	@Override
 	public void registerClient(IWailaClientRegistration registration) {
 		if (!Platform.isProduction()) {
-			registration.registerBlockComponent(new FruitLeavesDebugProvider(), FruitLeavesBlock.class);
-			registration.registerEntityComponent(new BeeDebugProvider(), Bee.class);
-			registration.registerBlockComponent(new ScentedCandleDebugProvider(), ScentedCandleBlock.class);
+			registration.registerBlockComponent(new FruitLeavesDebugProvider.Client(), FruitLeavesBlock.class);
+			registration.registerEntityComponent(new BeeDebugProvider.Client(), Bee.class);
+			registration.registerBlockComponent(new ScentedCandleDebugProvider.Client(), ScentedCandleBlock.class);
 		}
 		registration.registerBlockComponent(new CropProgressProvider(), FruitLeavesBlock.class);
 		registration.addRayTraceCallback((hit, accessor, original) -> override(original, registration));
 		if (Hooks.bee) {
-			registration.registerEntityComponent(new InspectorProvider(), Bee.class);
+			registration.registerEntityComponent(new InspectorProvider.EntityComponent(), Bee.class);
 			registration.registerBlockIcon(new BeehiveWaxProvider.Client(), BeehiveBlock.class);
 			if (Hooks.supplementaries) {
 				SupplementariesJadeCompat.registerClient(registration);

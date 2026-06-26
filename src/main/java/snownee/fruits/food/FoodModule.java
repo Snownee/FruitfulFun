@@ -8,6 +8,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -27,6 +29,7 @@ import snownee.kiwi.ItemObject;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModules;
+import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
 
@@ -45,8 +48,7 @@ public class FoodModule extends AbstractModule {
 			1,
 			Hooks.farmersdelight ? 0.3F : 4,
 			true,
-			Effects.COMFORT_DRINK).craftRemainder(Items.GLASS_BOTTLE);
-
+			Effects.HONEY_POMELO_TEA).craftRemainder(Items.GLASS_BOTTLE);
 	public static final BlockObject<Block> HONEY_POMELO_TEA = block(
 			$ -> new FoodBlock(Block.box(5, 0, 5, 11, 7.75, 11), $),
 			GRAPEFRUIT_PANNA_COTTA);
@@ -57,7 +59,7 @@ public class FoodModule extends AbstractModule {
 				block.lockShapeRotation = false;
 				return block;
 			}, GRAPEFRUIT_PANNA_COTTA);
-	public static final ItemObject<Item> LEMON_ROAST_CHICKEN = item($ -> new FoodItem($.food(
+	public static final ItemObject<Item> LEMON_ROAST_CHICKEN = item($ -> new ModItem($.food(
 			new FoodProperties(16, 0.8F, false),
 			Effects.NOURISHMENT).craftRemainder(Items.BOWL)));
 	public static Item.Properties LEMON_ROAST_CHICKEN_PROP = itemProp().craftRemainder(Items.BOWL);
@@ -67,7 +69,7 @@ public class FoodModule extends AbstractModule {
 					FeastBlock.LEFTOVER_SHAPE,
 					LEMON_ROAST_CHICKEN,
 					$), GRAPEFRUIT_PANNA_COTTA);
-	public static final ItemObject<Item> CHORUS_FRUIT_PIE_SLICE = item($ -> new FoodItem($.food(new FoodProperties.Builder().nutrition(2)
+	public static final ItemObject<Item> CHORUS_FRUIT_PIE_SLICE = item($ -> new ModItem($.food(new FoodProperties.Builder().nutrition(2)
 			.saturationModifier(0.6F)
 			.build())));
 	public static Item.Properties CHORUS_FRUIT_PIE_PROP = food(8, 0.6F, false, Consumables.DEFAULT_FOOD);
@@ -78,6 +80,9 @@ public class FoodModule extends AbstractModule {
 					CHORUS_FRUIT_PIE_SLICE,
 					$), GRAPEFRUIT_PANNA_COTTA);
 	public static final KiwiGO<SimpleParticleType> SMOKE = go(() -> new SimpleParticleType(true));
+	public static final KiwiGO<ConsumeEffect.Type<ClearHarmfulEffectsConsumeEffect>> CLEAR_HARMFUL_EFFECTS = go(() -> new ConsumeEffect.Type<>(
+			ClearHarmfulEffectsConsumeEffect.CODEC,
+			ClearHarmfulEffectsConsumeEffect.STREAM_CODEC));
 
 	public FoodModule() {
 		Hooks.food = true;
@@ -91,8 +96,7 @@ public class FoodModule extends AbstractModule {
 					Predicate.not(Items.AIR::equals)).forEach($ -> DispenserBlock.registerBehavior($, new FoodDispenseBehavior()));
 			KiwiModules.get(uid)
 					.getRegistries(Registries.ITEM)
-					.stream()
-					.filter($ -> $.components().has(DataComponents.FOOD))
+//					.filter($ -> $.components().has(DataComponents.FOOD))
 					.forEach($ -> Platform.registerCompostable(1, $));
 		});
 	}
@@ -104,18 +108,23 @@ public class FoodModule extends AbstractModule {
 	public static final class Effects {
 		private static final Consumable NOURISHMENT = make("farmersdelight:nourishment", 6000, 0);
 		private static final Consumable COMFORT = make("farmersdelight:comfort", 3600, 0);
-		private static final Consumable COMFORT_DRINK = makeBuilder("farmersdelight:comfort", 3600, 0).animation(ItemUseAnimation.DRINK)
-				.build();
+		private static final Consumable HONEY_POMELO_TEA = Util.make(
+				makeBuilder("farmersdelight:comfort", 3600, 0).animation(ItemUseAnimation.DRINK),
+				builder -> {
+					if (!Hooks.farmersdelight || !Platform.isProduction()) {
+						builder.onConsume(ClearHarmfulEffectsConsumeEffect.INSTANCE);
+					}
+				}).build();
 		private static final Consumable REGENERATION = make("regeneration", 120, 0);
 		private static final Consumable SPEED = make("speed", 1200, 0);
 
-		private static Consumable make(String id, int duration, int amplifier) {
-			return makeBuilder(id, duration, amplifier).build();
+		private static Consumable make(String effectId, int duration, int amplifier) {
+			return makeBuilder(effectId, duration, amplifier).build();
 		}
 
-		private static Consumable.Builder makeBuilder(String id, int duration, int amplifier) {
+		private static Consumable.Builder makeBuilder(String effectId, int duration, int amplifier) {
 			Consumable.Builder builder = Consumable.builder();
-			var effect = BuiltInRegistries.MOB_EFFECT.get(Identifier.parse(id));
+			var effect = BuiltInRegistries.MOB_EFFECT.get(Identifier.parse(effectId));
 			if (effect.isPresent()) {
 				var applyEffects = new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(effect.orElseThrow(), duration, amplifier));
 				builder.onConsume(applyEffects);

@@ -1,0 +1,20 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:bee"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "fruitfulfun:apple_sapling",
+    "minecraft:spore_blossom"
+  ],
+  "result": {
+    "id": "fruitfulfun:pomegranate_sapling"
+  }
+}

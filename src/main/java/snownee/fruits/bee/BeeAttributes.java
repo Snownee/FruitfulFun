@@ -2,17 +2,17 @@ package snownee.fruits.bee;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,12 +29,19 @@ import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFBee;
 
 public class BeeAttributes {
-	private static final UUID SPEED_MODIFIER = UUID.fromString("d21ceda4-191f-47e7-a7c7-f5eff7012bdd");
-	private static final UUID HEALTH_MODIFIER = UUID.fromString("aa3feeef-be3e-4d05-b98c-689bae6e22e7");
-	private static final UUID DAMAGE_MODIFIER = UUID.fromString("168df6fe-fa8d-426f-8198-d89a5bc01397");
+	public static final Codec<BeeAttributes> CODEC = RecordCodecBuilder.create(i -> i.group(
+			Codec.list(Codec.STRING).optionalFieldOf("Pollens", List.of()).forGetter(BeeAttributes::getPollens),
+			GeneData.CODEC.fieldOf("Genes").forGetter(BeeAttributes::getGenes),
+			Codec.list(UUIDUtil.CODEC).optionalFieldOf("Trusted", List.of()).forGetter(BeeAttributes::getTrusted),
+			Identifier.CODEC.optionalFieldOf("Texture").forGetter($ -> Optional.ofNullable($.getTexture())),
+			Codec.LONG.fieldOf("MutagenEndsIn").forGetter(BeeAttributes::getMutagenEndsIn)
+	).apply(i, BeeAttributes::new));
+	private static final Identifier SPEED_MODIFIER = FruitfulFun.id("bee_speed");
+	private static final Identifier HEALTH_MODIFIER = FruitfulFun.id("bee_health");
+	private static final Identifier DAMAGE_MODIFIER = FruitfulFun.id("bee_damage");
 	private final List<String> pollens = Lists.newArrayList();
-	private final GeneData genes = new GeneData();
-	public boolean dirty;
+	private final GeneData genes;
+	public boolean dirty = true;
 	private List<UUID> trusted = List.of();
 	@Nullable
 	private Identifier texture;
@@ -44,42 +51,17 @@ public class BeeAttributes {
 		return ((FFBee) bee).fruits$getBeeAttributes();
 	}
 
-	public void toNBT(CompoundTag data) {
-		if (!trusted.isEmpty()) {
-			ListTag trustedList = new ListTag();
-			for (UUID uuid : trusted) {
-				trustedList.add(StringTag.valueOf(uuid.toString()));
-			}
-			data.put("Trusted", trustedList);
-		}
-		if (!pollens.isEmpty()) {
-			ListTag pollensList = new ListTag();
-			for (String pollen : pollens) {
-				pollensList.add(StringTag.valueOf(pollen));
-			}
-			data.put("Pollens", pollensList);
-		}
-		CompoundTag lociTag = new CompoundTag();
-		genes.toNBT(lociTag);
-		if (!lociTag.isEmpty()) {
-			data.put("Genes", lociTag);
-		}
+	public BeeAttributes() {
+		genes = new GeneData();
 	}
 
-	public void fromNBT(CompoundTag data, Bee bee) {
-		ImmutableList.Builder<UUID> builder = ImmutableList.builder();
-		for (Tag tag : data.getList("Trusted", Tag.TAG_STRING)) {
-			builder.add(UUID.fromString(tag.getAsString()));
-		}
-		trusted = builder.build();
-		pollens.clear();
-		for (Tag tag : data.getList("Pollens", Tag.TAG_STRING)) {
-			pollens.add(tag.getAsString());
-		}
-		if (data.contains("Genes")) {
-			genes.fromNBT(data.getCompound("Genes"));
-		}
-		updateTraits(bee);
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	public BeeAttributes(List<String> pollens, GeneData genes, List<UUID> trusted, Optional<Identifier> texture, long mutagenEndsIn) {
+		this.pollens.addAll(pollens);
+		this.genes = genes;
+		this.trusted = trusted;
+		this.texture = texture.orElse(null);
+		this.mutagenEndsIn = mutagenEndsIn;
 	}
 
 	public void setTrusted(List<UUID> trusted) {
@@ -134,22 +116,22 @@ public class BeeAttributes {
 		damageInstance.removeModifier(DAMAGE_MODIFIER);
 		if (hasTrait(Trait.FASTER)) {
 			speedInstance.addPermanentModifier(
-					new AttributeModifier(SPEED_MODIFIER, "Genetic speed bonus", 0.25, AttributeModifier.Operation.ADDITION));
+					new AttributeModifier(SPEED_MODIFIER, 0.25, AttributeModifier.Operation.ADD_VALUE));
 		} else if (hasTrait(Trait.FAST)) {
 			speedInstance.addPermanentModifier(
-					new AttributeModifier(SPEED_MODIFIER, "Genetic speed bonus", 0.15, AttributeModifier.Operation.ADDITION));
+					new AttributeModifier(SPEED_MODIFIER, 0.15, AttributeModifier.Operation.ADD_VALUE));
 		}
 		boolean lazy = hasTrait(Trait.LAZY);
 		if (lazy || hasTrait(Trait.WARRIOR)) {
 			float healthRatio = bee.getHealth() / bee.getMaxHealth();
 			if (lazy) {
 				healthInstance.addPermanentModifier(
-						new AttributeModifier(HEALTH_MODIFIER, "Genetic health bonus", 5, AttributeModifier.Operation.ADDITION));
+						new AttributeModifier(HEALTH_MODIFIER, 5, AttributeModifier.Operation.ADD_VALUE));
 			} else {
 				healthInstance.addPermanentModifier(
-						new AttributeModifier(HEALTH_MODIFIER, "Genetic health bonus", 10, AttributeModifier.Operation.ADDITION));
+						new AttributeModifier(HEALTH_MODIFIER, 10, AttributeModifier.Operation.ADD_VALUE));
 				damageInstance.addPermanentModifier(
-						new AttributeModifier(DAMAGE_MODIFIER, "Genetic damage bonus", 2, AttributeModifier.Operation.ADDITION));
+						new AttributeModifier(DAMAGE_MODIFIER, 2, AttributeModifier.Operation.ADD_VALUE));
 			}
 			bee.setHealth(healthRatio * bee.getMaxHealth());
 		}

@@ -19,6 +19,7 @@ public class CropProgressProvider implements IBlockComponentProvider {
 		if (!config.get(JadeIds.MC_CROP_PROGRESS)) {
 			return;
 		}
+		tooltip.remove(JadeIds.MC_CROP_PROGRESS);
 		BlockState state = accessor.getBlockState();
 		FruitLeavesBlock block = (FruitLeavesBlock) state.getBlock();
 		if (!block.canGrow(state)) {
@@ -57,5 +58,10 @@ public class CropProgressProvider implements IBlockComponentProvider {
 	@Override
 	public boolean isRequired() {
 		return true;
+	}
+
+	@Override
+	public int getDefaultPriority() {
+		return 100;
 	}
 }

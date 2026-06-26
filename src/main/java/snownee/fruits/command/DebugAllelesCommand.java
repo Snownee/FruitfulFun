@@ -27,13 +27,10 @@ public class DebugAllelesCommand {
 							data.initAlleles(seed);
 							context.getSource().sendSystemMessage(Component.literal(String.join(
 									", ",
-									Allele.sortedByCode().stream().map($ -> String.valueOf($.codename)).toList())));
+									Allele.sortedByCode().stream().map($ -> $.codename).toList())));
 							ServerLevel world = Objects.requireNonNull(context.getSource().getServer().getLevel(Level.OVERWORLD));
 							seed = world.getSeed();
-							data = world.getDataStorage().computeIfAbsent(
-									GeneticSavedData::load,
-									GeneticSavedData::new,
-									"fruitfulfun_genetics");
+							data = world.getDataStorage().computeIfAbsent(GeneticSavedData.TYPE);
 							data.initAlleles(seed);
 							return 0;
 						}));

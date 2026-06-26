@@ -28,8 +28,6 @@ import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.phys.Vec3;
 
 public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFiller {
-	public static final String TAG_LAST_PERFECT_BLOCK = "last_perfect_block";
-
 	public BuzzyShieldItem(Properties properties) {
 		super(properties);
 	}
@@ -38,11 +36,11 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 		BuzzyPowerStorage storage = getPowerStorage(shield);
 		if (!shield.has(DataComponents.UNBREAKABLE)) {
 			storage.useLife(200); // durability is 120000 / 200 = 600
-			BuzzyPowerStorage.write(shield, storage);
+			shield.set(GadgetModule.BUZZY_POWER_STORAGE.get(), storage);
 		}
 		int ticksUsingItem = self.getTicksUsingItem();
 		if (ticksUsingItem > 0 && ticksUsingItem <= 6) {
-			shield.getOrCreateTag().putLong(TAG_LAST_PERFECT_BLOCK, self.level().getGameTime());
+			shield.set(GadgetModule.LAST_PERFECT_BLOCK.get(), self.level().getGameTime());
 			Set<LivingEntity> entities = Sets.newLinkedHashSet();
 			Level level = self.level();
 			entities.addAll(level.getEntitiesOfClass(LivingEntity.class, self.getBoundingBox().inflate(1)));
@@ -118,7 +116,7 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 	}
 
 	public static BuzzyPowerStorage getPowerStorage(ItemStack itemStack) {
-		return BuzzyPowerStorage.read(itemStack).orElseGet(() -> new BuzzyPowerStorage(120000f));
+		return BuzzyPowerStorage.of(itemStack).orElseGet(() -> new BuzzyPowerStorage(120000f));
 	}
 
 	@Override
@@ -127,7 +125,7 @@ public class BuzzyShieldItem extends ShieldItem implements BuzzyItemCategoryFill
 	}
 
 	public boolean hasNoPower(ItemStack itemStack) {
-		return BuzzyPowerStorage.read(itemStack).map(BuzzyPowerStorage::isEmpty).orElse(true);
+		return BuzzyPowerStorage.of(itemStack).isEmpty();
 	}
 
 	@Override

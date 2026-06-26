@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Maps;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetCameraPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,7 +52,7 @@ public abstract class PlayerMixin implements FFPlayer {
 			output.putString("FruitfulFun:GeneticsDifficulty", FFCommonConfig.geneticsDifficulty.name());
 		}
 		if (hauntingManager != null && hauntingManager.storedBee != null) {
-			output.put("FruitfulFun:StoredBee", hauntingManager.storedBee);
+			output.store("FruitfulFun:StoredBee", CompoundTag.CODEC, hauntingManager.storedBee);
 		}
 	}
 
@@ -83,7 +84,7 @@ public abstract class PlayerMixin implements FFPlayer {
 		}
 		if (input.contains("FruitfulFun:StoredBee")) {
 			hauntingManager = new HauntingManager(null);
-			hauntingManager.storedBee = input.get("FruitfulFun:StoredBee");
+			hauntingManager.storedBee = input.read("FruitfulFun:StoredBee", CompoundTag.CODEC).orElse(null);
 		}
 	}
 
@@ -130,7 +131,7 @@ public abstract class PlayerMixin implements FFPlayer {
 	public void fruits$maybeInitGenes() {
 		boolean changed = false;
 		for (Allele allele : Allele.sortedByCode()) {
-			String code = String.valueOf(allele.codename);
+			String code = allele.codename;
 			if (!geneNames.containsKey(code)) {
 				if (FFCommonConfig.geneticsDifficulty == FFCommonConfig.GeneticsDifficulty.Easy) {
 					fruits$setGeneName(code, new GeneName(allele.name, ""));

@@ -212,20 +212,20 @@ public class SlidingDoorBlock extends DoorBlock {
 		worldIn.addFreshEntity(door);
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		super.onRemove(state, worldIn, pos, newState, isMoving);
-		if (worldIn.isClientSide()) {
-			return;
-		}
-		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER) {
-			return;
-		}
-		if (newState.getBlock() == this && newState.getValue(OPEN)) {
-			return;
-		}
-		worldIn.getEntities(CoreModule.SLIDING_DOOR.get(), new AABB(pos), e -> e.blockPosition().equals(pos))
-				.forEach(e -> e.remove(RemovalReason.KILLED));
-	}
+//	@SuppressWarnings("deprecation")
+//	@Override
+//	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+//		super.onRemove(state, worldIn, pos, newState, isMoving);
+//		if (worldIn.isClientSide()) {
+//			return;
+//		}
+//		if (!state.getValue(OPEN) || state.getValue(HALF) != DoubleBlockHalf.LOWER) {
+//			return;
+//		}
+//		if (newState.getBlock() == this && newState.getValue(OPEN)) {
+//			return;
+//		}
+//		worldIn.getEntities(CoreModule.SLIDING_DOOR.get(), new AABB(pos), e -> e.blockPosition().equals(pos))
+//				.forEach(e -> e.remove(RemovalReason.KILLED));
+//	}
 }

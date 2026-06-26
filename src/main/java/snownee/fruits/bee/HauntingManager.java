@@ -1,20 +1,28 @@
 package snownee.fruits.bee;
 
+import java.util.Objects;
+
 import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFPlayer;
@@ -85,14 +93,21 @@ public class HauntingManager {
 	}
 
 	public void respawnStoredBee(ServerPlayer player) {
-		if (player.level().isClientSide() || storedBee == null) {
+		if (storedBee == null) {
 			return;
 		}
-		EntityType.create(storedBee, player.level()).ifPresent(entity -> {
-			entity.setPos(player.getX(), player.getY() + 0.7, player.getZ());
-			addNegativeEffects((LivingEntity) entity);
-			player.level().addWithUUID(entity);
-		});
+		ServerLevel level = player.level();
+		try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(player.problemPath(), FruitfulFun.LOGGER)) {
+			EntityType.create(
+							TagValueInput.create(reporter.forChild(() -> ".huanted"), level.registryAccess(), storedBee),
+							level,
+							EntitySpawnReason.LOAD)
+					.ifPresent(entity -> {
+						entity.setPos(player.getX(), player.getY() + 0.7F, player.getZ());
+						addNegativeEffects((LivingEntity) entity);
+						level.addWithUUID(entity);
+					});
+		}
 		storedBee = null;
 		traits = ImmutableSet.of();
 	}
@@ -101,11 +116,14 @@ public class HauntingManager {
 		if (bee.level().isClientSide()) {
 			return;
 		}
-		traits = ImmutableSet.copyOf(BeeAttributes.of(bee).getGenes().getTraits());
-		storedBee = new CompoundTag();
-		storedBee.putString("id", bee.getEncodeId());
-		bee.saveWithoutId(storedBee);
-		bee.discard();
+		try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(bee.problemPath(), FruitfulFun.LOGGER)) {
+			TagValueOutput output = TagValueOutput.createWithContext(reporter, bee.registryAccess());
+			bee.saveWithoutId(output);
+			output.putString("id", Objects.requireNonNull(bee.getEncodeId()));
+			traits = ImmutableSet.copyOf(BeeAttributes.of(bee).getGenes().getTraits());
+			storedBee = output.buildResult();
+			bee.discard();
+		}
 	}
 
 	public boolean hasTrait(Trait trait) {

@@ -19,7 +19,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
-import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.util.ClientProxy;
 
 @Mixin(BeeRenderer.class)
@@ -43,25 +42,27 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 //		FruitfulFun.id("textures/entity/bee/bee_saddle.png")
 	}
 
-	@Inject(method = "getTextureLocation*", at = @At("HEAD"), cancellable = true)
-	private void getTextureLocation(Bee bee, CallbackInfoReturnable<Identifier> ci) {
+	@Inject(
+			method = "getTextureLocation(Lnet/minecraft/client/renderer/entity/state/BeeRenderState;)Lnet/minecraft/resources/Identifier;",
+			at = @At("HEAD"),
+			cancellable = true)
+	private void getTextureLocation(BeeRenderState state, CallbackInfoReturnable<Identifier> cir) {
 		if (!Hooks.bee) {
 			return;
 		}
-		BeeAttributes attributes = BeeAttributes.of(bee);
-		Identifier texture = attributes.getTexture();
+		Identifier texture = state.getData(ClientProxy.TEXTURE);
 		if (texture != null) {
 			texture = texture.withPath($ -> {
-				if (bee.isAngry() && bee.hasNectar()) {
+				if (state.isAngry && state.hasNectar) {
 					$ += "_angry_nectar";
-				} else if (bee.isAngry()) {
+				} else if (state.isAngry) {
 					$ += "_angry";
-				} else if (bee.hasNectar()) {
+				} else if (state.hasNectar) {
 					$ += "_nectar";
 				}
 				return "textures/entity/bee/" + $ + ".png";
 			});
-			ci.setReturnValue(texture);
+			cir.setReturnValue(texture);
 		}
 	}
 }

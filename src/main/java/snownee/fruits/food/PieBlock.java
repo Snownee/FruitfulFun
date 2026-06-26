@@ -37,8 +37,14 @@ public class PieBlock extends FeastBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		ItemStack itemStack = player.getItemInHand(hand);
+	protected InteractionResult useItemOn(
+			ItemStack itemStack,
+			BlockState state,
+			Level level,
+			BlockPos pos,
+			Player player,
+			InteractionHand hand,
+			BlockHitResult hitResult) {
 		if (getServings(state) > 0 && CommonProxy.isKnife(itemStack)) {
 			if (!level.isClientSide()) {
 				ItemStack servingItem = new ItemStack(this.servingItem.get());
@@ -48,6 +54,6 @@ public class PieBlock extends FeastBlock {
 			level.playSound(player, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
 			return InteractionResult.SUCCESS_SERVER;
 		}
-		return super.use(state, level, pos, player, hand, hit);
+		return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
 	}
 }
