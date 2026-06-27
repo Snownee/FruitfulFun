@@ -17,8 +17,7 @@ block.fruitfulfun.lemon_roast_chicken_block: Lemon Roast Chicken
 item.fruitfulfun.lemon_roast_chicken: Plate of Lemon Roast Chicken
 item.fruitfulfun.chorus_fruit_pie_slice: Slice of Chorus Fruit Pie
 
-item.fruitfulfun.heart_banner_pattern: Banner Pattern
-item.fruitfulfun.heart_banner_pattern.desc: Heart Charge
+item.fruitfulfun.heart_banner_pattern: Heart Charge Banner Pattern
 block.minecraft.banner.fruitfulfun.heart.white: White Heart Charge
 block.minecraft.banner.fruitfulfun.heart.orange: Orange Heart Charge
 block.minecraft.banner.fruitfulfun.heart.magenta: Magenta Heart Charge
@@ -35,8 +34,7 @@ block.minecraft.banner.fruitfulfun.heart.brown: Brown Heart Charge
 block.minecraft.banner.fruitfulfun.heart.green: Green Heart Charge
 block.minecraft.banner.fruitfulfun.heart.red: Red Heart Charge
 block.minecraft.banner.fruitfulfun.heart.black: Black Heart Charge
-item.fruitfulfun.snowflake_banner_pattern: Banner Pattern
-item.fruitfulfun.snowflake_banner_pattern.desc: Snowflake Charge
+item.fruitfulfun.snowflake_banner_pattern: Snowflake Charge Banner Pattern
 block.minecraft.banner.fruitfulfun.snowflake.white: White Snowflake Charge
 block.minecraft.banner.fruitfulfun.snowflake.orange: Orange Snowflake Charge
 block.minecraft.banner.fruitfulfun.snowflake.magenta: Magenta Snowflake Charge

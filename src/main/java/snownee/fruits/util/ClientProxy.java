@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -36,10 +37,13 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.object.boat.BoatModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.entity.BeeRenderer;
+import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.component.DataComponentGetter;
@@ -63,6 +67,7 @@ import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFBoats;
 import snownee.fruits.FFClientConfig;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
@@ -172,6 +177,16 @@ public class ClientProxy implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientPlatform.registerEntityRenderer(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
+		{
+			ModelLayerLocation modelLayer = new ModelLayerLocation(FruitfulFun.id("citrus_boat"), "main");
+			ModelLayerRegistry.registerModelLayer(modelLayer, BoatModel::createBoatModel);
+			ClientPlatform.registerEntityRenderer(FFBoats.CITRUS_BOAT.getOrCreate(), $ -> new BoatRenderer($, modelLayer));
+		}
+		{
+			ModelLayerLocation modelLayer = new ModelLayerLocation(FruitfulFun.id("redlove_boat"), "main");
+			ModelLayerRegistry.registerModelLayer(modelLayer, BoatModel::createBoatModel);
+			ClientPlatform.registerEntityRenderer(FFBoats.REDLOVE_BOAT.getOrCreate(), $ -> new BoatRenderer($, modelLayer));
+		}
 
 		BlockTintSource oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES, 0);
 		List<BlockObject<?>> citrusLeaves = List.of(

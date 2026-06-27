@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "fruitfulfun:block/stripped_citrus_log_top",
+    "side": "fruitfulfun:block/stripped_citrus_log"
+  }
+}

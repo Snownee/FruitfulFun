@@ -9,6 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
+import snownee.fruits.FFBoats;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.gadget.GadgetModule;
 
@@ -26,5 +27,7 @@ public class FFEntityTypeTagsProvider extends FabricTagsProvider.EntityTypeTagsP
 		valueLookupBuilder(GadgetModule.VCD_MOVABLE);
 		valueLookupBuilder(EntityTypeTags.DISMOUNTS_UNDERWATER).add(EntityType.BEE);
 		valueLookupBuilder(EntityTypeTags.FALL_DAMAGE_IMMUNE).addOptional(GadgetModule.SUMMONED_BEE.get());
+
+		valueLookupBuilder(EntityTypeTags.BOAT).add(FFBoats.CITRUS_BOAT.get()).add(FFBoats.REDLOVE_BOAT.get());
 	}
 }

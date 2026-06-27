@@ -16,7 +16,7 @@ public class MutagenTintSource implements ItemTintSource {
 
 	@Override
 	public int calculate(ItemStack itemStack, @Nullable ClientLevel level, @Nullable LivingEntity owner) {
-		return itemStack.getOrDefault(BeeModule.MUTAGEN_CONTENT.get(), Mutagen.IMPERFECT).color();
+		return itemStack.getOrDefault(BeeModule.MUTAGEN_CONTENT.get(), Mutagen.IMPERFECT).color() | 0xFF000000;
 	}
 
 	@Override

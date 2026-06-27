@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.Item;
@@ -51,6 +53,7 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.ShelfBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.StandingSignBlock;
@@ -187,6 +190,10 @@ public final class CoreModule extends AbstractModule {
 			$ -> new PressurePlateBlock(CITRUS_SET_TYPE, $),
 			() -> Blocks.OAK_PRESSURE_PLATE);
 	public static final BlockObject<Block> CITRUS_BUTTON = block($ -> new ButtonBlock(CITRUS_SET_TYPE, 30, $), () -> Blocks.OAK_BUTTON);
+	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "cherry_boat")
+	public static final ItemObject<BoatItem> CITRUS_BOAT = item($ -> new BoatItem(FFBoats.CITRUS_BOAT.getOrCreate(), $.stacksTo(1)));
+	@Category(value = Categories.FUNCTIONAL_BLOCKS, after = "cherry_shelf")
+	public static final BlockObject<ShelfBlock> CITRUS_SHELF = block(ShelfBlock::new, () -> Blocks.OAK_SHELF);
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
 	public static final BlockObject<SaplingBlock> TANGERINE_SAPLING = block(
 			$ -> new SaplingBlock(FFTreeGrowers.TANGERINE, $),
@@ -318,6 +325,8 @@ public final class CoreModule extends AbstractModule {
 					.flatMap($ -> $.getRegistryEntries(Registries.BLOCK))
 					.forEach(CoreModule::setFlammability);
 
+			DispenserBlock.registerBehavior(CITRUS_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.CITRUS_BOAT.get()));
+
 			if (FFCommonConfig.dispenserCollectDragonBreath) {
 				DispenseItemBehavior original = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
 				if (original != null) {
@@ -361,10 +370,8 @@ public final class CoreModule extends AbstractModule {
 
 	public static void addWanderingTraderTrades(MerchantOffers offers, WanderingTrader trader) {
 		ItemStack sapling = Util.getRandom(
-						FFRegistries.FRUIT_TYPE.stream()
-								.filter($ -> $.tier == 0)
-								.map($ -> $.sapling.get())
-								.toList(), trader.getRandom())
+						FFRegistries.FRUIT_TYPE.stream().filter($ -> $.tier == 0).map($ -> $.sapling.get()).toList(),
+						trader.getRandom())
 				.asItem()
 				.getDefaultInstance();
 		offers.add(new MerchantOffer(new ItemCost(Items.EMERALD, FFCommonConfig.wanderingTraderSaplingPrice), sapling, 5, 1, 1));

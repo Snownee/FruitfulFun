@@ -1,5 +1,6 @@
 package snownee.fruits.datagen;
 
+import static snownee.fruits.CoreModule.CITRUS_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_BUTTON;
 import static snownee.fruits.CoreModule.CITRUS_DOOR;
 import static snownee.fruits.CoreModule.CITRUS_FENCE;
@@ -8,6 +9,7 @@ import static snownee.fruits.CoreModule.CITRUS_HANGING_SIGN_ITEM;
 import static snownee.fruits.CoreModule.CITRUS_LOG;
 import static snownee.fruits.CoreModule.CITRUS_PLANKS;
 import static snownee.fruits.CoreModule.CITRUS_PRESSURE_PLATE;
+import static snownee.fruits.CoreModule.CITRUS_SHELF;
 import static snownee.fruits.CoreModule.CITRUS_SIGN;
 import static snownee.fruits.CoreModule.CITRUS_SLAB;
 import static snownee.fruits.CoreModule.CITRUS_STAIRS;
@@ -20,6 +22,7 @@ import static snownee.fruits.CoreModule.STRIPPED_CITRUS_LOG;
 import static snownee.fruits.CoreModule.STRIPPED_CITRUS_WOOD;
 import static snownee.fruits.cherry.CherryModule.HEART_BANNER_PATTERN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_BOAT;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_BUTTON;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_DOOR;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_FENCE;
@@ -28,6 +31,7 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_HANGING_SIGN_ITEM;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_PLANKS;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_PRESSURE_PLATE;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_SHELF;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SIGN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SLAB;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SLIDING_DOOR;
@@ -42,8 +46,6 @@ import java.util.concurrent.CompletableFuture;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
-import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -68,13 +70,11 @@ import snownee.fruits.compat.farmersdelight.FarmersDelightModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.pomegranate.PomegranateModule;
-import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
-import snownee.kiwi.recipe.AlternativesIngredientBuilder;
 import snownee.kiwi.recipe.ModuleLoadedCondition;
 
 public class FFRecipeProvider extends FabricRecipeProvider {
-	public static final BlockFamily CITRUS_PLANKS_FAMILY = BlockFamilies.familyBuilder(CITRUS_PLANKS.get())
+	public static final BlockFamily CITRUS_FAMILY = BlockFamilies.familyBuilder(CITRUS_PLANKS.get())
 			.button(CITRUS_BUTTON.get())
 			.fence(CITRUS_FENCE.get())
 			.fenceGate(CITRUS_FENCE_GATE.get())
@@ -87,7 +87,7 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 			.recipeGroupPrefix("wooden")
 			.recipeUnlockedBy("has_planks")
 			.getFamily();
-	public static final BlockFamily REDLOVE_PLANKS_FAMILY = BlockFamilies.familyBuilder(REDLOVE_PLANKS.get())
+	public static final BlockFamily REDLOVE_FAMILY = BlockFamilies.familyBuilder(REDLOVE_PLANKS.get())
 			.button(REDLOVE_BUTTON.get())
 			.fence(REDLOVE_FENCE.get())
 			.fenceGate(REDLOVE_FENCE_GATE.get())
@@ -111,11 +111,11 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 			@Override
 			public void buildRecipes() {
 				oneToOneConversionRecipe(Items.PINK_DYE, CherryModule.PEACH_PINK_PETALS.get().asItem(), "pink_dye");
-				generateRecipes(CITRUS_PLANKS_FAMILY, FeatureFlagSet.of());
-				generateRecipes(REDLOVE_PLANKS_FAMILY, FeatureFlagSet.of());
+				generateRecipes(CITRUS_FAMILY, FeatureFlagSet.of());
+				generateRecipes(REDLOVE_FAMILY, FeatureFlagSet.of());
 				doorBuilder(REDLOVE_SLIDING_DOOR.get(), Ingredient.of(REDLOVE_PLANKS.get()))
 						.group("wooden_door")
-						.unlockedBy(REDLOVE_PLANKS_FAMILY.getRecipeUnlockedBy().orElseThrow(), has(REDLOVE_PLANKS.get()))
+						.unlockedBy(REDLOVE_FAMILY.getRecipeUnlockedBy().orElseThrow(), has(REDLOVE_PLANKS.get()))
 						.save(output);
 				planksFromLogs(CITRUS_PLANKS.get(), FFItemTagsProvider.CITRUS_LOGS, 4);
 				planksFromLogs(REDLOVE_PLANKS.get(), FFItemTagsProvider.REDLOVE_LOGS, 4);
@@ -123,10 +123,12 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				woodFromLogs(REDLOVE_WOOD.get(), REDLOVE_LOG.get());
 				woodFromLogs(STRIPPED_CITRUS_WOOD.get(), STRIPPED_CITRUS_LOG.get());
 				woodFromLogs(STRIPPED_REDLOVE_WOOD.get(), STRIPPED_REDLOVE_LOG.get());
-				woodenBoat(Items.OAK_BOAT, CITRUS_PLANKS.get());
-				woodenBoat(Items.CHERRY_BOAT, REDLOVE_PLANKS.get());
+				woodenBoat(CITRUS_BOAT.get(), CITRUS_PLANKS.get());
+				woodenBoat(REDLOVE_BOAT.get(), REDLOVE_PLANKS.get());
 				hangingSign(CITRUS_HANGING_SIGN_ITEM.get(), STRIPPED_REDLOVE_LOG.get());
 				hangingSign(REDLOVE_HANGING_SIGN_ITEM.get(), STRIPPED_CITRUS_LOG.get());
+				shelf(CITRUS_SHELF.get(), STRIPPED_CITRUS_LOG.get());
+				shelf(REDLOVE_SHELF.get(), STRIPPED_REDLOVE_LOG.get());
 				flowerCrown(output, CherryModule.CHERRY_CROWN.get(), Items.CHERRY_LEAVES);
 				flowerCrown(output, CherryModule.REDLOVE_CROWN.get(), CherryModule.REDLOVE_LEAVES.get());
 

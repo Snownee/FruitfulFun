@@ -1,8 +1,0 @@
-{
-	"parent": "block/inner_stairs",
-	"textures": {
-		"bottom": "fruitfulfun:block/citrus_planks",
-		"top": "fruitfulfun:block/citrus_planks",
-		"side": "fruitfulfun:block/citrus_planks"
-	}
-}

@@ -62,6 +62,7 @@ import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
+import snownee.kiwi.ItemObject;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
@@ -101,8 +102,8 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<SoundEvent> STOP_HAUNTING = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"entity.stop_haunting")));
 	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "shears")
-	public static final KiwiGO<Item> INSPECTOR = item(InspectorItem::new);
-	public static final KiwiGO<MutagenItem> MUTAGEN = item(MutagenItem::new);
+	public static final ItemObject<Item> INSPECTOR = item(InspectorItem::new);
+	public static final ItemObject<MutagenItem> MUTAGEN = item(MutagenItem::new);
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
 	@Name("mutagen")
 	public static final KiwiGO<DataComponentType<Mutagen>> MUTAGEN_CONTENT = go(

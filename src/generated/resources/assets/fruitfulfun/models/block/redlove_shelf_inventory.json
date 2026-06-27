@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_shelf_inventory",
+  "textures": {
+    "all": "fruitfulfun:block/redlove_shelf",
+    "particle": "fruitfulfun:block/stripped_redlove_log"
+  }
+}

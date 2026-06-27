@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "fruitfulfun:block/citrus_slab"
+    },
+    "type=double": {
+      "model": "fruitfulfun:block/citrus_planks"
+    },
+    "type=top": {
+      "model": "fruitfulfun:block/citrus_slab_top"
+    }
+  }
+}

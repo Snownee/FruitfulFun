@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_shelf_unpowered",
+  "textures": {
+    "all": "fruitfulfun:block/citrus_shelf",
+    "particle": "fruitfulfun:block/stripped_citrus_log"
+  }
+}

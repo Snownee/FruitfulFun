@@ -1,6 +1,7 @@
 package snownee.fruits.cherry;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
@@ -10,6 +11,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SignItem;
@@ -21,6 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.CeilingHangingSignBlock;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.ShelfBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
@@ -41,6 +45,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import snownee.fruits.CoreModule;
+import snownee.fruits.FFBoats;
 import snownee.fruits.FFFruitTypes;
 import snownee.fruits.FFTreeGrowers;
 import snownee.fruits.FruitfulFun;
@@ -135,6 +140,10 @@ public class CherryModule extends AbstractModule {
 	public static final BlockObject<Block> REDLOVE_BUTTON = block(
 			$ -> new ButtonBlock(REDLOVE_SET_TYPE, 30, $),
 			() -> Blocks.CHERRY_BUTTON);
+	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "cherry_boat")
+	public static final ItemObject<BoatItem> REDLOVE_BOAT = item($ -> new BoatItem(FFBoats.REDLOVE_BOAT.getOrCreate(), $.stacksTo(1)));
+	@Category(value = Categories.FUNCTIONAL_BLOCKS, after = "cherry_shelf")
+	public static final BlockObject<ShelfBlock> REDLOVE_SHELF = block(ShelfBlock::new, () -> Blocks.CHERRY_SHELF);
 	public static final KiwiGO<SimpleParticleType> PETAL_CHERRY = go(() -> new SimpleParticleType(false));
 	public static final KiwiGO<SimpleParticleType> PETAL_REDLOVE = go(() -> new SimpleParticleType(false));
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_leaves")
@@ -201,6 +210,8 @@ public class CherryModule extends AbstractModule {
 
 			Platform.registerCompostable(0.3F, PEACH_PINK_PETALS.get());
 			Platform.setFireInfo(PEACH_PINK_PETALS.get(), 60, 100);
+
+			DispenserBlock.registerBehavior(REDLOVE_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.REDLOVE_BOAT.get()));
 		});
 	}
 

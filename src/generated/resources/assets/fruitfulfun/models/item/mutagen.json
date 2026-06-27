@@ -1,7 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "fruitfulfun:item/mutagen",
-    "layer1": "fruitfulfun:item/mutagen_overlay"
-  }
+  "parent": "minecraft:item/potion"
 }

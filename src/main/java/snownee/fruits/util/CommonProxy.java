@@ -65,6 +65,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
@@ -81,6 +82,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.GeneticSavedData;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
 import snownee.fruits.duck.FFPlayer;
@@ -231,6 +233,13 @@ public class CommonProxy implements ModInitializer {
 		addFeature("citron");
 		addFeature("tangerine");
 		addFeature("lime");
+
+		BlockEntityType.SHELF.addValidBlock(CoreModule.CITRUS_SHELF.getOrCreate());
+		BlockEntityType.SHELF.addValidBlock(CherryModule.REDLOVE_SHELF.getOrCreate());
+		BlockEntityType.SIGN.addValidBlock(CoreModule.CITRUS_SIGN.getOrCreate());
+		BlockEntityType.SIGN.addValidBlock(CherryModule.REDLOVE_SIGN.getOrCreate());
+		BlockEntityType.HANGING_SIGN.addValidBlock(CoreModule.CITRUS_WALL_HANGING_SIGN.getOrCreate());
+		BlockEntityType.HANGING_SIGN.addValidBlock(CherryModule.REDLOVE_WALL_HANGING_SIGN.getOrCreate());
 
 		ServerLevelEvents.LOAD.register((server, world) -> {
 			if (world == server.overworld()) {

@@ -4,10 +4,6 @@
     "model": "fruitfulfun:item/mutagen",
     "tints": [
       {
-        "type": "minecraft:constant",
-        "value": -1
-      },
-      {
         "type": "fruitfulfun:mutagen"
       }
     ]

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stripped_citrus_log": {
+      "conditions": {
+        "items": [
+          {
+            "items": "fruitfulfun:stripped_citrus_log"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fruitfulfun:citrus_shelf"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_stripped_citrus_log"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fruitfulfun:citrus_shelf"
+    ]
+  }
+}

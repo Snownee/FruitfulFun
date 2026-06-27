@@ -10,6 +10,7 @@ import static snownee.fruits.CoreModule.CITRUS_HANGING_SIGN;
 import static snownee.fruits.CoreModule.CITRUS_LOG;
 import static snownee.fruits.CoreModule.CITRUS_PLANKS;
 import static snownee.fruits.CoreModule.CITRUS_PRESSURE_PLATE;
+import static snownee.fruits.CoreModule.CITRUS_SHELF;
 import static snownee.fruits.CoreModule.CITRUS_SIGN;
 import static snownee.fruits.CoreModule.CITRUS_SLAB;
 import static snownee.fruits.CoreModule.CITRUS_STAIRS;
@@ -40,6 +41,7 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_PLANKS;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_PRESSURE_PLATE;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_SHELF;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SIGN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SLAB;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SLIDING_DOOR;
@@ -170,6 +172,7 @@ public class FFBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
 		valueLookupBuilder(TREE_TYPES_OAK_LOG).add(APPLE_LEAVES.get());
 		valueLookupBuilder(TREE_TYPES_JUNGLE_LOG).add(POMEGRANATE_LEAVES.get());
 		valueLookupBuilder(BlockTags.BEEHIVES).addOptional(GadgetModule.BUZZY_CRAFTER.get());
+		valueLookupBuilder(BlockTags.WOODEN_SHELVES).add(CITRUS_SHELF.get()).add(REDLOVE_SHELF.get());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateRawBuilder(BlockTags.MINEABLE_WITH_AXE)

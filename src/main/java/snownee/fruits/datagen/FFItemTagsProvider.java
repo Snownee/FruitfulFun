@@ -5,9 +5,13 @@ import static net.minecraft.world.item.Items.CHORUS_FRUIT;
 import static net.minecraft.world.item.Items.GLOW_BERRIES;
 import static net.minecraft.world.item.Items.MELON_SLICE;
 import static net.minecraft.world.item.Items.SWEET_BERRIES;
+import static snownee.fruits.CoreModule.CITRUS_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_FRUITS;
+import static snownee.fruits.CoreModule.CITRUS_SHELF;
 import static snownee.fruits.cherry.CherryModule.CHERRY_CROWN;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_BOAT;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_CROWN;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_SHELF;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.REDLOVE_CABINET;
 import static snownee.fruits.food.FoodModule.HONEY_POMELO_TEA;
@@ -111,6 +115,9 @@ public class FFItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 				.addOptionalTag(AbstractModule.itemTag("biomeswevegone", "flowers/tulips"));
 		getOrCreateRawBuilder(ConventionalItemTags.SHIELD_TOOLS).addOptionalElement(GadgetModule.BUZZY_SHIELD.key());
 		getOrCreateRawBuilder(OFFHAND_EQUIPMENT).addOptionalElement(GadgetModule.BUZZY_SHIELD.key());
+
+		valueLookupBuilder(ItemTags.BOATS).add(CITRUS_BOAT.get()).add(REDLOVE_BOAT.get());
+		valueLookupBuilder(ItemTags.WOODEN_SHELVES).add(CITRUS_SHELF.asItem()).add(REDLOVE_SHELF.asItem());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateRawBuilder(WOODEN_CABINETS)

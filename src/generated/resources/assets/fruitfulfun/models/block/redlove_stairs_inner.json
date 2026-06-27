@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "fruitfulfun:block/redlove_planks",
+    "side": "fruitfulfun:block/redlove_planks",
+    "top": "fruitfulfun:block/redlove_planks"
+  }
+}

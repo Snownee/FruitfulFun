@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "fruitfulfun:block/redlove_wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "fruitfulfun:block/redlove_wood"
+    },
+    "axis=z": {
+      "model": "fruitfulfun:block/redlove_wood",
+      "x": 90
+    }
+  }
+}

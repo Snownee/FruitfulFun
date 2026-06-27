@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "fruitfulfun:block/grapefruit_sapling"
+    "model": "fruitfulfun:item/grapefruit_sapling"
   }
 }
