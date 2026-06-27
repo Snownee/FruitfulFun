@@ -55,6 +55,7 @@ import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.lychee.LycheeLootContextParams;
+import snownee.lychee.LycheeRegistries;
 import snownee.lychee.core.recipe.LycheeRecipe;
 import snownee.lychee.core.recipe.type.LycheeRecipeType;
 import snownee.lychee.mixin.LootContextParamSetsAccess;
@@ -62,7 +63,9 @@ import snownee.lychee.mixin.LootContextParamSetsAccess;
 @KiwiModule("ritual")
 @KiwiModule.Optional
 public class RitualModule extends AbstractModule {
-	public static final KiwiGO<SkyDarken.Type> SKY_DARKEN = go(SkyDarken.Type::new);
+	public static final KiwiGO<SkyDarken.Type> SKY_DARKEN = go(
+			SkyDarken.Type::new,
+			() -> LycheeRegistries.CONTEXTUAL);
 	@KiwiModule.Name("dragon_ritual")
 	public static final KiwiGO<LycheeRecipeType<DragonRitualContext, DragonRitualRecipe>> RECIPE_TYPE = go(() -> new LycheeRecipeType<>(
 			"fruitfulfun:dragon_ritual",
@@ -94,11 +97,12 @@ public class RitualModule extends AbstractModule {
 
 	public RitualModule() {
 		Hooks.ritual = true;
-		LootContextParamSetsAccess.callRegister("fruitfulfun:dragon_ritual", $ -> {
-			$.required(LootContextParams.ORIGIN)
-					.required(LootContextParams.THIS_ENTITY)
-					.required(LycheeLootContextParams.BLOCK_POS);
-		});
+		LootContextParamSetsAccess.callRegister(
+				"fruitfulfun:dragon_ritual", $ -> {
+					$.required(LootContextParams.ORIGIN)
+							.required(LootContextParams.THIS_ENTITY)
+							.required(LycheeLootContextParams.BLOCK_POS);
+				});
 	}
 
 	@Override
