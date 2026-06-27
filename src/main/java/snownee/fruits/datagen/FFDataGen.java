@@ -12,7 +12,6 @@ import snownee.fruits.compat.farmersdelight.FarmersDelightBlockLoot;
 import snownee.fruits.food.datagen.FoodBlockLoot;
 import snownee.fruits.gadget.datagen.GadgetBlockLoot;
 import snownee.fruits.pomegranate.datagen.PomegranateBlockLoot;
-import snownee.kiwi.datagen.KiwiLanguageProvider;
 
 public class FFDataGen implements DataGeneratorEntrypoint {
 	@Override
@@ -29,6 +28,7 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		FabricTagsProvider.BlockTagsProvider seasonalBlockTagsProvider = pack.addProvider(SeasonalBlockTagsProvider::new);
 		pack.addProvider((output, registriesFuture) -> new SeasonalItemTagsProvider(output, registriesFuture, seasonalBlockTagsProvider));
 		pack.addProvider(FFBiomeTagsProvider::new);
+		pack.addProvider(FFBannerPatternTagsProvider::new);
 		pack.addProvider(FFModelProvider::new);
 		pack.addProvider(FFRecipeProvider::new);
 		pack.addProvider(FFDynamicRegistryProvider::new);

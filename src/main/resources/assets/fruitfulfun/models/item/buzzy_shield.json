@@ -5,9 +5,6 @@
 		"layer0": "fruitfulfun:item/buzzy_shield"
 	},
 	"gui_light": "front",
-	"overrides": [
-		{"predicate": {"blocking": 1}, "model": "fruitfulfun:item/buzzy_shield_blocking"}
-	],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [0, 90, 0],

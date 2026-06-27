@@ -60,6 +60,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -113,12 +114,10 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 			@Override
 			public void buildRecipes() {
 				oneToOneConversionRecipe(Items.PINK_DYE, CherryModule.PEACH_PINK_PETALS.get().asItem(), "pink_dye");
-				generateRecipes(CITRUS_FAMILY, FeatureFlagSet.of());
-				generateRecipes(REDLOVE_FAMILY, FeatureFlagSet.of());
-				doorBuilder(REDLOVE_SLIDING_DOOR.get(), Ingredient.of(REDLOVE_PLANKS.get()))
-						.group("wooden_door")
-						.unlockedBy(REDLOVE_FAMILY.getRecipeUnlockedBy().orElseThrow(), has(REDLOVE_PLANKS.get()))
-						.save(output);
+				generateRecipes(CITRUS_FAMILY, FeatureFlagSet.of(FeatureFlags.VANILLA));
+				generateRecipes(REDLOVE_FAMILY, FeatureFlagSet.of(FeatureFlags.VANILLA));
+				oneToOneConversionRecipe(REDLOVE_SLIDING_DOOR.get(), REDLOVE_DOOR.get(), null);
+				oneToOneConversionRecipe(REDLOVE_DOOR.get(), REDLOVE_SLIDING_DOOR.get(), null);
 				planksFromLogs(CITRUS_PLANKS.get(), FFItemTagsProvider.CITRUS_LOGS, 4);
 				planksFromLogs(REDLOVE_PLANKS.get(), FFItemTagsProvider.REDLOVE_LOGS, 4);
 				woodFromLogs(CITRUS_WOOD.get(), CITRUS_LOG.get());

@@ -116,7 +116,7 @@ public final class BuzzyCrafterRenderer implements BlockEntityRenderer<BuzzyCraf
 
 	@Override
 	public BuzzyCrafterRenderState createRenderState() {
-		return null;
+		return new BuzzyCrafterRenderState();
 	}
 
 	@Override

@@ -2,18 +2,12 @@
   "model": {
     "type": "minecraft:condition",
     "on_false": {
-      "type": "minecraft:special",
-      "base": "fruitfulfun:item/buzzy_shield",
-      "model": {
-        "type": "minecraft:shield"
-      }
+      "type": "minecraft:model",
+      "model": "fruitfulfun:item/buzzy_shield"
     },
     "on_true": {
-      "type": "minecraft:special",
-      "base": "fruitfulfun:item/buzzy_shield_blocking",
-      "model": {
-        "type": "minecraft:shield"
-      }
+      "type": "minecraft:model",
+      "model": "fruitfulfun:item/buzzy_shield_blocking"
     },
     "property": "minecraft:using_item",
     "transformation": {
@@ -31,8 +25,8 @@
       ],
       "scale": [
         1.0,
-        -1.0,
-        -1.0
+        1.0,
+        1.0
       ],
       "translation": [
         0.0,

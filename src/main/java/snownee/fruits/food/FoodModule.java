@@ -3,7 +3,6 @@ package snownee.fruits.food;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;

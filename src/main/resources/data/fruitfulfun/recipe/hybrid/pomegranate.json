@@ -1,0 +1,17 @@
+{
+	"type": "fruitfulfun:hybridizing",
+	"fabric:load_conditions": [
+		{
+			"condition": "kiwi:is_loaded",
+			"module": "fruitfulfun:bee"
+		}
+	],
+	"pollens": [
+		"fruitfulfun:apple_leaves",
+		"spore_blossom"
+	],
+	"ending_step": [
+		"fruitfulfun:apple_leaves"
+	],
+	"post": "place fruitfulfun:pomegranate_leaves[age=2]"
+}

@@ -1,11 +1,15 @@
 package snownee.fruits.bee.genetics;
 
+import java.util.List;
+
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -17,7 +21,7 @@ import snownee.lychee.util.context.LycheeContextKey;
 import snownee.lychee.util.contextual.ContextualCondition;
 import snownee.lychee.util.contextual.ContextualConditionType;
 
-public record BeeHasTrait(Trait trait) implements ContextualCondition {
+public record BeeHasTrait(List<Trait> traits) implements ContextualCondition {
 	@Override
 	public ContextualConditionType<?> type() {
 		return BeeModule.BEE_HAS_TRAIT.get();
@@ -28,7 +32,7 @@ public record BeeHasTrait(Trait trait) implements ContextualCondition {
 		Entity entity = lycheeContext.get(LycheeContextKey.LOOT_PARAMS).get(LootContextParams.THIS_ENTITY);
 		if (entity instanceof Bee) {
 			BeeAttributes attributes = BeeAttributes.of(entity);
-			if (attributes.hasTrait(trait)) {
+			if (traits.stream().allMatch(attributes::hasTrait)) {
 				return i;
 			}
 		}
@@ -37,13 +41,14 @@ public record BeeHasTrait(Trait trait) implements ContextualCondition {
 
 	@Override
 	public MutableComponent getDescription(boolean inverted) {
-		String key = getDescriptionId(inverted);
-		return Component.translatable(key, trait.getDisplayName().withStyle(ChatFormatting.WHITE));
+		return Component.translatable(
+				getDescriptionId(inverted),
+				ComponentUtils.formatList(traits, ComponentUtils.DEFAULT_SEPARATOR, Trait::getDisplayName).withStyle(ChatFormatting.WHITE));
 	}
 
 	public static class Type implements ContextualConditionType<BeeHasTrait> {
 		public static final MapCodec<BeeHasTrait> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Trait.CODEC.fieldOf("trait").forGetter(BeeHasTrait::trait)
+				ExtraCodecs.compactListCodec(Trait.CODEC).fieldOf("trait").forGetter(BeeHasTrait::traits)
 		).apply(instance, BeeHasTrait::new));
 
 		@Override

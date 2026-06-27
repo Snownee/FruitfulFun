@@ -143,6 +143,7 @@ public class HybridizingRecipeType extends LycheeRecipeType<HybridizingRecipe> {
 			isBigFlowerUpper = true;
 		}
 		LycheeContext ctx = new LycheeContext();
+		ctx.put(LycheeContextKey.LEVEL, level);
 		ctx.put(LycheeContextKey.RANDOM, bee.getRandom());
 		LootParamsContext lootParams = ctx.initLootParams(this);
 		lootParams.set(LootContextParams.THIS_ENTITY, bee);

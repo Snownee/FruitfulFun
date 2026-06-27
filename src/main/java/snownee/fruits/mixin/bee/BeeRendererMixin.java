@@ -16,9 +16,13 @@ import net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer;
 import net.minecraft.client.renderer.entity.state.BeeRenderState;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Unit;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.util.ClientProxy;
 
 @Mixin(BeeRenderer.class)
@@ -63,6 +67,21 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 				return "textures/entity/bee/" + $ + ".png";
 			});
 			cir.setReturnValue(texture);
+		}
+	}
+
+	@Inject(
+			method = "extractRenderState(Lnet/minecraft/world/entity/animal/bee/Bee;Lnet/minecraft/client/renderer/entity/state/BeeRenderState;F)V",
+			at = @At("HEAD"))
+	private void extractRenderState(Bee entity, BeeRenderState state, float partialTicks, CallbackInfo ci) {
+		if (!Hooks.bee) {
+			return;
+		}
+		BeeAttributes attributes = BeeAttributes.of(entity);
+		state.setData(ClientProxy.SADDLE, entity.getItemBySlot(EquipmentSlot.SADDLE));
+		state.setData(ClientProxy.TEXTURE, attributes.getTexture());
+		if (attributes.hasTrait(Trait.GHOST)) {
+			state.setData(ClientProxy.TRANSLUCENT, Unit.INSTANCE);
 		}
 	}
 }

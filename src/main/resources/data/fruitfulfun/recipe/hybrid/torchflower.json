@@ -1,0 +1,49 @@
+{
+	"type": "fruitfulfun:hybridizing",
+	"fabric:load_conditions": [
+		{
+			"condition": "kiwi:is_loaded",
+			"module": "fruitfulfun:bee"
+		}
+	],
+	"pollens": [
+		"torchflower"
+	],
+	"contextual": {
+		"type": "fruitfulfun:bee_has_trait",
+		"trait": "wither_tolerant"
+	},
+	"post": [
+		"place * /0.1",
+		{
+			"type": "random",
+			"entries": [
+				{
+					"type": "drop_item",
+					"weight": 5,
+					"id": "minecraft:blaze_powder"
+				},
+				{
+					"type": "drop_item",
+					"weight": 5,
+					"id": "minecraft:gunpowder"
+				},
+				{
+					"type": "drop_item",
+					"weight": 3,
+					"id": "minecraft:coal"
+				},
+				{
+					"type": "drop_item",
+					"weight": 2,
+					"id": "minecraft:gold_ingot"
+				},
+				{
+					"type": "drop_item",
+					"weight": 1,
+					"id": "minecraft:quartz"
+				}
+			]
+		}
+	]
+}

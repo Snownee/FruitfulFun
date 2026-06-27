@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import net.minecraft.world.level.pathfinder.PathType;
 
 @Mixin(PathType.class)
-public enum PathTypeMixin {
+enum PathTypeMixin {
 	FRUITFULFUN_LEAVES(-1);
 
 	@Shadow

@@ -57,7 +57,12 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 
 	public BuzzyCrafterBlockEntity(BlockPos pos, BlockState state) {
 		super(pos, state);
+	}
+
+	@Override
+	public boolean isValidBlockState(BlockState blockState) {
 		type = GadgetModule.BUZZY_CRAFTER_ENTITY.get();
+		return super.isValidBlockState(blockState);
 	}
 
 	@Override

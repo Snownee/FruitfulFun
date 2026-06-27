@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
 import com.mojang.math.Quadrant;
+import com.mojang.math.Transformation;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -23,9 +24,11 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -56,15 +59,13 @@ public class FFModelProvider extends FabricModelProvider {
 		generators.woodProvider(CoreModule.CITRUS_LOG.get())
 				.logWithHorizontal(CoreModule.CITRUS_LOG.get())
 				.wood(CoreModule.CITRUS_WOOD.get());
-		generators.woodProvider(CoreModule.STRIPPED_CITRUS_LOG.get())
-				.logWithHorizontal(CoreModule.STRIPPED_CITRUS_LOG.get())
-				.wood(CoreModule.STRIPPED_CITRUS_WOOD.get());
+		generators.woodProvider(CoreModule.STRIPPED_CITRUS_LOG.get()).logWithHorizontal(CoreModule.STRIPPED_CITRUS_LOG.get()).wood(
+				CoreModule.STRIPPED_CITRUS_WOOD.get());
 		generators.woodProvider(CherryModule.REDLOVE_LOG.get())
 				.logWithHorizontal(CherryModule.REDLOVE_LOG.get())
 				.wood(CherryModule.REDLOVE_WOOD.get());
-		generators.woodProvider(CherryModule.STRIPPED_REDLOVE_LOG.get())
-				.logWithHorizontal(CherryModule.STRIPPED_REDLOVE_LOG.get())
-				.wood(CherryModule.STRIPPED_REDLOVE_WOOD.get());
+		generators.woodProvider(CherryModule.STRIPPED_REDLOVE_LOG.get()).logWithHorizontal(CherryModule.STRIPPED_REDLOVE_LOG.get()).wood(
+				CherryModule.STRIPPED_REDLOVE_WOOD.get());
 		generators.createHangingSign(
 				CoreModule.STRIPPED_CITRUS_LOG.get(),
 				CoreModule.CITRUS_HANGING_SIGN.get(),
@@ -156,7 +157,7 @@ public class FFModelProvider extends FabricModelProvider {
 				new TextureMapping(),
 				generators.modelOutput);
 		generators.itemModelOutput.accept(BeeModule.MUTAGEN.get(), ItemModelUtils.tintedModel(model, MutagenTintSource.INSTANCE));
-		generators.generateShield(GadgetModule.BUZZY_SHIELD.get());
+		buzzyShield(GadgetModule.BUZZY_SHIELD.get());
 
 		flat(CoreModule.TANGERINE);
 		flat(CoreModule.LIME);
@@ -230,11 +231,20 @@ public class FFModelProvider extends FabricModelProvider {
 						BlockStateProperties.CANDLES,
 						BlockStateProperties.LIT)
 				.select(1, false, plainVariant(Identifier))
-				.select(2, false, plainVariant(resourceLocation2))
+				.select(
+						2,
+						false,
+						plainVariant(resourceLocation2))
 				.select(3, false, plainVariant(resourceLocation3))
-				.select(4, false, plainVariant(resourceLocation4))
+				.select(
+						4,
+						false,
+						plainVariant(resourceLocation4))
 				.select(1, true, plainVariant(resourceLocation5))
-				.select(2, true, plainVariant(resourceLocation6))
+				.select(
+						2,
+						true,
+						plainVariant(resourceLocation6))
 				.select(3, true, plainVariant(resourceLocation7))
 				.select(4, true, plainVariant(resourceLocation8))));
 	}
@@ -297,7 +307,15 @@ public class FFModelProvider extends FabricModelProvider {
 					throw new IllegalStateException("Unexpected value: " + age);
 				}));
 		generators.blockStateOutput.accept(generator);
-		generators.registerSimpleTintedItemModel(block, model012, ItemModelUtils.constantTint(-8345771));
+		generators.registerSimpleItemModel(block, model012);
+	}
+
+	public final void buzzyShield(final Item item) {
+		ItemModel.Unbaked normal = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item));
+		ItemModel.Unbaked blocking = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, "_blocking"));
+		Objects.requireNonNull(itemGenerators).itemModelOutput.accept(
+				item,
+				ItemModelUtils.conditional(Transformation.IDENTITY, ItemModelUtils.isUsingItem(), blocking, normal));
 	}
 
 	public static Identifier tex(String path) {

@@ -1,0 +1,15 @@
+{
+	"type": "farmingforblockheads:market",
+	"result": {
+		"item": "fruitfulfun:lime_sapling"
+	},
+	"defaults": "selling.saplings.fruitfulfun.lime_sapling",
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+			"values": [
+				"farmingforblockheads"
+			]
+		}
+	]
+}

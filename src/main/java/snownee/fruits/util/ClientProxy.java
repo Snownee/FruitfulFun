@@ -11,7 +11,6 @@ import static snownee.fruits.CoreModule.TANGERINE_LEAVES;
 import static snownee.fruits.cherry.CherryModule.PEACH_PINK_PETALS;
 import static snownee.fruits.cherry.CherryModule.PETAL_CHERRY;
 import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_LEAVES;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +50,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -102,6 +102,7 @@ public class ClientProxy implements ClientModInitializer {
 	private static final ExtraModelKey<BlockStateModel> REDLOVE_CROWN_MODEL = ExtraModelKey.create();
 	public static final RenderStateDataKey<ItemStack> SADDLE = RenderStateDataKey.create(() -> "saddle");
 	public static final RenderStateDataKey<Identifier> TEXTURE = RenderStateDataKey.create(() -> "texture");
+	public static final RenderStateDataKey<Unit> TRANSLUCENT = RenderStateDataKey.create(() -> "texture");
 
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -222,9 +223,6 @@ public class ClientProxy implements ClientModInitializer {
 
 		ParticleProviderRegistry.getInstance().register(PETAL_CHERRY.getOrCreate(), PetalParticle.Factory::new);
 		ParticleProviderRegistry.getInstance().register(PETAL_REDLOVE.getOrCreate(), PetalParticle.Factory::new);
-
-		BlockTintSource birchBlockColor = ColorProviderUtil.delegate(Blocks.BIRCH_LEAVES, 0);
-		BlockColorRegistry.register(List.of(BlockTintSources.constant(0xC22626), birchBlockColor), REDLOVE_LEAVES.getOrCreate());
 
 		BlockColorRegistry.register(List.of(BlockColors.BLANK_LAYER, BlockTintSources.grass()), PEACH_PINK_PETALS.getOrCreate());
 

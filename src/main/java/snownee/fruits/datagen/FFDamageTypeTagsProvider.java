@@ -17,6 +17,6 @@ public class FFDamageTypeTagsProvider extends FabricTagsProvider<DamageType> {
 
 	@Override
 	protected void addTags(HolderLookup.Provider provider) {
-		builder(DamageTypeTags.IS_EXPLOSION).addOptional(FFDamageTypes.EXPLOSION).addOptional(FFDamageTypes.PLAYER_EXPLOSION);
+		builder(DamageTypeTags.IS_EXPLOSION).addOptional(FFDamageTypes.EXPLOSION);
 	}
 }

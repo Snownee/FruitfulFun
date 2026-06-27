@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Bees;
@@ -80,11 +81,12 @@ public record TransformBees(
 
 	public static class Type implements PostActionType<TransformBees> {
 		public static final MapCodec<TransformBees> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-				PostActionCommonProperties.MAP_CODEC.fieldOf("common_properties").forGetter(TransformBees::commonProperties),
-				Reference.CODEC.fieldOf("target").forGetter(TransformBees::target),
-				Trait.CODEC.listOf().fieldOf("add_traits").forGetter(TransformBees::addTraits),
-				Trait.CODEC.listOf().fieldOf("remove_traits").forGetter(TransformBees::removeTraits)
-		).apply(instance, TransformBees::new));
+				PostActionCommonProperties.MAP_CODEC.forGetter(TransformBees::commonProperties),
+				Reference.CODEC.optionalFieldOf("target", Reference.DEFAULT).forGetter(TransformBees::target),
+				ExtraCodecs.compactListCodec(Trait.CODEC).optionalFieldOf("add_trait", List.of()).forGetter(TransformBees::addTraits),
+				ExtraCodecs.compactListCodec(Trait.CODEC)
+						.optionalFieldOf("remove_trait", List.of())
+						.forGetter(TransformBees::removeTraits)).apply(instance, TransformBees::new));
 		public static final StreamCodec<RegistryFriendlyByteBuf, TransformBees> STREAM_CODEC = StreamCodec.composite(
 				PostActionCommonProperties.STREAM_CODEC,
 				TransformBees::commonProperties,

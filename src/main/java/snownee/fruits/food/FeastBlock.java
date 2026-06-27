@@ -1,6 +1,5 @@
 package snownee.fruits.food;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.jspecify.annotations.Nullable;

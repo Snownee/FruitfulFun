@@ -40,7 +40,7 @@ public class BeehiveWaxProvider implements StreamServerDataProvider<BlockAccesso
 	public static class Client extends BeehiveWaxProvider implements IBlockComponentProvider {
 		@Override
 		public @Nullable Element getIcon(BlockAccessor accessor, IPluginConfig config, @Nullable Element currentIcon) {
-			if (accessor.getPickedResult().isEmpty() || !config.get(JadeIds.MC_WAXED)) {
+			if (accessor.getPickedResult().isEmpty() || !config.get(JadeIds.MC_WAXED) || !decodeFromData(accessor).orElse(false)) {
 				return currentIcon;
 			}
 			Element largeIcon = JadeUI.item(accessor.getPickedResult());

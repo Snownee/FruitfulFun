@@ -2,6 +2,7 @@ package snownee.fruits.gadget;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import com.mojang.serialization.Codec;
@@ -9,6 +10,7 @@ import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -16,17 +18,21 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -87,7 +93,20 @@ public class GadgetModule extends AbstractModule {
 	});
 
 	@KiwiModule.Category(value = Categories.COMBAT, after = "shield")
-	public static final ItemObject<BuzzyShieldItem> BUZZY_SHIELD = item($ -> new BuzzyShieldItem($.stacksTo(1)));
+	public static final ItemObject<BuzzyShieldItem> BUZZY_SHIELD = item($ -> new BuzzyShieldItem($
+			.stacksTo(1)
+			.equippableUnswappable(EquipmentSlot.OFFHAND)
+			.delayedComponent(
+					DataComponents.BLOCKS_ATTACKS,
+					context -> new BlocksAttacks(
+							0F,
+							1.0F,
+							List.of(new BlocksAttacks.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
+							new BlocksAttacks.ItemDamageFunction(3.0F, 1.0F, 1.0F),
+							Optional.of(context.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
+							Optional.of(SoundEvents.SHIELD_BLOCK),
+							Optional.of(SoundEvents.SHIELD_BREAK)
+					))));
 	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = entity($ -> EntityType.Builder.of(
 			SummonedBee::new,
 			MobCategory.CREATURE).sized(0.525f, 0.45f).clientTrackingRange(8).build($));
