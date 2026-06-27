@@ -1,6 +1,12 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "fruitfulfun:block/pomegranate_leaves"
+    "model": "fruitfulfun:item/pomegranate_leaves",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -12012264
+      }
+    ]
   }
 }

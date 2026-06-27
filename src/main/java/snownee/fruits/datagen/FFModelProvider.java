@@ -177,7 +177,9 @@ public class FFModelProvider extends FabricModelProvider {
 		flat(FoodModule.CHORUS_FRUIT_PIE_SLICE);
 		flat(FoodModule.LEMON_ROAST_CHICKEN);
 		flat(CoreModule.CITRUS_BOAT);
+		flat(CoreModule.CITRUS_CHEST_BOAT);
 		flat(CherryModule.REDLOVE_BOAT);
+		flat(CherryModule.REDLOVE_CHEST_BOAT);
 	}
 
 	private void flat(ItemLike item) {
@@ -265,11 +267,11 @@ public class FFModelProvider extends FabricModelProvider {
 		}
 		generators.blockStateOutput.accept(generator);
 		Material baseTexture = TextureMapping.getBlockTexture(CoreModule.APPLE_LEAVES.is(block) ? Blocks.OAK_LEAVES : block);
-		FFModelTemplates.FLOWERING_INVENTORY.create(
+		Identifier model = FFModelTemplates.FLOWERING_INVENTORY.create(
 				ModelLocationUtils.getModelLocation(block.asItem()),
 				new TextureMapping().put(FFModelTemplates.LEAVES, baseTexture).put(FFModelTemplates.FLOWERS, flowersTexture),
 				generators.modelOutput);
-//		generators.registerSimpleTintedItemModel(block, blockModel, ItemModelUtils.constantTint(-12012264));
+		generators.registerSimpleTintedItemModel(block, model, ItemModelUtils.constantTint(-12012264));
 	}
 
 	public static void createRedloveLeaves(BlockModelGenerators generators, FruitLeavesBlock block) {
@@ -295,7 +297,7 @@ public class FFModelProvider extends FabricModelProvider {
 					throw new IllegalStateException("Unexpected value: " + age);
 				}));
 		generators.blockStateOutput.accept(generator);
-		generators.registerSimpleItemModel(block, model012);
+		generators.registerSimpleTintedItemModel(block, model012, ItemModelUtils.constantTint(-8345771));
 	}
 
 	public static Identifier tex(String path) {

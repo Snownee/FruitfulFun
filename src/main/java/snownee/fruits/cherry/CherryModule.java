@@ -142,6 +142,9 @@ public class CherryModule extends AbstractModule {
 			() -> Blocks.CHERRY_BUTTON);
 	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "cherry_boat")
 	public static final ItemObject<BoatItem> REDLOVE_BOAT = item($ -> new BoatItem(FFBoats.REDLOVE_BOAT.getOrCreate(), $.stacksTo(1)));
+	public static final ItemObject<BoatItem> REDLOVE_CHEST_BOAT = item($ -> new BoatItem(
+			FFBoats.REDLOVE_CHEST_BOAT.getOrCreate(),
+			$.stacksTo(1)));
 	@Category(value = Categories.FUNCTIONAL_BLOCKS, after = "cherry_shelf")
 	public static final BlockObject<ShelfBlock> REDLOVE_SHELF = block(ShelfBlock::new, () -> Blocks.CHERRY_SHELF);
 	public static final KiwiGO<SimpleParticleType> PETAL_CHERRY = go(() -> new SimpleParticleType(false));
@@ -212,6 +215,7 @@ public class CherryModule extends AbstractModule {
 			Platform.setFireInfo(PEACH_PINK_PETALS.get(), 60, 100);
 
 			DispenserBlock.registerBehavior(REDLOVE_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.REDLOVE_BOAT.get()));
+			DispenserBlock.registerBehavior(REDLOVE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.REDLOVE_CHEST_BOAT.get()));
 		});
 	}
 

@@ -52,8 +52,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -90,6 +92,7 @@ import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.client.ItemProjectileColor;
 import snownee.fruits.gadget.client.ItemProjectileRenderer;
 import snownee.kiwi.BlockObject;
+import snownee.kiwi.KiwiGO;
 import snownee.kiwi.loader.ClientPlatform;
 import snownee.kiwi.util.client.ColorProviderUtil;
 import snownee.lychee.util.action.ActionRenderer;
@@ -177,16 +180,10 @@ public class ClientProxy implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientPlatform.registerEntityRenderer(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
-		{
-			ModelLayerLocation modelLayer = new ModelLayerLocation(FruitfulFun.id("citrus_boat"), "main");
-			ModelLayerRegistry.registerModelLayer(modelLayer, BoatModel::createBoatModel);
-			ClientPlatform.registerEntityRenderer(FFBoats.CITRUS_BOAT.getOrCreate(), $ -> new BoatRenderer($, modelLayer));
-		}
-		{
-			ModelLayerLocation modelLayer = new ModelLayerLocation(FruitfulFun.id("redlove_boat"), "main");
-			ModelLayerRegistry.registerModelLayer(modelLayer, BoatModel::createBoatModel);
-			ClientPlatform.registerEntityRenderer(FFBoats.REDLOVE_BOAT.getOrCreate(), $ -> new BoatRenderer($, modelLayer));
-		}
+		registerBoatRenderer(FFBoats.CITRUS_BOAT);
+		registerBoatRenderer(FFBoats.CITRUS_CHEST_BOAT);
+		registerBoatRenderer(FFBoats.REDLOVE_BOAT);
+		registerBoatRenderer(FFBoats.REDLOVE_CHEST_BOAT);
 
 		BlockTintSource oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES, 0);
 		List<BlockObject<?>> citrusLeaves = List.of(
@@ -315,5 +312,13 @@ public class ClientProxy implements ClientModInitializer {
 	@Nullable
 	public static TooltipProvider getTooltipProvider(ConsumeEffect effect) {
 		return effect instanceof TooltipProvider provider ? provider : null;
+	}
+
+	public static void registerBoatRenderer(KiwiGO<? extends EntityType<? extends AbstractBoat>> boat) {
+		ModelLayerLocation modelLayer = new ModelLayerLocation(boat.key(), "main");
+		ModelLayerRegistry.registerModelLayer(
+				modelLayer,
+				modelLayer.model().getPath().endsWith("_chest_boat") ? BoatModel::createChestBoatModel : BoatModel::createBoatModel);
+		ClientPlatform.registerEntityRenderer(boat.getOrCreate(), $ -> new BoatRenderer($, modelLayer));
 	}
 }

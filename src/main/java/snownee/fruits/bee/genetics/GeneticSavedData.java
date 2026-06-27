@@ -1,5 +1,7 @@
 package snownee.fruits.bee.genetics;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
@@ -30,12 +32,15 @@ public class GeneticSavedData extends SavedData {
 	private final Map<String, AlleleRecord> alleles = Maps.newHashMap();
 
 	public void initAlleles(long seed) {
-		for (Allele allele : Allele.values()) {
+		Collection<Allele> values = Allele.values();
+		for (Allele allele : values) {
 			allele.codename = "0";
 			allele.index = -1;
 		}
 		RandomSource random = RandomSource.create(seed);
-		for (Allele allele : Allele.values()) {
+		float[] hues = pickEvenlySpacedPoints(values.size(), 0.6F / values.size(), random);
+		int i = 0;
+		for (Allele allele : values) {
 			AlleleRecord alleleRecord = alleles.get(allele.name);
 			if (alleleRecord != null) {
 				allele.codename = alleleRecord.code;
@@ -56,9 +61,48 @@ public class GeneticSavedData extends SavedData {
 				alleles.put(allele.name, new AlleleRecord(allele.codename, allele.index));
 				setDirty();
 			}
-			allele.color = Mth.hsvToRgb(allele.index / 254f, 0.86f, 0.86f);
+			allele.color = Mth.hsvToRgb(hues[i++], 0.86f, 0.86f);
 		}
-		Allele.BY_CODE = Allele.values().stream().sorted(Comparator.comparing(a -> a.codename)).toList();
+		Allele.BY_CODE = values.stream().sorted(Comparator.comparing(a -> a.codename)).toList();
+	}
+
+	private static float[] pickEvenlySpacedPoints(int count, float minDistance, RandomSource random) {
+		float freeSpace = 1 - count * minDistance;
+		if (freeSpace < 0) {
+			throw new IllegalArgumentException("Cannot place " + count + " points with min distance " + minDistance);
+		}
+		float[] cuts = new float[count];
+		for (int i = 0; i < count; i++) {
+			cuts[i] = random.nextFloat() * freeSpace;
+		}
+		Arrays.sort(cuts);
+		float[] gaps = new float[count - 1];
+		gaps[0] = cuts[0];
+		for (int i = 1; i < count - 1; i++) {
+			gaps[i] = cuts[i] - cuts[i - 1];
+		}
+		for (int i = 0; i < count - 1; i++) {
+			gaps[i] += minDistance;
+		}
+		float[] points = new float[count];
+		float current = points[0] = random.nextFloat();
+		for (int i = 1; i < count; i++) {
+			current += gaps[i - 1];
+			points[i] = current % 1;
+		}
+		shuffle(points, random);
+		return points;
+	}
+
+	private static void shuffle(final float[] list, final RandomSource random) {
+		int size = list.length;
+
+		for (int i = size; i > 1; i--) {
+			int swapTo = random.nextInt(i);
+			float temp = list[i - 1];
+			list[i - 1] = list[swapTo];
+			list[swapTo] = temp;
+		}
 	}
 
 	public record AlleleRecord(String code, int index) {

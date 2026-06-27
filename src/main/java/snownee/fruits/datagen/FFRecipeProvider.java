@@ -2,6 +2,7 @@ package snownee.fruits.datagen;
 
 import static snownee.fruits.CoreModule.CITRUS_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_BUTTON;
+import static snownee.fruits.CoreModule.CITRUS_CHEST_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_DOOR;
 import static snownee.fruits.CoreModule.CITRUS_FENCE;
 import static snownee.fruits.CoreModule.CITRUS_FENCE_GATE;
@@ -24,6 +25,7 @@ import static snownee.fruits.cherry.CherryModule.HEART_BANNER_PATTERN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_BOAT;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_BUTTON;
+import static snownee.fruits.cherry.CherryModule.REDLOVE_CHEST_BOAT;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_DOOR;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_FENCE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_FENCE_GATE;
@@ -125,6 +127,8 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				woodFromLogs(STRIPPED_REDLOVE_WOOD.get(), STRIPPED_REDLOVE_LOG.get());
 				woodenBoat(CITRUS_BOAT.get(), CITRUS_PLANKS.get());
 				woodenBoat(REDLOVE_BOAT.get(), REDLOVE_PLANKS.get());
+				chestBoat(CITRUS_CHEST_BOAT.get(), CITRUS_BOAT.get());
+				chestBoat(REDLOVE_CHEST_BOAT.get(), REDLOVE_BOAT.get());
 				hangingSign(CITRUS_HANGING_SIGN_ITEM.get(), STRIPPED_REDLOVE_LOG.get());
 				hangingSign(REDLOVE_HANGING_SIGN_ITEM.get(), STRIPPED_CITRUS_LOG.get());
 				shelf(CITRUS_SHELF.get(), STRIPPED_CITRUS_LOG.get());

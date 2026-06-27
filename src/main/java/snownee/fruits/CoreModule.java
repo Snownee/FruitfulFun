@@ -192,6 +192,9 @@ public final class CoreModule extends AbstractModule {
 	public static final BlockObject<Block> CITRUS_BUTTON = block($ -> new ButtonBlock(CITRUS_SET_TYPE, 30, $), () -> Blocks.OAK_BUTTON);
 	@Category(value = Categories.TOOLS_AND_UTILITIES, after = "cherry_boat")
 	public static final ItemObject<BoatItem> CITRUS_BOAT = item($ -> new BoatItem(FFBoats.CITRUS_BOAT.getOrCreate(), $.stacksTo(1)));
+	public static final ItemObject<BoatItem> CITRUS_CHEST_BOAT = item($ -> new BoatItem(
+			FFBoats.CITRUS_CHEST_BOAT.getOrCreate(),
+			$.stacksTo(1)));
 	@Category(value = Categories.FUNCTIONAL_BLOCKS, after = "cherry_shelf")
 	public static final BlockObject<ShelfBlock> CITRUS_SHELF = block(ShelfBlock::new, () -> Blocks.OAK_SHELF);
 	@Category(value = Categories.NATURAL_BLOCKS, after = "cherry_sapling")
@@ -326,6 +329,7 @@ public final class CoreModule extends AbstractModule {
 					.forEach(CoreModule::setFlammability);
 
 			DispenserBlock.registerBehavior(CITRUS_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.CITRUS_BOAT.get()));
+			DispenserBlock.registerBehavior(CITRUS_CHEST_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.CITRUS_CHEST_BOAT.get()));
 
 			if (FFCommonConfig.dispenserCollectDragonBreath) {
 				DispenseItemBehavior original = DispenserBlock.DISPENSER_REGISTRY.get(Items.GLASS_BOTTLE);
