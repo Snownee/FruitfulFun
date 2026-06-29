@@ -1,0 +1,11 @@
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+pollens:
+- blue_orchid
+- oxeye_daisy
+post:
+  block: mycelium
+  offsetY: -1
+  type: place
+type: fruitfulfun:hybridizing

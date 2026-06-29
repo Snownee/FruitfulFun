@@ -81,5 +81,22 @@
 		"sounds": [
 			"fruitfulfun:ritual_finish"
 		]
+	},
+	"entity.pomegranate.explode": {
+		"sounds": [
+			{
+				"attenuation_distance": 8,
+				"name": "entity/wind_charge/wind_burst1"
+			},
+			{
+				"attenuation_distance": 8,
+				"name": "entity/wind_charge/wind_burst2"
+			},
+			{
+				"attenuation_distance": 8,
+				"name": "entity/wind_charge/wind_burst3"
+			}
+		],
+		"subtitle": "subtitles.fruitfulfun.pomegranate.explode"
 	}
 }

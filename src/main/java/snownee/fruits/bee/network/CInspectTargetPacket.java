@@ -22,13 +22,18 @@ import snownee.kiwi.network.PayloadContext;
 import snownee.kiwi.network.PlayPacketHandler;
 
 @KiwiPacket
-public record CInspectTargetPacket(InspectTarget target) implements CustomPacketPayload {
+public record CInspectTargetPacket(int id, int hoverTicks, InspectTarget target) implements CustomPacketPayload {
 	public static final CustomPacketPayload.Type<CInspectTargetPacket> TYPE = new CustomPacketPayload.Type<>(
 			snownee.fruits.FruitfulFun.id("inspect_target"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, CInspectTargetPacket> STREAM_CODEC = StreamCodec.of(
-			(buf, packet) -> packet.target().toNetwork(buf),
-			buf -> new CInspectTargetPacket(Objects.requireNonNull(InspectTarget.fromNetwork(buf))));
+			(buf, packet) -> {
+				buf.writeVarInt(packet.id());
+				buf.writeVarInt(packet.hoverTicks());
+				packet.target().toNetwork(buf);
+			},
+			buf -> new CInspectTargetPacket(buf.readVarInt(), buf.readVarInt(), Objects.requireNonNull(InspectTarget.fromNetwork(buf))));
+	public static final int ANALYZE_TICKS = 12;
 
 	@Override
 	public CustomPacketPayload.Type<CInspectTargetPacket> type() {
@@ -50,8 +55,12 @@ public record CInspectTargetPacket(InspectTarget target) implements CustomPacket
 					Entity entity = target.getEntity(level);
 					FFPlayer.of(player).fruits$maybeInitGenes();
 					if (entity instanceof Bee bee) {
+						BeeAttributes attributes = BeeAttributes.of(bee);
+						if (packet.hoverTicks() < ANALYZE_TICKS && !attributes.isInspected(player)) {
+							return;
+						}
 						Hooks.awardSimpleAdvancement(player, "inspector");
-						SInspectBeeReplyPacket.send(player, BeeAttributes.of(bee));
+						SInspectBeeReplyPacket.send(packet.id(), player, attributes);
 					}
 				} else if (action == InspectAction.SCENT) {
 					LevelChunk chunk = level.getChunkAt(((InspectTarget.BlockTarget) target).pos());
@@ -89,7 +98,7 @@ public record CInspectTargetPacket(InspectTarget target) implements CustomPacket
 		}
 	}
 
-	public static void send(InspectTarget target) {
-		KPacketSender.sendToServer(new CInspectTargetPacket(target));
+	public static void send(int nextId, int hoverTicks, InspectTarget target) {
+		KPacketSender.sendToServer(new CInspectTargetPacket(nextId, hoverTicks, target));
 	}
 }

@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -54,6 +55,12 @@ import snownee.kiwi.loader.event.InitEvent;
 @KiwiModule(value = "gadget", modId = FruitfulFun.ID, dependencies = "@core")
 @KiwiModule.Optional
 public class GadgetModule extends AbstractModule {
+	public static final KiwiGO<DataComponentType<Unit>> HIDE_HONEY_LEVEL = go(
+			() -> DataComponentType.<Unit>builder()
+					.persistent(Unit.CODEC)
+					.networkSynchronized(Unit.STREAM_CODEC)
+					.build(),
+			Registries.DATA_COMPONENT_TYPE);
 	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS, after = "beehive")
 	public static final BlockObject<Block> BUZZY_CRAFTER = block(BuzzyCrafterBlock::new, () -> Blocks.BEEHIVE);
 	@KiwiModule.Name("buzzy_crafter")
@@ -93,20 +100,17 @@ public class GadgetModule extends AbstractModule {
 	});
 
 	@KiwiModule.Category(value = Categories.COMBAT, after = "shield")
-	public static final ItemObject<BuzzyShieldItem> BUZZY_SHIELD = item($ -> new BuzzyShieldItem($
-			.stacksTo(1)
+	public static final ItemObject<BuzzyShieldItem> BUZZY_SHIELD = item($ -> new BuzzyShieldItem($.stacksTo(1)
 			.equippableUnswappable(EquipmentSlot.OFFHAND)
 			.delayedComponent(
-					DataComponents.BLOCKS_ATTACKS,
-					context -> new BlocksAttacks(
+					DataComponents.BLOCKS_ATTACKS, context -> new BlocksAttacks(
 							0F,
 							1.0F,
 							List.of(new BlocksAttacks.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
 							new BlocksAttacks.ItemDamageFunction(3.0F, 1.0F, 1.0F),
 							Optional.of(context.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
 							Optional.of(SoundEvents.SHIELD_BLOCK),
-							Optional.of(SoundEvents.SHIELD_BREAK)
-					))));
+							Optional.of(SoundEvents.SHIELD_BREAK)))));
 	public static final KiwiGO<EntityType<SummonedBee>> SUMMONED_BEE = entity($ -> EntityType.Builder.of(
 			SummonedBee::new,
 			MobCategory.CREATURE).sized(0.525f, 0.45f).clientTrackingRange(8).build($));
@@ -162,7 +166,10 @@ public class GadgetModule extends AbstractModule {
 			() -> SetBuzzyPowerFunction.CODEC,
 			Registries.LOOT_FUNCTION_TYPE);
 	public static final KiwiGO<DataComponentType<Long>> LAST_PERFECT_BLOCK = go(
-			() -> DataComponentType.<Long>builder().persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.LONG).build(),
+			() -> DataComponentType.<Long>builder()
+					.persistent(Codec.LONG)
+					.networkSynchronized(ByteBufCodecs.LONG)
+					.build(),
 			Registries.DATA_COMPONENT_TYPE);
 	public static final KiwiGO<DataComponentType<BuzzyPowerStorage>> BUZZY_POWER_STORAGE = go(
 			() -> DataComponentType.<BuzzyPowerStorage>builder()

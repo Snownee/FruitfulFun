@@ -1,0 +1,11 @@
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:ritual
+item_in: fruitfulfun:pomegranate
+max_repeats: 1
+post:
+- drop fruitfulfun:enchanted_pomegranate
+- command: particle minecraft:enchanted_hit ~ ~ ~ 0.25 0.25 0.25 0 10
+  hide: true
+  type: execute
+type: fruitfulfun:dragon_ritual

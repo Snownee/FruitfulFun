@@ -17,9 +17,9 @@ import snownee.fruits.cherry.block.CherryLeavesBlock;
 @Mixin(Block.class)
 public class BlockMixin {
 	@Inject(method = "spawnDestroyParticles", at = @At("HEAD"))
-	private void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
-		if (blockState.is(Blocks.CHERRY_LEAVES)) {
-			CherryLeavesBlock.spawnDestroyParticles(level, player, blockPos, CherryModule.PETAL_CHERRY.get());
+	private void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state, CallbackInfo ci) {
+		if (state.is(Blocks.CHERRY_LEAVES)) {
+			CherryLeavesBlock.spawnDestroyParticles(level, player, pos, CherryModule.PETAL_CHERRY.get());
 		}
 	}
 }

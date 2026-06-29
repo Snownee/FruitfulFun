@@ -12,6 +12,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -93,13 +94,13 @@ public class SummonedBee extends Bee implements TraceableEntity {
 		} else {
 			lostTargetTicks = 0;
 		}
-		if (tickCount >= 200 || lostTargetTicks >= 15 || remainingAttacks <= 0 && --remainingAttacks < -10) {
-			level.broadcastEntityEvent(this, (byte) 60); // spawn poof particles
+		if (tickCount >= 200 || lostTargetTicks >= 15 || (remainingAttacks <= 0 && --remainingAttacks < -10)) {
+			level.broadcastEntityEvent(this, EntityEvent.POOF);
 			discard();
 			return;
 		}
 		if (tickCount == 1) {
-			level.broadcastEntityEvent(this, (byte) 60); // spawn poof particles
+			level.broadcastEntityEvent(this, EntityEvent.POOF);
 		}
 		ProfilerFiller profiler = Profiler.get();
 		profiler.push("beeBrain");
@@ -199,7 +200,7 @@ public class SummonedBee extends Bee implements TraceableEntity {
 	public void load(ValueInput input) {
 		super.load(input);
 		owner = EntityReference.read(input, "owner");
-		remainingAttacks = input.getIntOr("remaining_attacks", 1);
+		remainingAttacks = input.getIntOr("remaining_attacks", remainingAttacks);
 	}
 
 	@Override

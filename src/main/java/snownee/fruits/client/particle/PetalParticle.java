@@ -41,7 +41,7 @@ public class PetalParticle extends SingleQuadParticle {
 		lifetime = 300;
 		particleRandom = this.random.nextFloat();
 		age = random.nextInt(20);
-		quadSize = 0.75f + random.nextFloat() * 0.25f;
+		quadSize = 0.075f + random.nextFloat() * 0.025f;
 		alpha = 0.7f + random.nextFloat() * 0.3f;
 		gravity = 7.5E-4f;
 
@@ -76,9 +76,9 @@ public class PetalParticle extends SingleQuadParticle {
 	public float getQuadSize(float pTicks) {
 		if (lifetime - age < 10) {
 			float f = Mth.sin((float) ((lifetime - age - pTicks) / 20 * Math.PI));
-			return Mth.clamp(f, 0, 1);
+			return quadSize * Mth.clamp(f, 0, 1);
 		}
-		return 1;
+		return quadSize;
 	}
 
 	@Override

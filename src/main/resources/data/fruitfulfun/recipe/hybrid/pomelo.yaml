@@ -1,0 +1,8 @@
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+pollens:
+- fruitfulfun:tangerine_leaves
+- fruitfulfun:citron_leaves
+post: place fruitfulfun:pomelo_leaves[age=2]
+type: fruitfulfun:hybridizing

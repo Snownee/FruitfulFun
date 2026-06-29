@@ -3,11 +3,13 @@ package snownee.fruits.bee;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.bee.Bee;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.genetics.Allele;
@@ -33,9 +36,11 @@ public class BeeAttributes {
 			Codec.list(Codec.STRING).optionalFieldOf("Pollens", List.of()).forGetter(BeeAttributes::getPollens),
 			GeneData.CODEC.fieldOf("Genes").forGetter(BeeAttributes::getGenes),
 			Codec.list(UUIDUtil.CODEC).optionalFieldOf("Trusted", List.of()).forGetter(BeeAttributes::getTrusted),
+			Codec.list(UUIDUtil.CODEC).optionalFieldOf("Inspected", List.of()).forGetter(BeeAttributes::getInspected),
 			Identifier.CODEC.optionalFieldOf("Texture").forGetter($ -> Optional.ofNullable($.getTexture())),
-			Codec.LONG.fieldOf("MutagenEndsIn").forGetter(BeeAttributes::getMutagenEndsIn)
+			Codec.LONG.optionalFieldOf("MutagenEndsIn", 0L).forGetter(BeeAttributes::getMutagenEndsIn)
 	).apply(i, BeeAttributes::new));
+
 	private static final Identifier SPEED_MODIFIER = FruitfulFun.id("bee_speed");
 	private static final Identifier HEALTH_MODIFIER = FruitfulFun.id("bee_health");
 	private static final Identifier DAMAGE_MODIFIER = FruitfulFun.id("bee_damage");
@@ -43,6 +48,7 @@ public class BeeAttributes {
 	private final GeneData genes;
 	public boolean dirty = true;
 	private List<UUID> trusted = List.of();
+	private Set<UUID> inspected = Set.of();
 	@Nullable
 	private Identifier texture;
 	private long mutagenEndsIn;
@@ -56,10 +62,17 @@ public class BeeAttributes {
 	}
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	public BeeAttributes(List<String> pollens, GeneData genes, List<UUID> trusted, Optional<Identifier> texture, long mutagenEndsIn) {
+	public BeeAttributes(
+			List<String> pollens,
+			GeneData genes,
+			List<UUID> trusted,
+			List<UUID> inspected,
+			Optional<Identifier> texture,
+			long mutagenEndsIn) {
 		this.pollens.addAll(pollens);
 		this.genes = genes;
 		this.trusted = trusted;
+		this.inspected = Set.copyOf(inspected);
 		this.texture = texture.orElse(null);
 		this.mutagenEndsIn = mutagenEndsIn;
 	}
@@ -78,6 +91,30 @@ public class BeeAttributes {
 
 	public List<UUID> getTrusted() {
 		return trusted;
+	}
+
+	public void addInspected(UUID uuid) {
+		if (inspected.contains(uuid)) {
+			return;
+		}
+		int max = 20;
+		ImmutableSet.Builder<UUID> builder = ImmutableSet.builderWithExpectedSize(Math.min(inspected.size() + 1, max));
+		builder.add(uuid);
+		for (UUID id : inspected) {
+			if (builder.build().size() >= max) {
+				break;
+			}
+			builder.add(id);
+		}
+		inspected = builder.build();
+	}
+
+	public List<UUID> getInspected() {
+		return List.copyOf(inspected);
+	}
+
+	public boolean isInspected(Player player) {
+		return inspected.contains(player.getUUID());
 	}
 
 	public List<String> getPollens() {

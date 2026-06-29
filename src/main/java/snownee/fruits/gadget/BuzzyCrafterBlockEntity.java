@@ -240,9 +240,9 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		refresh();
 		if (level != null && !level.isClientSide()) {
 			if (empty && !item.isEmpty()) {
-				level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1);
+				playAddSound();
 			} else if (!empty && item.isEmpty()) {
-				level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1, 1);
+				playRemoveSound();
 			}
 		}
 	}
@@ -252,6 +252,28 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		ItemStack itemstack = item;
 		item = ItemStack.EMPTY;
 		return itemstack;
+	}
+
+	@Override
+	public ItemStack splitTheItem(int count) {
+		ItemStack itemStack = BuzzyCrafterContainer.super.splitTheItem(count);
+		if (!itemStack.isEmpty()) {
+			playRemoveSound();
+			refresh();
+		}
+		return itemStack;
+	}
+
+	private void playAddSound() {
+		if (level != null && !level.isClientSide()) {
+			level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1);
+		}
+	}
+
+	private void playRemoveSound() {
+		if (level != null && !level.isClientSide()) {
+			level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1, 1);
+		}
 	}
 
 	@Override

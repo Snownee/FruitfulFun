@@ -35,7 +35,6 @@ import snownee.fruits.compat.jade.JadeCompat;
 import snownee.fruits.duck.FFPlayer;
 
 public class InspectorClientHandler {
-	public static final int ANALYZE_TICKS = 12;
 	@Nullable
 	public static InspectTarget inspectingTarget;
 	private static int hoverTicks;
@@ -43,6 +42,8 @@ public class InspectorClientHandler {
 	private static boolean holdAlt;
 	private static long holdAltStart;
 	private static int pageNow;
+	private static int currentId;
+	private static int replyId = -1;
 
 	public static void tick(Minecraft mc) {
 		if (mc.level == null || mc.player == null) {
@@ -70,6 +71,7 @@ public class InspectorClientHandler {
 			return;
 		}
 		if (!Objects.equals(target, inspectingTarget)) {
+			++currentId;
 			hoverTicks = 0;
 			if (action.recommendJade && !Hooks.jade) {
 				mc.player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.analyzing"));
@@ -80,8 +82,8 @@ public class InspectorClientHandler {
 			}
 		}
 		inspectingTarget = target;
-		if (++hoverTicks == ANALYZE_TICKS) {
-			CInspectTargetPacket.send(inspectingTarget);
+		if (++hoverTicks == 1 || hoverTicks == CInspectTargetPacket.ANALYZE_TICKS) {
+			CInspectTargetPacket.send(currentId, hoverTicks, inspectingTarget);
 			if (Hooks.jade) {
 				JadeCompat.ensureVisibility(target.getClass() == InspectTarget.EntityTarget.class);
 			}
@@ -94,10 +96,16 @@ public class InspectorClientHandler {
 	}
 
 	public static void writeToBook(
+			int id,
 			LocalPlayer player,
 			List<Trait> traits,
 			List<String> pollens,
 			List<SInspectBeeReplyPacket.GeneRecord> genes) {
+		if (id >= replyId) {
+			replyId = id;
+		} else {
+			return;
+		}
 		ItemStack stack = player.getOffhandItem();
 		if (!stack.is(Items.WRITABLE_BOOK)) {
 			return;
@@ -196,7 +204,7 @@ public class InspectorClientHandler {
 	}
 
 	public static boolean isAnalyzing() {
-		return inspectingTarget != null && hoverTicks < ANALYZE_TICKS;
+		return inspectingTarget != null && currentId != replyId;
 	}
 
 	public static int getHoverTicks() {

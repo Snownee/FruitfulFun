@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
 import com.mojang.math.Quadrant;
-import com.mojang.math.Transformation;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -25,6 +24,7 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.properties.conditional.IsUsingItem;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
@@ -40,10 +40,12 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenTintSource;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
+import snownee.fruits.client.Head;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentedCandleBlock;
 import snownee.fruits.pomegranate.PomegranateModule;
+import snownee.kiwi.ItemObject;
 
 public class FFModelProvider extends FabricModelProvider {
 	private @Nullable ItemModelGenerators itemGenerators;
@@ -158,6 +160,7 @@ public class FFModelProvider extends FabricModelProvider {
 				generators.modelOutput);
 		generators.itemModelOutput.accept(BeeModule.MUTAGEN.get(), ItemModelUtils.tintedModel(model, MutagenTintSource.INSTANCE));
 		buzzyShield(GadgetModule.BUZZY_SHIELD.get());
+		inspector(BeeModule.INSPECTOR.get());
 
 		flat(CoreModule.TANGERINE);
 		flat(CoreModule.LIME);
@@ -170,17 +173,33 @@ public class FFModelProvider extends FabricModelProvider {
 		flat(CherryModule.REDLOVE);
 		flat(PomegranateModule.POMEGRANATE_ITEM);
 		generators.itemModelOutput.copy(PomegranateModule.POMEGRANATE_ITEM.get(), PomegranateModule.ENCHANTED_POMEGRANATE.get());
-		flat(BeeModule.INSPECTOR);
 		flat(CoreModule.SNOWFLAKE_BANNER_PATTERN);
 		flat(CherryModule.HEART_BANNER_PATTERN);
-		flat(CherryModule.CHERRY_CROWN);
-		flat(CherryModule.REDLOVE_CROWN);
 		flat(FoodModule.CHORUS_FRUIT_PIE_SLICE);
 		flat(FoodModule.LEMON_ROAST_CHICKEN);
 		flat(CoreModule.CITRUS_BOAT);
 		flat(CoreModule.CITRUS_CHEST_BOAT);
 		flat(CherryModule.REDLOVE_BOAT);
 		flat(CherryModule.REDLOVE_CHEST_BOAT);
+
+		flowerCrown(CherryModule.CHERRY_CROWN);
+		flowerCrown(CherryModule.REDLOVE_CROWN);
+	}
+
+	private void inspector(Item item) {
+		Objects.requireNonNull(itemGenerators);
+		Identifier id = ModelLocationUtils.getModelLocation(item);
+		ItemModel.Unbaked trueModel = ItemModelUtils.plainModel(id);
+		ItemModel.Unbaked falseModel = ItemModelUtils.plainModel(id.withSuffix("_using"));
+		itemGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new IsUsingItem(), trueModel, falseModel));
+	}
+
+	private void flowerCrown(ItemObject<?> item) {
+		Objects.requireNonNull(itemGenerators).itemModelOutput.accept(
+				item.get(), ItemModelUtils.conditional(
+						new Head(),
+						ItemModelUtils.plainModel(item.key().withPrefix("block/")),
+						ItemModelUtils.plainModel(itemGenerators.createFlatItemModel(item.get(), ModelTemplates.FLAT_ITEM))));
 	}
 
 	private void flat(ItemLike item) {
@@ -315,7 +334,7 @@ public class FFModelProvider extends FabricModelProvider {
 		ItemModel.Unbaked blocking = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, "_blocking"));
 		Objects.requireNonNull(itemGenerators).itemModelOutput.accept(
 				item,
-				ItemModelUtils.conditional(Transformation.IDENTITY, ItemModelUtils.isUsingItem(), blocking, normal));
+				ItemModelUtils.conditional(ItemModelUtils.isUsingItem(), blocking, normal));
 	}
 
 	public static Identifier tex(String path) {

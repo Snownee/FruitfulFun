@@ -22,12 +22,14 @@ import snownee.kiwi.network.PayloadContext;
 import snownee.kiwi.network.PlayPacketHandler;
 
 @KiwiPacket
-public record SInspectBeeReplyPacket(List<Trait> traits, List<String> pollens, List<GeneRecord> genes)
+public record SInspectBeeReplyPacket(int id, List<Trait> traits, List<String> pollens, List<GeneRecord> genes)
 		implements CustomPacketPayload {
 	public static final CustomPacketPayload.Type<SInspectBeeReplyPacket> TYPE = new CustomPacketPayload.Type<>(
 			FruitfulFun.id("inspect_bee_reply"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, SInspectBeeReplyPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_INT,
+			SInspectBeeReplyPacket::id,
 			Trait.STREAM_CODEC.apply(ByteBufCodecs.list()),
 			SInspectBeeReplyPacket::traits,
 			ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
@@ -50,7 +52,7 @@ public record SInspectBeeReplyPacket(List<Trait> traits, List<String> pollens, L
 					return;
 				}
 				List<Trait> realTraits = packet.traits().stream().sorted().toList();
-				InspectorClientHandler.writeToBook(mc.player, realTraits, packet.pollens(), packet.genes());
+				InspectorClientHandler.writeToBook(packet.id(), mc.player, realTraits, packet.pollens(), packet.genes());
 			});
 		}
 
@@ -60,7 +62,8 @@ public record SInspectBeeReplyPacket(List<Trait> traits, List<String> pollens, L
 		}
 	}
 
-	public static void send(ServerPlayer player, BeeAttributes attributes) {
+	public static void send(int id, ServerPlayer player, BeeAttributes attributes) {
+		attributes.addInspected(player.getUUID());
 		List<GeneRecord> genes = new ArrayList<>();
 		for (Allele allele : Allele.sortedByCode()) {
 			Locus locus = attributes.getLocus(allele);
@@ -68,6 +71,7 @@ public record SInspectBeeReplyPacket(List<Trait> traits, List<String> pollens, L
 		}
 		KPacketSender.send(
 				new SInspectBeeReplyPacket(
+						id,
 						List.copyOf(attributes.getGenes().getTraits()),
 						attributes.getPollens(),
 						List.copyOf(genes)),

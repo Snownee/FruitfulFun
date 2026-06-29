@@ -44,6 +44,7 @@ import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
@@ -79,6 +80,7 @@ import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.EditGeneNameScreen;
 import snownee.fruits.bee.genetics.MutagenTintSource;
 import snownee.fruits.bee.genetics.TransformBeesRenderer;
+import snownee.fruits.client.Head;
 import snownee.fruits.client.SlidingDoorRenderer;
 import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.GhostParticle;
@@ -226,6 +228,7 @@ public class ClientProxy implements ClientModInitializer {
 
 		BlockColorRegistry.register(List.of(BlockColors.BLANK_LAYER, BlockTintSources.grass()), PEACH_PINK_PETALS.getOrCreate());
 
+		ConditionalItemModelProperties.ID_MAPPER.put(FruitfulFun.id("head"), Head.MAP_CODEC);
 		ModelLoadingPlugin.register(ctx -> {
 			ctx.addModel(CHERRY_CROWN_MODEL, SimpleUnbakedExtraModel.blockStateModel(FruitfulFun.id("block/cherry_crown")));
 			ctx.addModel(REDLOVE_CROWN_MODEL, SimpleUnbakedExtraModel.blockStateModel(FruitfulFun.id("block/redlove_crown")));

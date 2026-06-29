@@ -1,0 +1,10 @@
+ending_step:
+- cherry_leaves
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+pollens:
+- cherry_leaves
+- pink_petals
+post: place fruitfulfun:cherry_leaves[age=2]
+type: fruitfulfun:hybridizing

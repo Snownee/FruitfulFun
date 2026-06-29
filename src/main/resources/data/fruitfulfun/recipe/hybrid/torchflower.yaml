@@ -1,0 +1,28 @@
+contextual:
+  trait: wither_tolerant
+  type: fruitfulfun:bee_has_trait
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+pollens:
+- torchflower
+post:
+- place * /0.1
+- entries:
+  - id: minecraft:blaze_powder
+    type: drop_item
+    weight: 5
+  - id: minecraft:gunpowder
+    type: drop_item
+    weight: 5
+  - id: minecraft:coal
+    type: drop_item
+    weight: 3
+  - id: minecraft:gold_ingot
+    type: drop_item
+    weight: 2
+  - id: minecraft:quartz
+    type: drop_item
+    weight: 1
+  type: random
+type: fruitfulfun:hybridizing

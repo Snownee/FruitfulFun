@@ -1,0 +1,11 @@
+ending_step:
+- pink_petals
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+ghost: true
+pollens:
+- fruitfulfun:redlove_leaves
+- pink_petals
+post: drop fruitfulfun:peach_pink_petals
+type: fruitfulfun:hybridizing

@@ -205,6 +205,7 @@ subtitles.fruitfulfun.stop_haunting: Haunting stopped
 subtitles.fruitfulfun.crown.equip: Flower crown equips
 subtitles.fruitfulfun.gun.shoot: V.C.D. shoots
 subtitles.fruitfulfun.gun.working: V.C.D. working
+subtitles.fruitfulfun.pomegranate.explode: Pomegranate bursts
 contextual.fruitfulfun.bee_has_trait: 'Bee has trait: %s'
 contextual.fruitfulfun.bee_has_trait.not: 'Bee doesn''t have trait: %s'
 death.attack.fruitfulfun.explosion: '%1$s was blown up by pomegranate'

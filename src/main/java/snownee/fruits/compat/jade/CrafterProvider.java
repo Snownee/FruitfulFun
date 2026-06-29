@@ -2,6 +2,7 @@ package snownee.fruits.compat.jade;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import snownee.jade.addon.vanilla.BeehiveProvider;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -17,9 +18,10 @@ public class CrafterProvider implements IBlockComponentProvider {
 		}
 		tooltip.remove(JadeIds.MC_BEEHIVE);
 		IThemeHelper t = IThemeHelper.get();
-		if (accessor.getServerData().contains("Full")) {
-			boolean full = accessor.getServerData().getBooleanOr("Full", false);
-			int bees = accessor.getServerData().getByteOr("Bees", (byte) 0);
+		Byte b = BeehiveProvider.INSTANCE.decodeFromData(accessor).orElse(null);
+		if (b != null) {
+			boolean full = b > 0;
+			int bees = Math.abs(b);
 			tooltip.add(Component.translatable("jade.beehive.bees", full ? t.success(bees) : t.info(bees)));
 		}
 	}

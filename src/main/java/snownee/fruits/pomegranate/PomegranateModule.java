@@ -1,5 +1,6 @@
 package snownee.fruits.pomegranate;
 
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.material.PushReaction;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFFruitTypes;
 import snownee.fruits.FFTreeGrowers;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.pomegranate.block.HangingFruitBlock;
 import snownee.fruits.pomegranate.block.HangingFruitLeavesBlock;
 import snownee.fruits.pomegranate.item.EnchantedPomegranateItem;
@@ -19,6 +21,7 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.Categories;
 import snownee.kiwi.ItemObject;
+import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 
 @KiwiModule(value = "pomegranate", dependencies = "@fruit_types")
@@ -47,6 +50,8 @@ public class PomegranateModule extends AbstractModule {
 	public static final BlockObject<Block> POTTED_POMEGRANATE = block(
 			$ -> new FlowerPotBlock(POMEGRANATE_SAPLING.getOrCreate(), $),
 			() -> Blocks.POTTED_JUNGLE_SAPLING);
+	public static final KiwiGO<SoundEvent> POMEGRANATE_EXPLODE = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
+			"entity.pomegranate.explode")));
 
 	@Override
 	protected void addEntries() {

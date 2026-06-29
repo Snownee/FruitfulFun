@@ -1,0 +1,14 @@
+block_in: '*'
+contextual:
+  range: 0
+  type: fall_distance
+hide_in_viewer: true
+item_in: fruitfulfun:enchanted_pomegranate
+post:
+  block_interaction: tnt
+  damage_type: fruitfulfun:explosion
+  radius: 3
+  sound: fruitfulfun:pomegranate_explode
+  type: explode
+time: 1
+type: lychee:item_inside

@@ -37,8 +37,12 @@ public class FruitLeavesDebugProvider implements IServerDataProvider<BlockAccess
 			if (!data.contains("Type")) {
 				return;
 			}
-			tooltip.add(Component.literal("%s: %s produced".formatted(data.getString("Type"), data.getInt("Produced"))));
-			tooltip.add(Component.literal("Lifespan: %s/%s".formatted(data.getInt("Lifespan"), data.getInt("MaxLifespan"))));
+			tooltip.add(Component.literal("%s: %s produced".formatted(
+					data.getString("Type").orElseThrow(),
+					data.getInt("Produced").orElseThrow())));
+			tooltip.add(Component.literal("Lifespan: %s/%s".formatted(
+					data.getInt("Lifespan").orElseThrow(),
+					data.getInt("MaxLifespan").orElseThrow())));
 		}
 
 		@Override

@@ -1,0 +1,12 @@
+contextual:
+  trait: advanced_pollination
+  type: fruitfulfun:bee_has_trait
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+pollens:
+- fruitfulfun:pomelo_leaves
+- fruitfulfun:lemon_leaves
+- fruitfulfun:orange_leaves
+post: place fruitfulfun:grapefruit_leaves[age=2]
+type: fruitfulfun:hybridizing

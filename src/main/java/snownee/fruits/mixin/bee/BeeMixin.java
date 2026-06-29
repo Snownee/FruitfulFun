@@ -13,6 +13,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -100,7 +101,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}*/
 
 	@Inject(method = "customServerAiStep", at = @At("HEAD"))
-	private void customServerAiStep(CallbackInfo ci) {
+	private void customServerAiStep(ServerLevel level, CallbackInfo ci) {
 		if (!Hooks.bee) {
 			return;
 		}
@@ -109,7 +110,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		}
 		if (hasStung() && BeeAttributes.of(this).hasTrait(Trait.WARRIOR)) {
 			if (timeSinceSting == 0) {
-				hurt(damageSources().generic(), 4);
+				hurtServer(level, damageSources().generic(), 4);
 			} else if (!isDeadOrDying() && tickCount % 10 == 0 && random.nextInt(20) == 0) {
 				setHasStung(false);
 				timeSinceSting = 0;
@@ -126,7 +127,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	}
 
 	@Shadow
-	protected abstract void setRolling(boolean bl);
+	protected abstract void setRolling(boolean rolling);
 
 	@Shadow
 	public abstract boolean hasStung();

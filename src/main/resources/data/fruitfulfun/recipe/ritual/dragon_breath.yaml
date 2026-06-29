@@ -1,0 +1,7 @@
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:ritual
+item_in: glass_bottle
+max_repeats: 1
+post: drop dragon_breath
+type: fruitfulfun:dragon_ritual

@@ -1,0 +1,8 @@
+block_in: '#beehives'
+comment: tip.fruitfulfun.beehiveWaxing
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+ghost: true
+item_in: minecraft:honeycomb
+type: lychee:block_interacting

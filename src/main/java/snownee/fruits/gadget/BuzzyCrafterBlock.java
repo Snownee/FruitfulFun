@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -27,8 +29,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.ticks.ContainerSingleItem;
+import snownee.kiwi.block.IKiwiBlock;
+import snownee.kiwi.item.ModBlockItem;
 
-public class BuzzyCrafterBlock extends BeehiveBlock {
+public class BuzzyCrafterBlock extends BeehiveBlock implements IKiwiBlock {
 	public BuzzyCrafterBlock(Properties properties) {
 		super(properties);
 	}
@@ -74,12 +78,14 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 			ItemStack held = pPlayer.getItemInHand(pHand);
 			if (held.is(Items.RED_DYE)) {
 				be.debugAddPower(BuzzyPowerType.RED, 1);
+				return InteractionResult.SUCCESS;
 			} else if (held.is(Items.BLUE_DYE)) {
 				be.debugAddPower(BuzzyPowerType.BLUE, 1);
+				return InteractionResult.SUCCESS;
 			} else if (held.is(Items.GREEN_DYE)) {
 				be.debugAddPower(BuzzyPowerType.GREEN, 1);
+				return InteractionResult.SUCCESS;
 			}
-			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
 	}
@@ -156,14 +162,13 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 	}
 
 	public void grab(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
-		if (pLevel.isClientSide() || !(pLevel.getBlockEntity(pPos) instanceof Container be)) {
+		if (pLevel.isClientSide() || !(pLevel.getBlockEntity(pPos) instanceof ContainerSingleItem be)) {
 			return;
 		}
-		ItemStack item = be.getItem(0);
+		ItemStack item = be.removeTheItem();
 		if (item.isEmpty()) {
 			return;
 		}
-		be.clearContent();
 		double d3 = pPos.getX() + 0.5;
 		double d4 = pPos.getY() + 1;
 		double d5 = pPos.getZ() + 0.5;
@@ -213,16 +218,8 @@ public class BuzzyCrafterBlock extends BeehiveBlock {
 		return be.getAnalogOutput();
 	}
 
-//	@SuppressWarnings("deprecation")
-//	@Override
-//	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-//		if (state.is(newState.getBlock())) {
-//			return;
-//		}
-//		if (level.getBlockEntity(pos) instanceof Container container) {
-//			Containers.dropContents(level, pos, container);
-//			level.updateNeighbourForOutputSignal(pos, this);
-//		}
-//		super.onRemove(state, level, pos, newState, movedByPiston);
-//	}
+	@Override
+	public BlockItem createItem(Item.Properties builder) {
+		return new ModBlockItem(this, builder.component(GadgetModule.HIDE_HONEY_LEVEL.getOrCreate(), Unit.INSTANCE));
+	}
 }

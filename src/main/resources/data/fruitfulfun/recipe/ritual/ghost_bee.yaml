@@ -1,0 +1,37 @@
+contextual:
+- predicate:
+    biomes: pale_garden
+    can_see_sky: true
+  type: location
+- description: tip.fruitfulfun.onlyAtNight
+  type: sky_darken
+  value:
+    min: 7
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:ritual
+- condition: kiwi:is_loaded
+  module: fruitfulfun:bee
+item_in:
+  fabric:type: fruitfulfun:beehive
+  require_bees: true
+post:
+- prevent_default
+- add_trait: ghost
+  type: fruitfulfun:transform_bees
+- command: particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 12
+  hide: true
+  type: execute
+- delay 0.5
+- command: particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 8
+  hide: true
+  type: execute
+- delay 0.5
+- command: particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 4
+  hide: true
+  type: execute
+- delay 0.5
+- command: particle fruitfulfun:ghost ~ ~ ~ 0.75 0.1 0.75 0 4
+  hide: true
+  type: execute
+type: fruitfulfun:dragon_ritual
