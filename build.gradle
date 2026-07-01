@@ -184,8 +184,8 @@ publishMods {
         minecraftVersions.add("26.1")
         minecraftVersions.add("26.1.1")
         requires("fabric-api")
-        requires("kiwi-fabric")
-        requires("lychee-fabric")
+        requires("kiwi")
+        requires("lychee")
         optional("jade")
     }
 }
