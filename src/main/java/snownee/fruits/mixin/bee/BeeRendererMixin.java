@@ -64,6 +64,9 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 				} else if (state.hasNectar) {
 					$ += "_nectar";
 				}
+				if (state.isBaby) {
+					$ += "_baby";
+				}
 				return "textures/entity/bee/" + $ + ".png";
 			});
 			cir.setReturnValue(texture);

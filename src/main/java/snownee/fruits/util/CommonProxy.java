@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
@@ -90,6 +91,7 @@ import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentType;
 import snownee.fruits.gadget.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
+import snownee.fruits.ritual.RitualModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiModuleContainer;
@@ -280,8 +282,15 @@ public class CommonProxy implements ModInitializer {
 		});
 
 		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
+		if (Hooks.bee) {
+			RecipeSynchronization.synchronizeRecipeSerializer(BeeModule.RECIPE_SERIALIZER.getOrCreate());
+		}
+		if (Hooks.ritual) {
+			RecipeSynchronization.synchronizeRecipeSerializer(RitualModule.RECIPE_SERIALIZER.getOrCreate());
+		}
 	}
 
+	@SuppressWarnings("DataFlowIssue")
 	public static void initBeeModule() {
 		// map in StatType is an IdentityHashMap, update the reference
 		BeeModule.BEE_ONE_CM = makeCustomStat(BeeModule.BEE_ONE_CM, StatFormatter.DISTANCE);

@@ -1,28 +1,31 @@
 package snownee.fruits.compat.lychee;
 
+import org.joml.Vector2f;
 import org.joml.Vector2fc;
 
 import net.minecraft.client.renderer.entity.state.BeeRenderState;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipe;
 import snownee.lychee.client.gui.GuiGameElement;
 import snownee.lychee.client.gui.RenderElement;
 import snownee.lychee.compat.recipeviewer.category.DecorationMapBuilder;
 import snownee.lychee.compat.recipeviewer.category.RvCategory;
+import snownee.lychee.compat.recipeviewer.category.RvCategoryLayoutBuilder;
 
 public class HybridizingRecipeCategory extends RvCategory<HybridizingRecipe> {
-	public static final BeeRenderState bee = new BeeRenderState();
+	public static final BeeRenderState BEE = new BeeRenderState();
+	public static final Vector2fc INFO_POSITION = new Vector2f(80, 38);
 
 	public HybridizingRecipeCategory() {
 		super(BeeModule.RECIPE_TYPE.get());
-		bee.entityType = EntityType.BEE;
-//		infoRect = new Rect2i(80, 38, 8, 8);
+		BEE.entityType = EntityType.BEE;
 	}
 
 	@Override
 	public Vector2fc infoPosition(HybridizingRecipe recipe) {
-		return super.infoPosition(recipe);
+		return INFO_POSITION;
 	}
 
 	@Override
@@ -30,7 +33,7 @@ public class HybridizingRecipeCategory extends RvCategory<HybridizingRecipe> {
 		mapBuilder.info(this::infoPosition);
 		mapBuilder.put(
 				"bee", (builder, recipeHolder) -> builder.addElement(RenderElement.create(
-						GuiGameElement.of(bee)
+						GuiGameElement.of(BEE)
 								.scale(12.0F)
 								.atLocal(0.0F, 1.5F, 1.0F)
 								.withSize(this.width, this.height), ($) -> {
@@ -38,22 +41,11 @@ public class HybridizingRecipeCategory extends RvCategory<HybridizingRecipe> {
 						})));
 	}
 
-//	@Override
-//	public Renderer createIcon(List<HybridizingRecipe> recipes) {
-//		GuiGameElement.GuiRenderBuilder mainIcon = GuiGameElement.of(CoreModule.GRAPEFRUIT.get());
-//		return new REICompat.ScreenElementWrapper(new SideBlockIcon(mainIcon, Blocks.BEEHIVE::defaultBlockState));
-//	}
-//
-//	@Override
-//	public int getDisplayWidth(HybridizingDisplay display) {
-//		return this.getRealWidth();
-//	}
-//
-//	@Override
-//	public int getRealWidth() {
-//		return 170;
-//	}
-//
+	@Override
+	public void configureLayout(RvCategoryLayoutBuilder<HybridizingRecipe> builder, RecipeHolder<HybridizingRecipe> recipeHolder) {
+		super.configureLayout(builder, recipeHolder);
+	}
+
 //	@Override
 //	public List<Widget> setupDisplay(HybridizingDisplay display, Rectangle bounds) {
 //		Point startPoint = new Point(bounds.getCenterX() - this.getRealWidth() / 2, bounds.getY() + 4);

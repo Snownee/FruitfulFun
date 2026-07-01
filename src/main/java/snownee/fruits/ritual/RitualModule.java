@@ -57,10 +57,11 @@ import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.loader.event.InitEvent;
 import snownee.lychee.LootContextKeys;
+import snownee.lychee.RecipeTypes;
 import snownee.lychee.mixin.LootContextParamSetsAccess;
 import snownee.lychee.util.recipe.LycheeRecipeType;
 
-@KiwiModule("ritual")
+@KiwiModule(value = "ritual", dependencies = "@food")
 @KiwiModule.Optional
 public class RitualModule extends AbstractModule {
 	@KiwiModule.Name("dragon_ritual")
@@ -69,7 +70,7 @@ public class RitualModule extends AbstractModule {
 			DragonRitualRecipe.class,
 			null));
 	@KiwiModule.Name("dragon_ritual")
-	public static final KiwiGO<RecipeSerializer<DragonRitualRecipe>> SERIALIZER = go(() -> new RecipeSerializer<>(
+	public static final KiwiGO<RecipeSerializer<DragonRitualRecipe>> RECIPE_SERIALIZER = go(() -> new RecipeSerializer<>(
 			DragonRitualRecipe.CODEC,
 			DragonRitualRecipe.STREAM_CODEC));
 	public static final KiwiGO<SoundEvent> RITUAL_FINISH = go(
@@ -106,7 +107,10 @@ public class RitualModule extends AbstractModule {
 
 	@Override
 	protected void init(InitEvent event) {
-		RECIPE_TYPE.get().canPreventConsumeInputs = true;
+		event.enqueueWork(() -> {
+			RECIPE_TYPE.get().canPreventConsumeInputs = true;
+			RecipeTypes.ALL.add(RECIPE_TYPE.get());
+		});
 	}
 
 	public static void tryStartRitual(Level level, BlockPos pos, BlockState pieState) {
@@ -180,7 +184,7 @@ public class RitualModule extends AbstractModule {
 		if (entities.isEmpty()) {
 			return false;
 		}
-		Interaction interaction = entities.get(0);
+		Interaction interaction = entities.getFirst();
 		skullBlockEntity.isAnimating = false; // cancel the tick lerping
 		skullBlockEntity.animationTickCount = interaction.tickCount >= LIFETIME - 1 ? 0 : 2;
 		if (!level.isClientSide()) {
@@ -244,7 +248,7 @@ public class RitualModule extends AbstractModule {
 						return itemEntity.isAlive() && !itemEntity.isNoGravity();
 					});
 			if (!itemEntities.isEmpty()) {
-				ItemEntity itemEntity = itemEntities.get(0);
+				ItemEntity itemEntity = itemEntities.getFirst();
 				itemEntity.startRiding(interaction);
 				itemEntity.setPickUpDelay(LIFETIME);
 			}

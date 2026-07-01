@@ -85,7 +85,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> {
 
 	@Override
 	public RecipeSerializer<? extends ILycheeRecipe<LycheeContext>> getSerializer() {
-		return BeeModule.SERIALIZER.get();
+		return BeeModule.RECIPE_SERIALIZER.get();
 	}
 
 	@Override

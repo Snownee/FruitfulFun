@@ -51,6 +51,7 @@
 		"haunt.PlayerMixin",
 		"haunt.ServerGamePacketListenerImplMixin",
 		"haunt.ServerPlayerMixin",
+		"lychee.RvPluginMixin",
 		"pomegranate.ItemEntityMixin",
 		"pomegranate.ServerExplosionMixin",
 		"scent.CandleBlockMixin",

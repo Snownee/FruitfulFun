@@ -2,11 +2,16 @@ package snownee.fruits.ritual;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.advancements.criterion.BlockPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -15,6 +20,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import snownee.fruits.food.FoodModule;
+import snownee.fruits.food.PieBlock;
 import snownee.kiwi.recipe.SizedIngredient;
 import snownee.lychee.LootContextKeys;
 import snownee.lychee.context.LootParamsContext;
@@ -22,11 +29,12 @@ import snownee.lychee.util.codec.LycheeCodecs;
 import snownee.lychee.util.context.LycheeContext;
 import snownee.lychee.util.context.LycheeContextKey;
 import snownee.lychee.util.input.ItemStackHolderCollection;
+import snownee.lychee.util.recipe.BlockKeyableRecipe;
 import snownee.lychee.util.recipe.LycheeRecipe;
 import snownee.lychee.util.recipe.LycheeRecipeCommonProperties;
 import snownee.lychee.util.recipe.LycheeRecipeType;
 
-public class DragonRitualRecipe extends LycheeRecipe<LycheeContext> {
+public class DragonRitualRecipe extends LycheeRecipe<LycheeContext> implements BlockKeyableRecipe {
 	public static final MapCodec<DragonRitualRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
 			LycheeRecipeCommonProperties.SIMPLE_MAP_CODEC.forGetter(LycheeRecipe::commonProperties),
 			LycheeCodecs.SIZED_INGREDIENT.fieldOf("item_in").forGetter(r -> r.input)
@@ -37,7 +45,15 @@ public class DragonRitualRecipe extends LycheeRecipe<LycheeContext> {
 			SizedIngredient.STREAM_CODEC,
 			r -> r.input,
 			DragonRitualRecipe::new);
-	private static final LycheeContextKey.Required<Integer> DRAGON_HEADS = LycheeContextKey.req("dragon_heads");
+	public static final LycheeContextKey.Required<Integer> DRAGON_HEADS = LycheeContextKey.req("dragon_heads");
+	public static final Supplier<BlockPredicate> DUMMY_BLOCK_INPUT = Suppliers.memoize(() -> {
+		PieBlock pieBlock = FoodModule.CHORUS_FRUIT_PIE.get();
+		return BlockPredicate.Builder.block()
+				.of(BuiltInRegistries.BLOCK, pieBlock)
+				.setProperties(StatePropertiesPredicate.Builder.properties()
+						.hasProperty(pieBlock.getServingsProperty(), pieBlock.getMaxServings()))
+				.build();
+	});
 
 	protected SizedIngredient input;
 
@@ -53,7 +69,7 @@ public class DragonRitualRecipe extends LycheeRecipe<LycheeContext> {
 
 	@Override
 	public RecipeSerializer<DragonRitualRecipe> getSerializer() {
-		return RitualModule.SERIALIZER.get();
+		return RitualModule.RECIPE_SERIALIZER.get();
 	}
 
 	@Override
@@ -64,6 +80,11 @@ public class DragonRitualRecipe extends LycheeRecipe<LycheeContext> {
 	@Override
 	public List<SizedIngredient> sizedIngredients() {
 		return List.of(input);
+	}
+
+	@Override
+	public BlockPredicate blockPredicate() {
+		return DUMMY_BLOCK_INPUT.get();
 	}
 
 	public static boolean on(ItemEntity entity, BlockPos pos, int heads, BlockState state) {
@@ -87,5 +108,4 @@ public class DragonRitualRecipe extends LycheeRecipe<LycheeContext> {
 		}
 		return recipeHolder.isPresent();
 	}
-
 }

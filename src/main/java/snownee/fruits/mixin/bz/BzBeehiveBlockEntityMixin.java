@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,9 +30,9 @@ public abstract class BzBeehiveBlockEntityMixin extends BlockEntity {
 		super(blockEntityType, blockPos, blockState);
 	}
 
-	@Inject(method = "addOccupantWithPresetTicks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;stopRiding()V"))
-	private void addOccupantWithPresetTicks(Entity occupant, boolean hasNectar, int ticksInHive, CallbackInfo ci) {
-		if (!Hooks.bee || !(((FFLivingEntity) occupant).fruits$getHauntedBy() instanceof ServerPlayer player)) {
+	@Inject(method = "addOccupant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/bee/Bee;stopRiding()V"))
+	private void addOccupant(Bee bee, CallbackInfo ci) {
+		if (!Hooks.bee || !(((FFLivingEntity) bee).fruits$getHauntedBy() instanceof ServerPlayer player)) {
 			return;
 		}
 		HauntingManager manager = FFPlayer.of(player).fruits$hauntingManager();

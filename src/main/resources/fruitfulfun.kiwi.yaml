@@ -25,7 +25,7 @@ modules:
     target: snownee.fruits.gadget.GadgetModule
   - data: {dependencies: '@fruit_types', value: pomegranate}
     target: snownee.fruits.pomegranate.PomegranateModule
-  - data: {value: ritual}
+  - data: {dependencies: '@food', value: ritual}
     target: snownee.fruits.ritual.RitualModule
 optionals:
   - data: {}

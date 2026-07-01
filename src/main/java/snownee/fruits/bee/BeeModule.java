@@ -85,7 +85,7 @@ public class BeeModule extends AbstractModule {
 			HybridizingRecipe.class,
 			null));
 	@Name("hybridizing")
-	public static final KiwiGO<RecipeSerializer<HybridizingRecipe>> SERIALIZER = go(() -> new RecipeSerializer<>(
+	public static final KiwiGO<RecipeSerializer<HybridizingRecipe>> RECIPE_SERIALIZER = go(() -> new RecipeSerializer<>(
 			HybridizingRecipe.CODEC,
 			HybridizingRecipe.STREAM_CODEC));
 	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(

@@ -10,8 +10,6 @@ import org.jspecify.annotations.Nullable;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 
-import net.minecraft.advancements.criterion.BlockPredicate;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -25,18 +23,9 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.HybridizingRecipe;
 import snownee.fruits.food.FoodModule;
-import snownee.fruits.food.PieBlock;
 
 public class LycheeCompat {
 	public static final Supplier<ItemStack> pieItem = Suppliers.memoize(FoodModule.CHORUS_FRUIT_PIE::itemStack);
-	public static final Supplier<BlockPredicate> pieBlockPredicate = Suppliers.memoize(() -> {
-		PieBlock pieBlock = FoodModule.CHORUS_FRUIT_PIE.get();
-		return BlockPredicate.Builder.block()
-				.of(BuiltInRegistries.BLOCK, pieBlock)
-				.setProperties(StatePropertiesPredicate.Builder.properties()
-						.hasProperty(pieBlock.getServingsProperty(), pieBlock.getMaxServings()))
-				.build();
-	});
 
 //	public static void renderBee(GuiGraphics graphics, HybridizingRecipe recipe, Bee bee) {
 //		Minecraft mc = Minecraft.getInstance();
