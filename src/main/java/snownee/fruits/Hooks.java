@@ -194,7 +194,6 @@ public final class Hooks {
 				boolean hasPink = attributes.hasTrait(Trait.PINK);
 				boolean hasGhost = attributes.hasTrait(Trait.GHOST);
 				// add debug code here
-//				attributes.setTexture(new Identifier(FruitfulFun.ID, "pink_bee"));
 				attributes.getLocus(Allele.FANCY).setData((byte) 0x11);
 				attributes.getLocus(Allele.FEAT1).setData((byte) 0x22);
 				attributes.getLocus(Allele.FEAT2).setData((byte) 0x22);
@@ -210,6 +209,8 @@ public final class Hooks {
 					}
 				}
 				attributes.updateTraits(bee);
+				var textures = List.of(FruitfulFun.id("pink_bee"), FruitfulFun.id("ghost_bee"), FruitfulFun.id("wither_bee"));
+				attributes.setTexture(textures.get(bee.getRandom().nextInt(textures.size())));
 			}
 			return InteractionResult.CONSUME;
 		}

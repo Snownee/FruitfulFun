@@ -198,7 +198,9 @@ public class BuzzyCrafterBlock extends BeehiveBlock implements IKiwiBlock {
 			RandomSource random) {
 		if (directionToNeighbour == Direction.UP && level.getBlockEntity(pos) instanceof BuzzyCrafterBlockEntity be) {
 			be.setBlocked(blocksContainer(neighbourState));
+			be.setHasBlockAbove(!neighbourState.canBeReplaced());
 			be.updateBlockPowerReceiver();
+			be.refresh();
 		}
 		return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
 	}

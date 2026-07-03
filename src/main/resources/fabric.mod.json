@@ -49,8 +49,8 @@
 		"fabric-api": ">=0.152",
 		"fabricloader": ">=0.19.0",
 		"minecraft": ">=26",
-		"kiwi": ">=26",
-		"lychee": ">=26"
+		"kiwi": ">=26.0.9",
+		"lychee": ">=26.0.2"
 	},
 	"recommends": {
 		"jade": ">=26"

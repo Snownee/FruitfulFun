@@ -19,8 +19,8 @@ public class ServerEntityMixin {
 	private Entity entity;
 
 	@Inject(method = {"addPairing", "removePairing"}, at = @At("HEAD"), cancellable = true)
-	private void addPairing(ServerPlayer serverPlayer, CallbackInfo ci) {
-		if (serverPlayer instanceof FFFakePlayer || entity instanceof FFFakePlayer) {
+	private void addPairing(ServerPlayer player, CallbackInfo ci) {
+		if (player instanceof FFFakePlayer || entity instanceof FFFakePlayer) {
 			ci.cancel();
 		}
 	}

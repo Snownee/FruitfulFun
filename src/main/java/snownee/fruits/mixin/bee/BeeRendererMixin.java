@@ -14,9 +14,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer;
 import net.minecraft.client.renderer.entity.state.BeeRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
@@ -75,7 +75,7 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 
 	@Inject(
 			method = "extractRenderState(Lnet/minecraft/world/entity/animal/bee/Bee;Lnet/minecraft/client/renderer/entity/state/BeeRenderState;F)V",
-			at = @At("HEAD"))
+			at = @At("RETURN"))
 	private void extractRenderState(Bee entity, BeeRenderState state, float partialTicks, CallbackInfo ci) {
 		if (!Hooks.bee) {
 			return;
@@ -84,7 +84,10 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 		state.setData(ClientProxy.SADDLE, entity.getItemBySlot(EquipmentSlot.SADDLE));
 		state.setData(ClientProxy.TEXTURE, attributes.getTexture());
 		if (attributes.hasTrait(Trait.GHOST)) {
-			state.setData(ClientProxy.TRANSLUCENT, Unit.INSTANCE);
+			state.setData(ClientProxy.RENDER_TYPE, RenderTypes::entityTranslucent);
+			state.hasNectar = false;
+		} else if (attributes.hasTrait(Trait.WITHER_TOLERANT)) {
+			state.setData(ClientProxy.RENDER_TYPE, RenderTypes::entityCutout);
 		}
 	}
 }

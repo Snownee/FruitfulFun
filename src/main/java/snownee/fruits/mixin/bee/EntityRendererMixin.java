@@ -29,7 +29,7 @@ public class EntityRendererMixin {
 			LightLayer lightLayer,
 			BlockPos pos,
 			Operation<Integer> original,
-			@Local(argsOnly = true) Entity entity) {
+			@Local(argsOnly = true, name = "entity") Entity entity) {
 		int light = original.call(level, lightLayer, pos);
 		if (entity instanceof Bee bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
 			return Mth.clamp(light + 4, 6, 15);

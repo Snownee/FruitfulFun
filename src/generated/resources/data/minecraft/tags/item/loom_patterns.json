@@ -1,0 +1,9 @@
+{
+  "values": [
+    {
+      "id": "fruitfulfun:snowflake_banner_pattern",
+      "required": false
+    },
+    "fruitfulfun:heart_banner_pattern"
+  ]
+}

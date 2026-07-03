@@ -78,11 +78,11 @@ dependencies {
     compileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 
-    implementation "libs:Kiwi-mc26.1-Fabric-26.0.4"
-    annotationProcessor "libs:Kiwi-mc26.1-Fabric-26.0.4"
-//    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-//    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-    implementation "libs:Lychee-mc26.1-Fabric-26.0.1"
+//    implementation "libs:Kiwi-mc26.1-Fabric-26.0.4"
+//    annotationProcessor "libs:Kiwi-mc26.1-Fabric-26.0.4"
+    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+    implementation "libs:Lychee-mc26.1-Fabric-26.0.2"
 //    implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
     implementation "maven.modrinth:jade:${project.jade_version}+fabric"
 
@@ -139,12 +139,10 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     exclude "/assets/${project.mod_id}/lang/en_us.existing.yaml"
-    exclude "/assets/${project.mod_id}/textures/entity/bee/bee.png"
-    exclude "/assets/${project.mod_id}/textures/entity/bee/bee_angry.png"
-    exclude "/assets/${project.mod_id}/textures/entity/bee/bee_nectar.png"
-    exclude "/assets/${project.mod_id}/textures/entity/bee/bee_angry_nectar.png"
+    exclude "/assets/${project.mod_id}/textures/entity/bee/ref"
     exclude '**/*.bat'
     exclude '**/*.psd'
+    exclude '**/*.aseprite'
     exclude '**/*.py'
     from("LICENSE") {
         rename { "${it}_${project.archives_base_name}" }

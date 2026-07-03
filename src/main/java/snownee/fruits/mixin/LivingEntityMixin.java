@@ -35,7 +35,7 @@ public abstract class LivingEntityMixin extends Entity {
 			DamageSource damageSource,
 			float damageAmount,
 			CallbackInfoReturnable<Float> cir,
-			@Local(argsOnly = true) LocalFloatRef damageAmountRef) {
+			@Local(argsOnly = true, name = "damage") LocalFloatRef damageAmountRef) {
 		MobEffectInstance effect = getEffect(CoreModule.FRAGILITY.holderOrThrow());
 		if (effect != null) {
 			damageAmountRef.set(damageAmountRef.get() * (1.2F + effect.getAmplifier() * 0.2F));

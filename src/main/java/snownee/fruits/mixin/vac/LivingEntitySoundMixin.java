@@ -16,7 +16,7 @@ import snownee.fruits.gadget.client.VacGunSoundInstance;
 @Mixin(LivingEntity.class)
 public class LivingEntitySoundMixin {
 	@Inject(method = "startUsingItem", at = @At("TAIL"))
-	private void startUsingItem(InteractionHand interactionHand, CallbackInfo ci) {
+	private void startUsingItem(InteractionHand hand, CallbackInfo ci) {
 		if (!Hooks.gadget) {
 			return;
 		}

@@ -26,7 +26,7 @@ public class GuiGraphicsExtractorMixin {
 			int y,
 			@Nullable String text,
 			CallbackInfo ci,
-			@Local(argsOnly = true) LocalRef<String> textRef) {
+			@Local(argsOnly = true, name = "countText") LocalRef<String> textRef) {
 		if (stack.is(Items.EMERALD) && text == null && stack.has(BeeModule.MERCHANT_OFFER.get())) {
 			textRef.set("?");
 		}

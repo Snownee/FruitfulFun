@@ -31,8 +31,8 @@ public class MinecraftMixin {
 	}
 
 	@Inject(method = "continueAttack", at = @At("HEAD"), cancellable = true)
-	private void handleVacGun(boolean bl, CallbackInfo ci) {
-		if (bl && Hooks.gadget && player != null && !player.isSpectator() && player.getMainHandItem().getItem() instanceof VacGunItem) {
+	private void handleVacGun(boolean down, CallbackInfo ci) {
+		if (down && Hooks.gadget && player != null && !player.isSpectator() && player.getMainHandItem().getItem() instanceof VacGunItem) {
 			VacGunItem.shoot(player, InteractionHand.MAIN_HAND);
 			ci.cancel();
 		}

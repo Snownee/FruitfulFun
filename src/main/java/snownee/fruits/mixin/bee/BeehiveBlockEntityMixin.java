@@ -60,7 +60,7 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 			EnvironmentAttribute<Boolean> environmentAttribute,
 			BlockPos blockPos,
 			Operation<Object> original,
-			@Local(argsOnly = true) BeehiveBlockEntity.Occupant beeData) {
+			@Local(argsOnly = true, name = "beeData") BeehiveBlockEntity.Occupant beeData) {
 		return ((Boolean) original.call(instance, environmentAttribute, blockPos)) && !beeData.entityData().contains("RainCapable");
 	}
 
@@ -104,8 +104,8 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 			List<BeehiveBlockEntity.BeeData> stored,
 			@Nullable BlockPos savedFlowerPos,
 			Operation<Void> original,
-			@Local(argsOnly = true) BeehiveBlockEntity beehive) {
-		FFBeehiveBlockEntity self = (FFBeehiveBlockEntity) beehive;
+			@Local(argsOnly = true, name = "entity") BeehiveBlockEntity entity) {
+		FFBeehiveBlockEntity self = (FFBeehiveBlockEntity) entity;
 		if (!self.fruits$isWaxed()) {
 			original.call(level, pos, state, stored, savedFlowerPos);
 		}
@@ -115,8 +115,8 @@ public class BeehiveBlockEntityMixin extends BlockEntity implements FFBeehiveBlo
 	private static boolean serverTick_playWorkingSound(
 			List<BeehiveBlockEntity.BeeData> list,
 			Operation<Boolean> original,
-			@Local(argsOnly = true) BeehiveBlockEntity beehive) {
-		FFBeehiveBlockEntity self = (FFBeehiveBlockEntity) beehive;
+			@Local(argsOnly = true, name = "entity") BeehiveBlockEntity entity) {
+		FFBeehiveBlockEntity self = (FFBeehiveBlockEntity) entity;
 		if (!self.fruits$isWaxed()) {
 			return original.call(list);
 		}

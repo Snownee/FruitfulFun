@@ -28,9 +28,9 @@ public class AxeItemMixin {
 			Optional<Block> instance,
 			Function<? super Block, ? extends BlockState> mapper,
 			Operation<Optional<BlockState>> original,
-			@Local(argsOnly = true) Level level,
-			@Local(argsOnly = true) BlockPos pos,
-			@Local(argsOnly = true) BlockState oldState) {
+			@Local(argsOnly = true, name = "level") Level level,
+			@Local(argsOnly = true, name = "pos") BlockPos pos,
+			@Local(argsOnly = true, name = "oldState") BlockState oldState) {
 		if (!oldState.is(BlockTags.BEEHIVES)) {
 			return original.call(instance, mapper);
 		}

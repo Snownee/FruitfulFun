@@ -1,5 +1,6 @@
 package snownee.fruits.mixin.bee;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,7 +21,8 @@ public class WalkNodeEvaluatorMixin {
 			method = "getPathTypeFromState",
 			at = @At(
 					value = "FIELD",
-					target = "Lnet/minecraft/world/level/pathfinder/PathType;LEAVES:Lnet/minecraft/world/level/pathfinder/PathType;"),
+					target = "Lnet/minecraft/world/level/pathfinder/PathType;LEAVES:Lnet/minecraft/world/level/pathfinder/PathType;",
+					opcode = Opcodes.GETSTATIC),
 			cancellable = true)
 	private static void getPathTypeFromState(
 			BlockGetter level,

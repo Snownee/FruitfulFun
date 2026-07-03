@@ -28,7 +28,7 @@ public class HoneycombItemMixin {
 	private Optional<BlockState> useOn(
 			BlockState oldState,
 			Operation<Optional<BlockState>> original,
-			@Local(argsOnly = true) UseOnContext context) {
+			@Local(argsOnly = true, name = "context") UseOnContext context) {
 		if (!Hooks.bee || !oldState.is(BlockTags.BEEHIVES)) {
 			return original.call(oldState);
 		}

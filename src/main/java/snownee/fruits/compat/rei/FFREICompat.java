@@ -23,37 +23,6 @@ import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.fruits.gadget.GadgetModule;
 
 public class FFREICompat implements REIClientPlugin {
-	public FFREICompat() {
-//		REICompat.addCategoryFactoryProvider($ -> {
-//			if (Hooks.bee) {
-//				$.put(BeeModule.RECIPE_TYPE.get().categoryId, $$ -> new HybridizingCategory(BeeModule.RECIPE_TYPE.get()));
-//			}
-//			if (Hooks.ritual) {
-//				$.put(RitualModule.RECIPE_TYPE.get().categoryId, $$ -> new DragonRitualCategory(RitualModule.RECIPE_TYPE.get()));
-//			}
-//		});
-//		REICompat.addDisplayFactoryProvider($ -> {
-//			if (Hooks.bee) {
-//				REICompat.registerDisplayFactory($, BeeModule.RECIPE_TYPE.get().categoryId, HybridizingDisplay::new);
-//			}
-//			if (Hooks.ritual) {
-//				REICompat.registerDisplayFactory($, RitualModule.RECIPE_TYPE.get().categoryId, DragonRitualDisplay::new);
-//			}
-//		});
-	}
-
-	@Override
-	public void registerCategories(CategoryRegistry registry) {
-//		if (Hooks.ritual) {
-//			ItemStack dragonHead = Items.DRAGON_HEAD.getDefaultInstance();
-//			ItemStack pie = LycheeCompat.pieItem.get();
-//			forEachCategories(
-//					BeeModule.RECIPE_TYPE.get(), $ -> {
-//						registry.addWorkstations($.getCategoryIdentifier(), EntryStacks.of(dragonHead), EntryStacks.of(pie));
-//					});
-//		}
-	}
-
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
 		if (FFCommonConfig.isMutagenRecipeEnabled()) {

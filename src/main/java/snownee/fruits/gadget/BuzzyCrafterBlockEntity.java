@@ -50,6 +50,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	private static final String ITEM_STACK_KEY = "item";
 	protected ItemStack item = ItemStack.EMPTY;
 	protected TriState blocked = TriState.DEFAULT;
+	protected boolean hasBlockAbove;
 	private boolean blockPowerReceiverUpdated;
 	private boolean itemPowerReceiverUpdated;
 	private @Nullable BuzzyPowerReceiver blockPowerReceiver;
@@ -154,6 +155,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		item = ItemStack.EMPTY;
 		if (input.contains(ITEM_STACK_KEY)) {
 			item = input.read(ITEM_STACK_KEY, ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+			hasBlockAbove = input.getBooleanOr("hasBlockAbove", false);
 			if (level != null && !level.isClientSide()) {
 				updateItemPowerReceiver();
 			}
@@ -163,6 +165,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 	protected void writeData(ValueOutput output, boolean network) {
 		if (network || !item.isEmpty()) {
 			output.store(ITEM_STACK_KEY, ItemStack.OPTIONAL_CODEC, getTheItem());
+			output.putBoolean("hasBlockAbove", hasBlockAbove);
 		}
 	}
 
@@ -197,8 +200,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 				worldPosition.getX() + 0.5,
 				worldPosition.getY() - EntityType.ITEM.getHeight(),
 				worldPosition.getZ() + 0.5,
-				item);
-		clearContent();
+				removeTheItem());
 		itemEntity.setDefaultPickUpDelay();
 		itemEntity.setDeltaMovement(0, -0.1, 0);
 		level.addFreshEntity(itemEntity);
@@ -210,6 +212,14 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			blocked = TriState.of(BuzzyCrafterBlock.blocksContainer(level.getBlockState(worldPosition.above())));
 		}
 		return blocked == TriState.TRUE;
+	}
+
+	public void setHasBlockAbove(boolean hasBlockAbove) {
+		this.hasBlockAbove = hasBlockAbove;
+	}
+
+	public boolean hasBlockAbove() {
+		return hasBlockAbove;
 	}
 
 	private void updateItemStats() {

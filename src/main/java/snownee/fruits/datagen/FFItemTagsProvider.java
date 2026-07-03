@@ -9,7 +9,9 @@ import static snownee.fruits.CoreModule.CITRUS_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_CHEST_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_FRUITS;
 import static snownee.fruits.CoreModule.CITRUS_SHELF;
+import static snownee.fruits.CoreModule.SNOWFLAKE_BANNER_PATTERN;
 import static snownee.fruits.cherry.CherryModule.CHERRY_CROWN;
+import static snownee.fruits.cherry.CherryModule.HEART_BANNER_PATTERN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_BOAT;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_CHEST_BOAT;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_CROWN;
@@ -121,6 +123,7 @@ public class FFItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 		valueLookupBuilder(ItemTags.BOATS).add(CITRUS_BOAT.get()).add(REDLOVE_BOAT.get());
 		valueLookupBuilder(ItemTags.CHEST_BOATS).add(CITRUS_CHEST_BOAT.get()).add(REDLOVE_CHEST_BOAT.get());
 		valueLookupBuilder(ItemTags.WOODEN_SHELVES).add(CITRUS_SHELF.asItem()).add(REDLOVE_SHELF.asItem());
+		valueLookupBuilder(ItemTags.LOOM_PATTERNS).addOptional(SNOWFLAKE_BANNER_PATTERN.get()).add(HEART_BANNER_PATTERN.get());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateRawBuilder(WOODEN_CABINETS)

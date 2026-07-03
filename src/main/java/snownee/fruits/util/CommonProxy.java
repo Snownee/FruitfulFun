@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
-import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
@@ -86,12 +85,12 @@ import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
+import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentType;
 import snownee.fruits.gadget.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
-import snownee.fruits.ritual.RitualModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiModuleContainer;
@@ -101,7 +100,6 @@ import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.KUtil;
 
-@SuppressWarnings("UnstableApiUsage")
 @Mod(FruitfulFun.ID)
 public class CommonProxy implements ModInitializer {
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("c", "tools/knives");
@@ -138,7 +136,6 @@ public class CommonProxy implements ModInitializer {
 		return blockState.is(ConventionalBlockTags.BOOKSHELVES);
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	public static long insertItem(
 			Level level,
 			BlockPos blockPos,
@@ -161,7 +158,6 @@ public class CommonProxy implements ModInitializer {
 		return inserted;
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	public static ItemStack extractOneItem(
 			Level level,
 			BlockPos blockPos,
@@ -282,12 +278,7 @@ public class CommonProxy implements ModInitializer {
 		});
 
 		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
-		if (Hooks.bee) {
-			RecipeSynchronization.synchronizeRecipeSerializer(BeeModule.RECIPE_SERIALIZER.getOrCreate());
-		}
-		if (Hooks.ritual) {
-			RecipeSynchronization.synchronizeRecipeSerializer(RitualModule.RECIPE_SERIALIZER.getOrCreate());
-		}
+		LycheeCompat.init();
 	}
 
 	@SuppressWarnings("DataFlowIssue")

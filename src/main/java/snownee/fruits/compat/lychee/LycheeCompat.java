@@ -10,6 +10,7 @@ import org.jspecify.annotations.Nullable;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -19,14 +20,47 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
+import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipe;
 import snownee.fruits.food.FoodModule;
+import snownee.fruits.ritual.RitualModule;
+import snownee.lychee.client.gui.GuiGameElement;
+import snownee.lychee.compat.recipeviewer.element.SideBlockIcon;
+import snownee.lychee.util.CommonProxy;
 
 public class LycheeCompat {
 	public static final Supplier<ItemStack> pieItem = Suppliers.memoize(FoodModule.CHORUS_FRUIT_PIE::itemStack);
 
+	public static void init() {
+		if (Hooks.bee) {
+			RecipeSynchronization.synchronizeRecipeSerializer(BeeModule.RECIPE_SERIALIZER.getOrCreate());
+			CommonProxy.registerRecipeCategoryListener($ -> {
+				$.register(
+						new HybridizingRecipeCategory(), it -> {
+							it.width = 170;
+							it.iconProvider = _ -> new SideBlockIcon(
+									GuiGameElement.of(CoreModule.GRAPEFRUIT),
+									Blocks.BEEHIVE::defaultBlockState);
+						});
+			});
+		}
+		if (Hooks.ritual) {
+			RecipeSynchronization.synchronizeRecipeSerializer(RitualModule.RECIPE_SERIALIZER.getOrCreate());
+			CommonProxy.registerRecipeCategoryListener($ -> {
+				$.register(
+						new DragonRitualCategory(), it -> {
+							it.iconProvider = _ -> new SideBlockIcon(
+									GuiGameElement.of(Items.DRAGON_HEAD),
+									FoodModule.CHORUS_FRUIT_PIE::defaultBlockState);
+							it.setSimpleWorkstationProvider(_ -> List.of(Items.DRAGON_HEAD, FoodModule.CHORUS_FRUIT_PIE.asItem()));
+						});
+			});
+		}
+	}
 //	public static void renderBee(GuiGraphics graphics, HybridizingRecipe recipe, Bee bee) {
 //		Minecraft mc = Minecraft.getInstance();
 //		if (mc.player == null) {

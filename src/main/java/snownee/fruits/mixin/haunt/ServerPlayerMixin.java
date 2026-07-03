@@ -33,10 +33,10 @@ public class ServerPlayerMixin {
 //	}
 
 	@Inject(method = "setCamera", at = @At("TAIL"))
-	private void setCamera(@Nullable Entity target, CallbackInfo ci) {
+	private void setCamera(@Nullable Entity newCamera, CallbackInfo ci) {
 		ServerPlayer player = (ServerPlayer) (Object) this;
 //		Hooks.debugInChat(player, "setCamera to %s".formatted(target == null ? "null" : target.getName().getString()));
-		if (Hooks.bee && (target == null || target == player) && FFPlayer.of(player).fruits$isHaunting()) {
+		if (Hooks.bee && (newCamera == null || newCamera == player) && FFPlayer.of(player).fruits$isHaunting()) {
 //			Hooks.debugInChat(player, "setCamera 2 to %s".formatted(target == null ? "null" : target.getName().getString()));
 			FFPlayer.of(this).fruits$setHauntingTarget(player);
 		}

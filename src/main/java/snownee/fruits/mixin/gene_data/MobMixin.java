@@ -18,9 +18,9 @@ import snownee.fruits.bee.BeeAttributes;
 @Mixin(Mob.class)
 public class MobMixin {
 	@Inject(method = "onOffspringSpawnedFromEgg", at = @At("HEAD"))
-	private void onOffspringSpawnedFromEgg(Player player, Mob mob, CallbackInfo ci) {
-		if (mob instanceof Bee) {
-			BeeAttributes.of(mob).addTrusted(player.getUUID());
+	private void onOffspringSpawnedFromEgg(Player spawner, Mob offspring, CallbackInfo ci) {
+		if (offspring instanceof Bee) {
+			BeeAttributes.of(offspring).addTrusted(spawner.getUUID());
 		}
 	}
 

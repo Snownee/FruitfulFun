@@ -28,8 +28,8 @@ public class LivingEntityRendererMixin {
 			Identifier texture,
 			Operation<RenderType> original,
 			@Local(argsOnly = true, name = "state") LivingEntityRenderState state) {
-		if (state instanceof BeeRenderState && state.getData(ClientProxy.TRANSLUCENT) != null) {
-			return RenderTypes.entityTranslucentCullItemTarget(texture);
+		if (state instanceof BeeRenderState && state.getData(ClientProxy.RENDER_TYPE) != null) {
+			return RenderTypes.entityTranslucent(texture);
 		}
 		return original.call(instance, texture);
 	}

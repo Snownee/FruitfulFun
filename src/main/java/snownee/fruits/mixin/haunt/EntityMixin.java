@@ -1,5 +1,6 @@
 package snownee.fruits.mixin.haunt;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,7 +21,11 @@ public class EntityMixin {
 //		BeeModule.changeDimension(destination, (Entity) (Object) this, cir.getReturnValue());
 //	}
 
-	@WrapOperation(method = "move", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;noPhysics:Z"))
+	@WrapOperation(
+			method = "move", at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/world/entity/Entity;noPhysics:Z",
+			opcode = Opcodes.GETFIELD))
 	private boolean move(Entity instance, Operation<Boolean> original) {
 		if (Hooks.bee && instance instanceof FFPlayer player && player.fruits$isHaunting()) {
 			return true;

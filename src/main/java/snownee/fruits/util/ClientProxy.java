@@ -15,6 +15,7 @@ import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.jspecify.annotations.Nullable;
 
@@ -45,6 +46,7 @@ import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
@@ -104,7 +106,8 @@ public class ClientProxy implements ClientModInitializer {
 	private static final ExtraModelKey<BlockStateModel> REDLOVE_CROWN_MODEL = ExtraModelKey.create();
 	public static final RenderStateDataKey<ItemStack> SADDLE = RenderStateDataKey.create(() -> "saddle");
 	public static final RenderStateDataKey<Identifier> TEXTURE = RenderStateDataKey.create(() -> "texture");
-	public static final RenderStateDataKey<Unit> TRANSLUCENT = RenderStateDataKey.create(() -> "texture");
+	public static final RenderStateDataKey<Function<Identifier, RenderType>> RENDER_TYPE = RenderStateDataKey.create(() -> "render_type");
+	public static final RenderStateDataKey<Unit> NO_BOB = RenderStateDataKey.create(() -> "no_bob");
 
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -183,10 +186,10 @@ public class ClientProxy implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientPlatform.registerEntityRenderer(CoreModule.SLIDING_DOOR.getOrCreate(), SlidingDoorRenderer::new);
-		registerBoatRenderer(FFBoats.CITRUS_BOAT);
-		registerBoatRenderer(FFBoats.CITRUS_CHEST_BOAT);
-		registerBoatRenderer(FFBoats.REDLOVE_BOAT);
-		registerBoatRenderer(FFBoats.REDLOVE_CHEST_BOAT);
+		registerBoatRenderer("citrus", FFBoats.CITRUS_BOAT);
+		registerBoatRenderer("citrus", FFBoats.CITRUS_CHEST_BOAT);
+		registerBoatRenderer("redlove", FFBoats.REDLOVE_BOAT);
+		registerBoatRenderer("redlove", FFBoats.REDLOVE_CHEST_BOAT);
 
 		BlockTintSource oakBlockColor = ColorProviderUtil.delegate(Blocks.OAK_LEAVES, 0);
 		List<BlockObject<?>> citrusLeaves = List.of(
@@ -315,11 +318,10 @@ public class ClientProxy implements ClientModInitializer {
 		return effect instanceof TooltipProvider provider ? provider : null;
 	}
 
-	public static void registerBoatRenderer(KiwiGO<? extends EntityType<? extends AbstractBoat>> boat) {
-		ModelLayerLocation modelLayer = new ModelLayerLocation(boat.key(), "main");
-		ModelLayerRegistry.registerModelLayer(
-				modelLayer,
-				modelLayer.model().getPath().endsWith("_chest_boat") ? BoatModel::createChestBoatModel : BoatModel::createBoatModel);
+	public static void registerBoatRenderer(String wood, KiwiGO<? extends EntityType<? extends AbstractBoat>> boat) {
+		boolean isChestBoat = boat.key().getPath().endsWith("_chest_boat");
+		ModelLayerLocation modelLayer = new ModelLayerLocation(FruitfulFun.id((isChestBoat ? "chest_boat/" : "boat/") + wood), "main");
+		ModelLayerRegistry.registerModelLayer(modelLayer, isChestBoat ? BoatModel::createChestBoatModel : BoatModel::createBoatModel);
 		ClientPlatform.registerEntityRenderer(boat.getOrCreate(), $ -> new BoatRenderer($, modelLayer));
 	}
 }

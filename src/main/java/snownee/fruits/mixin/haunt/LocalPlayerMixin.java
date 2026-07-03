@@ -17,14 +17,14 @@ import snownee.fruits.duck.FFPlayer;
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin {
 	@Inject(method = "drop", at = @At("HEAD"), cancellable = true)
-	private void drop(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
+	private void drop(boolean all, CallbackInfoReturnable<Boolean> cir) {
 		if (Hooks.bee && this instanceof FFPlayer player && player.fruits$isHaunting()) {
 			cir.setReturnValue(false);
 		}
 	}
 
 	@WrapOperation(
-			method = {"sendPosition", "serverAiStep"},
+			method = {"sendPosition", "aiStep"},
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isControlledCamera()Z"))
 	private boolean isControlledCamera(LocalPlayer player, Operation<Boolean> original) {
 		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {

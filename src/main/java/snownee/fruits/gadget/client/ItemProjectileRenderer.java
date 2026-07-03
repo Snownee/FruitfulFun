@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.ItemEntityRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import snownee.fruits.gadget.VacItemProjectile;
 
 public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile, ItemEntityRenderState> {
@@ -22,20 +21,6 @@ public class ItemProjectileRenderer extends EntityRenderer<VacItemProjectile, It
 	@Override
 	public ItemEntityRenderState createRenderState() {
 		return null;
-	}
-
-	private int getRenderAmount(ItemStack itemStack) {
-		int i = 1;
-		if (itemStack.getCount() > 48) {
-			i = 5;
-		} else if (itemStack.getCount() > 32) {
-			i = 4;
-		} else if (itemStack.getCount() > 16) {
-			i = 3;
-		} else if (itemStack.getCount() > 1) {
-			i = 2;
-		}
-		return i;
 	}
 
 //	@Override

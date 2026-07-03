@@ -24,17 +24,6 @@ public class FFJEICompat implements IModPlugin {
 
 	public static final Identifier UID = FruitfulFun.id("main");
 
-	public FFJEICompat() {
-//		JEICompat.addCategoryFactoryProvider($ -> {
-//			if (Hooks.bee) {
-//				$.put(BeeModule.RECIPE_TYPE.get().categoryId, $$ -> new HybridizingCategory(BeeModule.RECIPE_TYPE.get()));
-//			}
-//			if (Hooks.ritual) {
-//				$.put(RitualModule.RECIPE_TYPE.get().categoryId, $$ -> new DragonRitualCategory(RitualModule.RECIPE_TYPE.get()));
-//			}
-//		});
-	}
-
 	@Override
 	public Identifier getPluginUid() {
 		return UID;

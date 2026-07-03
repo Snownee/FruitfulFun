@@ -23,8 +23,8 @@ public class BottleItemMixin {
 	private static boolean allowDummyDragonBreath(
 			Object object,
 			Operation<Boolean> original,
-			@Local(argsOnly = true) AreaEffectCloud cloud) {
-		if (cloud.owner != null && RitualModule.DUMMY_UUID.equals(cloud.owner.getUUID())) {
+			@Local(argsOnly = true, name = "input") AreaEffectCloud input) {
+		if (input.owner != null && RitualModule.DUMMY_UUID.equals(input.owner.getUUID())) {
 			return true;
 		}
 		return original.call(object);

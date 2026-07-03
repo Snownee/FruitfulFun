@@ -3,12 +3,13 @@ package snownee.fruits;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.CreativeModeTab;
@@ -32,73 +33,89 @@ public final class CreativeTabModule extends AbstractModule {
 	public static final KiwiGO<CreativeModeTab> MAIN = go(() -> itemCategory(
 			FruitfulFun.id("main"),
 			CoreModule.GRAPEFRUIT::itemStack).title(Component.translatable("modmenu.nameTranslation.fruitfulfun"))
-			.displayItems(CreativeTabModule::generate)
+			.displayItems(CreativeTabModule.Generator::new)
 			.build());
 
-	private static void generate(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-		LinkedHashMap<String, Item> map = GameObjectLookup.all(BuiltInRegistries.ITEM, FruitfulFun.ID)
-				.collect(Collectors.toMap(
-						item -> BuiltInRegistries.ITEM.getKey(item).getPath(),
-						item -> item,
-						(a, _) -> a,
-						LinkedHashMap::new));
-		map.remove("redlove_crown");
-		for (FruitType type : FFRegistries.FRUIT_TYPE) {
-			add(type.fruit.get(), output::accept);
-		}
-		add(PomegranateModule.ENCHANTED_POMEGRANATE.get(), output::accept);
-		if (Hooks.food) {
-			add(FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get(), output::accept);
-			add(FoodModule.LEMON_ROAST_CHICKEN.get(), output::accept);
-			add(FoodModule.GRAPEFRUIT_PANNA_COTTA.get(), output::accept);
-			add(FoodModule.DONAUWELLE.get(), output::accept);
-			add(FoodModule.HONEY_POMELO_TEA.get(), output::accept);
-			add(FoodModule.RICE_WITH_FRUITS.get(), output::accept);
-			add(FoodModule.CHORUS_FRUIT_PIE.get(), output::accept);
-			add(FoodModule.CHORUS_FRUIT_PIE_SLICE.get(), output::accept);
-		}
-		addByTemplate(map, "*_sapling", output::accept);
-		addByTemplate(map, "*_leaves", output::accept);
-		addByTemplate(map, "citrus_*", output::accept);
-		addByTemplate(map, "redlove_*", output::accept);
-		add(CherryModule.CHERRY_CROWN.get(), output::accept);
-		add(CherryModule.REDLOVE_CROWN.get(), output::accept);
-		add(CherryModule.PEACH_PINK_PETALS.get(), output::accept);
-		addByTemplate(map, "*_banner_pattern", output::accept);
-		if (Hooks.bee) {
-			add(BeeModule.INSPECTOR.get(), output::accept);
-			add(BeeModule.MUTAGEN.get(), output::accept);
-		}
-		if (Hooks.gadget) {
-			add(GadgetModule.BUZZY_CRAFTER.get(), output::accept);
-			add(GadgetModule.BUZZY_SHIELD.get(), output::accept);
-			addByTemplate(map, "*_candle", output::accept);
-		}
-	}
+	static class Generator {
+		private final Map<Item, String> map;
+		private final CreativeModeTab.Output output;
 
-	private static void addByTemplate(Map<String, Item> map, String template, Consumer<ItemStack> consumer) {
-		boolean prefix = template.startsWith("*");
-		String trimmed = prefix ? template.substring(1) : template.substring(0, template.length() - 1);
-		for (String key : List.copyOf(map.keySet())) {
-			if (prefix && !key.endsWith(trimmed) || !prefix && !key.startsWith(trimmed)) {
-				continue;
+		public Generator(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+			this.output = output;
+			HolderLookup.RegistryLookup<Item> items = parameters.holders().lookupOrThrow(Registries.ITEM);
+			this.map = GameObjectLookup.allHolders(items, FruitfulFun.ID)
+					.collect(Collectors.toMap(
+							Holder.Reference::value,
+							item -> item.key().identifier().getPath(),
+							(a, _) -> a,
+							LinkedHashMap::new));
+			run();
+		}
+
+		void run() {
+			map.remove(CherryModule.REDLOVE_CROWN.get());
+			for (FruitType type : FFRegistries.FRUIT_TYPE) {
+				add(type.fruit.get());
 			}
-			add(map, key, consumer);
-			map.remove(key);
+			add(PomegranateModule.ENCHANTED_POMEGRANATE.get());
+			if (Hooks.food) {
+				add(FoodModule.LEMON_ROAST_CHICKEN_BLOCK.get());
+				add(FoodModule.LEMON_ROAST_CHICKEN.get());
+				add(FoodModule.GRAPEFRUIT_PANNA_COTTA.get());
+				add(FoodModule.DONAUWELLE.get());
+				add(FoodModule.HONEY_POMELO_TEA.get());
+				add(FoodModule.RICE_WITH_FRUITS.get());
+				add(FoodModule.CHORUS_FRUIT_PIE.get());
+				add(FoodModule.CHORUS_FRUIT_PIE_SLICE.get());
+			}
+			addByTemplate("*_sapling");
+			addByTemplate("*_leaves");
+			add(CoreModule.CITRUS_LOG.get());
+			add(CoreModule.CITRUS_WOOD.get());
+			add(CoreModule.STRIPPED_CITRUS_LOG.get());
+			add(CoreModule.STRIPPED_CITRUS_WOOD.get());
+			addByTemplate("citrus_*");
+			add(CherryModule.REDLOVE_LOG.get());
+			add(CherryModule.REDLOVE_WOOD.get());
+			add(CherryModule.STRIPPED_REDLOVE_LOG.get());
+			add(CherryModule.STRIPPED_REDLOVE_WOOD.get());
+			addByTemplate("redlove_*");
+			add(CherryModule.CHERRY_CROWN.get());
+			add(CherryModule.REDLOVE_CROWN.get());
+			add(CherryModule.PEACH_PINK_PETALS.get());
+			addByTemplate("*_banner_pattern");
+			if (Hooks.bee) {
+				add(BeeModule.INSPECTOR.get());
+				add(BeeModule.MUTAGEN.get());
+			}
+			if (Hooks.gadget) {
+				add(GadgetModule.BUZZY_CRAFTER.get());
+				add(GadgetModule.BUZZY_SHIELD.get());
+				addByTemplate("*_candle");
+			}
 		}
-	}
 
-	private static void add(Map<String, Item> map, String key, Consumer<ItemStack> consumer) {
-		add(map.get(key), consumer);
-	}
+		void addByTemplate(String template) {
+			boolean prefix = template.startsWith("*");
+			String trimmed = prefix ? template.substring(1) : template.substring(0, template.length() - 1);
+			for (Map.Entry<Item, String> entry : List.copyOf(map.entrySet())) {
+				String key = entry.getValue();
+				if (prefix && !key.endsWith(trimmed) || !prefix && !key.startsWith(trimmed)) {
+					continue;
+				}
+				add(entry.getKey());
+			}
+		}
 
-	private static void add(ItemLike item, Consumer<ItemStack> consumer) {
-		if (item instanceof ItemCategoryFiller filler) {
-			List<ItemStack> itemStacks = Lists.newArrayList();
-			filler.fillItemCategory(MAIN.getOrCreate(), FeatureFlags.VANILLA_SET, true, itemStacks);
-			itemStacks.forEach(consumer);
-		} else {
-			consumer.accept(item.asItem().getDefaultInstance());
+		void add(ItemLike item) {
+			map.remove(item.asItem());
+			if (item instanceof ItemCategoryFiller filler) {
+				List<ItemStack> itemStacks = Lists.newArrayList();
+				filler.fillItemCategory(MAIN.getOrCreate(), FeatureFlags.VANILLA_SET, true, itemStacks);
+				itemStacks.forEach(output::accept);
+			} else {
+				output.accept(item.asItem().getDefaultInstance());
+			}
 		}
 	}
 }

@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.google.common.math.IntMath;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -45,12 +44,11 @@ public abstract class LivingEntityMixin extends Entity {
 	private boolean canBeAffected(
 			LivingEntity entity,
 			MobEffectInstance newEffect,
-			Operation<Boolean> original,
-			@Local(argsOnly = true) MobEffectInstance effect) {
+			Operation<Boolean> original) {
 		boolean result = original.call(entity, newEffect);
-		if (result && Hooks.gadget && !Hooks.scentEffects.contains(effect.getEffect().value()) && !effect.isInfiniteDuration() &&
-				!effect.getEffect().value().isInstantenous() && entity.hasEffect(GadgetModule.WEAK_SCENT.holderOrThrow())) {
-			effect.duration = IntMath.saturatedAdd(effect.getDuration(), effect.getDuration());
+		if (result && Hooks.gadget && !Hooks.scentEffects.contains(newEffect.getEffect().value()) && !newEffect.isInfiniteDuration() &&
+				!newEffect.getEffect().value().isInstantenous() && entity.hasEffect(GadgetModule.WEAK_SCENT.holderOrThrow())) {
+			newEffect.duration = IntMath.saturatedAdd(newEffect.getDuration(), newEffect.getDuration());
 		}
 		return result;
 	}
