@@ -23,6 +23,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -167,7 +168,7 @@ public class ServerGamePacketListenerImplMixin {
 	}
 
 	@WrapOperation(
-			method = {"handleMoveVehicle", "tick"}, at = @At(
+			method = {"handleMoveVehicle", "tickPlayer"}, at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/level/ServerPlayer;getRootVehicle()Lnet/minecraft/world/entity/Entity;"))
 	private @Nullable Entity getRootVehicle(ServerPlayer player, Operation<Entity> original) {
@@ -175,6 +176,18 @@ public class ServerGamePacketListenerImplMixin {
 			return FFPlayer.of(player).fruits$hauntingTarget();
 		}
 		return original.call(player);
+	}
+
+
+	@WrapOperation(
+			method = "handleMoveVehicle", at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;getControllingPassenger()Lnet/minecraft/world/entity/LivingEntity;"))
+	private LivingEntity getControllingPassenger(Entity entity, Operation<LivingEntity> original) {
+		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {
+			return player;
+		}
+		return original.call(entity);
 	}
 
 	@WrapOperation(

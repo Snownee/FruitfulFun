@@ -24,7 +24,7 @@ public class LocalPlayerMixin {
 	}
 
 	@WrapOperation(
-			method = {"sendPosition", "aiStep"},
+			method = {"sendPosition", "aiStep", "applyInput"},
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isControlledCamera()Z"))
 	private boolean isControlledCamera(LocalPlayer player, Operation<Boolean> original) {
 		if (Hooks.bee && FFPlayer.of(player).fruits$isHaunting()) {

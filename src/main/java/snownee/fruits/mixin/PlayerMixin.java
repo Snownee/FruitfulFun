@@ -36,6 +36,9 @@ public abstract class PlayerMixin implements FFPlayer {
 	@Shadow
 	public abstract Component getName();
 
+	@Shadow
+	protected abstract void removeEntitiesOnShoulder();
+
 	@Unique
 	private Map<String, GeneName> geneNames = Map.of();
 	@Unique
@@ -183,6 +186,7 @@ public abstract class PlayerMixin implements FFPlayer {
 			if (!serverPlayer.isChangingDimension()) {
 				SHauntPacket.send(serverPlayer);
 			}
+			removeEntitiesOnShoulder();
 			player.level().playSound(null, player, BeeModule.START_HAUNTING.get(), player.getSoundSource(), 1, 1);
 			player.setXRot(0);
 			player.setYRot(0);

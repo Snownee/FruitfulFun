@@ -211,6 +211,7 @@ public final class Hooks {
 				attributes.updateTraits(bee);
 				var textures = List.of(FruitfulFun.id("pink_bee"), FruitfulFun.id("ghost_bee"), FruitfulFun.id("wither_bee"));
 				attributes.setTexture(textures.get(bee.getRandom().nextInt(textures.size())));
+				attributes.addTrusted(player.getUUID());
 			}
 			return InteractionResult.CONSUME;
 		}
@@ -254,7 +255,7 @@ public final class Hooks {
 		Level level = bee.level();
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		boolean ghost = attributes.hasTrait(Trait.GHOST);
-		if (FFCommonConfig.beeRidingEnvironmentAttrRules && !ghost && level.environmentAttributes().getValue(
+		if (FFCommonConfig.beeRidingEnvironmentAttrRules && !ghost && !level.environmentAttributes().getValue(
 				BeeModule.BEE_RIDEABLE.get(),
 				bee.position())) {
 			return new Vec3(0, -0.07, 0);
@@ -264,6 +265,7 @@ public final class Hooks {
 		}
 		float x = player.xxa * 0.7f * FFCommonConfig.beeRidingHorizontalSpeedMultiplier;
 		float z = player.zza * 1.4f * FFCommonConfig.beeRidingHorizontalSpeedMultiplier;
+//		FruitfulFun.LOGGER.info("player.xxa={}, player.zza={}", player.xxa, player.zza);
 		z *= bee.onGround() ? 0.3f : 0.6f;
 		if (z <= 0.0f) {
 			z *= 0.25f;

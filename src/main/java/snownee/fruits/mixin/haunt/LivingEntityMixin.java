@@ -40,6 +40,9 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 	@Shadow
 	protected abstract void serverAiStep();
 
+	@Shadow
+	protected abstract void applyInput();
+
 	@Unique
 	@Nullable
 	private UUID hauntedBy;
@@ -71,6 +74,7 @@ public abstract class LivingEntityMixin extends Entity implements FFLivingEntity
 				lerpHeadSteps = 0;
 				syncPacketPositionCodec(getX(), getY(), getZ());
 			}
+			applyInput();
 			if (!isImmobile() && isEffectiveAi()) {
 				Profiler.get().push("newAi");
 				serverAiStep();

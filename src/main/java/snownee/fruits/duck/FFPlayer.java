@@ -13,15 +13,7 @@ public interface FFPlayer {
 		return (FFPlayer) player;
 	}
 
-	default String fruits$getGeneName(char codename) {
-		return fruits$getGeneName(String.valueOf(codename));
-	}
-
 	String fruits$getGeneName(String codename);
-
-	default String fruits$getGeneDesc(char codename) {
-		return fruits$getGeneDesc(String.valueOf(codename));
-	}
 
 	String fruits$getGeneDesc(String codename);
 

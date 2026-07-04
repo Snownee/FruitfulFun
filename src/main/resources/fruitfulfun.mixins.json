@@ -70,7 +70,9 @@
 	"client": [
 		"bee.BeeRendererMixin",
 		"bee.EntityRendererMixin",
+		"bee.EquipmentAssetManagerMixin",
 		"bee.GuiGraphicsExtractorMixin",
+		"bee.LayerTypeMixin",
 		"bee.LivingEntityRendererMixin",
 		"cherry.BlockMixin",
 		"cherry.LivingEntityFlowerCrownMixin",

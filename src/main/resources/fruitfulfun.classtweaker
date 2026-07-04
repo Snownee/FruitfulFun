@@ -1,6 +1,7 @@
 classTweaker v2 official
 
 extend-enum net/minecraft/world/level/pathfinder/PathType FRUITFULFUN_LEAVES
+extend-enum net/minecraft/client/resources/model/EquipmentClientInfo$LayerType FRUITFULFUN_BEE_SADDLE
 
 accessible method net/minecraft/world/level/block/LeavesBlock updateDistance (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;
 

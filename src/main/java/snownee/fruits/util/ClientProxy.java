@@ -37,6 +37,7 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.model.animal.bee.AdultBeeModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.object.boat.BoatModel;
@@ -108,6 +109,7 @@ public class ClientProxy implements ClientModInitializer {
 	public static final RenderStateDataKey<Identifier> TEXTURE = RenderStateDataKey.create(() -> "texture");
 	public static final RenderStateDataKey<Function<Identifier, RenderType>> RENDER_TYPE = RenderStateDataKey.create(() -> "render_type");
 	public static final RenderStateDataKey<Unit> NO_BOB = RenderStateDataKey.create(() -> "no_bob");
+	public static final ModelLayerLocation BEE_SADDLE = new ModelLayerLocation(FruitfulFun.id("bee"), "saddle");
 
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -246,6 +248,7 @@ public class ClientProxy implements ClientModInitializer {
 
 		if (Hooks.bee) {
 			ItemTintSources.ID_MAPPER.put(FruitfulFun.id("mutagen"), MutagenTintSource.CODEC);
+			ModelLayerRegistry.registerModelLayer(BEE_SADDLE, AdultBeeModel::createBodyLayer);
 
 			ClientTickEvents.START_CLIENT_TICK.register(client -> {
 				if (client.player != null && client.player.isSpectator()) {

@@ -78,10 +78,10 @@ dependencies {
     compileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 
-//    implementation "libs:Kiwi-mc26.1-Fabric-26.0.4"
-//    annotationProcessor "libs:Kiwi-mc26.1-Fabric-26.0.4"
-    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+    implementation "libs:Kiwi-mc26.1-Fabric-26.0.10"
+    annotationProcessor "libs:Kiwi-mc26.1-Fabric-26.0.10"
+//    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+//    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
     implementation "libs:Lychee-mc26.1-Fabric-26.0.2"
 //    implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
     implementation "maven.modrinth:jade:${project.jade_version}+fabric"
@@ -140,6 +140,7 @@ jar {
 
     exclude "/assets/${project.mod_id}/lang/en_us.existing.yaml"
     exclude "/assets/${project.mod_id}/textures/entity/bee/ref"
+    exclude "/assets/${project.mod_id}/textures/ref"
     exclude '**/*.bat'
     exclude '**/*.psd'
     exclude '**/*.aseprite'

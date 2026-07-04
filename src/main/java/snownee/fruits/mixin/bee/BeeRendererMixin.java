@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.model.animal.bee.AdultBeeModel;
 import net.minecraft.client.model.animal.bee.BeeModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -39,9 +38,9 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 		this.addLayer(new SimpleEquipmentLayer<>(
 				(BeeRenderer) (Object) this,
 				context.getEquipmentRenderer(),
-				EquipmentClientInfo.LayerType.PIG_SADDLE,
+				EquipmentClientInfo.LayerType.FRUITFULFUN_BEE_SADDLE,
 				state -> state.getDataOrDefault(ClientProxy.SADDLE, ItemStack.EMPTY),
-				new AdultBeeModel(context.bakeLayer(ModelLayers.BEE)),
+				new AdultBeeModel(context.bakeLayer(ClientProxy.BEE_SADDLE)),
 				null));
 //		FruitfulFun.id("textures/entity/bee/bee_saddle.png")
 	}

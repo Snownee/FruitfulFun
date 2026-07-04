@@ -26,8 +26,8 @@ public class FFEntityTypeTagsProvider extends FabricTagsProvider.EntityTypeTagsP
 				.addOptionalElement(Identifier.parse("dummmmmmy:target_dummy"));
 		valueLookupBuilder(GadgetModule.VCD_MOVABLE);
 		valueLookupBuilder(EntityTypeTags.DISMOUNTS_UNDERWATER).add(EntityType.BEE);
+		valueLookupBuilder(EntityTypeTags.CAN_EQUIP_SADDLE).add(EntityType.BEE);
 		valueLookupBuilder(EntityTypeTags.FALL_DAMAGE_IMMUNE).addOptional(GadgetModule.SUMMONED_BEE.get());
-
 		valueLookupBuilder(EntityTypeTags.BOAT).add(FFBoats.CITRUS_BOAT.get()).add(FFBoats.REDLOVE_BOAT.get());
 	}
 }
