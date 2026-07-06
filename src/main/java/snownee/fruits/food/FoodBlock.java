@@ -1,5 +1,9 @@
 package snownee.fruits.food;
 
+import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
+
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
@@ -28,7 +32,7 @@ import snownee.kiwi.util.VoxelUtil;
 
 public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock {
 
-	private final VoxelShape[] shapes = new VoxelShape[4];
+	private final @Nullable VoxelShape[] shapes = new VoxelShape[4];
 	public boolean lockShapeRotation = true;
 
 	public FoodBlock(VoxelShape northShape, BlockBehaviour.Properties properties) {
@@ -72,10 +76,13 @@ public class FoodBlock extends HorizontalDirectionalBlock implements IKiwiBlock 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		int index = lockShapeRotation ? Direction.NORTH.get2DDataValue() : state.getValue(FACING).get2DDataValue();
-		if (shapes[index] == null) {
-			shapes[index] = VoxelUtil.rotateHorizontal(shapes[Direction.NORTH.get2DDataValue()], state.getValue(FACING));
+		VoxelShape shape = shapes[index];
+		if (shape == null) {
+			shape = shapes[index] = VoxelUtil.rotateHorizontal(
+					Objects.requireNonNull(shapes[Direction.NORTH.get2DDataValue()]),
+					state.getValue(FACING));
 		}
-		return shapes[index];
+		return shape;
 	}
 
 	@Override

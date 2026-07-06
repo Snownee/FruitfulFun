@@ -1,0 +1,52 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:or",
+      "values": [
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:grain/rice"
+          ]
+        },
+        {
+          "condition": "fabric:tags_populated",
+          "registry": "minecraft:item",
+          "values": [
+            "c:seeds/rice"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "kiwi:is_loaded",
+        "module": "fruitfulfun:farmersdelight"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:fruits/tangerine",
+    "#c:fruits/apple",
+    "#c:foods/fruit",
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        "#c:grain/rice",
+        "#c:seeds/rice"
+      ]
+    },
+    "minecraft:bamboo"
+  ],
+  "result": {
+    "id": "fruitfulfun:rice_with_fruits"
+  }
+}

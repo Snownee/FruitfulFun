@@ -6,7 +6,7 @@
     }
   ],
   "type": "minecraft:smithing_transform",
-  "addition": "#c:tulips",
+  "addition": "#c:flowers/tulips",
   "base": "#minecraft:candles",
   "result": {
     "id": "fruitfulfun:weak_candle"

@@ -2,6 +2,8 @@ package snownee.fruits.gadget;
 
 import org.jspecify.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,6 +35,8 @@ import snownee.kiwi.block.IKiwiBlock;
 import snownee.kiwi.item.ModBlockItem;
 
 public class BuzzyCrafterBlock extends BeehiveBlock implements IKiwiBlock {
+	public static final MapCodec<BeehiveBlock> CODEC = simpleCodec(BuzzyCrafterBlock::new);
+
 	public BuzzyCrafterBlock(Properties properties) {
 		super(properties);
 	}
@@ -223,5 +227,10 @@ public class BuzzyCrafterBlock extends BeehiveBlock implements IKiwiBlock {
 	@Override
 	public BlockItem createItem(Item.Properties builder) {
 		return new ModBlockItem(this, builder.component(GadgetModule.HIDE_HONEY_LEVEL.getOrCreate(), Unit.INSTANCE));
+	}
+
+	@Override
+	public MapCodec<BeehiveBlock> codec() {
+		return CODEC;
 	}
 }

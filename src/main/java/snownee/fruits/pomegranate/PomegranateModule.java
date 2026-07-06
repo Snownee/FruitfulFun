@@ -1,5 +1,7 @@
 package snownee.fruits.pomegranate;
 
+import java.util.Optional;
+
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -30,6 +32,9 @@ public class PomegranateModule extends AbstractModule {
 	public static final BlockObject<HangingFruitLeavesBlock> POMEGRANATE_LEAVES = block(
 			$ -> new HangingFruitLeavesBlock(
 					FFFruitTypes.POMEGRANATE.holderOrThrow(),
+					0.01F,
+					Optional.empty(),
+					0xFF6b852c,
 					$), () -> Blocks.JUNGLE_LEAVES);
 	@KiwiModule.NoItem
 	public static final BlockObject<HangingFruitBlock> POMEGRANATE = block($ -> new HangingFruitBlock($.instabreak()

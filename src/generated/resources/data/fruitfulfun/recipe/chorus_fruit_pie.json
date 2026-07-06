@@ -10,7 +10,7 @@
   "ingredients": [
     "minecraft:chorus_fruit",
     "minecraft:chorus_fruit",
-    "minecraft:egg",
+    "#c:eggs",
     "minecraft:sugar"
   ],
   "result": {

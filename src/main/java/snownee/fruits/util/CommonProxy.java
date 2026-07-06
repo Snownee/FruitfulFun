@@ -86,6 +86,7 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.lychee.LycheeCompat;
+import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentType;
@@ -104,7 +105,7 @@ import snownee.kiwi.util.KUtil;
 public class CommonProxy implements ModInitializer {
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("c", "tools/knives");
 	private static final Map<ScentType, AttachmentType<Long>> SCENT_ATTACHMENT_TYPES = Maps.newHashMap();
-	public static boolean trinkets = Platform.isModLoaded("trinkets");
+	public static boolean trinkets = Platform.isModLoaded("trinkets_updated");
 
 	public static void maybeGrowCrops(ServerLevel world, BlockPos pos, BlockState state, boolean defaultResult, Runnable defaultAction) {
 		if (defaultResult) {
@@ -368,7 +369,7 @@ public class CommonProxy implements ModInitializer {
 			return item;
 		}
 		if (trinkets) {
-//			return TrinketsCompat.getFlowerCrown(entity);
+			return TrinketsCompat.getFlowerCrown(entity);
 		}
 		return null;
 	}

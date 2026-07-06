@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRewards;
@@ -67,7 +68,7 @@ public class FFAdvancements extends FabricAdvancementProvider {
 				.addCriterion(
 						"_",
 						InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item()
-								.of(items, FFItemTagsProvider.FRUITS)
+								.of(items, ConventionalItemTags.FRUIT_FOODS)
 								.build()))
 				.save(consumer, "husbandry/fruitfulfun/start");
 

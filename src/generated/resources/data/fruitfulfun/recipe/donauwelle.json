@@ -1,0 +1,35 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "fruitfulfun:redlove",
+    "minecraft:cocoa_beans",
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        "#c:cream",
+        "#c:milk",
+        "#c:buckets/milk"
+      ]
+    },
+    "#c:eggs",
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        "#c:flour",
+        "#c:grain/wheat",
+        "minecraft:wheat"
+      ]
+    },
+    "minecraft:sugar"
+  ],
+  "result": {
+    "id": "fruitfulfun:donauwelle"
+  }
+}

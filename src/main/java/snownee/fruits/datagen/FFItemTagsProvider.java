@@ -1,10 +1,5 @@
 package snownee.fruits.datagen;
 
-import static net.minecraft.world.item.Items.APPLE;
-import static net.minecraft.world.item.Items.CHORUS_FRUIT;
-import static net.minecraft.world.item.Items.GLOW_BERRIES;
-import static net.minecraft.world.item.Items.MELON_SLICE;
-import static net.minecraft.world.item.Items.SWEET_BERRIES;
 import static snownee.fruits.CoreModule.CITRUS_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_CHEST_BOAT;
 import static snownee.fruits.CoreModule.CITRUS_FRUITS;
@@ -18,6 +13,8 @@ import static snownee.fruits.cherry.CherryModule.REDLOVE_CROWN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SHELF;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.CITRUS_CABINET;
 import static snownee.fruits.compat.farmersdelight.FarmersDelightModule.REDLOVE_CABINET;
+import static snownee.fruits.food.FoodModule.CHORUS_FRUIT_PIE;
+import static snownee.fruits.food.FoodModule.CHORUS_FRUIT_PIE_SLICE;
 import static snownee.fruits.food.FoodModule.HONEY_POMELO_TEA;
 import static snownee.fruits.food.FoodModule.RICE_WITH_FRUITS;
 
@@ -46,8 +43,7 @@ import snownee.kiwi.KiwiModules;
 public class FFItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 	static final TagKey<Item> CITRUS_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "citrus_logs");
 	static final TagKey<Item> REDLOVE_LOGS = AbstractModule.itemTag(FruitfulFun.ID, "redlove_logs");
-	static final TagKey<Item> FRUITS = AbstractModule.itemTag("c", "fruits");
-	static final TagKey<Item> TULIPS = AbstractModule.itemTag("c", "tulips");
+	static final TagKey<Item> TULIPS = AbstractModule.itemTag("c", "flowers/tulips");
 	static final TagKey<Item> HAT = AbstractModule.itemTag("trinkets", "head/hat");
 	static final TagKey<Item> WOODEN_CABINETS = AbstractModule.itemTag("farmersdelight", "cabinets/wooden");
 	static final TagKey<Item> OFFHAND_EQUIPMENT = AbstractModule.itemTag("farmersdelight", "offhand_equipment");
@@ -83,7 +79,7 @@ public class FFItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 		copy(FFBlockTagsProvider.REDLOVE_LOGS, REDLOVE_LOGS);
 		copy(BlockTags.FLOWERS, ItemTags.FLOWERS);
 
-		var fruits = valueLookupBuilder(FRUITS).add(APPLE, MELON_SLICE, SWEET_BERRIES, CHORUS_FRUIT, GLOW_BERRIES);
+		var fruits = valueLookupBuilder(ConventionalItemTags.FRUIT_FOODS);
 		var citrusFruits = valueLookupBuilder(CITRUS_FRUITS);
 		var villagerPicksUp = valueLookupBuilder(ItemTags.VILLAGER_PICKS_UP);
 		FFRegistries.FRUIT_TYPE.forEach($ -> {
@@ -95,11 +91,10 @@ public class FFItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 			villagerPicksUp.add($.fruit.get());
 		});
 		fruits.addTag(CITRUS_FRUITS);
-		valueLookupBuilder(ItemTags.FOX_FOOD).addTag(FRUITS);
+		valueLookupBuilder(ItemTags.FOX_FOOD).addTag(ConventionalItemTags.FRUIT_FOODS);
 		getOrCreateRawBuilder(ItemTags.PANDA_FOOD).addOptionalElement(RICE_WITH_FRUITS.key());
 
 		var tagAppender = valueLookupBuilder(ConventionalItemTags.FOODS);
-		tagAppender.addTag(FRUITS);
 		KiwiModules.get(FruitfulFun.id("food")).getRegistryEntries(Registries.ITEM)
 				.map(KiwiGO::get)
 				.forEach(tagAppender::addOptional);
@@ -124,6 +119,11 @@ public class FFItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 		valueLookupBuilder(ItemTags.CHEST_BOATS).add(CITRUS_CHEST_BOAT.get()).add(REDLOVE_CHEST_BOAT.get());
 		valueLookupBuilder(ItemTags.WOODEN_SHELVES).add(CITRUS_SHELF.asItem()).add(REDLOVE_SHELF.asItem());
 		valueLookupBuilder(ItemTags.LOOM_PATTERNS).addOptional(SNOWFLAKE_BANNER_PATTERN.get()).add(HEART_BANNER_PATTERN.get());
+
+		valueLookupBuilder(ConventionalItemTags.HONEY_DRINKS).addOptional(HONEY_POMELO_TEA.asItem());
+		valueLookupBuilder(ConventionalItemTags.PIE_FOODS)
+				.addOptional(CHORUS_FRUIT_PIE.asItem())
+				.addOptional(CHORUS_FRUIT_PIE_SLICE.asItem());
 
 		if (Hooks.farmersdelight) {
 			getOrCreateRawBuilder(WOODEN_CABINETS)

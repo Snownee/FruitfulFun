@@ -1,7 +1,10 @@
 package snownee.fruits;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.datafixers.util.Either;
 
@@ -21,7 +24,7 @@ public abstract class FruitType {
 	public final Supplier<? extends FruitLeavesBlock> leaves;
 	public final Supplier<? extends Block> sapling;
 	public final Supplier<Item> fruit;
-	public Holder<PoiType> poiType;
+	public @Nullable Holder<PoiType> poiType;
 	public boolean allogamous;
 
 	public FruitType(
@@ -58,6 +61,10 @@ public abstract class FruitType {
 	public FruitType allogamous() {
 		allogamous = true;
 		return this;
+	}
+
+	public Holder<PoiType> poiType() {
+		return Objects.requireNonNull(poiType);
 	}
 
 	public abstract void makeFeatures(Identifier id, boolean worldgen, BiConsumer<Identifier, TreeConfiguration> exporter);

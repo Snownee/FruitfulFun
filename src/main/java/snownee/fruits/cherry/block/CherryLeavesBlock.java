@@ -88,4 +88,9 @@ public class CherryLeavesBlock extends FruitLeavesBlock {
 			}
 		}
 	}
+
+	@Override
+	public void spawnFallingLeavesParticle(Level level, BlockPos pos, RandomSource random) {
+
+	}
 }

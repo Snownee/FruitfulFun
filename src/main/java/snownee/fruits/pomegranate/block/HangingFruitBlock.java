@@ -1,5 +1,7 @@
 package snownee.fruits.pomegranate.block;
 
+import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -19,6 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import snownee.fruits.block.FruitLeavesBlock;
 
 public class HangingFruitBlock extends HangingRootsBlock {
+	public static final MapCodec<HangingRootsBlock> CODEC = simpleCodec(HangingFruitBlock::new);
 	protected static final VoxelShape SHAPE = Block.box(3, 5, 3, 13, 15, 13);
 
 	public HangingFruitBlock(Properties builder) {
@@ -60,5 +63,10 @@ public class HangingFruitBlock extends HangingRootsBlock {
 		if (level instanceof ServerLevel serverLevel && projectile.mayInteract(serverLevel, blockPos) && projectile.mayBreak(serverLevel)) {
 			level.destroyBlock(blockPos, true, projectile);
 		}
+	}
+
+	@Override
+	public MapCodec<HangingRootsBlock> codec() {
+		return CODEC;
 	}
 }

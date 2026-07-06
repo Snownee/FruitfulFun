@@ -28,19 +28,8 @@ repositories {
     maven { url "https://maven.terraformersmc.com/releases/" }
     // Trinkets
     maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
-    }
-    maven {
-        name = "Ladysnake Libs"
-        url = 'https://maven.ladysnake.org/releases'
-    }
-
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
+        name = "Nucleoid"
+        url = 'https://maven.nucleoid.xyz/releases'
     }
     maven { url = "https://api.modrinth.com/maven" }
     flatDir { dir 'libs' }
@@ -78,16 +67,16 @@ dependencies {
     compileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 
-    implementation "libs:Kiwi-mc26.1-Fabric-26.0.10"
-    annotationProcessor "libs:Kiwi-mc26.1-Fabric-26.0.10"
+    implementation "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
+    annotationProcessor "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
 //    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
 //    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
     implementation "libs:Lychee-mc26.1-Fabric-26.0.2"
 //    implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
     implementation "maven.modrinth:jade:${project.jade_version}+fabric"
 
-    // do not upgrade, otherwise it will crash
-//    implementation "dev.emi:trinkets:${project.trinkets_version}"
+//    implementation "maven.modrinth:trinkets-updated:${project.trinkets_version}"
+    implementation "eu.pb4:trinkets:${project.trinkets_version}"
 //    implementation "curse.maven:selene-499980:4981682"
 //    implementation "maven.modrinth:supplementaries:8rvsAEun"
 //    implementation "maven.modrinth:farmers-delight-fabric:QXYNitXw"

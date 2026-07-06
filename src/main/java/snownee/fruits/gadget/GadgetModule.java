@@ -147,17 +147,15 @@ public class GadgetModule extends AbstractModule {
 //			false))));
 	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS)
 	public static final BlockObject<ScentedCandleBlock> PHANTOM_CANDLE = block(
-			$ -> new ScentedCandleBlock($, PHANTOM.getOrCreate()),
+			$ -> new ScentedCandleBlock(PHANTOM.getOrCreate(), $),
 			() -> Blocks.CANDLE);
 	public static final BlockObject<ScentedCandleBlock> WANDERING_TRADER_CANDLE = block(
-			$ -> new ScentedCandleBlock(
-					$,
-					WANDERING_TRADER.getOrCreate()), () -> Blocks.CANDLE);
+			$ -> new ScentedCandleBlock(WANDERING_TRADER.getOrCreate(), $), () -> Blocks.CANDLE);
 	public static final BlockObject<ScentedCandleBlock> ENDER_CANDLE = block(
-			$ -> new ScentedCandleBlock($, ENDER.getOrCreate()),
+			$ -> new ScentedCandleBlock(ENDER.getOrCreate(), $),
 			() -> Blocks.CANDLE);
 	public static final BlockObject<ScentedCandleBlock> WEAK_CANDLE = block(
-			$ -> new ScentedCandleBlock($, WEAK.getOrCreate()),
+			$ -> new ScentedCandleBlock(WEAK.getOrCreate(), $),
 			() -> Blocks.CANDLE);
 	//	public static final BlockObject<ScentedCandleBlock> HEAVY_CANDLE = block($ -> new ScentedCandleBlock(
 	//			$,

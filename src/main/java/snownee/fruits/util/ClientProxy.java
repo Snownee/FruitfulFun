@@ -89,6 +89,7 @@ import snownee.fruits.client.particle.FoodSmokeParticle;
 import snownee.fruits.client.particle.GhostParticle;
 import snownee.fruits.client.particle.PetalParticle;
 import snownee.fruits.compat.supplementaries.SupplementariesCompat;
+import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
@@ -275,7 +276,7 @@ public class ClientProxy implements ClientModInitializer {
 		}
 
 		if (CommonProxy.trinkets) {
-//			TrinketsCompat.init();
+			TrinketsCompat.init();
 		}
 
 		if (Hooks.gadget) {

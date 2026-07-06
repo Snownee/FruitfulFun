@@ -4,6 +4,9 @@ import java.util.Objects;
 
 import org.jspecify.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -24,14 +27,25 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.BlockHitResult;
+import snownee.fruits.FFRegistries;
 import snownee.kiwi.block.IKiwiBlock;
 
 public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiwiBlock {
+	public static final MapCodec<ScentedCandleBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+			FFRegistries.SCENT_TYPE.byNameCodec().fieldOf("scent").forGetter(e -> e.type),
+			propertiesCodec()
+	).apply(i, ScentedCandleBlock::new));
 	public final ScentType type;
 
-	public ScentedCandleBlock(Properties properties, ScentType type) {
+	public ScentedCandleBlock(ScentType type, Properties properties) {
 		super(properties);
 		this.type = type;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public MapCodec<CandleBlock> codec() {
+		return (MapCodec<CandleBlock>) (Object) CODEC;
 	}
 
 	@Override

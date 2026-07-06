@@ -1,0 +1,32 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:food"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:fruits/lemon",
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        "#c:flowers/lavender",
+        "#c:fruits/lemon"
+      ]
+    },
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        "#c:vegetables/onion",
+        "minecraft:potato"
+      ]
+    },
+    "minecraft:cooked_chicken",
+    "minecraft:bowl"
+  ],
+  "result": {
+    "id": "fruitfulfun:lemon_roast_chicken_block"
+  }
+}

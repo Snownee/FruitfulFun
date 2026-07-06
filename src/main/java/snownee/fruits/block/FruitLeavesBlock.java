@@ -1,20 +1,28 @@
 package snownee.fruits.block;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jspecify.annotations.Nullable;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -55,6 +63,7 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFCommonConfig.DropMode;
 import snownee.fruits.FFFruitTypes;
+import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitType;
 import snownee.fruits.Hooks;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
@@ -63,6 +72,13 @@ import snownee.kiwi.loader.Platform;
 
 public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, EntityBlock {
 
+	public static final MapCodec<FruitLeavesBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+			FFRegistries.FRUIT_TYPE.holderByNameCodec().fieldOf("fruit").forGetter(e -> e.type),
+			ExtraCodecs.floatRange(0.0F, 1.0F).fieldOf("leaf_particle_chance").forGetter(e -> e.leafParticleChance),
+			ParticleTypes.CODEC.optionalFieldOf("leaf_particle").forGetter(e -> Optional.ofNullable(e.leafParticle)),
+			Codec.INT.optionalFieldOf("constant_tint_color", -1).forGetter(e -> e.constantTintColor),
+			propertiesCodec()
+	).apply(i, FruitLeavesBlock::new));
 	public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 	public static final int DEAD = 0;
 	public static final int YOUNG = 1;
@@ -70,8 +86,23 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	public static final int FRUITING = 3;
 
 	public final Holder<FruitType> type;
+	protected final @Nullable ParticleOptions leafParticle;
+	protected final int constantTintColor;
 
-	public FruitLeavesBlock(Holder<FruitType> type, float leafParticleChance, Properties properties) {
+	public FruitLeavesBlock(
+			Holder<FruitType> type,
+			float leafParticleChance,
+			Properties properties) {
+		this(type, leafParticleChance, Optional.empty(), -1, properties);
+	}
+
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	public FruitLeavesBlock(
+			Holder<FruitType> type,
+			float leafParticleChance,
+			Optional<ParticleOptions> leafParticle,
+			int constantTintColor,
+			Properties properties) {
 		super(
 				leafParticleChance,
 				properties.isValidSpawn(Blocks::ocelotOrParrot)
@@ -79,6 +110,8 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 						.isViewBlocking(Blocks::never)
 						.isRedstoneConductor(Blocks::never));
 		this.type = type;
+		this.leafParticle = leafParticle.orElse(null);
+		this.constantTintColor = constantTintColor;
 		registerDefaultState(stateDefinition.any()
 				.setValue(DISTANCE, 7)
 				.setValue(PERSISTENT, false)
@@ -164,7 +197,7 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 	@Nullable
 	public FruitTreeBlockEntity findCore(ServerLevel level, BlockPos pos) {
 		return level.getPoiManager()
-				.findClosest(type.value().poiType::equals, pos, 10, PoiManager.Occupancy.ANY)
+				.findClosest(type.value().poiType()::equals, pos, 10, PoiManager.Occupancy.ANY)
 				.flatMap(core -> level.getBlockEntity(core, CoreModule.FRUIT_TREE.get()))
 				.orElse(null);
 	}
@@ -238,12 +271,18 @@ public class FruitLeavesBlock extends LeavesBlock implements BonemealableBlock, 
 
 	@Override
 	public void spawnFallingLeavesParticle(Level level, BlockPos pos, RandomSource random) {
-//TODO
+		if (leafParticle == null) {
+			int color = constantTintColor != -1 ? constantTintColor : level.getClientLeafTintColor(pos);
+			ColorParticleOption particle = ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, color);
+			ParticleUtils.spawnParticleBelow(level, pos, random, particle);
+		} else {
+			ParticleUtils.spawnParticleBelow(level, pos, random, leafParticle);
+		}
 	}
 
 	@Override
-	public MapCodec<? extends LeavesBlock> codec() {
-		return null; //TODO
+	public MapCodec<? extends FruitLeavesBlock> codec() {
+		return CODEC;
 	}
 
 	@Override
