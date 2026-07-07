@@ -46,7 +46,7 @@ public record BeehiveIngredient(boolean requireBees) implements CustomIngredient
 
 	@Override
 	public boolean requiresTesting() {
-		return false;
+		return true;
 	}
 
 	@Override

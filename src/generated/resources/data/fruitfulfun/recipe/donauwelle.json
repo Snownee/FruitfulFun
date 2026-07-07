@@ -26,7 +26,7 @@
       "fabric:type": "kiwi:alternatives",
       "options": [
         "#c:cream",
-        "#c:milk",
+        "#c:drinks/milk",
         "#c:buckets/milk"
       ]
     },

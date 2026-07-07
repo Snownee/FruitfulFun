@@ -1,0 +1,23 @@
+{
+  "type": "farmersdelight:cooking",
+  "container": {
+    "id": "minecraft:bamboo"
+  },
+  "experience": 1.0,
+  "ingredients": [
+    "#c:crops/tangerine",
+    "#c:crops/apple",
+    "#c:foods/fruit",
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        "#c:crops/rice",
+        "#c:seeds/rice"
+      ]
+    }
+  ],
+  "recipe_book_tab": "meals",
+  "result": {
+    "id": "fruitfulfun:rice_with_fruits"
+  }
+}

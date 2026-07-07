@@ -2,6 +2,7 @@ package snownee.fruits.bee;
 
 import java.util.function.Consumer;
 
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.Hooks;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.ClientProxy;
-import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.item.ModItem;
 
 public class InspectorItem extends ModItem {
@@ -59,7 +59,7 @@ public class InspectorItem extends ModItem {
 	@Override
 	public InteractionResult useOn(UseOnContext useOnContext) {
 		BlockState blockState = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
-		if (CommonProxy.isBookshelf(blockState)) {
+		if (blockState.is(ConventionalBlockTags.BOOKSHELVES)) {
 			if (useOnContext.getLevel().isClientSide()) {
 				Player player = useOnContext.getPlayer();
 				if (player == null) {

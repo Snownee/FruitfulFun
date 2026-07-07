@@ -1,0 +1,36 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    [
+      "fruitfulfun:redlove_door",
+      "fruitfulfun:redlove_trapdoor",
+      "fruitfulfun:redlove_sign",
+      "fruitfulfun:redlove_hanging_sign",
+      "fruitfulfun:redlove_fence",
+      "fruitfulfun:redlove_fence_gate",
+      "fruitfulfun:redlove_pressure_plate",
+      "fruitfulfun:redlove_button",
+      "fruitfulfun:redlove_boat",
+      "fruitfulfun:redlove_cabinet",
+      "fruitfulfun:redlove_sliding_door"
+    ]
+  ],
+  "result": [
+    {
+      "chance": 0.75,
+      "item": {
+        "id": "fruitfulfun:redlove_planks"
+      }
+    }
+  ],
+  "tool": {
+    "fabric:type": "fabric:any",
+    "ingredients": [
+      {
+        "fabric:type": "farmersdelight:item_ability",
+        "action": "axe_dig"
+      },
+      "#minecraft:axes"
+    ]
+  }
+}

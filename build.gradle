@@ -31,6 +31,11 @@ repositories {
         name = "Nucleoid"
         url = 'https://maven.nucleoid.xyz/releases'
     }
+    // Farmer's Delight Refabricated
+    maven {
+        name = "Greenhouse Maven"
+        url = 'https://maven.greenhouse.lgbt/releases/'
+    }
     maven { url = "https://api.modrinth.com/maven" }
     flatDir { dir 'libs' }
     // Add repositories to retrieve artifacts from in here.
@@ -79,9 +84,10 @@ dependencies {
     implementation "eu.pb4:trinkets:${project.trinkets_version}"
 //    implementation "curse.maven:selene-499980:4981682"
 //    implementation "maven.modrinth:supplementaries:8rvsAEun"
-//    implementation "maven.modrinth:farmers-delight-fabric:QXYNitXw"
-//    implementation "curse.maven:farmers-delight-refabricated-993166:5219672"
-//    implementation "vectorwing:FarmersDelight-Refabricated:1.20.1-2.0.8"
+
+    implementation("vectorwing:FarmersDelight:${fdrf_version}") {
+        exclude(group: "net.fabricmc")
+    }
 
     implementation "maven.modrinth:debugutils:26.1.2-1.0.9-fabric"
 //    implementation "maven.modrinth:suggestion-tweaker:1.20-1.5.1+fabric"

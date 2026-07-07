@@ -1,24 +1,11 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:food"
-    },
-    {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "kiwi:is_loaded",
-        "module": "fruitfulfun:farmersdelight"
-      }
-    }
-  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_item": {
       "conditions": {
         "items": [
           {
-            "items": "#c:crops/grapefruit"
+            "items": "fruitfulfun:redlove_trapdoor"
           }
         ]
       },
@@ -26,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "fruitfulfun:grapefruit_panna_cotta"
+        "recipe": "fruitfulfun:redlove_cabinet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -39,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "fruitfulfun:grapefruit_panna_cotta"
+      "fruitfulfun:redlove_cabinet"
     ]
   }
 }

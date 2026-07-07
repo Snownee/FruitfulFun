@@ -26,7 +26,6 @@ import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -131,10 +130,6 @@ public class CommonProxy implements ModInitializer {
 
 	private static void addBuiltinPack(ModContainer modContainer, String id) {
 		ResourceLoader.registerBuiltinPack(FruitfulFun.id(id), modContainer, PackActivationType.ALWAYS_ENABLED);
-	}
-
-	public static boolean isBookshelf(BlockState blockState) {
-		return blockState.is(ConventionalBlockTags.BOOKSHELVES);
 	}
 
 	public static long insertItem(

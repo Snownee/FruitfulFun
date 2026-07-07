@@ -1,0 +1,24 @@
+{
+  "type": "farmersdelight:cooking",
+  "container": {
+    "id": "minecraft:glass_bottle"
+  },
+  "experience": 1.0,
+  "ingredients": [
+    "#c:crops/pomelo",
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        "#c:crops/mint",
+        "#c:leaves/mint",
+        []
+      ]
+    },
+    "minecraft:honey_bottle",
+    "minecraft:sugar"
+  ],
+  "recipe_book_tab": "drinks",
+  "result": {
+    "id": "fruitfulfun:honey_pomelo_tea"
+  }
+}

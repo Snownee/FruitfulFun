@@ -19,20 +19,20 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 		pack.addProvider(CoreBlockLoot::new);
 		pack.addProvider(FFAdvancements::new);
-		FabricTagsProvider.BlockTagsProvider ffBlockTagsProvider = pack.addProvider(FFBlockTagsProvider::new);
-		pack.addProvider((output, registriesFuture) -> new FFItemTagsProvider(output, registriesFuture, ffBlockTagsProvider));
-		pack.addProvider(FFPoiTypeTagsProvider::new);
-		pack.addProvider(FFDamageTypeTagsProvider::new);
-		pack.addProvider(FFInstrumentTagsProvider::new);
-		pack.addProvider(FFEntityTypeTagsProvider::new);
-		FabricTagsProvider.BlockTagsProvider seasonalBlockTagsProvider = pack.addProvider(SeasonalBlockTagsProvider::new);
-		pack.addProvider((output, registriesFuture) -> new SeasonalItemTagsProvider(output, registriesFuture, seasonalBlockTagsProvider));
-		pack.addProvider(FFBiomeTagsProvider::new);
-		pack.addProvider(FFBannerPatternTagsProvider::new);
-		pack.addProvider(FFModelProvider::new);
-		pack.addProvider(FFRecipeProvider::new);
+		FabricTagsProvider.BlockTagsProvider ffBlockTagsProvider = pack.addProvider(FFBlockTags::new);
+		pack.addProvider((output, registriesFuture) -> new FFItemTags(output, registriesFuture, ffBlockTagsProvider));
+		pack.addProvider(FFPoiTypeTags::new);
+		pack.addProvider(FFDamageTypeTags::new);
+		pack.addProvider(FFInstrumentTags::new);
+		pack.addProvider(FFEntityTypeTags::new);
+		FabricTagsProvider.BlockTagsProvider seasonalBlockTagsProvider = pack.addProvider(SeasonalBlockTags::new);
+		pack.addProvider((output, registriesFuture) -> new SeasonalItemTags(output, registriesFuture, seasonalBlockTagsProvider));
+		pack.addProvider(FFBiomeTags::new);
+		pack.addProvider(FFBannerPatternTags::new);
+		pack.addProvider(FFModels::new);
+		pack.addProvider(FFRecipes::new);
 		pack.addProvider(FFDynamicRegistryProvider::new);
-		pack.addProvider(FFLanguageProvider::new);
+		pack.addProvider(FFLanguage::new);
 //		pack.addProvider(($, _) -> new FFEquipmentAssetProvider($));
 		pack.addProvider(CherryBlockLoot::new);
 		pack.addProvider(PomegranateBlockLoot::new);
@@ -43,6 +43,9 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		if (Hooks.farmersdelight) {
 			pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("farmersdelight"));
 			pack.addProvider(FarmersDelightBlockLoot::new);
+			pack.addProvider(FFFDModels::new);
+			pack.addProvider(FFFDCuttingRecipes::new);
+			pack.addProvider(FFFDCookingRecipes::new);
 		}
 	}
 

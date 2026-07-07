@@ -1,19 +1,6 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:food"
-    },
-    {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "kiwi:is_loaded",
-        "module": "fruitfulfun:farmersdelight"
-      }
-    }
-  ],
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
+  "type": "farmersdelight:cooking",
+  "experience": 1.0,
   "ingredients": [
     "#c:crops/grapefruit",
     {
