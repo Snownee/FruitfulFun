@@ -114,6 +114,7 @@ public class FFItemTags extends FabricTagsProvider.ItemTagsProvider {
 		valueLookupBuilder(itemTag("c:crops/pomegranate")).add(POMEGRANATE.asItem());
 		valueLookupBuilder(ItemTags.FOX_FOOD).addTag(ConventionalItemTags.FRUIT_FOODS);
 		getOrCreateRawBuilder(ItemTags.PANDA_FOOD).addOptionalElement(RICE_WITH_FRUITS.key());
+		valueLookupBuilder(ConventionalItemTags.EDIBLE_WHEN_PLACED_FOODS).addOptional(CHORUS_FRUIT_PIE.get().asItem());
 
 		var tagAppender = valueLookupBuilder(ConventionalItemTags.FOODS);
 		KiwiModules.get(FruitfulFun.id("food")).getRegistryEntries(Registries.ITEM)

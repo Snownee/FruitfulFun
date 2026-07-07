@@ -1,4 +1,4 @@
-package snownee.fruits.mixin.food;
+package snownee.fruits.mixin.ritual;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +23,7 @@ public class SkullBlockEntityMixin {
 			SkullBlockEntity entity,
 			CallbackInfo ci) {
 		if (state.is(Blocks.DRAGON_HEAD) || state.is(Blocks.DRAGON_WALL_HEAD)) {
-			if (Hooks.food && RitualModule.tickDragonHead(level, pos, state, entity)) {
+			if (Hooks.ritual && RitualModule.tickDragonHead(level, pos, state, entity)) {
 				ci.cancel();
 			}
 		}

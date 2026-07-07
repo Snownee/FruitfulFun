@@ -126,6 +126,7 @@ public class RitualModule extends AbstractModule {
 		}
 		Interaction interaction = new Interaction(EntityType.INTERACTION, level);
 		interaction.setPos(Vec3.atCenterOf(pos));
+		interaction.setCustomNameVisible(false);
 		interaction.setCustomName(Component.literal(INTERACTION_NAME));
 		level.addFreshEntity(interaction);
 	}

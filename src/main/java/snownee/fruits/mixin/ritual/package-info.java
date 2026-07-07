@@ -1,4 +1,4 @@
 @NullMarked
-package snownee.fruits.mixin.food;
+package snownee.fruits.mixin.ritual;
 
 import org.jspecify.annotations.NullMarked;
