@@ -1,9 +1,0 @@
-{
-	"replace": false,
-	"values": [
-		{
-			"id": "farmers_extra_foods:flour",
-			"required": false
-		}
-	]
-}

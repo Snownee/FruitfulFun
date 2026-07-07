@@ -7,7 +7,7 @@
           "condition": "fabric:tags_populated",
           "registry": "minecraft:item",
           "values": [
-            "c:grain/rice"
+            "c:crops/rice"
           ]
         },
         {
@@ -37,7 +37,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#c:fruits/tangerine"
+            "items": "#c:crops/tangerine"
           }
         ]
       },

@@ -119,7 +119,7 @@ public final class CoreModule extends AbstractModule {
 			CITRUS_HANGING_SIGN.get(),
 			CITRUS_WALL_HANGING_SIGN.get(),
 			$.stacksTo(16)));
-	public static final TagKey<Item> CITRUS_FRUITS = itemTag("c", "fruits/citrus");
+	public static final TagKey<Item> CITRUS_FRUITS = itemTag("c", "crops/citrus");
 	@Category(value = Categories.FOOD_AND_DRINKS, after = "chorus_fruit")
 	public static final ItemObject<Item> TANGERINE = citrusFood(Foods.TANGERINE);
 	public static final ItemObject<Item> LIME = citrusFood(Foods.LIME);

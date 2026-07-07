@@ -18,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#c:fruits/pomelo"
+            "items": "#c:crops/pomelo"
           }
         ]
       },

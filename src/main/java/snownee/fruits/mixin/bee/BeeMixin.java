@@ -20,7 +20,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
@@ -30,6 +32,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.bee.network.SSyncBeePacket;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.duck.FFBee;
 
 @Mixin(Bee.class)
@@ -65,8 +68,23 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		if (!Hooks.bee) {
 			return;
 		}
-		if (!state.hasBlockEntity() && state.getBlock() instanceof FruitLeavesBlock) {
+		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
 			cir.setReturnValue(true);
+			return;
+		}
+		if (state.getBlock() instanceof FruitLeavesBlock block) {
+			if (block instanceof CherryLeavesBlock) {
+				cir.setReturnValue(block.notPlacedByPlayer(state));
+				return;
+			}
+			if (!block.canGrow(state)) {
+				cir.setReturnValue(false);
+				return;
+			}
+			cir.setReturnValue(state.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING);
+		} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) &&
+				state.getValue(LeavesBlock.PERSISTENT)) {
+			cir.setReturnValue(false);
 		}
 	}
 
@@ -136,8 +154,7 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	private int ticksWithoutNectarSinceExitingHive;
 
 	@ModifyExpressionValue(
-			method = "wantsToEnterHive",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/bee/Bee;hasNectar()Z"))
+			method = "wantsToEnterHive", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/bee/Bee;hasNectar()Z"))
 	private boolean wantsToEnterHive(boolean original) {
 		if (BeeAttributes.of(this).hasTrait(Trait.RAIN_CAPABLE)) {
 			return false;

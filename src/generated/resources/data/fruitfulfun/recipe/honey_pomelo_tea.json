@@ -15,7 +15,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "#c:fruits/pomelo",
+    "#c:crops/pomelo",
     {
       "fabric:type": "kiwi:alternatives",
       "options": [

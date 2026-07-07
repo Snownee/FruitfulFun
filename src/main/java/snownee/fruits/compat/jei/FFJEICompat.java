@@ -8,16 +8,20 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.recipe.IRecipeLookup;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.Mutagen;
 import snownee.fruits.bee.genetics.MutagenItem;
 import snownee.fruits.compat.lychee.LycheeCompat;
+import snownee.fruits.gadget.GadgetModule;
 
 @JeiPlugin
 public class FFJEICompat implements IModPlugin {
@@ -52,6 +56,23 @@ public class FFJEICompat implements IModPlugin {
 					.getOrDefault(BeeModule.MUTAGEN_CONTENT.get(), Mutagen.IMPERFECT)
 					.isImperfect()).toList();
 			jeiRuntime.getRecipeManager().hideRecipes(RecipeTypes.BREWING, recipes);
+		}
+	}
+
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistration registration) {
+		if (Hooks.gadget) {
+			List.of(
+							GadgetModule.BUZZY_SHIELD,
+							GadgetModule.ENDER_CANDLE,
+							GadgetModule.PHANTOM_CANDLE,
+							GadgetModule.WEAK_CANDLE,
+							GadgetModule.WANDERING_TRADER_CANDLE)
+					.forEach((ItemLike item) ->
+							registration.registerFromDataComponentTypes(item.asItem(), GadgetModule.BUZZY_POWER_STORAGE.get()));
+		}
+		if (Hooks.bee) {
+			registration.registerFromDataComponentTypes(BeeModule.MUTAGEN.get(), BeeModule.MUTAGEN_CONTENT.get());
 		}
 	}
 }

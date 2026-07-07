@@ -133,7 +133,7 @@ public class GadgetModule extends AbstractModule {
 			true,
 			false,
 			false))));
-	public static final KiwiGO<ScentType> ENDER = go(() -> new ScentType(List.of()));
+	public static final KiwiGO<ScentType> ENDER = go(() -> new ScentType(List.of(), 0x6e6bca));
 	public static final KiwiGO<ScentType> WEAK = go(() -> new ScentType(List.of(
 			new MobEffectInstance(WEAK_SCENT.holderOrThrow(), 600, 0, true, false, false),
 			new MobEffectInstance(MobEffects.WEAKNESS, 600),

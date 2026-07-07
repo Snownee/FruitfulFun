@@ -90,6 +90,13 @@ dependencies {
 
 loom {
     accessWidenerPath = file("src/main/resources/${project.mod_id}.classtweaker")
+
+    runs {
+        client {
+            client()
+            jvmArguments.add('-Dfabric-tag-conventions-v2.missingTagTranslationWarning=VERBOSE')
+        }
+    }
 }
 
 fabricApi {

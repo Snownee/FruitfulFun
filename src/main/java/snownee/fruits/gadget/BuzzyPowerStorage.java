@@ -23,8 +23,7 @@ public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 			Codec.FLOAT.fieldOf("life").forGetter(BuzzyPowerStorage::life),
 			Codec.FLOAT.fieldOf("red").forGetter(BuzzyPowerStorage::red),
 			Codec.FLOAT.fieldOf("green").forGetter(BuzzyPowerStorage::green),
-			Codec.FLOAT.fieldOf("blue").forGetter(BuzzyPowerStorage::blue)
-	).apply(instance, BuzzyPowerStorage::new));
+			Codec.FLOAT.fieldOf("blue").forGetter(BuzzyPowerStorage::blue)).apply(instance, BuzzyPowerStorage::new));
 
 	public static final StreamCodec<ByteBuf, BuzzyPowerStorage> STREAM_CODEC = StreamCodec.composite(
 			ByteBufCodecs.FLOAT,
@@ -157,5 +156,26 @@ public class BuzzyPowerStorage implements BuzzyPowerReceiver {
 
 	public boolean isEmpty() {
 		return life == 0 && red == 0 && green == 0 && blue == 0;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof BuzzyPowerStorage other)) {
+			return false;
+		}
+		return maxLife == other.maxLife && life == other.life && red == other.red && green == other.green && blue == other.blue;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Float.hashCode(maxLife);
+		result = 31 * result + Float.hashCode(life);
+		result = 31 * result + Float.hashCode(red);
+		result = 31 * result + Float.hashCode(green);
+		result = 31 * result + Float.hashCode(blue);
+		return result;
 	}
 }

@@ -30,7 +30,6 @@ public final class FFCommonConfig {
 	public static boolean appleSaplingFromHeroOfTheVillage = true;
 	@KiwiConfig.GameRestart
 	public static boolean villageAppleTreeWorldGen = false;
-	public static String hornHarvestingInstrument = "minecraft:sing_goat_horn";
 	@KiwiConfig.Range(min = 0, max = 64)
 	public static int wanderingTraderSaplingPrice = 12;
 	public static boolean beehiveTrade = true;

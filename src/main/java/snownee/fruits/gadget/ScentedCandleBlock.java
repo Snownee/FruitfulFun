@@ -8,8 +8,14 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,14 +33,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFRegistries;
 import snownee.kiwi.block.IKiwiBlock;
 
 public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiwiBlock {
 	public static final MapCodec<ScentedCandleBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-			FFRegistries.SCENT_TYPE.byNameCodec().fieldOf("scent").forGetter(e -> e.type),
-			propertiesCodec()
-	).apply(i, ScentedCandleBlock::new));
+					FFRegistries.SCENT_TYPE.byNameCodec()
+							.fieldOf("scent")
+							.forGetter(e -> e.type), propertiesCodec())
+			.apply(i, ScentedCandleBlock::new));
 	public final ScentType type;
 
 	public ScentedCandleBlock(ScentType type, Properties properties) {
@@ -119,13 +127,43 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 
 	@Override
 	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-		if (player.isCreative() && level instanceof ServerLevel serverLevel &&
-				serverLevel.getGameRules().get(GameRules.BLOCK_DROPS) &&
+		if (player.isCreative() && level instanceof ServerLevel serverLevel && serverLevel.getGameRules().get(GameRules.BLOCK_DROPS) &&
 				level.getBlockEntity(pos) instanceof ScentedCandleBlockEntity be && !be.power().isEmpty()) {
 			dropResources(state, level, pos, be);
 		}
 		super.playerWillDestroy(level, pos, state, player);
 		return state;
+	}
+
+	@Override
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+		if (state.getValue(LIT)) {
+			this.getParticleOffsets(state).forEach(particlePos -> addParticlesAndSound(
+					level,
+					particlePos.add(pos.getX(), pos.getY(), pos.getZ()),
+					random));
+		}
+	}
+
+	private void addParticlesAndSound(final Level level, final Vec3 pos, final RandomSource random) {
+		float chance = random.nextFloat();
+		if (chance < 0.3F) {
+			ColorParticleOption particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(0.5F, type.color()));
+			level.addParticle(particle, pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
+			if (chance < 0.17F) {
+				level.playLocalSound(
+						pos.x + 0.5,
+						pos.y + 0.5,
+						pos.z + 0.5,
+						SoundEvents.CANDLE_AMBIENT,
+						SoundSource.BLOCKS,
+						1.0F + random.nextFloat(),
+						random.nextFloat() * 0.7F + 0.3F,
+						false);
+			}
+		}
+
+		level.addParticle(ParticleTypes.SMALL_FLAME, pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
 	}
 
 	@Override

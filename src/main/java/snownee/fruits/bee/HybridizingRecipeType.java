@@ -114,7 +114,7 @@ public class HybridizingRecipeType extends LycheeRecipeType<HybridizingRecipe> {
 				core.consumeLifespan(-2);
 			}
 			leaves.performBonemeal(level, bee.getRandom(), flowerPos, blockState);
-			level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos, 0);
+			level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos, 15);
 		}
 	}
 
@@ -153,9 +153,9 @@ public class HybridizingRecipeType extends LycheeRecipeType<HybridizingRecipe> {
 		Optional<RecipeHolder<HybridizingRecipe>> result = findFirst(ctx, level);
 		if (result.isPresent()) {
 			ctx.put(result.get());
-			level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos, 0);
+			level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos, 15);
 			if (isBigFlowerUpper) {
-				level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos.above(), 0);
+				level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, flowerPos.above(), 15);
 			}
 			if (result.get().value().resetPollens()) {
 				pollens.clear();

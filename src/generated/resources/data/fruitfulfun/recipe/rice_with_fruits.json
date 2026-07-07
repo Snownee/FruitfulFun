@@ -7,7 +7,7 @@
           "condition": "fabric:tags_populated",
           "registry": "minecraft:item",
           "values": [
-            "c:grain/rice"
+            "c:crops/rice"
           ]
         },
         {
@@ -34,13 +34,13 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "#c:fruits/tangerine",
-    "#c:fruits/apple",
+    "#c:crops/tangerine",
+    "#c:crops/apple",
     "#c:foods/fruit",
     {
       "fabric:type": "kiwi:alternatives",
       "options": [
-        "#c:grain/rice",
+        "#c:crops/rice",
         "#c:seeds/rice"
       ]
     },

@@ -15,7 +15,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "#c:fruits/grapefruit",
+    "#c:crops/grapefruit",
     {
       "fabric:type": "kiwi:alternatives",
       "options": [

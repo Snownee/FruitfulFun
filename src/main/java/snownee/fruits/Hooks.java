@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jspecify.annotations.Nullable;
@@ -38,9 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -56,7 +53,6 @@ import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
-import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.mixin.EntityAccess;
@@ -76,27 +72,6 @@ public final class Hooks {
 	public static final Set<MobEffect> scentEffects = Sets.newHashSet();
 
 	private Hooks() {
-	}
-
-	public static Predicate<BlockState> wrapPollinationPredicate(Predicate<BlockState> original) {
-		return state -> {
-			if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED)) {
-				return false;
-			}
-			if (state.getBlock() instanceof FruitLeavesBlock block) {
-				if (block instanceof CherryLeavesBlock) {
-					return block.notPlacedByPlayer(state);
-				}
-				if (!block.canGrow(state)) {
-					return false;
-				}
-				return state.getValue(FruitLeavesBlock.AGE) == FruitLeavesBlock.BLOOMING;
-			} else if (state.getBlock() instanceof LeavesBlock && state.hasProperty(LeavesBlock.PERSISTENT) &&
-					state.getValue(LeavesBlock.PERSISTENT)) {
-				return false;
-			}
-			return original.test(state);
-		};
 	}
 
 	public static void modifyRayTraceResult(@Nullable HitResult hitResult, Consumer<HitResult> consumer) {

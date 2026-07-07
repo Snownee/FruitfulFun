@@ -8,12 +8,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "#c:fruits/lemon",
+    "#c:crops/lemon",
     {
       "fabric:type": "kiwi:alternatives",
       "options": [
         "#c:flowers/lavender",
-        "#c:fruits/lemon"
+        "#c:crops/lemon"
       ]
     },
     {

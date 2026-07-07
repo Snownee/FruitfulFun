@@ -63,3 +63,5 @@ packets:
     target: snownee.fruits.gadget.network.CClickCrafterPacket
   - data: {}
     target: snownee.fruits.gadget.network.CGunShotPacket
+  - data: {}
+    target: snownee.fruits.gadget.network.SScentAddedPacket

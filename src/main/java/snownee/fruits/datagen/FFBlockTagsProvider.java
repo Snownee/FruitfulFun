@@ -62,6 +62,7 @@ import java.util.concurrent.CompletableFuture;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -105,6 +106,10 @@ public class FFBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
 				STRIPPED_REDLOVE_LOG.get(),
 				STRIPPED_REDLOVE_WOOD.get());
 		valueLookupBuilder(BlockTags.LOGS_THAT_BURN).addTag(CITRUS_LOGS).addTag(REDLOVE_LOGS);
+		valueLookupBuilder(ConventionalBlockTags.OVERWORLD_NATURAL_LOGS).add(CITRUS_LOG.get());
+		valueLookupBuilder(ConventionalBlockTags.NATURAL_WOODS).add(CITRUS_WOOD.get());
+		valueLookupBuilder(ConventionalBlockTags.STRIPPED_LOGS).add(STRIPPED_CITRUS_LOG.get(), STRIPPED_REDLOVE_LOG.get());
+		valueLookupBuilder(ConventionalBlockTags.STRIPPED_WOODS).add(STRIPPED_CITRUS_WOOD.get(), STRIPPED_REDLOVE_WOOD.get());
 		valueLookupBuilder(BlockTags.WOODEN_FENCES).add(CITRUS_FENCE.get(), REDLOVE_FENCE.get());
 		valueLookupBuilder(BlockTags.FENCE_GATES).add(CITRUS_FENCE_GATE.get(), REDLOVE_FENCE_GATE.get());
 		valueLookupBuilder(BlockTags.WOODEN_BUTTONS).add(CITRUS_BUTTON.get(), REDLOVE_BUTTON.get());

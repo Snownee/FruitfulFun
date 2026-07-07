@@ -9,7 +9,19 @@
   "category": "misc",
   "ingredients": [
     "fruitfulfun:redlove",
-    "minecraft:cocoa_beans",
+    {
+      "fabric:type": "kiwi:alternatives",
+      "options": [
+        {
+          "fabric:type": "fabric:any",
+          "ingredients": [
+            "#c:chocolates",
+            "#c:chocolatebar"
+          ]
+        },
+        "minecraft:cocoa_beans"
+      ]
+    },
     {
       "fabric:type": "kiwi:alternatives",
       "options": [
@@ -23,8 +35,7 @@
       "fabric:type": "kiwi:alternatives",
       "options": [
         "#c:flour",
-        "#c:grain/wheat",
-        "minecraft:wheat"
+        "#c:crops/wheat"
       ]
     },
     "minecraft:sugar"
