@@ -27,7 +27,8 @@ public class MerchantOfferMixin {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/trading/ItemCost;test(Lnet/minecraft/world/item/ItemStack;)Z"))
 	private boolean satisfiedBy(ItemCost itemCost, ItemStack itemStack, Operation<Boolean> original) {
 		boolean result = original.call(itemCost, itemStack);
-		if (BeeModule.isBeehiveTrade((MerchantOffer) (Object) this) && CommonProxy.isBeehive(itemStack)) {
+		MerchantOffer offer = (MerchantOffer) (Object) this;
+		if (BeeModule.isBeehiveTrade(offer) && CommonProxy.isBeehive(itemStack)) {
 			return result && BeehiveIngredient.TRUE.test(itemStack);
 		}
 		return result;
@@ -36,7 +37,8 @@ public class MerchantOfferMixin {
 	@WrapMethod(method = "getCostA")
 	private ItemStack getCostA(Operation<ItemStack> original) {
 		ItemStack itemStack = original.call();
-		if (BeeModule.isBeehiveTrade((MerchantOffer) (Object) this)) {
+		MerchantOffer offer = (MerchantOffer) (Object) this;
+		if (BeeModule.isBeehiveTrade(offer)) {
 			itemStack.set(DataComponents.ITEM_NAME, Component.translatable("tip.fruitfulfun.beehiveTradeInputName"));
 			itemStack.set(BeeModule.MERCHANT_OFFER.get(), Unit.INSTANCE);
 			itemStack.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("tip.fruitfulfun.beehiveTradeInputHint"))));

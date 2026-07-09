@@ -33,11 +33,11 @@ import snownee.fruits.duck.FFBee;
 
 public class BeeAttributes {
 	public static final Codec<BeeAttributes> CODEC = RecordCodecBuilder.create(i -> i.group(
-			Codec.list(Codec.STRING).optionalFieldOf("Pollens", List.of()).forGetter(BeeAttributes::getPollens),
-			GeneData.CODEC.fieldOf("Genes").forGetter(BeeAttributes::getGenes),
+			Codec.list(Codec.STRING).optionalFieldOf("Pollens", List.of()).forGetter(BeeAttributes::pollens),
+			GeneData.CODEC.fieldOf("Genes").forGetter(BeeAttributes::genes),
 			Codec.list(UUIDUtil.CODEC).optionalFieldOf("Trusted", List.of()).forGetter(BeeAttributes::getTrusted),
 			Codec.list(UUIDUtil.CODEC).optionalFieldOf("Inspected", List.of()).forGetter(BeeAttributes::getInspected),
-			Identifier.CODEC.optionalFieldOf("Texture").forGetter($ -> Optional.ofNullable($.getTexture())),
+			Identifier.CODEC.optionalFieldOf("Texture").forGetter($ -> Optional.ofNullable($.texture())),
 			Codec.LONG.optionalFieldOf("MutagenEndsIn", 0L).forGetter(BeeAttributes::getMutagenEndsIn)
 	).apply(i, BeeAttributes::new));
 
@@ -117,7 +117,7 @@ public class BeeAttributes {
 		return inspected.contains(player.getUUID());
 	}
 
-	public List<String> getPollens() {
+	public List<String> pollens() {
 		return pollens;
 	}
 
@@ -176,18 +176,19 @@ public class BeeAttributes {
 	}
 
 	public void updateTexture() {
-		if (hasTrait(Trait.GHOST)) {
-			setTexture(FruitfulFun.id("ghost_bee"));
-		} else if (hasTrait(Trait.PINK)) {
-			setTexture(FruitfulFun.id("pink_bee"));
-		} else if (hasTrait(Trait.WITHER_TOLERANT)) {
-			setTexture(FruitfulFun.id("wither_bee"));
-		} else {
-			setTexture(null);
+		setTexture(null);
+		maybeUseTexture(Trait.GHOST);
+		maybeUseTexture(Trait.PINK);
+		maybeUseTexture(Trait.WITHER_TOLERANT);
+	}
+
+	private void maybeUseTexture(Trait trait) {
+		if (texture == null && hasTrait(trait)) {
+			setTexture(trait.texture());
 		}
 	}
 
-	public @Nullable Identifier getTexture() {
+	public @Nullable Identifier texture() {
 		return texture;
 	}
 
@@ -215,7 +216,7 @@ public class BeeAttributes {
 		return genes.hasTrait(trait);
 	}
 
-	public GeneData getGenes() {
+	public GeneData genes() {
 		return genes;
 	}
 

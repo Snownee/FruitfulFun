@@ -13,7 +13,9 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ServerLevelAccessor;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.BeeModule;
 
 @Mixin(Mob.class)
 public class MobMixin {
@@ -34,6 +36,9 @@ public class MobMixin {
 		Mob mob = (Mob) (Object) this;
 		if (mob instanceof Bee bee) {
 			BeeAttributes.of(bee).randomize(bee);
+			if (FFCommonConfig.randomBeeNames) {
+				bee.setCustomName(BeeModule.randomName(bee.getUUID()));
+			}
 		}
 	}
 }

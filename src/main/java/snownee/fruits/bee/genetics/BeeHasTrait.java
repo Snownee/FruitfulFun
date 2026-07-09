@@ -43,7 +43,7 @@ public record BeeHasTrait(List<Trait> traits) implements ContextualCondition {
 	public MutableComponent getDescription(boolean inverted) {
 		return Component.translatable(
 				getDescriptionId(inverted),
-				ComponentUtils.formatList(traits, ComponentUtils.DEFAULT_SEPARATOR, Trait::getDisplayName).withStyle(ChatFormatting.WHITE));
+				ComponentUtils.formatList(traits, ComponentUtils.DEFAULT_SEPARATOR, Trait::displayName).withStyle(ChatFormatting.WHITE));
 	}
 
 	public static class Type implements ContextualConditionType<BeeHasTrait> {

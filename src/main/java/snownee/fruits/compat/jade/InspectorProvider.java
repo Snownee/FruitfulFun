@@ -1,25 +1,40 @@
 package snownee.fruits.compat.jade;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.mojang.datafixers.util.Pair;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.bee.Bee;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitType;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.BoundEntity;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.Allele;
+import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Locus;
+import snownee.fruits.bee.genetics.MutationRate;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFPlayer;
 import snownee.jade.api.Accessor;
@@ -37,14 +52,16 @@ import snownee.jade.api.ui.Element;
 import snownee.jade.api.ui.JadeUI;
 
 public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
+	public static final Cache<Pair<UUID, UUID>, ListTag> POTENTIAL_CACHE = CacheBuilder.newBuilder().maximumSize(100).build();
 
 	public static void appendServerData(Accessor<?> accessor, Bee bee) {
-		if (!BeeModule.INSPECTOR.is(accessor.getPlayer().getUseItem())) {
+		ItemStack inspector = accessor.getPlayer().getUseItem();
+		if (!BeeModule.INSPECTOR.is(inspector)) {
 			return;
 		}
 		CompoundTag data = accessor.getServerData();
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		List<String> pollens = attributes.getPollens();
+		List<String> pollens = attributes.pollens();
 		if (!pollens.isEmpty()) {
 			ListTag list = new ListTag();
 			for (String pollen : pollens) {
@@ -52,7 +69,7 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 			}
 			data.put("Pollens", list);
 		}
-		Set<Trait> traits = attributes.getGenes().getTraits();
+		Set<Trait> traits = attributes.genes().traits();
 		if (!traits.isEmpty()) {
 			ListTag list = new ListTag();
 			for (Trait trait : traits) {
@@ -60,16 +77,92 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 			}
 			data.put("Traits", list);
 		}
+		BoundEntity bound = inspector.get(BeeModule.BOUND_ENTITY.get());
+		if (FFCommonConfig.inspectorShowOffspringPotential && bound != null && !bound.uuid().equals(bee.getUUID()) && BeeModule.canBreed(bee)) {
+			Entity boundEntity = accessor.getLevel().getEntity(bound.uuid());
+			if (boundEntity instanceof Bee boundBee && BeeModule.canBreed(boundBee)) {
+				Pair<UUID, UUID> key = Pair.of(bound.uuid(), bee.getUUID());
+				ListTag list = POTENTIAL_CACHE.getIfPresent(key);
+				if (list == null) {
+					POTENTIAL_CACHE.put(
+							key,
+							createPotentialList(
+									list = new ListTag(),
+									attributes.genes(),
+									BeeAttributes.of(boundBee).genes(),
+									accessor.getLevel().getRandom()));
+				}
+				data.put("Potential", list);
+			}
+		}
 		ListTag list = new ListTag();
 		for (Allele allele : Allele.sortedByCode()) {
 			CompoundTag tag = new CompoundTag();
 			Locus locus = attributes.getLocus(allele);
 			tag.putString("Code", allele.codename);
-			tag.putInt("High", locus.getHigh());
-			tag.putInt("Low", locus.getLow());
+			tag.putInt("High", locus.high());
+			tag.putInt("Low", locus.low());
 			list.add(tag);
 		}
 		data.put("Loci", list);
+	}
+
+	private static ListTag createPotentialList(ListTag tag, GeneData genes1, GeneData genes2, RandomSource random) {
+		Set<String> parentTraits = Sets.newHashSet();
+		genes1.traits().forEach(trait -> parentTraits.add(trait.name()));
+		genes2.traits().forEach(trait -> parentTraits.add(trait.name()));
+		Object2IntOpenHashMap<String> traitCounts = new Object2IntOpenHashMap<>();
+		for (String trait : parentTraits) {
+			traitCounts.put(trait, 0);
+		}
+		for (int i = 0; i < 200; i++) {
+			GeneData offspring = new GeneData();
+			offspring.breedFrom(
+					genes1,
+					MutationRate.neverMutate(),
+					genes2,
+					MutationRate.neverMutate(),
+					random);
+			offspring.updateTraits();
+			for (Trait trait : offspring.traits()) {
+				traitCounts.addTo(trait.name(), 1);
+			}
+		}
+		List<Pair<String, String>> results = Lists.newArrayList();
+		for (String trait : parentTraits) {
+			int count = traitCounts.getInt(trait);
+			int parentTraitBasis = 0;
+			if (genes1.hasTrait(Trait.REGISTRY.get(trait))) {
+				parentTraitBasis += 100;
+			}
+			if (genes2.hasTrait(Trait.REGISTRY.get(trait))) {
+				parentTraitBasis += 100;
+			}
+			int gap = count - parentTraitBasis;
+			if (gap > 0) {
+				results.add(Pair.of(trait, gap >= parentTraitBasis / 2 ? "++" : "+"));
+			} else if (gap < 0) {
+				results.add(Pair.of(trait, gap <= -parentTraitBasis / 2 ? "--" : "-"));
+			}
+		}
+		results.sort(Comparator.<Pair<String, String>>comparingInt(pair -> pair.getSecond().length())
+				.thenComparing(Pair::getFirst));
+		int limit = 3;
+		for (Pair<String, String> pair : results) {
+			CompoundTag traitTag = new CompoundTag();
+			traitTag.putString("Trait", pair.getFirst());
+			traitTag.putString("State", pair.getSecond());
+			tag.add(traitTag);
+			if (--limit <= 0) {
+				break;
+			}
+		}
+		return tag;
+	}
+
+	@Override
+	public boolean shouldRequestData(EntityAccessor accessor) {
+		return !InspectorClientHandler.isAnalyzing();
 	}
 
 	@Override
@@ -143,10 +236,30 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 				for (Tag tag : traits) {
 					Trait trait = Trait.REGISTRY.get(tag.asString().orElseThrow());
 					if (trait != null) {
-						strings.add(trait.getDisplayName().getString());
+						strings.add(trait.displayName().getString());
 					}
 				}
 				tooltip.add(Component.literal(String.join("/", strings)));
+			}
+
+			if (!data.contains("Potential")) {
+				return;
+			}
+			title(tooltip, "text.fruitfulfun.offspringPotential");
+			ListTag potential = data.getListOrEmpty("Potential");
+			if (potential.isEmpty()) {
+				tooltip.add(Component.translatable("text.fruitfulfun.offspringPotential.none"));
+			} else {
+				List<String> strings = Lists.newArrayList();
+				for (CompoundTag tag : potential.compoundStream().toList()) {
+					Trait trait = Trait.REGISTRY.get(tag.getStringOr("Trait", ""));
+					if (trait == null) {
+						continue;
+					}
+					String state = tag.getStringOr("State", "");
+					strings.add(I18n.get("text.fruitfulfun.offspringPotential.%s".formatted(state), trait.displayName().getString()));
+				}
+				tooltip.add(Component.literal(String.join(" ", strings)));
 			}
 		}
 

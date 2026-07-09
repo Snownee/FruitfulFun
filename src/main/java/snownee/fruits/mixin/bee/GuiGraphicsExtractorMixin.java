@@ -13,6 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 
 @Mixin(GuiGraphicsExtractor.class)
@@ -27,7 +28,7 @@ public class GuiGraphicsExtractorMixin {
 			@Nullable String text,
 			CallbackInfo ci,
 			@Local(argsOnly = true, name = "countText") LocalRef<String> textRef) {
-		if (stack.is(Items.EMERALD) && text == null && stack.has(BeeModule.MERCHANT_OFFER.get())) {
+		if (Hooks.bee && stack.is(Items.EMERALD) && text == null && stack.has(BeeModule.MERCHANT_OFFER.get())) {
 			textRef.set("?");
 		}
 	}

@@ -33,6 +33,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFBeehiveBlockEntity;
@@ -61,7 +62,7 @@ public class BeehiveBlockMixin {
 			Operation<Boolean> original,
 			@Local(name = "beehiveBlockEntity") BeehiveBlockEntity beehiveBlockEntity) {
 		boolean result = original.call(item, tag);
-		if (!result && ((FFBeehiveBlockEntity) beehiveBlockEntity).fruits$isWaxed()) {
+		if (Hooks.bee && !result && ((FFBeehiveBlockEntity) beehiveBlockEntity).fruits$isWaxed()) {
 			((FFBeehiveBlockEntity) beehiveBlockEntity).fruits$setWaxed(false);
 			return true;
 		}
@@ -70,7 +71,8 @@ public class BeehiveBlockMixin {
 
 	@Inject(method = "getDrops", at = @At("HEAD"))
 	private void getDrops(BlockState state, LootParams.Builder params, CallbackInfoReturnable<List<ItemStack>> cir) {
-		if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof FFBeehiveBlockEntity be && be.fruits$isWaxed()) {
+		if (Hooks.bee && params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof FFBeehiveBlockEntity be &&
+				be.fruits$isWaxed()) {
 			// EnderMan.dropCustomDeathLoot
 			ItemStack fakeTool = Items.DIAMOND_AXE.getDefaultInstance();
 			fakeTool.enchant(params.getLevel().registryAccess().getOrThrow(Enchantments.SILK_TOUCH), 1);
@@ -88,7 +90,7 @@ public class BeehiveBlockMixin {
 			InteractionHand hand,
 			BlockHitResult hitResult,
 			CallbackInfoReturnable<InteractionResult> cir) {
-		if (!(level.getBlockEntity(pos) instanceof BeehiveBlockEntity be)) {
+		if (!Hooks.bee || !(level.getBlockEntity(pos) instanceof BeehiveBlockEntity be)) {
 			return;
 		}
 		boolean bl = false;

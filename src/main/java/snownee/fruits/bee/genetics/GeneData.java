@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import org.jspecify.annotations.Nullable;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
@@ -73,12 +71,12 @@ public class GeneData {
 
 	public boolean anyGene(Allele allele, int gene) {
 		Locus locus = getLocus(allele);
-		return locus.getHigh() == gene || locus.getLow() == gene;
+		return locus.high() == gene || locus.low() == gene;
 	}
 
 	public boolean allGene(Allele allele, int gene) {
 		Locus locus = getLocus(allele);
-		return locus.getHigh() == gene && locus.getLow() == gene;
+		return locus.high() == gene && locus.low() == gene;
 	}
 
 	public void randomize(RandomSource random) {
@@ -93,7 +91,7 @@ public class GeneData {
 		return loci;
 	}
 
-	public Set<Trait> getTraits() {
+	public Set<Trait> traits() {
 		return traits;
 	}
 
@@ -102,25 +100,25 @@ public class GeneData {
 		traits.addAll(list);
 	}
 
-	public void breedFrom(GeneData parent1, @Nullable Allele allele1, GeneData parent2, @Nullable Allele allele2, RandomSource random) {
+	public void breedFrom(GeneData parent1, MutationRate mutationRate1, GeneData parent2, MutationRate mutationRate2, RandomSource random) {
 		for (Allele allele : Allele.values()) {
-			byte gene1 = parent1.pickAllele(allele, random, allele == allele1);
-			byte gene2 = parent2.pickAllele(allele, random, allele == allele2);
+			byte gene1 = parent1.pickAllele(allele, random, mutationRate1);
+			byte gene2 = parent2.pickAllele(allele, random, mutationRate2);
 			Locus locus = new Locus(allele);
 			locus.setData((byte) (gene1 << 4 | gene2));
 			loci.put(allele, locus);
 		}
 	}
 
-	protected byte pickAllele(Allele allele, RandomSource random, boolean highMutation) {
+	protected byte pickAllele(Allele allele, RandomSource random, MutationRate mutationRate) {
 		Locus locus = getLocus(allele);
 		int gene;
 		if (random.nextBoolean()) {
-			gene = locus.getHigh();
+			gene = locus.high();
 		} else {
-			gene = locus.getLow();
+			gene = locus.low();
 		}
-		return allele.maybeMutate((byte) gene, random, highMutation);
+		return allele.maybeMutate((byte) gene, random, mutationRate);
 	}
 
 	public void addExtraTrait(Trait trait) {
@@ -163,7 +161,7 @@ public class GeneData {
 	private <T> DataResult<T> encode(DynamicOps<T> ops, T t) {
 		RecordBuilder<T> mapBuilder = ops.mapBuilder();
 		for (Map.Entry<Allele, Locus> entry : loci.entrySet()) {
-			mapBuilder.add(entry.getKey().name, ops.createByte(entry.getValue().getData()));
+			mapBuilder.add(entry.getKey().name, ops.createByte(entry.getValue().data()));
 		}
 		if (!extraTraits.isEmpty()) {
 			mapBuilder.add("ExtraTraits", ops.createList(extraTraits.stream().map(Trait::name).map(ops::createString)));

@@ -21,6 +21,9 @@ public class MerchantResultSlotMixin {
 
 	@Inject(method = "checkTakeAchievements", at = @At("HEAD"))
 	private void checkTakeAchievements(ItemStack carried, CallbackInfo ci) {
+		if (!Hooks.bee) {
+			return;
+		}
 		String advancement = carried.get(BeeModule.MERCHANT_OFFER_ADVANCEMENT.get());
 		if (advancement != null) {
 			carried.remove(BeeModule.MERCHANT_OFFER_ADVANCEMENT.get());

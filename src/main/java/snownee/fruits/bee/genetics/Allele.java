@@ -72,18 +72,15 @@ public class Allele {
 		return null;
 	}
 
-	public byte maybeMutate(byte data, RandomSource random, boolean highMutation) {
-		if (highMutation && random.nextFloat() < FFCommonConfig.mutagenMutationRate) {
-			return (byte) allowedValues.getInt(random.nextInt(allowedValues.size()));
-		}
-		if (mutationRate > 0 && random.nextFloat() < mutationRate) {
+	public byte maybeMutate(byte data, RandomSource random, MutationRate mutationRate) {
+		if (mutationRate.shouldMutate(this, random)) {
 			return (byte) allowedValues.getInt(random.nextInt(allowedValues.size()));
 		}
 		return data;
 	}
 
 	public byte randomize(RandomSource random) {
-		return maybeMutate((byte) defaultValue, random, false);
+		return maybeMutate((byte) defaultValue, random, MutationRate.DEFAULT);
 	}
 
 	public Component getDisplayName(int data) {

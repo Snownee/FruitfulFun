@@ -37,7 +37,7 @@ public abstract class EntityMixin {
 
 	@Inject(method = "isInvulnerableToBase", at = @At("HEAD"), cancellable = true)
 	private void isInvulnerableToBase(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
-		if (!source.is(DamageTypes.WITHER)) {
+		if (!Hooks.bee || !source.is(DamageTypes.WITHER)) {
 			return;
 		}
 		Entity entity = (Entity) (Object) this;

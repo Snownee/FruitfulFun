@@ -50,7 +50,7 @@ public class HybridizingRecipeType extends LycheeRecipeType<HybridizingRecipe> {
 
 	public static void removeOverflownPollens(Bee bee) {
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		List<String> pollens = attributes.getPollens();
+		List<String> pollens = attributes.pollens();
 		if (pollens.size() > 3) {
 			int toRemove = pollens.size() - 3;
 			while (toRemove-- > 0) {
@@ -125,7 +125,7 @@ public class HybridizingRecipeType extends LycheeRecipeType<HybridizingRecipe> {
 		Block block = blockState.getBlock();
 		String newPollen = KUtil.trimRL(BuiltInRegistries.BLOCK.getKey(block));
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		List<String> pollens = attributes.getPollens();
+		List<String> pollens = attributes.pollens();
 		pollens.remove(newPollen);
 		pollens.add(newPollen);
 		if (!has(blockState)) {

@@ -81,7 +81,7 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 		}
 		BeeAttributes attributes = BeeAttributes.of(entity);
 		state.setData(ClientProxy.SADDLE, entity.getItemBySlot(EquipmentSlot.SADDLE));
-		state.setData(ClientProxy.TEXTURE, attributes.getTexture());
+		state.setData(ClientProxy.TEXTURE, attributes.texture());
 		if (attributes.hasTrait(Trait.GHOST)) {
 			state.setData(ClientProxy.RENDER_TYPE, RenderTypes::entityTranslucent);
 			state.hasNectar = false;

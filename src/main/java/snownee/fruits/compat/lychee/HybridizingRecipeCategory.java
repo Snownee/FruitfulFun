@@ -1,13 +1,20 @@
 package snownee.fruits.compat.lychee;
 
+import java.util.Objects;
+
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.BeeRenderState;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipe;
+import snownee.fruits.bee.genetics.BeeHasTrait;
+import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.util.ClientProxy;
 import snownee.lychee.client.gui.GuiGameElement;
 import snownee.lychee.client.gui.RenderElement;
 import snownee.lychee.compat.recipeviewer.category.DecorationMapBuilder;
@@ -15,12 +22,10 @@ import snownee.lychee.compat.recipeviewer.category.RvCategory;
 import snownee.lychee.compat.recipeviewer.category.RvCategoryLayoutBuilder;
 
 public class HybridizingRecipeCategory extends RvCategory<HybridizingRecipe> {
-	public static final BeeRenderState BEE = new BeeRenderState();
 	public static final Vector2fc INFO_POSITION = new Vector2f(80, 38);
 
 	public HybridizingRecipeCategory() {
 		super(BeeModule.RECIPE_TYPE.get());
-		BEE.entityType = EntityType.BEE;
 	}
 
 	@Override
@@ -32,13 +37,31 @@ public class HybridizingRecipeCategory extends RvCategory<HybridizingRecipe> {
 	public void setupDecorations(DecorationMapBuilder<HybridizingRecipe> mapBuilder) {
 		mapBuilder.info(this::infoPosition);
 		mapBuilder.put(
-				"bee", (builder, recipeHolder) -> builder.addElement(RenderElement.create(
-						GuiGameElement.of(BEE)
-								.scale(12.0F)
-								.atLocal(0.0F, 1.5F, 1.0F)
-								.withSize(this.width, this.height), ($) -> {
-
-						})));
+				"bee", (builder, recipeHolder) -> {
+					Identifier texture = recipeHolder.value()
+							.conditions()
+							.conditions()
+							.stream()
+							.filter(BeeHasTrait.class::isInstance)
+							.map(BeeHasTrait.class::cast)
+							.flatMap($ -> $.traits().stream())
+							.map(Trait::texture)
+							.filter(Objects::nonNull)
+							.findFirst()
+							.orElse(null);
+					BeeRenderState bee = new BeeRenderState();
+					bee.entityType = EntityType.BEE;
+					bee.setData(ClientProxy.TEXTURE, texture);
+					builder.addElement(RenderElement.create(
+							GuiGameElement.of(bee)
+									.scale(12.0F)
+									.atLocal(0.0F, 1.5F, 1.0F)
+									.withSize(width, height), _ -> {
+								bee.ageInTicks = Objects.requireNonNull(Minecraft.getInstance().level).getGameTime() +
+										Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(
+												true);
+							}));
+				});
 	}
 
 	@Override

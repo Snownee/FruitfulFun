@@ -23,13 +23,13 @@ public class TransformBeesRenderer implements ItemBasedActionRenderer<TransformB
 		if (!action.addTraits().isEmpty()) {
 			baseTooltips.add(Component.literal("+: ")
 					.append(ComponentUtils.formatList(
-							action.addTraits().stream().map(Trait::getDisplayName).toList(),
+							action.addTraits().stream().map(Trait::displayName).toList(),
 							ComponentUtils.DEFAULT_SEPARATOR)));
 		}
 		if (!action.removeTraits().isEmpty()) {
 			baseTooltips.add(Component.literal("-: ")
 					.append(ComponentUtils.formatList(
-							action.removeTraits().stream().map(Trait::getDisplayName).toList(),
+							action.removeTraits().stream().map(Trait::displayName).toList(),
 							ComponentUtils.DEFAULT_SEPARATOR)));
 		}
 		return baseTooltips;

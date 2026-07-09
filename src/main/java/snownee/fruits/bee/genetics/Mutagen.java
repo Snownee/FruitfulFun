@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,12 @@ public record Mutagen(String type, int color) implements TooltipProvider {
 
 	@Override
 	public void addToTooltip(Item.TooltipContext context, Consumer<Component> consumer, TooltipFlag flag, DataComponentGetter components) {
-
+		if (Platform.isPhysicalClient() && ClientProxy.getPlayer() != null) {
+			String s = FFPlayer.of(ClientProxy.getPlayer()).fruits$getGeneDesc(type);
+			if (!s.isEmpty()) {
+				consumer.accept(Component.literal(s).withStyle(ChatFormatting.GRAY));
+			}
+		}
 	}
 
 	public boolean isImperfect() {

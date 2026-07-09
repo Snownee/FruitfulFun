@@ -120,7 +120,7 @@ public class HauntingManager {
 			TagValueOutput output = TagValueOutput.createWithContext(reporter, bee.registryAccess());
 			bee.saveWithoutId(output);
 			output.putString("id", Objects.requireNonNull(bee.getEncodeId()));
-			traits = ImmutableSet.copyOf(BeeAttributes.of(bee).getGenes().getTraits());
+			traits = ImmutableSet.copyOf(BeeAttributes.of(bee).genes().traits());
 			storedBee = output.buildResult();
 			bee.discard();
 		}

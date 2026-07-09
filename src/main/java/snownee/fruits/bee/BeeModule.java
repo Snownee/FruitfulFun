@@ -2,6 +2,7 @@ package snownee.fruits.bee;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
@@ -14,6 +15,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -30,6 +32,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
@@ -116,6 +119,12 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<DataComponentType<String>> MERCHANT_OFFER_ADVANCEMENT = go(
 			() -> DataComponentType.<String>builder().persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build(),
 			Registries.DATA_COMPONENT_TYPE);
+	public static final KiwiGO<DataComponentType<BoundEntity>> BOUND_ENTITY = go(
+			() -> DataComponentType.<BoundEntity>builder()
+					.persistent(BoundEntity.CODEC)
+					.networkSynchronized(BoundEntity.STREAM_CODEC)
+					.build(),
+			Registries.DATA_COMPONENT_TYPE);
 	public static final KiwiGO<SimpleParticleType> GHOST = go(() -> new SimpleParticleType(false));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
@@ -190,7 +199,7 @@ public class BeeModule extends AbstractModule {
 	}
 
 	public static boolean isBeehiveTrade(MerchantOffer offer) {
-		return offer.getResult().has(MERCHANT_OFFER.get());
+		return Hooks.bee && offer.getResult().has(MERCHANT_OFFER.get());
 	}
 
 	public static boolean isHauntingNormalEntity(@Nullable Player player, @Nullable Entity target) {
@@ -218,6 +227,21 @@ public class BeeModule extends AbstractModule {
 
 	public static boolean isAllogamous(ItemStack stack) {
 		return ALLOGAMOUS_ITEMS.contains(stack.getItem());
+	}
+
+	public static boolean canBreed(Bee bee) {
+		if (Hooks.bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+			return false;
+		}
+		return !bee.isBaby();
+	}
+
+	public static Component randomName(UUID uuid) {
+		RandomSource random = RandomSource.createThreadLocalInstance(uuid.hashCode() >> 2);
+		return Component.translatable(
+				"fruitfulfun.beeName",
+				Component.translatable("fruitfulfun.beeName." + random.nextInt(150)),
+				Component.translatable("fruitfulfun.beeName." + random.nextInt(150)));
 	}
 
 	@Override
@@ -248,7 +272,7 @@ public class BeeModule extends AbstractModule {
 		int value = 0;
 		for (GeneData geneData : dataList) {
 			int singleValue = 0;
-			for (Trait trait : geneData.getTraits()) {
+			for (Trait trait : geneData.traits()) {
 				singleValue += trait.value();
 			}
 			if (geneData.hasTrait(Trait.FASTER) && geneData.hasTrait(Trait.MOUNTABLE)) {
@@ -260,9 +284,9 @@ public class BeeModule extends AbstractModule {
 		}
 		combo:
 		if (value > 0 && dataList.size() >= 3) {
-			Set<Trait> first = dataList.getFirst().getTraits();
+			Set<Trait> first = dataList.getFirst().traits();
 			for (int i = 1; i < dataList.size(); i++) {
-				if (!first.equals(dataList.get(i).getTraits())) {
+				if (!first.equals(dataList.get(i).traits())) {
 					break combo;
 				}
 			}

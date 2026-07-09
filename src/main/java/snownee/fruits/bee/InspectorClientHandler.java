@@ -151,8 +151,8 @@ public class InspectorClientHandler {
 
 		lines.add(I18n.get("text.fruitfulfun.trait"));
 		for (Trait trait : traits) {
-			String name = trait.getDisplayName().getString();
-			String desc = trait.getDescription().getString();
+			String name = trait.displayName().getString();
+			String desc = trait.description().getString();
 			lines.add(I18n.get("text.fruitfulfun.trait.pair", name, desc));
 		}
 		if (traits.isEmpty()) {

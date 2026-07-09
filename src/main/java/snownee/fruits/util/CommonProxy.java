@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
@@ -303,6 +304,9 @@ public class CommonProxy implements ModInitializer {
 			}
 			return InteractionResult.PASS;
 		});
+
+		ItemComponentTooltipProviderRegistry.addFirst(BeeModule.BOUND_ENTITY.getOrCreate());
+		ItemComponentTooltipProviderRegistry.addFirst(BeeModule.MUTAGEN_CONTENT.getOrCreate());
 	}
 
 	public static void initGadgetModule() {

@@ -16,6 +16,7 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.Hooks;
 import snownee.fruits.duck.FFBeehiveBlockEntity;
 
 @Mixin(AxeItem.class)
@@ -31,16 +32,8 @@ public class AxeItemMixin {
 			@Local(argsOnly = true, name = "level") Level level,
 			@Local(argsOnly = true, name = "pos") BlockPos pos,
 			@Local(argsOnly = true, name = "oldState") BlockState oldState) {
-		if (!oldState.is(BlockTags.BEEHIVES)) {
-			return original.call(instance, mapper);
-		}
-		if (!(level.getBlockEntity(pos) instanceof FFBeehiveBlockEntity be)) {
-			return original.call(instance, mapper);
-		}
-		if (be.fruits$findWaxedMarkers().isEmpty()) {
-			return original.call(instance, mapper);
-		}
-		if (!be.fruits$isWaxed()) {
+		if (Hooks.bee || !oldState.is(BlockTags.BEEHIVES) || !(level.getBlockEntity(pos) instanceof FFBeehiveBlockEntity be) ||
+				be.fruits$findWaxedMarkers().isEmpty() || !be.fruits$isWaxed()) {
 			return original.call(instance, mapper);
 		}
 		be.fruits$setWaxed(false);

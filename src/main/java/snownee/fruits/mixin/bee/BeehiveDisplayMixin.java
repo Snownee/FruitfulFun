@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 
 @Mixin(Display.class)
@@ -20,7 +21,7 @@ public abstract class BeehiveDisplayMixin extends Entity {
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void tick(CallbackInfo ci) {
 		Display self = (Display) (Object) this;
-		if (BeeModule.isWaxedMarker(self)) {
+		if (Hooks.bee && BeeModule.isWaxedMarker(self)) {
 			BeeModule.tickWaxedMarker(self);
 		}
 	}

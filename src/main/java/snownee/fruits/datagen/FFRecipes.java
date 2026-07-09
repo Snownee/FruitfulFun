@@ -153,7 +153,10 @@ public class FFRecipes extends FabricRecipeProvider {
 				RecipeOutput beeExporter = withConditions(
 						output,
 						new ModuleLoadedCondition(FruitfulFun.id("bee")));
-				oneToOneConversionRecipe(Items.GLASS_BOTTLE, BeeModule.MUTAGEN.get(), null);
+				shapeless(RecipeCategory.MISC, Items.GLASS_BOTTLE)
+						.requires(BeeModule.MUTAGEN)
+						.unlockedBy(getHasName(BeeModule.MUTAGEN), has(BeeModule.MUTAGEN))
+						.save(beeExporter, getConversionRecipeName(Items.GLASS_BOTTLE, BeeModule.MUTAGEN));
 				shaped(RecipeCategory.TOOLS, BeeModule.INSPECTOR.get())
 						.pattern("A")
 						.pattern("B")

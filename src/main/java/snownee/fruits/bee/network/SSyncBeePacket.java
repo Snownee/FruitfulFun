@@ -61,7 +61,7 @@ public record SSyncBeePacket(
 					} else {
 						attributes.setTexture(Identifier.tryParse(packet.texture()));
 					}
-					attributes.getGenes().setTraits(packet.traits());
+					attributes.genes().setTraits(packet.traits());
 					attributes.setMutagenEndsIn(packet.mutagenEndsIn(), entity.level().getGameTime());
 				}
 			});
@@ -84,12 +84,12 @@ public record SSyncBeePacket(
 
 	private static SSyncBeePacket create(Bee bee) {
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		Identifier texture = attributes.getTexture();
+		Identifier texture = attributes.texture();
 		return new SSyncBeePacket(
 				bee.getId(),
 				attributes.getTrusted(),
 				texture == null ? "" : texture.toString(),
-				List.copyOf(attributes.getGenes().getTraits()),
+				List.copyOf(attributes.genes().traits()),
 				attributes.getMutagenEndsIn());
 	}
 }

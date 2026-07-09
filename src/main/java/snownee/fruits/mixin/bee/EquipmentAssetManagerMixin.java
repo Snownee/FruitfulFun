@@ -23,6 +23,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.Hooks;
 
 @Mixin(EquipmentAssetManager.class)
 public class EquipmentAssetManagerMixin {
@@ -42,6 +43,9 @@ public class EquipmentAssetManagerMixin {
 			ResourceManager manager,
 			ProfilerFiller profiler,
 			CallbackInfo ci) {
+		if (!Hooks.bee) {
+			return;
+		}
 		EquipmentClientInfo info = equipmentAssets.getOrDefault(EquipmentAssets.SADDLE, MISSING);
 		ImmutableMap.Builder<EquipmentClientInfo.LayerType, List<EquipmentClientInfo.Layer>> layers = ImmutableMap.builder();
 		ImmutableList.Builder<EquipmentClientInfo.Layer> list = ImmutableList.builder();

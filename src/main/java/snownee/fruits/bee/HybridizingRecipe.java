@@ -80,7 +80,7 @@ public class HybridizingRecipe extends LycheeRecipe<LycheeContext> {
 	@Override
 	public boolean matches(LycheeContext ctx, Level worldIn) {
 		BeeAttributes attributes = BeeAttributes.of(ctx.get(LycheeContextKey.LOOT_PARAMS).get(LootContextParams.THIS_ENTITY));
-		return attributes.getPollens().size() >= pollens.size() && attributes.getPollens().containsAll(pollens);
+		return attributes.pollens().size() >= pollens.size() && attributes.pollens().containsAll(pollens);
 	}
 
 	@Override

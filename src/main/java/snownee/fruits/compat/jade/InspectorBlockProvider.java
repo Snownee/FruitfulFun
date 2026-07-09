@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.bee.Bee;
+import snownee.fruits.bee.InspectorClientHandler;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IServerDataProvider;
 
@@ -22,6 +23,11 @@ public class InspectorBlockProvider implements IServerDataProvider<BlockAccessor
 		if (entity instanceof Bee bee) {
 			InspectorProvider.appendServerData(accessor, bee);
 		}
+	}
+
+	@Override
+	public boolean shouldRequestData(BlockAccessor accessor) {
+		return !InspectorClientHandler.isAnalyzing();
 	}
 
 	@Override

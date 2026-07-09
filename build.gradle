@@ -72,12 +72,12 @@ dependencies {
     compileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 
-    implementation "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
-    annotationProcessor "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
-//    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-//    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-    implementation "libs:Lychee-mc26.1-Fabric-26.0.2"
-//    implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
+//    implementation "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
+//    annotationProcessor "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
+    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+//    implementation "libs:Lychee-mc26.1-Fabric-${project.lychee_version}"
+    implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
     implementation "maven.modrinth:jade:${project.jade_version}+fabric"
 
 //    implementation "maven.modrinth:trinkets-updated:${project.trinkets_version}"

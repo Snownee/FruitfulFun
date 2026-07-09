@@ -73,7 +73,7 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 		}
 		List<String> pollens;
 		if (Hooks.bee) {
-			pollens = BeeAttributes.of(bee).getPollens();
+			pollens = BeeAttributes.of(bee).pollens();
 		} else {
 			pollens = List.of("*");
 		}

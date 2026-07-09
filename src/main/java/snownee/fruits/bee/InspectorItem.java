@@ -21,6 +21,7 @@ import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.ClientProxy;
@@ -58,10 +59,11 @@ public class InspectorItem extends ModItem {
 
 	@Override
 	public InteractionResult useOn(UseOnContext useOnContext) {
+		Player player = useOnContext.getPlayer();
 		BlockState blockState = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
+		boolean isClientSide = useOnContext.getLevel().isClientSide();
 		if (blockState.is(ConventionalBlockTags.BOOKSHELVES)) {
-			if (useOnContext.getLevel().isClientSide()) {
-				Player player = useOnContext.getPlayer();
+			if (isClientSide) {
 				if (player == null) {
 					return InteractionResult.FAIL;
 				}
@@ -71,6 +73,11 @@ public class InspectorItem extends ModItem {
 				}
 				ClientProxy.openEditGeneNameScreen();
 			}
+			return InteractionResult.SUCCESS;
+		} else if (player != null && useOnContext.isSecondaryUseActive() && !isClientSide &&
+				useOnContext.getItemInHand().has(BeeModule.BOUND_ENTITY.get())) {
+			useOnContext.getItemInHand().remove(BeeModule.BOUND_ENTITY.get());
+//			player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.boundEntity.removed"));
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
@@ -87,6 +94,10 @@ public class InspectorItem extends ModItem {
 		builder.accept(Component.empty());
 		builder.accept(Component.translatable("tip.fruitfulfun.whenUseOnBookshelf").withStyle(ChatFormatting.GRAY));
 		builder.accept(Component.translatable("tip.fruitfulfun.renameGenes").withStyle(ChatFormatting.BLUE));
+		if (Hooks.jade && FFCommonConfig.inspectorShowOffspringPotential) {
+			builder.accept(Component.translatable("tip.fruitfulfun.whenSneakUseOnBee").withStyle(ChatFormatting.GRAY));
+			builder.accept(Component.translatable("tip.fruitfulfun.lockBee").withStyle(ChatFormatting.BLUE));
+		}
 		if (Hooks.gadget) {
 			builder.accept(Component.translatable("tip.fruitfulfun.whenUseOnBlock").withStyle(ChatFormatting.GRAY));
 			builder.accept(Component.translatable("tip.fruitfulfun.viewScents").withStyle(ChatFormatting.BLUE));

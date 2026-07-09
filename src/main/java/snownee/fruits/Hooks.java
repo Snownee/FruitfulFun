@@ -27,7 +27,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
@@ -48,8 +47,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.BoundEntity;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.GeneData;
+import snownee.fruits.bee.genetics.MutationRate;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
@@ -160,10 +161,15 @@ public final class Hooks {
 	public static InteractionResult playerInteractBee(Player player, InteractionHand hand, Bee bee) {
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		ItemStack held = player.getItemInHand(hand);
+		boolean isClientSide = player.level().isClientSide();
 		if (BeeModule.INSPECTOR.is(held)) {
+			if (jade && FFCommonConfig.inspectorShowOffspringPotential && !isClientSide && player.isShiftKeyDown()) {
+				BoundEntity bound = new BoundEntity(bee);
+				held.set(BeeModule.BOUND_ENTITY.get(), bound);
+				player.sendOverlayMessage(Component.translatable("tip.fruitfulfun.boundEntity.set", bound.name()));
+			}
 			return InteractionResult.PASS;
 		}
-		boolean isClientSide = player.level().isClientSide();
 		if (held.is(Items.DEBUG_STICK)) {
 			if (!isClientSide) {
 				boolean hasPink = attributes.hasTrait(Trait.PINK);
@@ -173,10 +179,10 @@ public final class Hooks {
 				attributes.getLocus(Allele.FEAT1).setData((byte) 0x22);
 				attributes.getLocus(Allele.FEAT2).setData((byte) 0x22);
 				attributes.getLocus(Allele.RAINC).setData((byte) 0x11);
-				attributes.getPollens().add("fruitfulfun:apple_leaves");
-				attributes.getPollens().add("wither_rose");
+				attributes.pollens().add("fruitfulfun:apple_leaves");
+				attributes.pollens().add("wither_rose");
 				if (hasPink) {
-					GeneData genes = attributes.getGenes();
+					GeneData genes = attributes.genes();
 					if (hasGhost) {
 						genes.removeExtraTrait(Trait.GHOST);
 					} else {
@@ -304,22 +310,14 @@ public final class Hooks {
 		}
 		babyAttributes.setTrusted(builder.build());
 		if (bee) {
-			babyAttributes.getGenes().breedFrom(
-					BeeAttributes.of(parent1).getGenes(),
-					mutagenAffectedAllele(parent1),
-					BeeAttributes.of(parent2).getGenes(),
-					mutagenAffectedAllele(parent2),
+			babyAttributes.genes().breedFrom(
+					BeeAttributes.of(parent1).genes(),
+					MutationRate.mutagenAffected(parent1),
+					BeeAttributes.of(parent2).genes(),
+					MutationRate.mutagenAffected(parent2),
 					baby.getRandom());
 			babyAttributes.updateTraits(baby);
 		}
-	}
-
-	private static @Nullable Allele mutagenAffectedAllele(Bee bee) {
-		MobEffectInstance effect = bee.getEffect(BeeModule.MUTAGEN_EFFECT.holderOrThrow());
-		if (effect == null) {
-			return null;
-		}
-		return Allele.byIndex(effect.getAmplifier());
 	}
 
 	public static Vec3 modifyExplosionDeltaMovement(Entity entity, Vec3 impulse, float radius) {

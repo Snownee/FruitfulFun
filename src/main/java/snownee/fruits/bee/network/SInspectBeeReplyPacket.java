@@ -67,13 +67,13 @@ public record SInspectBeeReplyPacket(int id, List<Trait> traits, List<String> po
 		List<GeneRecord> genes = new ArrayList<>();
 		for (Allele allele : Allele.sortedByCode()) {
 			Locus locus = attributes.getLocus(allele);
-			genes.add(new GeneRecord(allele.codename, locus.getHigh(), locus.getLow()));
+			genes.add(new GeneRecord(allele.codename, locus.high(), locus.low()));
 		}
 		KPacketSender.send(
 				new SInspectBeeReplyPacket(
 						id,
-						List.copyOf(attributes.getGenes().getTraits()),
-						attributes.getPollens(),
+						List.copyOf(attributes.genes().traits()),
+						attributes.pollens(),
 						List.copyOf(genes)),
 				player);
 	}
