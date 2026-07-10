@@ -3,11 +3,9 @@ package snownee.fruits.compat.lychee;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 import org.jspecify.annotations.Nullable;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
@@ -33,8 +31,6 @@ import snownee.lychee.compat.recipeviewer.element.SideBlockIcon;
 import snownee.lychee.util.CommonProxy;
 
 public class LycheeCompat {
-	public static final Supplier<ItemStack> pieItem = Suppliers.memoize(FoodModule.CHORUS_FRUIT_PIE::itemStack);
-
 	public static void init() {
 		if (Hooks.bee) {
 			RecipeSynchronization.synchronizeRecipeSerializer(BeeModule.RECIPE_SERIALIZER.getOrCreate());

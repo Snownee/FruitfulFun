@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.state.BeeRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipe;
 import snownee.fruits.bee.genetics.BeeHasTrait;
@@ -20,6 +21,7 @@ import snownee.lychee.client.gui.RenderElement;
 import snownee.lychee.compat.recipeviewer.category.DecorationMapBuilder;
 import snownee.lychee.compat.recipeviewer.category.RvCategory;
 import snownee.lychee.compat.recipeviewer.category.RvCategoryLayoutBuilder;
+import snownee.lychee.ui.SpriteElementRenderer;
 
 public class HybridizingRecipeCategory extends RvCategory<HybridizingRecipe> {
 	public static final Vector2fc INFO_POSITION = new Vector2f(80, 38);
@@ -54,13 +56,20 @@ public class HybridizingRecipeCategory extends RvCategory<HybridizingRecipe> {
 					bee.setData(ClientProxy.TEXTURE, texture);
 					builder.addElement(RenderElement.create(
 							GuiGameElement.of(bee)
-									.scale(12.0F)
-									.atLocal(0.0F, 1.5F, 1.0F)
+									.scale(20)
+									.rotate(170, 135, 0)
+									.atLocal(0.0F, -0.5F, 1.0F)
 									.withSize(width, height), _ -> {
 								bee.ageInTicks = Objects.requireNonNull(Minecraft.getInstance().level).getGameTime() +
 										Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(
 												true);
 							}));
+				});
+		mapBuilder.put(
+				"arrow", (builder, _) -> {
+					builder.addElement(new SpriteElementRenderer(FruitfulFun.id("recipe_arrow"))
+							.at(width / 2F - 15, 24)
+							.withSize(31, 11));
 				});
 	}
 

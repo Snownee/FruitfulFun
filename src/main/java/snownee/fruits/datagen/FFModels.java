@@ -293,7 +293,11 @@ public class FFModels extends FabricModelProvider {
 				ModelLocationUtils.getModelLocation(block.asItem()),
 				new TextureMapping().put(FFModelTemplates.LEAVES, baseTexture).put(FFModelTemplates.FLOWERS, flowersTexture),
 				generators.modelOutput);
-		generators.registerSimpleTintedItemModel(block, model, ItemModelUtils.constantTint(-12012264));
+		if (PomegranateModule.POMEGRANATE_LEAVES.is(block)) {
+			generators.registerSimpleItemModel(block, model);
+		} else {
+			generators.registerSimpleTintedItemModel(block, model, ItemModelUtils.constantTint(-12012264));
+		}
 	}
 
 	public static void createRedloveLeaves(BlockModelGenerators generators, FruitLeavesBlock block) {
