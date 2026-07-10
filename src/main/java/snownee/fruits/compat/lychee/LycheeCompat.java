@@ -57,48 +57,6 @@ public class LycheeCompat {
 			});
 		}
 	}
-//	public static void renderBee(GuiGraphics graphics, HybridizingRecipe recipe, Bee bee) {
-//		Minecraft mc = Minecraft.getInstance();
-//		if (mc.player == null) {
-//			return;
-//		}
-//		bee.setLevel(mc.level);
-//		bee.tickCount = mc.player.tickCount;
-//
-//		PoseStack matrixStack = graphics.pose();
-//		matrixStack.pushPose();
-//		matrixStack.translate(85, 24, 20);
-//		matrixStack.scale(20, 20, 20);
-//
-//		float toRad = 0.01745329251F;
-//		Quaternionf quaternion = new Quaternionf().rotateXYZ(170 * toRad, 135 * toRad, 0);
-//		matrixStack.mulPose(quaternion);
-//
-//		ILightingSettings.DEFAULT_FLAT.applyLighting();
-//		EntityRenderDispatcher renderDispatcher = mc.getEntityRenderDispatcher();
-//		quaternion.conjugate();
-//		renderDispatcher.overrideCameraOrientation(quaternion);
-//		renderDispatcher.setRenderShadow(false);
-//		MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-//
-//		BeeAttributes attributes = BeeAttributes.of(bee);
-//		attributes.getGenes().getTraits().clear();
-//		for (ContextualCondition condition : recipe.getConditions()) {
-//			if (!BeeModule.BEE_HAS_TRAIT.is(condition.getType())) {
-//				continue;
-//			}
-//			BeeHasTrait beeHasTrait = (BeeHasTrait) condition;
-//			attributes.getGenes().getTraits().add(beeHasTrait.trait());
-//		}
-//		attributes.updateTexture();
-//		renderDispatcher.render(bee, 0.0D, 0.0D, 0.0D, mc.getFrameTime(), 1, matrixStack, bufferSource, 15728880);
-//
-//		bufferSource.endBatch();
-//		renderDispatcher.setRenderShadow(true);
-//		matrixStack.popPose();
-//		bee.setLevel(null);
-//		ILightingSettings.DEFAULT_3D.applyLighting();
-//	}
 
 	public static void addInformation(BiConsumer<List<ItemStack>, Component> registrar) {
 		if (FFCommonConfig.appleSaplingFromHeroOfTheVillage || FFCommonConfig.villageAppleTreeWorldGen) {

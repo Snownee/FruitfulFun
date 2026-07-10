@@ -13,14 +13,20 @@ import snownee.fruits.util.CommonProxy;
 public class ScentType {
 	private final List<MobEffectInstance> effects;
 	private final int color;
+	private final float rate;
 
 	public ScentType(List<MobEffectInstance> effects) {
-		this(effects, effects.isEmpty() ? -1 : effects.getFirst().getEffect().value().getColor());
+		this(effects, 1.0f);
 	}
 
-	public ScentType(List<MobEffectInstance> effects, int color) {
+	public ScentType(List<MobEffectInstance> effects, float rate) {
+		this(effects, effects.isEmpty() ? -1 : effects.getFirst().getEffect().value().getColor(), rate);
+	}
+
+	public ScentType(List<MobEffectInstance> effects, int color, float rate) {
 		this.effects = effects;
 		this.color = color;
+		this.rate = rate;
 	}
 
 	public boolean isActiveAt(LevelChunk chunk) {
@@ -65,5 +71,9 @@ public class ScentType {
 
 	public int color() {
 		return color;
+	}
+
+	public float rate() {
+		return rate;
 	}
 }

@@ -78,6 +78,8 @@ block.fruitfulfun.phantom_candle: Sunflower Scented Candle
 block.fruitfulfun.phantom_candle.tip.shift: Prevent phantoms from spawning nearby.
 block.fruitfulfun.ender_candle: Pitcher Plant Scented Candle
 block.fruitfulfun.ender_candle.tip.shift: Prevent teleportation and Endermen from moving blocks.
+block.fruitfulfun.peace_candle: Rose Scented Candle
+block.fruitfulfun.peace_candle.tip.shift: Prevent hostile mobs and bats from spawning nearby.
 block.fruitfulfun.buzzy_crafter.tip.shift: Collect power from returning bees.
 item.fruitfulfun.vac_gun: V.C.D.
 item.fruitfulfun.vac_gun_casing: V.C.D. Casing

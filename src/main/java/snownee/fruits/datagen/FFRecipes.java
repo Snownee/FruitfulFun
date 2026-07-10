@@ -334,6 +334,7 @@ public class FFRecipes extends FabricRecipeProvider {
 				scentedCandle(gadgetExporter, Ingredient.of(CherryModule.CHERRY.get()), GadgetModule.WANDERING_TRADER_CANDLE);
 				scentedCandle(gadgetExporter, Ingredient.of(Items.SUNFLOWER), GadgetModule.PHANTOM_CANDLE);
 				scentedCandle(gadgetExporter, Ingredient.of(Items.PITCHER_PLANT), GadgetModule.ENDER_CANDLE);
+				scentedCandle(gadgetExporter, Ingredient.of(Items.ROSE_BUSH), GadgetModule.PEACE_CANDLE);
 
 				SmithingTransformRecipeBuilder.smithing(
 								tag(FFItemTags.GADGET_TOKEN),

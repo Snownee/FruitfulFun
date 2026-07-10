@@ -148,6 +148,7 @@ public class FFModels extends FabricModelProvider {
 		createCandle(generators, GadgetModule.WANDERING_TRADER_CANDLE.get());
 		createCandle(generators, GadgetModule.ENDER_CANDLE.get());
 		createCandle(generators, GadgetModule.WEAK_CANDLE.get());
+		createCandle(generators, GadgetModule.PEACE_CANDLE.get());
 //		createCandle(generators, GadgetModule.HEAVY_CANDLE.get());
 		generators.createHorizontallyRotatedBlock(GadgetModule.BUZZY_CRAFTER.get(), TexturedModel.ORIENTABLE);
 		createSlidingDoor(generators, CherryModule.REDLOVE_SLIDING_DOOR.get());

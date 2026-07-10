@@ -61,6 +61,7 @@
 		"scent.EndermanTakeBlockGoalMixin",
 		"scent.EntityMixin",
 		"scent.LivingEntityMixin",
+		"scent.NaturalSpawnerMixin",
 		"scent.PhantomSpawnerMixin",
 		"scent.ServerLevelMixin",
 		"scent.WanderingTraderSpawnerMixin",

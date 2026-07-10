@@ -67,7 +67,8 @@ public class FFJEICompat implements IModPlugin {
 							GadgetModule.ENDER_CANDLE,
 							GadgetModule.PHANTOM_CANDLE,
 							GadgetModule.WEAK_CANDLE,
-							GadgetModule.WANDERING_TRADER_CANDLE)
+							GadgetModule.WANDERING_TRADER_CANDLE,
+							GadgetModule.PEACE_CANDLE)
 					.forEach((ItemLike item) ->
 							registration.registerFromDataComponentTypes(item.asItem(), GadgetModule.BUZZY_POWER_STORAGE.get()));
 		}

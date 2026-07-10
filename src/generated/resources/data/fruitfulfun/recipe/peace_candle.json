@@ -1,0 +1,15 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "kiwi:is_loaded",
+      "module": "fruitfulfun:gadget"
+    }
+  ],
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:rose_bush",
+  "base": "#minecraft:candles",
+  "result": {
+    "id": "fruitfulfun:peace_candle"
+  },
+  "template": "#fruitfulfun:gadget_token"
+}
