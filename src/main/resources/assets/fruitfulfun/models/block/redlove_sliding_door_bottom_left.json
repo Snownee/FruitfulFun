@@ -1,20 +1,20 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "fruitfulfun:block/redlove_door_bottom",
-		"bottom": "fruitfulfun:block/redlove_door_bottom"
+		"particle": "fruitfulfun:block/redlove_sliding_door_bottom",
+		"bottom": "fruitfulfun:block/redlove_sliding_door_bottom"
 	},
 	"elements": [
 		{
 			"from": [
 				3,
 				0,
-				-13
+				0
 			],
 			"to": [
 				4,
 				16,
-				3
+				16
 			],
 			"faces": {
 				"north": {
@@ -24,7 +24,8 @@
 						0,
 						16
 					],
-					"texture": "#bottom"
+					"texture": "#bottom",
+					"cullface": "north"
 				},
 				"east": {
 					"uv": [
@@ -42,7 +43,8 @@
 						1,
 						16
 					],
-					"texture": "#bottom"
+					"texture": "#bottom",
+					"cullface": "south"
 				},
 				"west": {
 					"uv": [

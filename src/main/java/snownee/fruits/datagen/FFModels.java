@@ -21,6 +21,7 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.item.ItemModel;
@@ -30,6 +31,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import snownee.fruits.CoreModule;
@@ -148,7 +150,7 @@ public class FFModels extends FabricModelProvider {
 		createCandle(generators, GadgetModule.WEAK_CANDLE.get());
 //		createCandle(generators, GadgetModule.HEAVY_CANDLE.get());
 		generators.createHorizontallyRotatedBlock(GadgetModule.BUZZY_CRAFTER.get(), TexturedModel.ORIENTABLE);
-		generators.createDoor(CherryModule.REDLOVE_SLIDING_DOOR.get());
+		createSlidingDoor(generators, CherryModule.REDLOVE_SLIDING_DOOR.get());
 	}
 
 	@Override
@@ -189,8 +191,8 @@ public class FFModels extends FabricModelProvider {
 	private void inspector(Item item) {
 		Objects.requireNonNull(itemGenerators);
 		Identifier id = ModelLocationUtils.getModelLocation(item);
-		ItemModel.Unbaked trueModel = ItemModelUtils.plainModel(id);
-		ItemModel.Unbaked falseModel = ItemModelUtils.plainModel(id.withSuffix("_using"));
+		ItemModel.Unbaked trueModel = ItemModelUtils.plainModel(id.withSuffix("_using"));
+		ItemModel.Unbaked falseModel = ItemModelUtils.plainModel(id);
 		itemGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new IsUsingItem(), trueModel, falseModel));
 	}
 
@@ -250,20 +252,11 @@ public class FFModels extends FabricModelProvider {
 						BlockStateProperties.CANDLES,
 						BlockStateProperties.LIT)
 				.select(1, false, plainVariant(Identifier))
-				.select(
-						2,
-						false,
-						plainVariant(resourceLocation2))
+				.select(2, false, plainVariant(resourceLocation2))
 				.select(3, false, plainVariant(resourceLocation3))
-				.select(
-						4,
-						false,
-						plainVariant(resourceLocation4))
+				.select(4, false, plainVariant(resourceLocation4))
 				.select(1, true, plainVariant(resourceLocation5))
-				.select(
-						2,
-						true,
-						plainVariant(resourceLocation6))
+				.select(2, true, plainVariant(resourceLocation6))
 				.select(3, true, plainVariant(resourceLocation7))
 				.select(4, true, plainVariant(resourceLocation8))));
 	}
@@ -327,6 +320,34 @@ public class FFModels extends FabricModelProvider {
 				}));
 		generators.blockStateOutput.accept(generator);
 		generators.registerSimpleItemModel(block, model012);
+	}
+
+	public void createSlidingDoor(BlockModelGenerators generators, Block door) {
+		MultiVariant doorBottomLeft = plainVariant(ModelLocationUtils.getModelLocation(door, "_bottom_left"));
+		MultiVariant doorBottomRight = plainVariant(ModelLocationUtils.getModelLocation(door, "_bottom_right"));
+		MultiVariant doorTopLeft = plainVariant(ModelLocationUtils.getModelLocation(door, "_top_left"));
+		MultiVariant doorTopRight = plainVariant(ModelLocationUtils.getModelLocation(door, "_top_right"));
+		MultiVariant doorBottomOpen = plainVariant(ModelTemplates.PARTICLE_ONLY.createWithSuffix(
+				door,
+				"_bottom_open",
+				new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(door, "_bottom")),
+				generators.modelOutput));
+		MultiVariant doorTopOpen = plainVariant(ModelTemplates.PARTICLE_ONLY.createWithSuffix(
+				door,
+				"_top_open",
+				new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(door, "_top")),
+				generators.modelOutput));
+		generators.registerSimpleFlatItemModel(door.asItem());
+		generators.blockStateOutput.accept(BlockModelGenerators.createDoor(
+				door,
+				doorBottomLeft,
+				doorBottomOpen,
+				doorBottomRight,
+				doorBottomOpen,
+				doorTopLeft,
+				doorTopOpen,
+				doorTopRight,
+				doorTopOpen));
 	}
 
 	public final void buzzyShield(final Item item) {

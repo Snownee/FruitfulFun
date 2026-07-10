@@ -123,6 +123,7 @@ public class FFBlockTags extends FabricTagsProvider.BlockTagsProvider {
 		valueLookupBuilder(BlockTags.WALL_HANGING_SIGNS).add(CITRUS_WALL_HANGING_SIGN.get(), REDLOVE_WALL_HANGING_SIGN.get());
 		valueLookupBuilder(BlockTags.CEILING_HANGING_SIGNS).add(CITRUS_HANGING_SIGN.get(), REDLOVE_HANGING_SIGN.get());
 		valueLookupBuilder(BlockTags.WOODEN_DOORS).add(CITRUS_DOOR.get(), REDLOVE_DOOR.get(), REDLOVE_SLIDING_DOOR.get());
+		valueLookupBuilder(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED).add(REDLOVE_SLIDING_DOOR.get());
 		valueLookupBuilder(BlockTags.FLOWER_POTS).add(
 				POTTED_APPLE.get(),
 				POTTED_CITRON.get(),

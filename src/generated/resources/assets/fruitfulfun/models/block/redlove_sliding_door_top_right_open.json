@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/door_top_right_open",
-  "textures": {
-    "bottom": "fruitfulfun:block/redlove_sliding_door_bottom",
-    "top": "fruitfulfun:block/redlove_sliding_door_top"
-  }
-}

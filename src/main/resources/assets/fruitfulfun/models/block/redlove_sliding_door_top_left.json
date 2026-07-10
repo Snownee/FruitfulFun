@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "fruitfulfun:block/redlove_door_bottom",
-		"bottom": "fruitfulfun:block/redlove_door_bottom"
+		"particle": "fruitfulfun:block/redlove_sliding_door_top",
+		"top": "fruitfulfun:block/redlove_sliding_door_top"
 	},
 	"elements": [
 		{
@@ -24,17 +24,17 @@
 						0,
 						16
 					],
-					"texture": "#bottom",
+					"texture": "#top",
 					"cullface": "north"
 				},
 				"east": {
 					"uv": [
-						0,
-						0,
 						16,
+						0,
+						0,
 						16
 					],
-					"texture": "#bottom"
+					"texture": "#top"
 				},
 				"south": {
 					"uv": [
@@ -43,27 +43,27 @@
 						1,
 						16
 					],
-					"texture": "#bottom",
+					"texture": "#top",
 					"cullface": "south"
 				},
 				"west": {
 					"uv": [
+						0,
+						0,
 						16,
-						0,
-						0,
 						16
 					],
-					"texture": "#bottom"
+					"texture": "#top"
 				},
-				"down": {
+				"up": {
 					"uv": [
 						15,
 						0,
 						16,
 						16
 					],
-					"texture": "#bottom",
-					"cullface": "down"
+					"texture": "#top",
+					"cullface": "up"
 				}
 			}
 		}

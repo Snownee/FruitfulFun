@@ -1,8 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "fruitfulfun:block/redlove_door_bottom",
-		"bottom": "fruitfulfun:block/redlove_door_bottom"
+		"particle": "fruitfulfun:block/redlove_sliding_door_bottom",
+		"bottom": "fruitfulfun:block/redlove_sliding_door_bottom"
 	},
 	"elements": [
 		{
@@ -29,9 +29,9 @@
 				},
 				"east": {
 					"uv": [
+						0,
+						0,
 						16,
-						0,
-						0,
 						16
 					],
 					"texture": "#bottom"
@@ -48,9 +48,9 @@
 				},
 				"west": {
 					"uv": [
-						0,
-						0,
 						16,
+						0,
+						0,
 						16
 					],
 					"texture": "#bottom"

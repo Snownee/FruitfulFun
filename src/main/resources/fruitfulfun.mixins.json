@@ -85,6 +85,7 @@
 		"client.GuiMixin",
 		"client.HumanoidModelMixin",
 		"client.ItemInHandRendererMixin",
+		"client.LevelRendererMixin",
 		"client.LocalPlayerMixin",
 		"client.MinecraftMixin",
 		"client.MultiPlayerGameModeMixin",

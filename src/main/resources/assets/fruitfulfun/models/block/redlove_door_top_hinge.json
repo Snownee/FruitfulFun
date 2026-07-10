@@ -1,7 +1,0 @@
-{
-	"parent": "block/door_top_right",
-	"textures": {
-		"bottom": "fruitfulfun:block/redlove_door_bottom",
-		"top": "fruitfulfun:block/redlove_door_top"
-	}
-}

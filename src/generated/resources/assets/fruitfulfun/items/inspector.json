@@ -3,11 +3,11 @@
     "type": "minecraft:condition",
     "on_false": {
       "type": "minecraft:model",
-      "model": "fruitfulfun:item/inspector_using"
+      "model": "fruitfulfun:item/inspector"
     },
     "on_true": {
       "type": "minecraft:model",
-      "model": "fruitfulfun:item/inspector"
+      "model": "fruitfulfun:item/inspector_using"
     },
     "property": "minecraft:using_item"
   }

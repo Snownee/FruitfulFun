@@ -87,8 +87,8 @@ public class JadeCompat implements IWailaPlugin {
 	private static @Nullable Accessor<?> override(@Nullable Accessor<?> accessor, IWailaClientRegistration registration) {
 		if (accessor instanceof EntityAccessor) {
 			Entity entity = ((EntityAccessor) accessor).getEntity();
-			if (entity instanceof SlidingDoorEntity) {
-				BlockPos pos = entity.blockPosition();
+			if (entity instanceof SlidingDoorEntity door) {
+				BlockPos pos = door.doorPos();
 				Level level = accessor.getLevel();
 				BlockHitResult hitResult = new BlockHitResult(
 						accessor.getHitResult().getLocation(), accessor.getPlayer().getDirection().getOpposite(), pos, false);
