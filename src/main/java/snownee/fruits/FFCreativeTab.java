@@ -22,6 +22,7 @@ import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.AbstractModule;
+import snownee.kiwi.BlockObject;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.item.ItemCategoryFiller;
@@ -109,9 +110,19 @@ public final class FFCreativeTab extends AbstractModule {
 			}
 		}
 
+		void add(BlockObject<?> blockObject) {
+			add(blockObject.get());
+		}
+
 		void add(ItemLike item) {
 			map.remove(item.asItem());
-			if (item instanceof ItemCategoryFiller filler) {
+			ItemCategoryFiller filler = null;
+			if (item instanceof ItemCategoryFiller) {
+				filler = (ItemCategoryFiller) item;
+			} else if (item.asItem() instanceof ItemCategoryFiller) {
+				filler = (ItemCategoryFiller) item.asItem();
+			}
+			if (filler != null) {
 				List<ItemStack> itemStacks = Lists.newArrayList();
 				filler.fillItemCategory(MAIN.getOrCreate(), FeatureFlags.VANILLA_SET, true, itemStacks);
 				itemStacks.forEach(output::accept);
