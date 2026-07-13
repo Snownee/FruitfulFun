@@ -168,11 +168,11 @@ public class FFBlockTags extends FabricTagsProvider.BlockTagsProvider {
 		}
 		valueLookupBuilder(GadgetModule.SUSTAIN_CRAFTER_ITEM)
 				.addTag(CoreModule.CANDLES);
-		valueLookupBuilder(GadgetModule.VCD_PERFORM_USING)
+		valueLookupBuilder(GadgetModule.VAC_PERFORM_USING)
 				.addTag(ALL_LEAVES)
 				.addOptionalTag(BlockTags.CAVE_VINES)
 				.add(Blocks.SWEET_BERRY_BUSH);
-		valueLookupBuilder(GadgetModule.VCD_PERFORM_BREAKING)
+		valueLookupBuilder(GadgetModule.VAC_PERFORM_BREAKING)
 				.add(Blocks.COCOA)
 				.add(POMEGRANATE.get());
 		valueLookupBuilder(TREE_TYPES_OAK_LOG).add(APPLE_LEAVES.get());

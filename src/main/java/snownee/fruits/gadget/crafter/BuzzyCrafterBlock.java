@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -228,7 +230,10 @@ public class BuzzyCrafterBlock extends BeehiveBlock implements IKiwiBlock {
 
 	@Override
 	public BlockItem createItem(Item.Properties builder) {
-		return new ModBlockItem(this, builder.component(GadgetModule.HIDE_HONEY_LEVEL.getOrCreate(), Unit.INSTANCE));
+		return new ModBlockItem(
+				this,
+				builder.component(GadgetModule.HIDE_HONEY_LEVEL.getOrCreate(), Unit.INSTANCE)
+						.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
 	}
 
 	@Override

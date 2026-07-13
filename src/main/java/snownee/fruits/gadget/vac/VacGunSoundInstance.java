@@ -32,7 +32,7 @@ public class VacGunSoundInstance extends AbstractTickableSoundInstance {
 			stop();
 			return;
 		}
-		volume = Math.min(1, volume + 0.05F);
+		volume = Math.min(0.5F, volume + 0.025F);
 	}
 
 	@Override

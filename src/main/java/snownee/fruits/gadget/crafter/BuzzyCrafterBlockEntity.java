@@ -11,6 +11,9 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -24,6 +27,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
@@ -346,5 +350,22 @@ public class BuzzyCrafterBlockEntity extends BeehiveBlockEntity implements Buzzy
 			return 0;
 		}
 		return 1 + Mth.clamp((int) Math.ceil(14 * life / maxLife), 0, 14);
+	}
+
+	@Override
+	protected void applyImplicitComponents(final DataComponentGetter components) {
+		super.applyImplicitComponents(components);
+		setTheItem(components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyOne());
+	}
+
+	@Override
+	protected void collectImplicitComponents(final DataComponentMap.Builder components) {
+		super.collectImplicitComponents(components);
+		components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(item)));
+	}
+
+	@Override
+	public void removeComponentsFromTag(final ValueOutput output) {
+		output.discard(ITEM_STACK_KEY);
 	}
 }

@@ -24,7 +24,7 @@ public class FFEntityTypeTags extends FabricTagsProvider.EntityTypeTagsProvider 
 				.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ARMOR_STAND))
 				.addOptionalElement(Identifier.parse("supplementaries:hat_stand"))
 				.addOptionalElement(Identifier.parse("dummmmmmy:target_dummy"));
-		valueLookupBuilder(GadgetModule.VCD_MOVABLE);
+		valueLookupBuilder(GadgetModule.VAC_MOVABLE);
 		valueLookupBuilder(EntityTypeTags.DISMOUNTS_UNDERWATER).add(EntityType.BEE);
 		valueLookupBuilder(EntityTypeTags.CAN_EQUIP_SADDLE).add(EntityType.BEE);
 		valueLookupBuilder(EntityTypeTags.FALL_DAMAGE_IMMUNE).addOptional(GadgetModule.SUMMONED_BEE.get());

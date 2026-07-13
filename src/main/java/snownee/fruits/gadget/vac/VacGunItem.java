@@ -4,6 +4,7 @@ import java.util.function.Predicate;
 
 import org.jspecify.annotations.Nullable;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.kiwi.util.PreventUpdateAnimation;
 
@@ -25,7 +27,7 @@ public class VacGunItem extends ProjectileWeaponItem implements PreventUpdateAni
 	private static final ThreadLocal<ItemEntity> DUMMY_ITEM_ENTITY = new ThreadLocal<>();
 
 	public VacGunItem(Item.Properties properties) {
-		super(properties.stacksTo(1).rarity(Rarity.RARE));
+		super(properties.stacksTo(1).rarity(Rarity.RARE).component(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
 	}
 
 	public static void shoot(Player player, InteractionHand hand) {

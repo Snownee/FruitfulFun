@@ -81,8 +81,8 @@ block.fruitfulfun.ender_candle.tip.shift: Prevent teleportation and Endermen fro
 block.fruitfulfun.peace_candle: Rose Scented Candle
 block.fruitfulfun.peace_candle.tip.shift: Prevent hostile mobs and bats from spawning nearby.
 block.fruitfulfun.buzzy_crafter.tip.shift: Collect power from returning bees.
-item.fruitfulfun.vac_gun: V.C.D.
-item.fruitfulfun.vac_gun_casing: V.C.D. Casing
+item.fruitfulfun.vac_gun: Mini-Vac
+item.fruitfulfun.vac_gun_casing: Mini-Vac Casing
 block.fruitfulfun.brewer.tip.shift: A brewing stand that dispenses products. After continuously brewing the same product, it provides a speed bonus of up to +100%.
 
 recipeType.fruitfulfun.hybridizing: Bee Pollinating
@@ -220,8 +220,8 @@ effect.fruitfulfun.fragility.description: Takes 20% more damage per level
 subtitles.fruitfulfun.start_haunting: Haunting starts
 subtitles.fruitfulfun.stop_haunting: Haunting stopped
 subtitles.fruitfulfun.crown.equip: Flower crown equips
-subtitles.fruitfulfun.gun.shoot: V.C.D. shoots
-subtitles.fruitfulfun.gun.working: V.C.D. working
+subtitles.fruitfulfun.gun.shoot: Mini-Vac shoots
+subtitles.fruitfulfun.gun.working: Mini-Vac working
 subtitles.fruitfulfun.pomegranate.explode: Pomegranate bursts
 contextual.fruitfulfun.bee_has_trait: 'Bee has trait: %s'
 contextual.fruitfulfun.bee_has_trait.not: 'Bee doesn''t have trait: %s'

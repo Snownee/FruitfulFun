@@ -108,9 +108,10 @@ public class GadgetModule extends AbstractModule {
 			"item.gun.shoot_item")));
 	public static final KiwiGO<SoundEvent> GUN_WORKING = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("item.gun.working")));
 	public static final KiwiGO<SoundEvent> GUN_STOP = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id("item.gun.stop")));
-	public static final TagKey<Block> VCD_PERFORM_USING = blockTag("vcd_perform_using");
-	public static final TagKey<Block> VCD_PERFORM_BREAKING = blockTag("vcd_perform_breaking");
-	public static final TagKey<EntityType<?>> VCD_MOVABLE = entityTag("vcd_movable");
+	public static final TagKey<Block> VAC_PERFORM_USING = blockTag("vac_perform_using");
+	public static final TagKey<Block> VAC_PERFORM_BREAKING = blockTag("vac_perform_breaking");
+	public static final TagKey<EntityType<?>> VAC_MOVABLE = entityTag("vac_movable");
+	public static final TagKey<EntityType<?>> VAC_IMMOVABLE = entityTag("vac_immovable");
 	public static final KiwiGO<EntityType<VacItemProjectile>> ITEM_PROJECTILE = entity($ -> EntityType.Builder.of(
 			VacItemProjectile::new,
 			MobCategory.MISC).sized(0.25f, 0.25f).clientTrackingRange(4).updateInterval(10).build($));
