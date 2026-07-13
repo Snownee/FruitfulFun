@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.Hooks;
-import snownee.fruits.gadget.ScentedCandleBlock;
+import snownee.fruits.gadget.scent.ScentedCandleBlock;
 
 @Mixin(CandleBlock.class)
 public abstract class CandleBlockMixin extends AbstractCandleBlock {

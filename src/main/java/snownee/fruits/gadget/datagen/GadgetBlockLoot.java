@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BrewingStandBlock;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.datagen.CoreBlockLoot;
-import snownee.fruits.gadget.ScentedCandleBlock;
+import snownee.fruits.gadget.scent.ScentedCandleBlock;
 
 public class GadgetBlockLoot extends CoreBlockLoot {
 	public GadgetBlockLoot(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
@@ -27,6 +28,7 @@ public class GadgetBlockLoot extends CoreBlockLoot {
 	protected void addTables() {
 		super.addTables();
 		handle(ScentedCandleBlock.class, this::createCandleDrops);
+		handle(BrewingStandBlock.class, this::createNameableBlockEntityTable);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import snownee.fruits.Hooks;
-import snownee.fruits.gadget.VacGunItem;
+import snownee.fruits.gadget.vac.VacGunItem;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {

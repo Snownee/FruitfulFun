@@ -5,7 +5,7 @@ import org.jspecify.annotations.Nullable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import snownee.fruits.gadget.client.ItemProjectileColor;
+import snownee.fruits.gadget.vac.ItemProjectileColor;
 
 public class SupplementariesCompat {
 	public static @Nullable Entity getTargetEntity(BlockEntity be) {

@@ -89,8 +89,8 @@ import snownee.fruits.compat.lychee.LycheeCompat;
 import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.ScentType;
-import snownee.fruits.gadget.VacGunItem;
+import snownee.fruits.gadget.scent.ScentType;
+import snownee.fruits.gadget.vac.VacGunItem;
 import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Kiwi;
@@ -235,6 +235,9 @@ public class CommonProxy implements ModInitializer {
 		BlockEntityType.SIGN.addValidBlock(CherryModule.REDLOVE_SIGN.getOrCreate());
 		BlockEntityType.HANGING_SIGN.addValidBlock(CoreModule.CITRUS_WALL_HANGING_SIGN.getOrCreate());
 		BlockEntityType.HANGING_SIGN.addValidBlock(CherryModule.REDLOVE_WALL_HANGING_SIGN.getOrCreate());
+		if (Hooks.gadget) {
+			BlockEntityType.BREWING_STAND.addValidBlock(GadgetModule.BREWER.getOrCreate());
+		}
 
 		ServerLevelEvents.LOAD.register((server, world) -> {
 			if (world == server.overworld()) {

@@ -21,7 +21,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import snownee.fruits.FFRegistries;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.ScentType;
+import snownee.fruits.gadget.scent.ScentType;
 
 @Mixin(value = LivingEntity.class, priority = 600)
 public abstract class LivingEntityMixin extends Entity {

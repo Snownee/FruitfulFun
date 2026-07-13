@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.Hooks;
-import snownee.fruits.gadget.VacGunItem;
+import snownee.fruits.gadget.vac.VacGunItem;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {

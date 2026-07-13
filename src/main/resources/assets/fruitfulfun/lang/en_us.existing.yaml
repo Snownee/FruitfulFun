@@ -83,6 +83,7 @@ block.fruitfulfun.peace_candle.tip.shift: Prevent hostile mobs and bats from spa
 block.fruitfulfun.buzzy_crafter.tip.shift: Collect power from returning bees.
 item.fruitfulfun.vac_gun: V.C.D.
 item.fruitfulfun.vac_gun_casing: V.C.D. Casing
+block.fruitfulfun.brewer.tip.shift: A brewing stand that dispenses products. After continuously brewing the same product, it provides a speed bonus of up to +100%.
 
 recipeType.fruitfulfun.hybridizing: Bee Pollinating
 recipeType.fruitfulfun.dragon_ritual: Dragon Ritual
@@ -140,6 +141,7 @@ tip.fruitfulfun.analyzeScents.plural: '%s scents are active here and the shortes
 tip.fruitfulfun.boundEntity.removed: Bound entity removed
 tip.fruitfulfun.boundEntity.set: Bound entity set to %s
 tip.fruitfulfun.boundEntity.status: 'Bound to: %s'
+tip.fruitfulfun.speedBonus: 'Speed Bonus: +%s%%'
 
 text.fruitfulfun.offspringPotential: Offspring Potential
 text.fruitfulfun.offspringPotential.none: No changes
@@ -226,6 +228,7 @@ contextual.fruitfulfun.bee_has_trait.not: 'Bee doesn''t have trait: %s'
 death.attack.fruitfulfun.explosion: '%1$s was blown up by pomegranate'
 death.attack.fruitfulfun.explosion.player: '%1$s was blown up by %2$s''s pomegranate'
 death.attack.fruitfulfun.explosion.player.item: '%1$s was blown up by %2$s using %3$s'
+container.fruitfulfun.brewer: Brewer
 fruitfulfun.config.geneticsDifficulty.desc: Easy - Real gene names will be shown as preset.
 
 fruitfulfun.beeName: '%s %s'

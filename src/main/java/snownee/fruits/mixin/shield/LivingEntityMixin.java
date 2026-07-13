@@ -15,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
-import snownee.fruits.gadget.BuzzyShieldItem;
+import snownee.fruits.gadget.shield.BuzzyShieldItem;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {

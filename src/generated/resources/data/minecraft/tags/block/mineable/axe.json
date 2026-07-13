@@ -7,6 +7,14 @@
     {
       "id": "fruitfulfun:redlove_cabinet",
       "required": false
+    },
+    {
+      "id": "fruitfulfun:buzzy_crafter",
+      "required": false
+    },
+    {
+      "id": "fruitfulfun:rain_detector",
+      "required": false
     }
   ]
 }

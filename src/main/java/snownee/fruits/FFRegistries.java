@@ -8,7 +8,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import snownee.fruits.gadget.ScentType;
+import snownee.fruits.gadget.scent.ScentType;
 import snownee.kiwi.Kiwi;
 
 public class FFRegistries {

@@ -1,0 +1,9 @@
+fabric:load_conditions:
+- condition: kiwi:is_loaded
+  module: fruitfulfun:ritual
+- condition: kiwi:is_loaded
+  module: fruitfulfun:gadget
+item_in: daylight_detector
+max_repeats: 1
+post: drop fruitfulfun:rain_detector
+type: fruitfulfun:dragon_ritual

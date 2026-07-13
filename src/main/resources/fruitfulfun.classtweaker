@@ -70,3 +70,9 @@ accessible field net/minecraft/data/recipes/RecipeProvider items Lnet/minecraft/
 
 accessible method net/minecraft/world/entity/EntityType boatFactory (Ljava/util/function/Supplier;)Lnet/minecraft/world/entity/EntityType$EntityFactory;
 accessible method net/minecraft/world/entity/EntityType chestBoatFactory (Ljava/util/function/Supplier;)Lnet/minecraft/world/entity/EntityType$EntityFactory;
+
+accessible field net/minecraft/client/Minecraft clientTickCount J
+
+accessible field net/minecraft/world/inventory/AbstractContainerMenu menuType Lnet/minecraft/world/inventory/MenuType;
+mutable field net/minecraft/world/inventory/AbstractContainerMenu menuType Lnet/minecraft/world/inventory/MenuType;
+accessible field net/minecraft/world/inventory/BrewingStandMenu brewingStandData Lnet/minecraft/world/inventory/ContainerData;

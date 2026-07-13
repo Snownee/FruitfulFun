@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 import snownee.fruits.FFRegistries;
-import snownee.fruits.gadget.ScentType;
+import snownee.fruits.gadget.scent.ScentType;
 
 public class ScentCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {

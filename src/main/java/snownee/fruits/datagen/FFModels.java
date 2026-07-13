@@ -45,7 +45,7 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.client.Head;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.ScentedCandleBlock;
+import snownee.fruits.gadget.scent.ScentedCandleBlock;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.ItemObject;
 
@@ -152,6 +152,13 @@ public class FFModels extends FabricModelProvider {
 //		createCandle(generators, GadgetModule.HEAVY_CANDLE.get());
 		generators.createHorizontallyRotatedBlock(GadgetModule.BUZZY_CRAFTER.get(), TexturedModel.ORIENTABLE);
 		createSlidingDoor(generators, CherryModule.REDLOVE_SLIDING_DOOR.get());
+		generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(
+				GadgetModule.RAIN_DETECTOR.get(),
+				plainVariant(ModelLocationUtils.getModelLocation(GadgetModule.RAIN_DETECTOR.get()))));
+		generators.registerSimpleItemModel(
+				GadgetModule.RAIN_DETECTOR.get(),
+				ModelLocationUtils.getModelLocation(GadgetModule.RAIN_DETECTOR.get()));
+		createBrewer(generators);
 	}
 
 	@Override
@@ -187,6 +194,33 @@ public class FFModels extends FabricModelProvider {
 
 		flowerCrown(CherryModule.CHERRY_CROWN);
 		flowerCrown(CherryModule.REDLOVE_CROWN);
+	}
+
+	private void createBrewer(BlockModelGenerators generators) {
+		generators.registerSimpleFlatItemModel(GadgetModule.BREWER.asItem());
+		generators.blockStateOutput
+				.accept(
+						MultiPartGenerator.multiPart(GadgetModule.BREWER.get())
+								.with(plainVariant(ModelLocationUtils.getModelLocation(GadgetModule.BREWER.get())))
+								.with(
+										condition().term(BlockStateProperties.HAS_BOTTLE_0, true),
+										plainVariant(ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_bottle0")))
+								.with(
+										condition().term(BlockStateProperties.HAS_BOTTLE_1, true),
+										plainVariant(ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_bottle1")))
+								.with(
+										condition().term(BlockStateProperties.HAS_BOTTLE_2, true),
+										plainVariant(ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_bottle2")))
+								.with(
+										condition().term(BlockStateProperties.HAS_BOTTLE_0, false),
+										plainVariant(ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_empty0")))
+								.with(
+										condition().term(BlockStateProperties.HAS_BOTTLE_1, false),
+										plainVariant(ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_empty1")))
+								.with(
+										condition().term(BlockStateProperties.HAS_BOTTLE_2, false),
+										plainVariant(ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_empty2")))
+				);
 	}
 
 	private void inspector(Item item) {

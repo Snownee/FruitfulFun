@@ -6,6 +6,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import snownee.fruits.gadget.crafter.BuzzyCrafterBlockEntity;
 import snownee.kiwi.item.ItemCategoryFiller;
 
 public interface BuzzyItemCategoryFiller extends ItemCategoryFiller {

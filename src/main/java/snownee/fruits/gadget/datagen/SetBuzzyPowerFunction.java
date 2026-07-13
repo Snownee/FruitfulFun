@@ -15,7 +15,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import snownee.fruits.gadget.BuzzyPowerStorage;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.ScentedCandleBlockEntity;
+import snownee.fruits.gadget.scent.ScentedCandleBlockEntity;
 
 public class SetBuzzyPowerFunction extends LootItemConditionalFunction {
 	public static final MapCodec<? extends SetBuzzyPowerFunction> CODEC = RecordCodecBuilder.mapCodec(i -> commonFields(i).apply(

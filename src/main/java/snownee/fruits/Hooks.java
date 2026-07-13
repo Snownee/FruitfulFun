@@ -25,10 +25,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.animal.bee.Bee;
@@ -38,6 +40,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
@@ -64,6 +67,7 @@ import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.mixin.EntityAccess;
+import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.KUtil;
 
@@ -371,5 +375,39 @@ public final class Hooks {
 			return Shapes.empty();
 		}
 		return SlidingDoorBlock.getActualShape(door.bottomState).move(door.getLerpedOffset(partialTick));
+	}
+
+	public static void popItemBelow(BlockEntity blockEntity, boolean dropItem, int... slots) {
+		BlockPos pos = blockEntity.getBlockPos();
+		BlockPos below = pos.below();
+		Level level = Objects.requireNonNull(blockEntity.getLevel());
+		BlockState belowState = level.getBlockState(below);
+		BlockEntity belowEntity = level.getBlockEntity(below);
+		Container container = (Container) blockEntity;
+		for (int slot : slots) {
+			ItemStack item = container.removeItem(slot, container.getMaxStackSize());
+			if (item.isEmpty()) {
+				continue;
+			}
+			if (!belowState.isAir()) {
+				CommonProxy.insertItem(level, below, belowState, belowEntity, Direction.UP, item);
+				if (item.isEmpty()) {
+					continue;
+				}
+			}
+			if (dropItem) {
+				ItemEntity itemEntity = new ItemEntity(
+						Objects.requireNonNull(level),
+						pos.getX() + 0.5,
+						pos.getY() - EntityType.ITEM.getHeight(),
+						pos.getZ() + 0.5,
+						item);
+				itemEntity.setDefaultPickUpDelay();
+				itemEntity.setDeltaMovement(0, -0.1, 0);
+				level.addFreshEntity(itemEntity);
+			} else {
+				container.setItem(slot, item);
+			}
+		}
 	}
 }

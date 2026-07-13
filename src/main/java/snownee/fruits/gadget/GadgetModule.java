@@ -8,7 +8,9 @@ import java.util.Set;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
@@ -22,6 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -31,16 +34,40 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BlocksAttacks;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BrewingStandBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.duck.FFBrewingStand;
+import snownee.fruits.gadget.brewer.RemoteBrewerContainerData;
+import snownee.fruits.gadget.crafter.BuzzyCrafterBlock;
+import snownee.fruits.gadget.crafter.BuzzyCrafterBlockEntity;
 import snownee.fruits.gadget.datagen.SetBuzzyPowerFunction;
+import snownee.fruits.gadget.detector.RainDetectorBlock;
+import snownee.fruits.gadget.detector.RainDetectorBlockEntity;
+import snownee.fruits.gadget.scent.ScentType;
+import snownee.fruits.gadget.scent.ScentedCandleBlock;
+import snownee.fruits.gadget.scent.ScentedCandleBlockEntity;
+import snownee.fruits.gadget.shield.BuzzyShieldItem;
+import snownee.fruits.gadget.shield.SummonedBee;
+import snownee.fruits.gadget.vac.AirVortexParticleOption;
+import snownee.fruits.gadget.vac.VacGunItem;
+import snownee.fruits.gadget.vac.VacItemProjectile;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
@@ -178,14 +205,74 @@ public class GadgetModule extends AbstractModule {
 					.persistent(BuzzyPowerStorage.CODEC)
 					.networkSynchronized(BuzzyPowerStorage.STREAM_CODEC)
 					.build(), Registries.DATA_COMPONENT_TYPE);
-
 	@KiwiModule.Name("scented_candle")
 	public static final KiwiGO<BlockEntityType<ScentedCandleBlockEntity>> SCENTED_CANDLE_ENTITY = blockEntity(
 			ScentedCandleBlockEntity::new,
 			ScentedCandleBlock.class);
+	@KiwiModule.Category(value = Categories.REDSTONE_BLOCKS, after = "daylight_detector")
+	public static final BlockObject<Block> RAIN_DETECTOR = block(RainDetectorBlock::new, () -> Blocks.DAYLIGHT_DETECTOR);
+	@KiwiModule.Name("rain_detector")
+	public static final KiwiGO<BlockEntityType<RainDetectorBlockEntity>> RAIN_DETECTOR_ENTITY = blockEntity(
+			RainDetectorBlockEntity::new,
+			RainDetectorBlock.class);
+	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS, after = "brewing_stand")
+	public static final BlockObject<Block> BREWER = block(BrewingStandBlock::new, () -> Blocks.BREWING_STAND);
+	@KiwiModule.Name("brewer")
+	public static final KiwiGO<MenuType<BrewingStandMenu>> BREWER_MENU = go(() -> new MenuType<>(
+			(containerId, inventory) -> new BrewingStandMenu(
+					containerId,
+					inventory,
+					new SimpleContainer(5),
+					new RemoteBrewerContainerData(3)),
+			FeatureFlags.VANILLA_SET));
 
 	public GadgetModule() {
 		Hooks.gadget = true;
+	}
+
+	public static void doBrew(Level level, BlockPos pos, NonNullList<ItemStack> items, BrewingStandBlockEntity entity) {
+		ItemStack ingredient = items.get(3);
+		int ingredientHash = hash(ingredient) * 31;
+		PotionBrewing potionBrewing = level.potionBrewing();
+		int[] recipeHash = new int[3];
+
+		for (int dest = 0; dest < 3; dest++) {
+			ItemStack source = items.get(dest);
+			ItemStack mixed = potionBrewing.mix(ingredient, source);
+			items.set(dest, mixed);
+			if (!ItemStack.isSameItemSameComponents(source, mixed)) {
+				recipeHash[dest] = hash(source) + ingredientHash;
+			}
+		}
+		Hooks.popItemBelow(entity, false, 0, 1, 2);
+
+		ingredient.shrink(1);
+		ItemStackTemplate remainder = ingredient.getItem().getCraftingRemainder();
+		if (remainder != null) {
+			items.set(3, remainder.create());
+			Hooks.popItemBelow(entity, true, 3);
+		}
+
+		items.set(3, ingredient);
+		level.levelEvent(1035, pos, 0);
+		((FFBrewingStand) entity).fruits$updateRecipeHash(recipeHash);
+	}
+
+	public static int hash(ItemStack stack) {
+		int hash = stack.typeHolder().getRegisteredName().hashCode();
+		if (stack.hasNonDefault(DataComponents.POTION_CONTENTS)) {
+			PotionContents contents = Objects.requireNonNull(stack.get(DataComponents.POTION_CONTENTS));
+			if (contents.potion().isPresent()) {
+				hash = 31 * hash + contents.potion().get().getRegisteredName().hashCode();
+			}
+			for (MobEffectInstance effect : contents.customEffects()) {
+				hash = 31 * hash + effect.getEffect().getRegisteredName().hashCode();
+			}
+			if (contents.customName().isPresent()) {
+				hash = 31 * hash + contents.customName().get().hashCode();
+			}
+		}
+		return hash;
 	}
 
 	@Override

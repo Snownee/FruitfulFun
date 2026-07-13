@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.client.VacGunSoundInstance;
+import snownee.fruits.gadget.vac.VacGunSoundInstance;
 
 @Mixin(LivingEntity.class)
 public class LivingEntitySoundMixin {

@@ -76,7 +76,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.ScentedCandleBlock;
+import snownee.fruits.gadget.scent.ScentedCandleBlock;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModules;
@@ -190,5 +190,12 @@ public class FFBlockTags extends FabricTagsProvider.BlockTagsProvider {
 		KiwiModules.get(FruitfulFun.id("food")).getRegistryEntries(Registries.BLOCK)
 				.map(KiwiGO::get)
 				.forEach(builder::addOptional);
+
+		valueLookupBuilder(BlockTags.MINEABLE_WITH_AXE)
+				.addOptional(GadgetModule.BUZZY_CRAFTER.get())
+				.addOptional(GadgetModule.RAIN_DETECTOR.get());
+
+		valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
+				.addOptional(GadgetModule.BREWER.get());
 	}
 }

@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.gadget.BuzzyPowerStorage;
-import snownee.fruits.gadget.ScentedCandleBlockEntity;
+import snownee.fruits.gadget.scent.ScentedCandleBlockEntity;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;

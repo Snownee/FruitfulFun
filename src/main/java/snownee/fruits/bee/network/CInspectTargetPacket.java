@@ -15,7 +15,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.duck.FFPlayer;
-import snownee.fruits.gadget.ScentType;
+import snownee.fruits.gadget.scent.ScentType;
 import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PayloadContext;

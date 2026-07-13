@@ -38,6 +38,9 @@
 		"bee.RideableBeePlayerMixin",
 		"bee.TemptGoalMixin",
 		"bee.WalkNodeEvaluatorMixin",
+		"brewer.AbstractContainerMenuMixin",
+		"brewer.BrewingStandBlockEntityMixin",
+		"brewer.BrewingStandMenuMixin",
 		"bz.BzBeehiveBlockEntityMixin",
 		"crafter.BeehiveBlockEntityMixin",
 		"crafter.BeeMixin",
@@ -78,6 +81,7 @@
 		"bee.GuiGraphicsExtractorMixin",
 		"bee.LayerTypeMixin",
 		"bee.LivingEntityRendererMixin",
+		"brewer.BrewingStandScreenMixin",
 		"cherry.BlockMixin",
 		"cherry.LivingEntityFlowerCrownMixin",
 		"cherry.UntintedParticleLeavesBlockMixin",
@@ -102,5 +106,8 @@
 	"injectors": {
 		"defaultRequire": 1
 	},
-	"minVersion": "0.8"
+	"minVersion": "0.8",
+	"mixinextras": {
+		"minVersion": "0.5.4"
+	}
 }

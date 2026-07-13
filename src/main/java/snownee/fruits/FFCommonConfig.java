@@ -49,6 +49,8 @@ public final class FFCommonConfig {
 	public static boolean redloveFruitUse = true;
 	public static boolean inspectorShowOffspringPotential = true;
 	public static boolean randomBeeNames = true;
+	@KiwiConfig.Range(min = 0, max = Short.MAX_VALUE)
+	public static int brewerMaxSpeedRequirement = 30;
 	@KiwiConfig.Path("dragonBreath.fixExploit") // fix MC-114618
 	public static boolean fixDragonBreathExploit = true;
 	@KiwiConfig.GameRestart

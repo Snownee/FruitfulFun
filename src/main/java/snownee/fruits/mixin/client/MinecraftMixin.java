@@ -21,8 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.network.CHauntingActionPacket;
-import snownee.fruits.gadget.BuzzyCrafterBlock;
-import snownee.fruits.gadget.network.CClickCrafterPacket;
+import snownee.fruits.gadget.crafter.BuzzyCrafterBlock;
+import snownee.fruits.gadget.crafter.CClickCrafterPacket;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {

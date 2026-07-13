@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import snownee.fruits.Hooks;
-import snownee.fruits.gadget.BuzzyCrafterBlock;
+import snownee.fruits.gadget.crafter.BuzzyCrafterBlock;
 
 @Mixin(BeehiveBlockEntity.class)
 public class BeehiveBlockEntityMixin {

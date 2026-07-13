@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import snownee.fruits.Hooks;
-import snownee.fruits.gadget.BuzzyShieldItem;
+import snownee.fruits.gadget.shield.BuzzyShieldItem;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity {

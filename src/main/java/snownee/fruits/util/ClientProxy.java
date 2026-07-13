@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
@@ -37,6 +38,8 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.model.animal.bee.AdultBeeModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -93,12 +96,13 @@ import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.gadget.client.AirVortexParticle;
-import snownee.fruits.gadget.client.BuzzyCrafterRenderer;
-import snownee.fruits.gadget.client.ItemProjectileColor;
-import snownee.fruits.gadget.client.ItemProjectileRenderer;
+import snownee.fruits.gadget.crafter.BuzzyCrafterRenderer;
+import snownee.fruits.gadget.vac.AirVortexParticle;
+import snownee.fruits.gadget.vac.ItemProjectileColor;
+import snownee.fruits.gadget.vac.ItemProjectileRenderer;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.KiwiGO;
+import snownee.kiwi.client.TooltipEvents;
 import snownee.kiwi.loader.ClientPlatform;
 import snownee.kiwi.util.client.ColorProviderUtil;
 import snownee.lychee.util.action.ActionRenderer;
@@ -284,6 +288,8 @@ public class ClientProxy implements ClientModInitializer {
 			ParticleProviderRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
 			ClientPlatform.registerEntityRenderer(GadgetModule.SUMMONED_BEE.getOrCreate(), BeeRenderer::new);
 			ClientPlatform.registerBlockEntityRenderer(GadgetModule.BUZZY_CRAFTER_ENTITY.getOrCreate(), BuzzyCrafterRenderer::new);
+			ClientLifecycleEvents.CLIENT_STARTED.register(_ -> TooltipEvents.CUSTOM_TOOLTIP_ITEMS.add(GadgetModule.BREWER.asItem()));
+			MenuScreens.register(GadgetModule.BREWER_MENU.getOrCreate(), BrewingStandScreen::new);
 		}
 
 		if (Hooks.ritual) {

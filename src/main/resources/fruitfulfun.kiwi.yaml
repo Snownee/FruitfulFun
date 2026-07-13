@@ -1,52 +1,52 @@
 configs:
-  - data:
+  - target: snownee.fruits.FFClientConfig
+    data:
       type: CLIENT
-    target: snownee.fruits.FFClientConfig
   - target: snownee.fruits.FFCommonConfig
 modules:
-  - data:
+  - target: snownee.fruits.bee.BeeModule
+    data:
       dependencies: '@core'
       modId: fruitfulfun
       value: bee
-    target: snownee.fruits.bee.BeeModule
-  - data:
+  - target: snownee.fruits.cherry.CherryModule
+    data:
       dependencies: '@fruit_types'
       modId: fruitfulfun
       value: cherry
-    target: snownee.fruits.cherry.CherryModule
-  - data:
+  - target: snownee.fruits.compat.farmersdelight.FarmersDelightModule
+    data:
       dependencies: farmersdelight
       value: farmersdelight
-    target: snownee.fruits.compat.farmersdelight.FarmersDelightModule
-  - data:
+  - target: snownee.fruits.CoreModule
+    data:
       dependencies: '@fruit_types'
       modId: fruitfulfun
-    target: snownee.fruits.CoreModule
-  - data:
+  - target: snownee.fruits.FFCreativeTab
+    data:
       value: creative_tab
-    target: snownee.fruits.CreativeTabModule
-  - data:
+  - target: snownee.fruits.FFBoats
+    data:
       value: boats
-    target: snownee.fruits.FFBoats
-  - data:
+  - target: snownee.fruits.FFFruitTypes
+    data:
       value: fruit_types
-    target: snownee.fruits.FFFruitTypes
-  - data:
+  - target: snownee.fruits.food.FoodModule
+    data:
       value: food
-    target: snownee.fruits.food.FoodModule
-  - data:
+  - target: snownee.fruits.gadget.GadgetModule
+    data:
       dependencies: '@core'
       modId: fruitfulfun
       value: gadget
-    target: snownee.fruits.gadget.GadgetModule
-  - data:
+  - target: snownee.fruits.pomegranate.PomegranateModule
+    data:
       dependencies: '@fruit_types'
       value: pomegranate
-    target: snownee.fruits.pomegranate.PomegranateModule
-  - data:
+  - target: snownee.fruits.ritual.RitualModule
+    data:
       dependencies: '@food'
       value: ritual
-    target: snownee.fruits.ritual.RitualModule
 optionals:
   - target: snownee.fruits.bee.BeeModule
   - target: snownee.fruits.compat.farmersdelight.FarmersDelightModule
@@ -64,6 +64,6 @@ packets:
   - target: snownee.fruits.bee.network.SSetPinkGlowPacket
   - target: snownee.fruits.bee.network.SSyncBeePacket
   - target: snownee.fruits.bee.network.SSyncPlayerPacket
-  - target: snownee.fruits.gadget.network.CClickCrafterPacket
-  - target: snownee.fruits.gadget.network.CGunShotPacket
-  - target: snownee.fruits.gadget.network.SScentAddedPacket
+  - target: snownee.fruits.gadget.crafter.CClickCrafterPacket
+  - target: snownee.fruits.gadget.scent.SScentAddedPacket
+  - target: snownee.fruits.gadget.vac.CGunShotPacket

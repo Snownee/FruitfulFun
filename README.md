@@ -46,9 +46,16 @@ Delight [Fabric]). And if it doesn't, please open an issue on GitHub.
 
 ## Known Incompatible Mods (not my fault!)
 
-- CreativeCore (Forge) - [you can manually fix it](https://github.com/Sinytra/ForgifiedFabricAPI/issues/37#issuecomment-1751684746)
-- Valkyrien Skies (Fabric) - [you can manually fix it](https://github.com/ValkyrienSkies/Valkyrien-Skies-2/issues/616)
 - OptiFine - [please use alternatives](https://optifine.alternatives.lambdaurora.dev/)
+- CreativeCore (Forge 1.20) - [you can manually fix it](https://github.com/Sinytra/ForgifiedFabricAPI/issues/37#issuecomment-1751684746)
+- ~~Valkyrien Skies (Fabric 1.20) - [you can manually fix it](https://github.com/ValkyrienSkies/Valkyrien-Skies-2/issues/616)~~
+
+## Vanilla Content Changes
+
+- The particles of the cherry leaves have been overhauled, and you can disable this feature in the configuration.
+- The exploit to collect unlimited dragon breath from an effect cloud (MC-249698) has been patched, as the mod adds a way to automate the dragon breath production. You can disable this feature in the configuration.
+- Bees now slowly regenerate health on their own over time. You can disable this feature in the configuration.
+- (26.1) Bees now have a randomly generated name when they are born. You can disable this feature in the configuration.
 
 ## Commercial Use
 
