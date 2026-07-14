@@ -55,6 +55,7 @@ import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.genetics.BeeHasTrait;
+import snownee.fruits.bee.genetics.BeeIsVariant;
 import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Mutagen;
 import snownee.fruits.bee.genetics.MutagenItem;
@@ -93,6 +94,9 @@ public class BeeModule extends AbstractModule {
 			HybridizingRecipe.STREAM_CODEC));
 	public static final KiwiGO<ContextualConditionType<BeeHasTrait>> BEE_HAS_TRAIT = go(
 			BeeHasTrait.Type::new,
+			LycheeRegistries.CONTEXTUAL.key());
+	public static final KiwiGO<ContextualConditionType<BeeIsVariant>> BEE_IS_VARIANT = go(
+			BeeIsVariant.Type::new,
 			LycheeRegistries.CONTEXTUAL.key());
 	public static final KiwiGO<PostActionType<TransformBees>> TRANSFORM_BEES = go(
 			TransformBees.Type::new,

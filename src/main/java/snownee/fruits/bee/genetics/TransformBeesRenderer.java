@@ -9,8 +9,11 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import snownee.fruits.FFRegistries;
+import snownee.lychee.util.RegistryEntryDisplay;
 import snownee.lychee.util.action.ItemBasedActionRenderer;
 
+//TODO actually render bees
 public class TransformBeesRenderer implements ItemBasedActionRenderer<TransformBees> {
 	@Override
 	public ItemStackTemplate getItem(TransformBees transformBees) {
@@ -31,6 +34,9 @@ public class TransformBeesRenderer implements ItemBasedActionRenderer<TransformB
 					.append(ComponentUtils.formatList(
 							action.removeTraits().stream().map(Trait::displayName).toList(),
 							ComponentUtils.DEFAULT_SEPARATOR)));
+		}
+		if (action.variant().isPresent()) {
+			baseTooltips.add(RegistryEntryDisplay.of(action.variant().get(), FFRegistries.BEE_VARIANT_KEY));
 		}
 		return baseTooltips;
 	}

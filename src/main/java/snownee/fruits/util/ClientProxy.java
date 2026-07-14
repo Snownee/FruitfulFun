@@ -15,7 +15,6 @@ import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import org.jspecify.annotations.Nullable;
 
@@ -50,12 +49,11 @@ import net.minecraft.client.renderer.entity.BeeRenderer;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -82,6 +80,7 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.BeeVariant;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.EditGeneNameScreen;
 import snownee.fruits.bee.genetics.MutagenTintSource;
@@ -111,8 +110,7 @@ public class ClientProxy implements ClientModInitializer {
 	private static final ExtraModelKey<BlockStateModel> CHERRY_CROWN_MODEL = ExtraModelKey.create();
 	private static final ExtraModelKey<BlockStateModel> REDLOVE_CROWN_MODEL = ExtraModelKey.create();
 	public static final RenderStateDataKey<ItemStack> SADDLE = RenderStateDataKey.create(() -> "saddle");
-	public static final RenderStateDataKey<Identifier> TEXTURE = RenderStateDataKey.create(() -> "texture");
-	public static final RenderStateDataKey<Function<Identifier, RenderType>> RENDER_TYPE = RenderStateDataKey.create(() -> "render_type");
+	public static final RenderStateDataKey<Holder<BeeVariant>> BEE_VARIANT = RenderStateDataKey.create(() -> "bee_variant");
 	public static final RenderStateDataKey<Unit> NO_BOB = RenderStateDataKey.create(() -> "no_bob");
 	public static final ModelLayerLocation BEE_SADDLE = new ModelLayerLocation(FruitfulFun.id("bee"), "saddle");
 

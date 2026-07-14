@@ -5,17 +5,18 @@ import java.util.Objects;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.bee.Bee;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.BeeVariant;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
@@ -26,7 +27,7 @@ import snownee.kiwi.network.PlayPacketHandler;
 public record SSyncBeePacket(
 		int id,
 		List<UUID> trusted,
-		String texture,
+		Holder<BeeVariant> variant,
 		List<Trait> traits,
 		long mutagenEndsIn) implements CustomPacketPayload {
 	public static final CustomPacketPayload.Type<SSyncBeePacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("sync_bee"));
@@ -35,8 +36,8 @@ public record SSyncBeePacket(
 			SSyncBeePacket::id,
 			UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()),
 			SSyncBeePacket::trusted,
-			ByteBufCodecs.STRING_UTF8,
-			SSyncBeePacket::texture,
+			BeeVariant.STREAM_CODEC,
+			SSyncBeePacket::variant,
 			Trait.STREAM_CODEC.apply(ByteBufCodecs.list()),
 			SSyncBeePacket::traits,
 			ByteBufCodecs.LONG,
@@ -56,11 +57,7 @@ public record SSyncBeePacket(
 				if (entity instanceof Bee) {
 					BeeAttributes attributes = BeeAttributes.of(entity);
 					attributes.setTrusted(packet.trusted());
-					if (packet.texture().isEmpty()) {
-						attributes.setTexture(null);
-					} else {
-						attributes.setTexture(Identifier.tryParse(packet.texture()));
-					}
+					attributes.setForcedVariant(packet.variant());
 					attributes.genes().setTraits(packet.traits());
 					attributes.setMutagenEndsIn(packet.mutagenEndsIn(), entity.level().getGameTime());
 				}
@@ -84,11 +81,10 @@ public record SSyncBeePacket(
 
 	private static SSyncBeePacket create(Bee bee) {
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		Identifier texture = attributes.texture();
 		return new SSyncBeePacket(
 				bee.getId(),
 				attributes.getTrusted(),
-				texture == null ? "" : texture.toString(),
+				attributes.variant(),
 				List.copyOf(attributes.genes().traits()),
 				attributes.getMutagenEndsIn());
 	}

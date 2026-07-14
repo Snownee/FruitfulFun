@@ -5,8 +5,10 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
+import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeVariants;
 import snownee.fruits.cherry.datagen.CherryBlockLoot;
 import snownee.fruits.compat.farmersdelight.FarmersDelightBlockLoot;
 import snownee.fruits.food.datagen.FoodBlockLoot;
@@ -53,5 +55,6 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 	public void buildRegistry(RegistrySetBuilder registryBuilder) {
 		registryBuilder.add(Registries.CONFIGURED_FEATURE, FFDynamicRegistryProvider::configureConfiguredFeatures);
 		registryBuilder.add(Registries.PLACED_FEATURE, FFDynamicRegistryProvider::configurePlacedFeatures);
+		registryBuilder.add(FFRegistries.BEE_VARIANT_KEY, BeeVariants::bootstrap);
 	}
 }

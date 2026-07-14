@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.animal.bee.Bee;
@@ -27,7 +28,11 @@ public class BeeDebugProvider implements IServerDataProvider<EntityAccessor> {
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		data.putBoolean("Trusted", attributes.trusts(accessor.getPlayer().getUUID()));
 //		data.putBoolean("Rolling", bee.isRolling());
-		data.store("BeeAttributes", BeeAttributes.CODEC, attributes);
+		data.store(
+				"BeeAttributes",
+				BeeAttributes.CODEC,
+				accessor.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE),
+				attributes);
 	}
 
 	@Override

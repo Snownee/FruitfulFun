@@ -1,6 +1,7 @@
 package snownee.fruits.bee.genetics;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.MapCodec;
@@ -12,13 +13,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Bees;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
+import snownee.fruits.FFRegistries;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.bee.BeeVariant;
 import snownee.lychee.context.ActionContext;
 import snownee.lychee.util.Reference;
 import snownee.lychee.util.action.PostAction;
@@ -31,7 +35,8 @@ public record TransformBees(
 		PostActionCommonProperties commonProperties,
 		Reference target,
 		List<Trait> addTraits,
-		List<Trait> removeTraits) implements PostAction {
+		List<Trait> removeTraits,
+		Optional<ResourceKey<BeeVariant>> variant) implements PostAction {
 
 	@Override
 	public PostActionType<?> type() {
@@ -58,17 +63,17 @@ public record TransformBees(
 				// See Mob.java
 				entityData.putBoolean("PersistenceRequired", true);
 				CompoundTag attributesTag = entityData.getCompoundOrEmpty("FruitfulFun");
-				if (!attributesTag.contains("Genes")) {
-					continue;
+				if ((!addTraits.isEmpty() || !removeTraits.isEmpty()) && attributesTag.contains("Genes")) {
+					GeneData geneData = attributesTag.read("Genes", GeneData.CODEC).orElseGet(GeneData::new);
+					for (Trait trait : addTraits) {
+						geneData.addExtraTrait(trait);
+					}
+					for (Trait trait : removeTraits) {
+						geneData.removeExtraTrait(trait);
+					}
+					attributesTag.store("Genes", GeneData.CODEC, geneData);
 				}
-				GeneData geneData = attributesTag.read("Genes", GeneData.CODEC).orElseGet(GeneData::new);
-				for (Trait trait : addTraits) {
-					geneData.addExtraTrait(trait);
-				}
-				for (Trait trait : removeTraits) {
-					geneData.removeExtraTrait(trait);
-				}
-				attributesTag.store("Genes", GeneData.CODEC, geneData);
+				variant.ifPresent(key -> attributesTag.putString("ForcedVariant", key.toString()));
 				entityData.put("FruitfulFun", attributesTag);
 				transformed.add(new BeehiveBlockEntity.Occupant(
 						TypedEntityData.of(EntityType.BEE, entityData),
@@ -86,7 +91,9 @@ public record TransformBees(
 				ExtraCodecs.compactListCodec(Trait.CODEC).optionalFieldOf("add_trait", List.of()).forGetter(TransformBees::addTraits),
 				ExtraCodecs.compactListCodec(Trait.CODEC)
 						.optionalFieldOf("remove_trait", List.of())
-						.forGetter(TransformBees::removeTraits)).apply(instance, TransformBees::new));
+						.forGetter(TransformBees::removeTraits),
+				ResourceKey.codec(FFRegistries.BEE_VARIANT_KEY).optionalFieldOf("variant").forGetter(TransformBees::variant)
+		).apply(instance, TransformBees::new));
 		public static final StreamCodec<RegistryFriendlyByteBuf, TransformBees> STREAM_CODEC = StreamCodec.composite(
 				PostActionCommonProperties.STREAM_CODEC,
 				TransformBees::commonProperties,
@@ -96,6 +103,8 @@ public record TransformBees(
 				TransformBees::addTraits,
 				Trait.STREAM_CODEC.apply(ByteBufCodecs.list()),
 				TransformBees::removeTraits,
+				ResourceKey.streamCodec(FFRegistries.BEE_VARIANT_KEY).apply(ByteBufCodecs::optional),
+				TransformBees::variant,
 				TransformBees::new);
 
 		@Override

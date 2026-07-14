@@ -13,14 +13,16 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer;
 import net.minecraft.client.renderer.entity.state.BeeRenderState;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
+import snownee.fruits.bee.BeeVariant;
+import snownee.fruits.bee.BeeVariants;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.util.ClientProxy;
 
@@ -53,9 +55,9 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 		if (!Hooks.bee) {
 			return;
 		}
-		Identifier texture = state.getData(ClientProxy.TEXTURE);
-		if (texture != null) {
-			texture = texture.withPath($ -> {
+		Holder<BeeVariant> variant = state.getData(ClientProxy.BEE_VARIANT);
+		if (variant != null && !variant.is(BeeVariants.NORMAL) && variant.value().texture().isPresent()) {
+			Identifier texture = variant.value().texture().get().withPath($ -> {
 				if (state.isAngry && state.hasNectar) {
 					$ += "_angry_nectar";
 				} else if (state.isAngry) {
@@ -81,12 +83,9 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeRenderState, 
 		}
 		BeeAttributes attributes = BeeAttributes.of(entity);
 		state.setData(ClientProxy.SADDLE, entity.getItemBySlot(EquipmentSlot.SADDLE));
-		state.setData(ClientProxy.TEXTURE, attributes.texture());
+		state.setData(ClientProxy.BEE_VARIANT, attributes.variant());
 		if (attributes.hasTrait(Trait.GHOST)) {
-			state.setData(ClientProxy.RENDER_TYPE, RenderTypes::entityTranslucent);
 			state.hasNectar = false;
-		} else if (attributes.hasTrait(Trait.WITHER_TOLERANT)) {
-			state.setData(ClientProxy.RENDER_TYPE, RenderTypes::entityCutout);
 		}
 	}
 }

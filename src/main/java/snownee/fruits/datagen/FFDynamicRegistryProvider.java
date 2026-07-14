@@ -40,6 +40,7 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 	protected void configure(HolderLookup.Provider registries, FabricDynamicRegistryProvider.Entries entries) {
 		entries.addAll(registries.lookupOrThrow(Registries.CONFIGURED_FEATURE));
 		entries.addAll(registries.lookupOrThrow(Registries.PLACED_FEATURE));
+		entries.addAll(registries.lookupOrThrow(FFRegistries.BEE_VARIANT_KEY));
 		addBannerPatterns(entries);
 	}
 

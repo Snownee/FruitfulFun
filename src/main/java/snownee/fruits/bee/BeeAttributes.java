@@ -8,14 +8,18 @@ import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -24,6 +28,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.GeneData;
@@ -37,7 +42,7 @@ public class BeeAttributes {
 			GeneData.CODEC.fieldOf("Genes").forGetter(BeeAttributes::genes),
 			Codec.list(UUIDUtil.CODEC).optionalFieldOf("Trusted", List.of()).forGetter(BeeAttributes::getTrusted),
 			Codec.list(UUIDUtil.CODEC).optionalFieldOf("Inspected", List.of()).forGetter(BeeAttributes::getInspected),
-			Identifier.CODEC.optionalFieldOf("Texture").forGetter($ -> Optional.ofNullable($.texture())),
+			BeeVariant.CODEC.optionalFieldOf("ForcedVariant").forGetter($ -> Optional.ofNullable($.forcedVariant)),
 			Codec.LONG.optionalFieldOf("MutagenEndsIn", 0L).forGetter(BeeAttributes::getMutagenEndsIn)
 	).apply(i, BeeAttributes::new));
 
@@ -50,7 +55,9 @@ public class BeeAttributes {
 	private List<UUID> trusted = List.of();
 	private Set<UUID> inspected = Set.of();
 	@Nullable
-	private Identifier texture;
+	private Holder<BeeVariant> variant;
+	@Nullable
+	private Holder<BeeVariant> forcedVariant;
 	private long mutagenEndsIn;
 
 	public static BeeAttributes of(Object bee) {
@@ -67,14 +74,15 @@ public class BeeAttributes {
 			GeneData genes,
 			List<UUID> trusted,
 			List<UUID> inspected,
-			Optional<Identifier> texture,
+			Optional<Holder<BeeVariant>> forcedVariant,
 			long mutagenEndsIn) {
 		this.pollens.addAll(pollens);
 		this.genes = genes;
 		this.trusted = trusted;
 		this.inspected = Set.copyOf(inspected);
-		this.texture = texture.orElse(null);
+		this.forcedVariant = forcedVariant.orElse(null);
 		this.mutagenEndsIn = mutagenEndsIn;
+		dirty = true;
 	}
 
 	public void setTrusted(List<UUID> trusted) {
@@ -140,7 +148,7 @@ public class BeeAttributes {
 
 	public void updateTraits(Bee bee) {
 		genes.updateTraits();
-		updateTexture();
+		updateTexture(bee.registryAccess().lookupOrThrow(FFRegistries.BEE_VARIANT_KEY));
 		if (bee.level().isClientSide()) {
 			return;
 		}
@@ -175,25 +183,31 @@ public class BeeAttributes {
 		dirty = true;
 	}
 
-	public void updateTexture() {
-		setTexture(null);
-		maybeUseTexture(Trait.GHOST);
-		maybeUseTexture(Trait.PINK);
-		maybeUseTexture(Trait.WITHER_TOLERANT);
+	public void updateTexture(HolderGetter<BeeVariant> holderGetter) {
+		setVariant(holderGetter, BeeVariants.NORMAL);
+		maybeUseVariant(holderGetter, Trait.GHOST);
+		maybeUseVariant(holderGetter, Trait.PINK);
+		maybeUseVariant(holderGetter, Trait.WITHER_TOLERANT);
 	}
 
-	private void maybeUseTexture(Trait trait) {
-		if (texture == null && hasTrait(trait)) {
-			setTexture(trait.texture());
+	private void maybeUseVariant(HolderGetter<BeeVariant> holderGetter, Trait trait) {
+		Preconditions.checkArgument(trait.variant().isPresent(), "Trait %s does not have a variant", trait);
+		if (variant == null || variant.is(BeeVariants.NORMAL) && hasTrait(trait)) {
+			setVariant(holderGetter, trait.variant().get());
 		}
 	}
 
-	public @Nullable Identifier texture() {
-		return texture;
+	public Holder<BeeVariant> variant() {
+		return forcedVariant != null ? forcedVariant : Objects.requireNonNull(variant);
 	}
 
-	public void setTexture(@Nullable Identifier texture) {
-		this.texture = texture;
+	public void setForcedVariant(Holder<BeeVariant> forcedVariant) {
+		this.forcedVariant = forcedVariant;
+		dirty = true;
+	}
+
+	private void setVariant(HolderGetter<BeeVariant> holderGetter, ResourceKey<BeeVariant> variant) {
+		this.variant = holderGetter.getOrThrow(variant);
 		dirty = true;
 	}
 

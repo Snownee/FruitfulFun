@@ -155,6 +155,8 @@
   "container.fruitfulfun.brewer": "Brewer",
   "contextual.fruitfulfun.bee_has_trait": "Bee has trait: %s",
   "contextual.fruitfulfun.bee_has_trait.not": "Bee doesn't have trait: %s",
+  "contextual.fruitfulfun.bee_variant_is": "Bee variant is: %s",
+  "contextual.fruitfulfun.bee_variant_is.not": "Bee variant isn't: %s",
   "death.attack.fruitfulfun.explosion": "%1$s was blown up by pomegranate",
   "death.attack.fruitfulfun.explosion.player": "%1$s was blown up by %2$s's pomegranate",
   "death.attack.fruitfulfun.explosion.player.item": "%1$s was blown up by %2$s using %3$s",

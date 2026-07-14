@@ -13,8 +13,10 @@ import net.minecraft.client.renderer.entity.state.BeeRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import snownee.fruits.Hooks;
+import snownee.fruits.bee.BeeVariant;
 import snownee.fruits.util.ClientProxy;
 
 @Mixin(LivingEntityRenderer.class)
@@ -29,8 +31,15 @@ public class LivingEntityRendererMixin {
 			Identifier texture,
 			Operation<RenderType> original,
 			@Local(argsOnly = true, name = "state") LivingEntityRenderState state) {
-		if (Hooks.bee && state instanceof BeeRenderState && state.getData(ClientProxy.RENDER_TYPE) != null) {
-			return RenderTypes.entityTranslucent(texture);
+		if (Hooks.bee && state instanceof BeeRenderState) {
+			Holder<BeeVariant> variant = state.getData(ClientProxy.BEE_VARIANT);
+			if (variant != null) {
+				return switch (variant.value().renderType()) {
+					case CutoutCull -> RenderTypes.entityCutoutCull(texture);
+					case Cutout -> RenderTypes.entityCutout(texture);
+					case Translucent -> RenderTypes.entityTranslucent(texture);
+				};
+			}
 		}
 		return original.call(instance, texture);
 	}

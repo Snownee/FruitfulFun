@@ -204,8 +204,10 @@ public final class Hooks {
 					}
 				}
 				attributes.updateTraits(bee);
-				var textures = List.of(FruitfulFun.id("pink_bee"), FruitfulFun.id("ghost_bee"), FruitfulFun.id("wither_bee"));
-				attributes.setTexture(textures.get(bee.getRandom().nextInt(textures.size())));
+				attributes.setForcedVariant(bee.registryAccess()
+						.lookupOrThrow(FFRegistries.BEE_VARIANT_KEY)
+						.getRandom(bee.getRandom())
+						.orElseThrow());
 				attributes.addTrusted(player.getUUID());
 			}
 			return InteractionResult.CONSUME;
