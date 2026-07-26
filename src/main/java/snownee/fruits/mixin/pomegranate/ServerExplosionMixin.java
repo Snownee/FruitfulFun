@@ -28,10 +28,11 @@ public class ServerExplosionMixin {
 	private float radius;
 
 	@WrapOperation(
-			method = "hurtEntities",
+			method = "hurtEntities*",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/entity/Entity;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+					target = "Lnet/minecraft/world/entity/Entity;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"),
+			require = 0)
 	private boolean clampGrenadeExplosionDamage(
 			Entity entity,
 			ServerLevel level,
@@ -46,8 +47,9 @@ public class ServerExplosionMixin {
 	}
 
 	@WrapOperation(
-			method = "hurtEntities",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;push(Lnet/minecraft/world/phys/Vec3;)V"))
+			method = "hurtEntities*",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;push(Lnet/minecraft/world/phys/Vec3;)V"),
+			require = 0)
 	private void modifyDeltaMovement(Entity entity, Vec3 impulse, Operation<Void> original) {
 		if (FFDamageTypes.isGrenadeExplosion(damageSource)) {
 			impulse = Hooks.modifyExplosionDeltaMovement(entity, impulse, radius);

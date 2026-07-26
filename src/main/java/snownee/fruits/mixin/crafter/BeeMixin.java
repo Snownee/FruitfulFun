@@ -21,7 +21,8 @@ public class BeeMixin {
 	@WrapOperation(
 			method = "getBeehiveBlockEntity", at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntityType;)Ljava/util/Optional;"))
+			target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntityType;)Ljava/util/Optional;"),
+			require = 0)
 	private Optional<? extends BeehiveBlockEntity> getBeehiveBlockEntity(
 			Level level,
 			BlockPos blockPos,

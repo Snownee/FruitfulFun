@@ -1,0 +1,7 @@
+// 26.1.2	-999999999-01-01T00:00:00	Fruitful Fun/Tags for minecraft:entity_type
+6d1a66aa70d5a1805de9f33fe2bdcb966c4c3b3a data/fruitfulfun/tags/entity_type/cannot_haunt.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/fruitfulfun/tags/entity_type/vac_movable.json
+c8b884ed2c3b957c4e963008514a0cfdbe3a7b8d data/minecraft/tags/entity_type/boat.json
+4c073b476785113705dfd3c6b286a337ddbd56b0 data/minecraft/tags/entity_type/can_equip_saddle.json
+4c073b476785113705dfd3c6b286a337ddbd56b0 data/minecraft/tags/entity_type/dismounts_underwater.json
+93fbbf5fe3985f27ba22c06921ddf6c9273b663d data/minecraft/tags/entity_type/fall_damage_immune.json

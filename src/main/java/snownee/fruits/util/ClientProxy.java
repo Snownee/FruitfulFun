@@ -15,6 +15,7 @@ import static snownee.fruits.cherry.CherryModule.PETAL_REDLOVE;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.jspecify.annotations.Nullable;
 
@@ -31,6 +32,9 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
@@ -54,6 +58,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -271,6 +276,20 @@ public class ClientProxy implements ClientModInitializer {
 			});
 
 			ParticleProviderRegistry.getInstance().register(BeeModule.GHOST.getOrCreate(), GhostParticle.EmissiveProvider::new);
+
+			HudElement empty = (_, _) -> {};
+			Function<HudElement, HudElement> replacer = o -> {
+				if (Minecraft.getInstance().player instanceof FFPlayer player && player.fruits$isHaunting()) {
+					return empty;
+				}
+				return o;
+			};
+			for (Identifier id : List.of(
+					VanillaHudElements.EXPERIENCE_LEVEL,
+					VanillaHudElements.HEALTH_BAR,
+					VanillaHudElements.HOTBAR)) {
+				HudElementRegistry.replaceElement(id, replacer);
+			}
 		}
 
 		if (Hooks.food) {

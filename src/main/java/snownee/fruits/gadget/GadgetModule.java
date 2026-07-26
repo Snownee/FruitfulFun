@@ -285,8 +285,10 @@ public class GadgetModule extends AbstractModule {
 	@Override
 	protected void init(InitEvent event) {
 		event.enqueueWork(() -> {
-			Holder<PoiType> holder = BuiltInRegistries.POINT_OF_INTEREST_TYPE.wrapAsHolder(BUZZY_CRAFTER_POI.get());
-			PoiTypes.registerBlockStates(holder, holder.value().matchingStates());
+			if (!Hooks.neoforge) {
+				Holder<PoiType> holder = BuiltInRegistries.POINT_OF_INTEREST_TYPE.wrapAsHolder(BUZZY_CRAFTER_POI.get());
+				PoiTypes.registerBlockStates(holder, holder.value().matchingStates());
+			}
 		});
 	}
 }

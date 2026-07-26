@@ -76,3 +76,5 @@ accessible field net/minecraft/client/Minecraft clientTickCount J
 accessible field net/minecraft/world/inventory/AbstractContainerMenu menuType Lnet/minecraft/world/inventory/MenuType;
 mutable field net/minecraft/world/inventory/AbstractContainerMenu menuType Lnet/minecraft/world/inventory/MenuType;
 accessible field net/minecraft/world/inventory/BrewingStandMenu brewingStandData Lnet/minecraft/world/inventory/ContainerData;
+
+accessible field net/minecraft/world/entity/ai/attributes/AttributeSupplier instances Ljava/util/Map;

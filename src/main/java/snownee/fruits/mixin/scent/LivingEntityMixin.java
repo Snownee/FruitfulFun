@@ -1,8 +1,11 @@
 package snownee.fruits.mixin.scent;
 
+import java.util.Map;
 import java.util.Objects;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -11,7 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.google.common.math.IntMath;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +31,9 @@ import snownee.fruits.gadget.scent.ScentType;
 
 @Mixin(value = LivingEntity.class, priority = 600)
 public abstract class LivingEntityMixin extends Entity {
+	@Shadow
+	public abstract boolean hasEffect(Holder<MobEffect> effect);
+
 	public LivingEntityMixin(EntityType<?> entityType, Level level) {
 		super(entityType, level);
 	}
@@ -39,15 +48,17 @@ public abstract class LivingEntityMixin extends Entity {
 	@WrapOperation(
 			method = {"forceAddEffect", "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z"},
 			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/world/entity/LivingEntity;canBeAffected(Lnet/minecraft/world/effect/MobEffectInstance;)Z"))
-	private boolean canBeAffected(
-			LivingEntity entity,
-			MobEffectInstance newEffect,
-			Operation<Boolean> original) {
-		boolean result = original.call(entity, newEffect);
-		if (result && Hooks.gadget && !Hooks.scentEffects.contains(newEffect.getEffect().value()) && !newEffect.isInfiniteDuration() &&
-				!newEffect.getEffect().value().isInstantenous() && entity.hasEffect(GadgetModule.WEAK_SCENT.holderOrThrow())) {
+					value = "FIELD",
+					target = "Lnet/minecraft/world/entity/LivingEntity;activeEffects:Ljava/util/Map;",
+					opcode = Opcodes.GETFIELD,
+					ordinal = 0))
+	private Map<Holder<MobEffect>, MobEffectInstance> canBeAffected(
+			LivingEntity instance,
+			Operation<Map<Holder<MobEffect>, MobEffectInstance>> original,
+			@Local(argsOnly = true, name = "newEffect") MobEffectInstance newEffect) {
+		Map<Holder<MobEffect>, MobEffectInstance> result = original.call(instance);
+		if (Hooks.gadget && !Hooks.scentEffects.contains(newEffect.getEffect().value()) && !newEffect.isInfiniteDuration() &&
+				!newEffect.getEffect().value().isInstantenous() && hasEffect(GadgetModule.WEAK_SCENT.holderOrThrow())) {
 			newEffect.duration = IntMath.saturatedAdd(newEffect.getDuration(), newEffect.getDuration());
 		}
 		return result;

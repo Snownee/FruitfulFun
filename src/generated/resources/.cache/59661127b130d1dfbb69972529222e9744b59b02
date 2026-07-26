@@ -1,0 +1,6 @@
+// 26.1.2	-999999999-01-01T00:00:00	Fruitful Fun/[Seasonal] Tags for minecraft:block
+858432687ce879c1ce3dabfe10fbd8e2df8ba3ec data/sereneseasons/tags/block/autumn_crops.json
+a677391f01fcbebdf55eae0a3d8d63591eebf83f data/sereneseasons/tags/block/spring_crops.json
+eb8d29bfccd79d0af07d265396961538a8b8b90b data/sereneseasons/tags/block/summer_crops.json
+68e369e8c8c9065dd827deb783b798d2717ec40a data/sereneseasons/tags/block/unbreakable_infertile_crops.json
+7bd9683f83b70a6221c5d15d5d0e1ab4ec4db507 data/sereneseasons/tags/block/winter_crops.json

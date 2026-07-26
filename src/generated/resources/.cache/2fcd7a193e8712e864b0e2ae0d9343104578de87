@@ -1,0 +1,5 @@
+// 26.1.2	-999999999-01-01T00:00:00	Fruitful Fun/Block Loot Tables - fruitfulfun:pomegranate
+e7a94350ab457b2cd74ccde348b53cf3a2d772bb data/fruitfulfun/loot_table/blocks/pomegranate.json
+2c682971d1dc0a05906b9d3585cdb5a29fe9d271 data/fruitfulfun/loot_table/blocks/pomegranate_leaves.json
+b98f4db0a45b91e353539792397ff8cc312617f6 data/fruitfulfun/loot_table/blocks/pomegranate_sapling.json
+b96f65ff2ee61a6de63ba85d79ddf3e9ca2b26bd data/fruitfulfun/loot_table/blocks/potted_pomegranate.json

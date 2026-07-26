@@ -81,6 +81,7 @@ public final class Hooks {
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
 	public static boolean jade = Platform.isModLoaded("jade");
 	public static boolean hauntedHarvest = Platform.isModLoaded("hauntedharvest");
+	public static boolean neoforge = Platform.isModLoaded("neoforge");
 	public static final Set<MobEffect> scentEffects = Sets.newHashSet();
 
 	private Hooks() {

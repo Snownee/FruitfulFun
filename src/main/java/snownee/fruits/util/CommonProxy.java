@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
@@ -36,6 +35,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -55,6 +55,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -99,6 +101,7 @@ import snownee.kiwi.KiwiModules;
 import snownee.kiwi.Mod;
 import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
+import snownee.kiwi.recipe.CustomIngredientSerializer;
 import snownee.kiwi.util.KUtil;
 
 @Mod(FruitfulFun.ID)
@@ -224,7 +227,9 @@ public class CommonProxy implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		Kiwi.onInitialize();
+		if (!Hooks.neoforge) {
+			Kiwi.onInitialize();
+		}
 		addFeature("citron");
 		addFeature("tangerine");
 		addFeature("lime");
@@ -346,7 +351,17 @@ public class CommonProxy implements ModInitializer {
 			});
 		}
 
-		FabricDefaultAttributeRegistry.register(GadgetModule.SUMMONED_BEE.getOrCreate(), Bee.createAttributes());
+		// Use this way to make our mod compatible with FFAPI
+		FabricDefaultAttributeRegistry.MODIFY.register(context -> {
+			FabricDefaultAttributeRegistry.register(GadgetModule.SUMMONED_BEE.getOrCreate(), AttributeSupplier.builder());
+			context.modify(
+					GadgetModule.SUMMONED_BEE.getOrCreate(), (_, builder) -> {
+						AttributeSupplier supplier = Bee.createAttributes().build();
+						for (Holder<Attribute> holder : supplier.instances.keySet()) {
+							builder.add(holder, supplier.getBaseValue(holder));
+						}
+					});
+		});
 	}
 
 	public static void onScentTypeAdded(Identifier id, ScentType scentType) {
@@ -360,8 +375,9 @@ public class CommonProxy implements ModInitializer {
 				Objects.requireNonNull(KUtil.RL(id, FruitfulFun.ID)));
 		BiomeModifications.addFeature(
 				context -> context.hasTag(ConventionalBiomeTags.IS_DECIDUOUS_TREE) ||
-						context.hasTag(ConventionalBiomeTags.IS_JUNGLE_TREE) ||
-						context.hasFeature(VegetationFeatures.TREES_PLAINS), GenerationStep.Decoration.VEGETAL_DECORATION, key);
+						context.hasTag(ConventionalBiomeTags.IS_JUNGLE_TREE) || context.hasFeature(VegetationFeatures.TREES_PLAINS),
+				GenerationStep.Decoration.VEGETAL_DECORATION,
+				key);
 	}
 
 	@Nullable

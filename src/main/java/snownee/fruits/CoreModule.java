@@ -77,6 +77,7 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.Categories;
 import snownee.kiwi.ItemObject;
+import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
@@ -314,7 +315,9 @@ public final class CoreModule extends AbstractModule {
 				type.poiType = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getOrThrow(ResourceKey.create(
 						Registries.POINT_OF_INTEREST_TYPE,
 						id));
-				PoiTypes.registerBlockStates(type.poiType, type.poiType.value().matchingStates());
+				if (!Hooks.neoforge) {
+					PoiTypes.registerBlockStates(type.poiType, type.poiType.value().matchingStates());
+				}
 				Platform.registerCompostable(0.5f, type.fruit.get());
 				Platform.registerCompostable(0.3f, type.leaves.get());
 				Platform.registerCompostable(0.3f, type.sapling.get());

@@ -83,7 +83,7 @@ block.fruitfulfun.peace_candle.tip.shift: Prevent hostile mobs and bats from spa
 block.fruitfulfun.buzzy_crafter.tip.shift: Collect power from returning bees.
 item.fruitfulfun.vac_gun: Mini-Vac
 item.fruitfulfun.vac_gun_casing: Mini-Vac Casing
-block.fruitfulfun.brewer.tip.shift: A brewing stand that dispenses products. After continuously brewing the same product, it provides a speed bonus of up to +100%.
+block.fruitfulfun.brewer.tip.shift: A brewing stand that dispenses products. After continuously brewing the same product, it provides a speed bonus of up to +100%%.
 
 recipeType.fruitfulfun.hybridizing: Bee Pollinating
 recipeType.fruitfulfun.dragon_ritual: Dragon Ritual
