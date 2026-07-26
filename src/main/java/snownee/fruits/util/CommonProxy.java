@@ -93,7 +93,6 @@ import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentType;
 import snownee.fruits.gadget.vac.VacGunItem;
-import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiModuleContainer;
@@ -101,7 +100,6 @@ import snownee.kiwi.KiwiModules;
 import snownee.kiwi.Mod;
 import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
-import snownee.kiwi.recipe.CustomIngredientSerializer;
 import snownee.kiwi.util.KUtil;
 
 @Mod(FruitfulFun.ID)
@@ -282,7 +280,6 @@ public class CommonProxy implements ModInitializer {
 			}
 		});
 
-		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
 		LycheeCompat.init();
 	}
 

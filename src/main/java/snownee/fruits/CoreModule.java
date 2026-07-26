@@ -70,6 +70,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.levelgen.foliageplacers.Fruitify;
+import snownee.fruits.ritual.BeehiveIngredient;
 import snownee.fruits.ritual.CollectDragonBreathDispenseBehavior;
 import snownee.fruits.util.CommonProxy;
 import snownee.fruits.util.ExtinguishFireConsumeEffect;
@@ -77,7 +78,6 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.Categories;
 import snownee.kiwi.ItemObject;
-import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
@@ -89,6 +89,7 @@ import snownee.kiwi.block.ModBlock;
 import snownee.kiwi.item.ModItem;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.loader.event.InitEvent;
+import snownee.kiwi.recipe.CustomIngredientSerializer;
 
 @KiwiModule(modId = FruitfulFun.ID, dependencies = "@fruit_types")
 public final class CoreModule extends AbstractModule {
@@ -283,6 +284,7 @@ public final class CoreModule extends AbstractModule {
 	protected void addEntries() {
 		createPoiTypes(this);
 		CommonProxy.addBuiltinPacks();
+		CustomIngredientSerializer.register(BeehiveIngredient.SERIALIZER);
 	}
 
 	public static void createPoiTypes(AbstractModule module) {
