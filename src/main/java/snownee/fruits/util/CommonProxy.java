@@ -74,6 +74,7 @@ import net.minecraft.world.level.chunk.EmptyLevelChunk;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.neoforged.fml.common.Mod;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FFRegistries;
@@ -97,7 +98,6 @@ import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiModuleContainer;
 import snownee.kiwi.KiwiModules;
-import snownee.kiwi.Mod;
 import snownee.kiwi.config.KiwiConfigManager;
 import snownee.kiwi.loader.Platform;
 import snownee.kiwi.util.KUtil;
@@ -226,7 +226,7 @@ public class CommonProxy implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		if (!Hooks.neoforge) {
-			Kiwi.onInitialize();
+//			Kiwi.onInitialize();
 		}
 		addFeature("citron");
 		addFeature("tangerine");

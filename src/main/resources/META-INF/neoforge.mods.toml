@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="ARR"
+issueTrackerURL="https://github.com/Snownee/FruitfulFun/issues"
+
+[[mods]]
+modId="fruitfulfun"
+version="${file.jarVersion}"
+displayName="Fruitful Fun"
+description="Introduces insightful content featuring fruits and beekeeping"
+authors="Snownee"
+credits="WZD, MalayP, minzhi, PixelCraft, VVVHY"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/fruit-trees"
+logoFile="assets/fruitfulfun/icon.png"
+
+[[dependencies.fruitfulfun]]
+modId="launchpad"
+type="required"
+versionRange="*"
+ordering="NONE"
+side="BOTH"
+
+[properties]
+"launchpad:placeholder"=true
