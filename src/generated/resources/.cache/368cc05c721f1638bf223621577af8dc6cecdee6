@@ -1,4 +1,4 @@
-// 1.20.1	2026-07-31T19:13:33.7935561	Fruitful Fun/Block Loot Tables - fruitfulfun:core
+// 1.20.1	2026-08-01T05:45:59.7702391	Fruitful Fun/Block Loot Tables - fruitfulfun:core
 e344bf86bede4d6e32101f49e46f1ee532c2e5db data\fruitfulfun\loot_tables\blocks\citrus_stairs.json
 a38cdc0a290d5837a86de7ef36f924d42b1134ad data\fruitfulfun\loot_tables\blocks\citrus_fence_gate.json
 281f55f7af9017a1e1fe6610093ca431153bb39d data\fruitfulfun\loot_tables\blocks\lime_sapling.json
@@ -9,14 +9,14 @@ d5fd0505e26446abfd550fb5080bc742754527fc data\fruitfulfun\loot_tables\blocks\cit
 be52f1229b541db7c4a69da2ac83de855f27dc9e data\fruitfulfun\loot_tables\blocks\potted_tangerine.json
 fe7489b32edd5ae3feb930cd0de0735d7719ddcb data\fruitfulfun\loot_tables\blocks\potted_apple.json
 18ffb6db268fa02ddbc58aa9f3769482e577d8a8 data\fruitfulfun\loot_tables\blocks\citrus_button.json
-b6706f205f8b8a46c72f043eb81542094272578b data\fruitfulfun\loot_tables\blocks\apple_leaves.json
 ba157cead95bac9a47ad335607e43dc9621c4489 data\fruitfulfun\loot_tables\blocks\citrus_planks.json
+b6706f205f8b8a46c72f043eb81542094272578b data\fruitfulfun\loot_tables\blocks\apple_leaves.json
 04c030738d79a153fcd2c5f582eb75a24a190fa6 data\fruitfulfun\loot_tables\blocks\lemon_leaves.json
 df5524787e64a1a2af8ebe59fec4bd21d9b19ccd data\fruitfulfun\loot_tables\blocks\orange_sapling.json
 71b7dd9cb59b8a7dfca95f10b01e780c4b74b00b data\fruitfulfun\loot_tables\blocks\citrus_hanging_sign.json
 99b03808a6bfe905a96b3c92f4cb3962ee9922c5 data\fruitfulfun\loot_tables\blocks\potted_orange.json
-6fb76d118b89a2ed6eaaed689c85895f1822bec3 data\fruitfulfun\loot_tables\blocks\citron_sapling.json
 e1fcf1a6a27a0cc4dcdd2a6dcd418c7f5e18211b data\fruitfulfun\loot_tables\blocks\grapefruit_sapling.json
+6fb76d118b89a2ed6eaaed689c85895f1822bec3 data\fruitfulfun\loot_tables\blocks\citron_sapling.json
 72cdbaa2f3cfb40f60025f3d3e6d78955b3e8b9c data\fruitfulfun\loot_tables\blocks\citrus_log.json
 909435b93b508a36e31f9095b20f80bcfa0002b2 data\fruitfulfun\loot_tables\blocks\citrus_sign.json
 fc4997134c8d6795ac2fe13382c618d364793abf data\fruitfulfun\loot_tables\blocks\potted_lime.json

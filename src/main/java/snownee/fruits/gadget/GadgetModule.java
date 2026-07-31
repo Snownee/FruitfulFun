@@ -1,11 +1,14 @@
 package snownee.fruits.gadget;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
@@ -18,16 +21,29 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BrewingStandBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
+import snownee.fruits.duck.FFBrewingStand;
+import snownee.fruits.gadget.brewer.RemoteBrewerContainerData;
 import snownee.fruits.gadget.datagen.SetBuzzyPowerFunction;
+import snownee.fruits.gadget.detector.RainDetectorBlock;
+import snownee.fruits.gadget.detector.RainDetectorBlockEntity;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Categories;
@@ -146,9 +162,58 @@ public class GadgetModule extends AbstractModule {
 			ScentedCandleBlockEntity::new,
 			null,
 			ScentedCandleBlock.class);
+	@KiwiModule.Category(value = Categories.REDSTONE_BLOCKS, after = "daylight_detector")
+	public static final KiwiGO<Block> RAIN_DETECTOR = go(() -> new RainDetectorBlock(blockProp(Blocks.DAYLIGHT_DETECTOR)));
+	@KiwiModule.Name("rain_detector")
+	public static final KiwiGO<BlockEntityType<RainDetectorBlockEntity>> RAIN_DETECTOR_ENTITY = blockEntity(
+			RainDetectorBlockEntity::new,
+			null,
+			RainDetectorBlock.class);
+	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS, after = "brewing_stand")
+	@KiwiModule.RenderLayer(KiwiModule.RenderLayer.Layer.CUTOUT)
+	public static final KiwiGO<Block> BREWER = go(() -> new BrewingStandBlock(blockProp(Blocks.BREWING_STAND)));
+	@KiwiModule.Name("brewer")
+	public static final KiwiGO<MenuType<BrewingStandMenu>> BREWER_MENU = go(() -> new MenuType<>(
+			(containerId, inventory) -> new BrewingStandMenu(
+					containerId,
+					inventory,
+					new SimpleContainer(5),
+					new RemoteBrewerContainerData(3)),
+			FeatureFlags.VANILLA_SET));
 
 	public GadgetModule() {
 		Hooks.gadget = true;
+	}
+
+	public static void doBrew(Level level, BlockPos pos, NonNullList<ItemStack> items, BrewingStandBlockEntity entity) {
+		ItemStack ingredient = items.get(3);
+		int ingredientHash = hash(ingredient) * 31;
+		int[] recipeHash = new int[3];
+
+		for (int dest = 0; dest < 3; dest++) {
+			ItemStack source = items.get(dest);
+			ItemStack mixed = PotionBrewing.mix(ingredient, source);
+			items.set(dest, mixed);
+			if (!ItemStack.isSameItemSameTags(source, mixed)) {
+				recipeHash[dest] = hash(source) + ingredientHash;
+			}
+		}
+		Hooks.popItemBelow(entity, false, 0, 1, 2);
+
+		ingredient.shrink(1);
+		Item remainder = ingredient.getItem().getCraftingRemainingItem();
+		if (remainder != null) {
+			items.set(3, new ItemStack(remainder));
+			Hooks.popItemBelow(entity, true, 3);
+		}
+
+		items.set(3, ingredient);
+		level.levelEvent(1035, pos, 0);
+		((FFBrewingStand) entity).fruits$updateRecipeHash(recipeHash);
+	}
+
+	public static int hash(ItemStack stack) {
+		return Objects.hash(BuiltInRegistries.ITEM.getKey(stack.getItem()), stack.getTag());
 	}
 
 	@Override

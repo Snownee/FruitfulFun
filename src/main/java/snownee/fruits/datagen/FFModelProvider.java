@@ -86,6 +86,25 @@ public class FFModelProvider extends FabricModelProvider {
 		createCandle(generators, GadgetModule.PEACE_CANDLE.get());
 //		createCandle(generators, GadgetModule.HEAVY_CANDLE.get());
 		generators.createHorizontallyRotatedBlock(GadgetModule.BUZZY_CRAFTER.get(), TexturedModel.ORIENTABLE);
+		generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(
+				GadgetModule.RAIN_DETECTOR.get(),
+				ModelLocationUtils.getModelLocation(GadgetModule.RAIN_DETECTOR.get())));
+		generators.delegateItemModel(GadgetModule.RAIN_DETECTOR.get(), ModelLocationUtils.getModelLocation(GadgetModule.RAIN_DETECTOR.get()));
+		generators.createSimpleFlatItemModel(GadgetModule.BREWER.get().asItem());
+		generators.blockStateOutput.accept(MultiPartGenerator.multiPart(GadgetModule.BREWER.get())
+				.with(Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GadgetModule.BREWER.get())))
+				.with(Condition.condition().term(BlockStateProperties.HAS_BOTTLE_0, true),
+						Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_bottle0")))
+				.with(Condition.condition().term(BlockStateProperties.HAS_BOTTLE_1, true),
+						Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_bottle1")))
+				.with(Condition.condition().term(BlockStateProperties.HAS_BOTTLE_2, true),
+						Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_bottle2")))
+				.with(Condition.condition().term(BlockStateProperties.HAS_BOTTLE_0, false),
+						Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_empty0")))
+				.with(Condition.condition().term(BlockStateProperties.HAS_BOTTLE_1, false),
+						Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_empty1")))
+				.with(Condition.condition().term(BlockStateProperties.HAS_BOTTLE_2, false),
+						Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(Blocks.BREWING_STAND, "_empty2"))));
 	}
 
 	public static void createCandle(BlockModelGenerators generators, ScentedCandleBlock block) {

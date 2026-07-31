@@ -73,6 +73,8 @@ public final class FFCreativeTab extends AbstractModule {
 			add(BeeModule.MUTAGEN.get(), output::accept);
 		}
 		if (Hooks.gadget) {
+			add(GadgetModule.RAIN_DETECTOR.get(), output::accept);
+			add(GadgetModule.BREWER.get(), output::accept);
 			add(GadgetModule.BUZZY_CRAFTER.get(), output::accept);
 			add(GadgetModule.BUZZY_SHIELD.get(), output::accept);
 			addByTemplate(map, "*_candle", output::accept);

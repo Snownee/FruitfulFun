@@ -30,6 +30,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.model.geom.ModelPart;
@@ -251,7 +253,10 @@ public class ClientProxy implements ClientModInitializer {
 					(stack, i) -> {
 						if (i == 0) {
 							CompoundTag tag = stack.getTag();
-							return tag != null && tag.contains("Color") ? tag.getInt("Color") : 0xF3DCEB;
+							if (tag != null && tag.contains("Color")) {
+								return tag.getInt("Color");
+							}
+							return BeeModule.MUTAGEN.get().isImperfect(stack) ? 0xF3DCEB : 0xDE73B9;
 						}
 						return -1;
 					}, BeeModule.MUTAGEN.getOrCreate());
@@ -299,6 +304,7 @@ public class ClientProxy implements ClientModInitializer {
 		}
 
 		if (Hooks.gadget) {
+			MenuScreens.register(GadgetModule.BREWER_MENU.getOrCreate(), BrewingStandScreen::new);
 			EntityRendererRegistry.register(GadgetModule.ITEM_PROJECTILE.getOrCreate(), ItemProjectileRenderer::new);
 			ParticleFactoryRegistry.getInstance().register(GadgetModule.AIR_VORTEX.getOrCreate(), AirVortexParticle.Factory::new);
 

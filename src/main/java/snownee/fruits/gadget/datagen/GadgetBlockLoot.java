@@ -5,6 +5,7 @@ import java.util.List;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BrewingStandBlock;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -25,6 +26,7 @@ public class GadgetBlockLoot extends CoreBlockLoot {
 	protected void addTables() {
 		super.addTables();
 		handle(ScentedCandleBlock.class, this::createCandleDrops);
+		handle(BrewingStandBlock.class, this::createNameableBlockEntityTable);
 	}
 
 	@Override

@@ -174,6 +174,8 @@ public class FFBlockTagsProvider extends FabricTagProvider.BlockTagProvider {
 					.addOptional(CITRUS_CABINET.key())
 					.addOptional(REDLOVE_CABINET.key());
 		}
+		getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).addOptional(GadgetModule.RAIN_DETECTOR.key());
+		getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE).addOptional(GadgetModule.BREWER.key());
 
 		FabricTagProvider<Block>.FabricTagBuilder builder = getOrCreateTagBuilder(MINEABLE_WITH_KNIFE);
 		KiwiModules.get(new ResourceLocation(FruitfulFun.ID, "food")).getRegistryEntries(BuiltInRegistries.BLOCK)
