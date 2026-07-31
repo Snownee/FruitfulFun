@@ -27,6 +27,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -211,6 +212,13 @@ public class BeeModule extends AbstractModule {
 
 	public static boolean isAllogamous(ItemStack stack) {
 		return ALLOGAMOUS_ITEMS.contains(stack.getItem());
+	}
+
+	public static boolean canBreed(Bee bee) {
+		if (Hooks.bee && BeeAttributes.of(bee).hasTrait(Trait.GHOST)) {
+			return false;
+		}
+		return !bee.isBaby();
 	}
 
 	@Override
