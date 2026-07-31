@@ -108,11 +108,11 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 	}
 
 	private static ListTag createPotentialList(ListTag tag, GeneData genes1, GeneData genes2, RandomSource random) {
-		Set<String> parentTraits = Sets.newHashSet();
-		genes1.traits().forEach(trait -> parentTraits.add(trait.name()));
-		genes2.traits().forEach(trait -> parentTraits.add(trait.name()));
+		Set<String> potentialTraits = Sets.newHashSet();
+		genes1.traits().forEach(trait -> potentialTraits.add(trait.name()));
+		genes2.traits().forEach(trait -> potentialTraits.add(trait.name()));
 		Object2IntOpenHashMap<String> traitCounts = new Object2IntOpenHashMap<>();
-		for (String trait : parentTraits) {
+		for (String trait : potentialTraits) {
 			traitCounts.put(trait, 0);
 		}
 		for (int i = 0; i < 200; i++) {
@@ -125,11 +125,12 @@ public class InspectorProvider implements IServerDataProvider<EntityAccessor> {
 					random);
 			offspring.updateTraits();
 			for (Trait trait : offspring.traits()) {
+				potentialTraits.add(trait.name());
 				traitCounts.addTo(trait.name(), 1);
 			}
 		}
 		List<Pair<String, String>> results = Lists.newArrayList();
-		for (String trait : parentTraits) {
+		for (String trait : potentialTraits) {
 			int count = traitCounts.getInt(trait);
 			int parentTraitBasis = 0;
 			if (genes1.hasTrait(Trait.REGISTRY.get(trait))) {
