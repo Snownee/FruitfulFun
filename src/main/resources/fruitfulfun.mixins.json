@@ -89,6 +89,7 @@
 		"client.HumanoidModelMixin",
 		"client.ItemBlockRenderTypesMixin",
 		"client.ItemInHandRendererMixin",
+		"client.LevelRendererMixin",
 		"client.MinecraftMixin",
 		"client.MultiPlayerGameModeMixin",
 		"haunt.AbstractClientPlayerMixin",

@@ -115,6 +115,8 @@ public class FFRecipeProvider extends FabricRecipeProvider {
 				.group("wooden_door")
 				.unlockedBy(REDLOVE_PLANKS_FAMILY.getRecipeUnlockedBy().orElseThrow(), has(REDLOVE_PLANKS.get()))
 				.save(exporter);
+		oneToOneConversionRecipe(exporter, REDLOVE_SLIDING_DOOR.get().asItem(), REDLOVE_DOOR.get().asItem(), "redlove_sliding_door_from_door");
+		oneToOneConversionRecipe(exporter, REDLOVE_DOOR.get().asItem(), REDLOVE_SLIDING_DOOR.get().asItem(), "redlove_door_from_sliding_door");
 		planksFromLogs(exporter, CITRUS_PLANKS.get(), FFItemTagsProvider.CITRUS_LOGS, 4);
 		planksFromLogs(exporter, REDLOVE_PLANKS.get(), FFItemTagsProvider.REDLOVE_LOGS, 4);
 		woodFromLogs(exporter, CITRUS_WOOD.get(), CITRUS_LOG.get());
