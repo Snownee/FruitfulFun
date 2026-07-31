@@ -39,7 +39,7 @@ public final class FFCommonConfig {
 	@KiwiConfig.Path("beeRiding.heightLimit")
 	public static boolean beeRidingHeightLimit = true;
 	@KiwiConfig.Path("beeRiding.ultraWarmDimensionLimit")
-	public static boolean beeRidingUltraWarmDimensionLimit = true;
+	public static boolean beeRidingUltraWarmDimensionLimit = false;
 	@KiwiConfig.Path("beeRiding.rainingLimit")
 	public static boolean beeRidingRainingLimit = true;
 	@KiwiConfig.Path("beeRiding.horizontalSpeedMultiplier")
