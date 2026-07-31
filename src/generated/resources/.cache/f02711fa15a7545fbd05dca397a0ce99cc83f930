@@ -1,4 +1,4 @@
-// 1.20.1	2026-07-31T18:32:58.1101574	Fruitful Fun/Tags for minecraft:block
+// 1.20.1	2026-07-31T19:13:33.7905538	Fruitful Fun/Tags for minecraft:block
 6866bb6d45e7753516de4f918ec8a9c5776bcac1 data\minecraft\tags\blocks\wall_signs.json
 ee70a6d8b0a83889452e4fafe02fb0663f98e671 data\minecraft\tags\blocks\logs_that_burn.json
 b08afdfafc5dcb294f9da2e0594f2d617d63a6b6 data\minecraft\tags\blocks\inside_step_sound_blocks.json
@@ -27,7 +27,7 @@ fb19a01c8abeb12a77286d1f10a765060d083811 data\minecraft\tags\blocks\ceiling_hang
 3581b1746f5b372cb6bceabd37cbb3c1e19f06c0 data\minecraft\tags\blocks\mineable\hoe.json
 08eb51b86a97ebb3c8cdf0dbba71a76e61b4f631 data\minecraft\tags\blocks\mineable\axe.json
 154a0152eeae1cec3e72ee0022a65ba55068daa4 data\minecraft\tags\blocks\standing_signs.json
-243ab81777fcde2d7191fd09ce34e6641a18aa87 data\fruitfulfun\tags\blocks\candles.json
+a384f5e537f8b69442a8957f1ee8dc9a3602aaef data\fruitfulfun\tags\blocks\candles.json
 2d0cb84ef272eb7604223c0f0d6f74451bcfde12 data\minecraft\tags\blocks\wooden_doors.json
 453632af22716f27e9ed868057d9f94fa724b1b6 data\minecraft\tags\blocks\planks.json
 d7eefaa58f9b43078d138d9fca0f22d41194ebb0 data\minecraft\tags\blocks\flower_pots.json

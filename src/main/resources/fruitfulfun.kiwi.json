@@ -34,7 +34,7 @@
       "target": "snownee.fruits.CoreModule"
     },
     {
-      "target": "snownee.fruits.CreativeTabModule",
+      "target": "snownee.fruits.FFCreativeTab",
       "data": {
         "value": "creative_tab"
       }
@@ -144,6 +144,13 @@
       "data": {
         "value": "gun_shot"
       }
+    },
+    {
+      "target": "snownee.fruits.gadget.network.SScentAddedPacket",
+      "data": {
+        "dir": "PLAY_TO_CLIENT",
+        "value": "scent_added"
+      }
     }
   ],
   "Optional": [
@@ -154,7 +161,7 @@
       "target": "snownee.fruits.compat.farmersdelight.FarmersDelightModule"
     },
     {
-      "target": "snownee.fruits.CreativeTabModule"
+      "target": "snownee.fruits.FFCreativeTab"
     },
     {
       "target": "snownee.fruits.food.FoodModule"

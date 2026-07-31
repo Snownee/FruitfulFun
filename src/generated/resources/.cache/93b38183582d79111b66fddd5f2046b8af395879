@@ -1,4 +1,4 @@
-// 1.20.1	2026-07-31T18:32:58.1036508	Fruitful Fun/Block Loot Tables - fruitfulfun:cherry
+// 1.20.1	2026-07-31T19:13:33.7859609	Fruitful Fun/Block Loot Tables - fruitfulfun:cherry
 6612a4e9207fc57df96a8a8e047350070e14e1b8 data\fruitfulfun\loot_tables\blocks\redlove_wall_hanging_sign.json
 0d3c9f70bf7c3db77a66c65d94550cab8a00f654 data\fruitfulfun\loot_tables\blocks\redlove_wall_sign.json
 0d3c9f70bf7c3db77a66c65d94550cab8a00f654 data\fruitfulfun\loot_tables\blocks\redlove_sign.json
@@ -6,10 +6,10 @@
 9aff4dad0b58fe0bb424d821b82fcaec52381886 data\fruitfulfun\loot_tables\blocks\redlove_log.json
 36633742357a07045f1a9b9ee0b89e1ae35e5e47 data\fruitfulfun\loot_tables\blocks\redlove_fence_gate.json
 aaf6eb4241a215af7eb0d94973e2df7ae9720b4d data\fruitfulfun\loot_tables\blocks\cherry_leaves.json
-3090174f8c6ead98c48a5596c21da3cad2257385 data\fruitfulfun\loot_tables\blocks\redlove_leaves.json
 7c0dac9a6e84ef086f2dc6dee6cb45a8b29cbb3d data\fruitfulfun\loot_tables\blocks\potted_redlove.json
-1c9d47c11276d1e375cd5a8da7da59b4c9ab5a87 data\fruitfulfun\loot_tables\blocks\peach_pink_petals.json
+3090174f8c6ead98c48a5596c21da3cad2257385 data\fruitfulfun\loot_tables\blocks\redlove_leaves.json
 e461786d2ac466c8bf28ce03abcbe0e8ed231d8e data\fruitfulfun\loot_tables\blocks\redlove_trapdoor.json
+1c9d47c11276d1e375cd5a8da7da59b4c9ab5a87 data\fruitfulfun\loot_tables\blocks\peach_pink_petals.json
 2ec60b8b2e46eece804e1d27fac29210b9d51886 data\fruitfulfun\loot_tables\blocks\cherry_sapling.json
 2770ffa9f759f3e2458b50c7ad6c88e5949d03a0 data\fruitfulfun\loot_tables\blocks\stripped_redlove_log.json
 fa7055333700606d4d5ed84603c223f0f72bc999 data\fruitfulfun\loot_tables\blocks\redlove_door.json

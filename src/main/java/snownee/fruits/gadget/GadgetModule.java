@@ -107,11 +107,12 @@ public class GadgetModule extends AbstractModule {
 			true,
 			false,
 			false))));
-	public static final KiwiGO<ScentType> ENDER = go(() -> new ScentType(List.of()));
+	public static final KiwiGO<ScentType> ENDER = go(() -> new ScentType(List.of(), 0x6e6bca, 1));
 	public static final KiwiGO<ScentType> WEAK = go(() -> new ScentType(List.of(
 			new MobEffectInstance(WEAK_SCENT.getOrCreate(), 600, 0, true, false, false),
 			new MobEffectInstance(MobEffects.WEAKNESS, 600),
 			new MobEffectInstance(CoreModule.FRAGILITY.getOrCreate(), 600))));
+	public static final KiwiGO<ScentType> PEACE = go(() -> new ScentType(List.of(), 0xee2c28, 2));
 	//	public static final KiwiGO<ScentType> HEAVY = go(() -> new ScentType(List.of(new MobEffectInstance(
 //			HEAVY_SCENT.getOrCreate(),
 //			600,
@@ -132,6 +133,9 @@ public class GadgetModule extends AbstractModule {
 	public static final KiwiGO<ScentedCandleBlock> WEAK_CANDLE = go(() -> new ScentedCandleBlock(
 			blockProp(Blocks.CANDLE),
 			WEAK.getOrCreate()));
+	public static final KiwiGO<ScentedCandleBlock> PEACE_CANDLE = go(() -> new ScentedCandleBlock(
+			blockProp(Blocks.CANDLE),
+			PEACE.getOrCreate()));
 	//	public static final KiwiGO<ScentedCandleBlock> HEAVY_CANDLE = go(() -> new ScentedCandleBlock(
 //			blockProp(Blocks.CANDLE),
 //			HEAVY.getOrCreate()));

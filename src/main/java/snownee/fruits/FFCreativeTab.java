@@ -29,13 +29,13 @@ import snownee.kiwi.item.ItemCategoryFiller;
 
 @KiwiModule("creative_tab")
 @KiwiModule.Optional
-public final class CreativeTabModule extends AbstractModule {
+public final class FFCreativeTab extends AbstractModule {
 	public static final KiwiGO<CreativeModeTab> MAIN = go(() -> itemCategory(
 			FruitfulFun.ID,
 			"main",
 			CoreModule.GRAPEFRUIT::itemStack)
 			.title(Component.translatable("modmenu.nameTranslation.fruitfulfun"))
-			.displayItems(CreativeTabModule::generate)
+			.displayItems(FFCreativeTab::generate)
 			.build());
 
 	private static void generate(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
