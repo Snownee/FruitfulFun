@@ -107,7 +107,6 @@ loom {
 
 fabricApi {
     configureDataGeneration {
-        client = true
         modId = project.mod_id
         client = true
         outputDirectory = file("src/generated/resources")
