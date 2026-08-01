@@ -18,6 +18,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.ScentType;
+import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PacketHandler;
 
@@ -49,16 +50,18 @@ public class CInspectTargetPacket extends PacketHandler {
 					SInspectBeeReplyPacket.send(player, BeeAttributes.of(bee));
 				}
 			} else if (action == InspectAction.SCENT) {
-				LevelChunk chunk = level.getChunkAt(((InspectTarget.BlockTarget) target).pos());
+				LevelChunk chunk = CommonProxy.getLoadedChunkAt(level, ((InspectTarget.BlockTarget) target).pos());
 				long gameTime = level.getGameTime();
 				int count = 0;
 				long firstEnds = Long.MAX_VALUE;
-				for (ScentType type : FFRegistries.SCENT_TYPE) {
-					long time = type.getTime(chunk);
-					if (time > gameTime) {
-						count++;
-						if (time < firstEnds) {
-							firstEnds = time;
+				if (chunk != null) {
+					for (ScentType type : FFRegistries.SCENT_TYPE) {
+						long time = type.getTime(chunk);
+						if (time > gameTime) {
+							count++;
+							if (time < firstEnds) {
+								firstEnds = time;
+							}
 						}
 					}
 				}
