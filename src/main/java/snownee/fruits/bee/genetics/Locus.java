@@ -17,25 +17,25 @@ public class Locus {
 		data = (byte) (gene1 << 4 | gene2);
 	}
 
-	public byte getData() {
+	public byte data() {
 		return data;
 	}
 
-	public int getHigh() {
+	public int high() {
 		return (data & 0b11110000) >> 4;
 	}
 
-	public int getLow() {
+	public int low() {
 		return data & 0b00001111;
 	}
 
-	public Allele getType() {
+	public Allele type() {
 		return type;
 	}
 
 	public void setData(byte b) {
 		data = b;
-		if (!type.allowedValues.contains(getHigh()) || !type.allowedValues.contains(getLow())) {
+		if (!type.allowedValues.contains(high()) || !type.allowedValues.contains(low())) {
 			data = type.defaultData;
 		}
 	}

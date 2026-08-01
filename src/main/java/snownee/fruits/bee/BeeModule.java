@@ -250,7 +250,7 @@ public class BeeModule extends AbstractModule {
 		int value = 0;
 		for (GeneData geneData : dataList) {
 			int singleValue = 0;
-			for (Trait trait : geneData.getTraits()) {
+			for (Trait trait : geneData.traits()) {
 				singleValue += trait.value();
 			}
 			if (geneData.hasTrait(Trait.FASTER) && geneData.hasTrait(Trait.MOUNTABLE)) {
@@ -262,9 +262,9 @@ public class BeeModule extends AbstractModule {
 		}
 		combo:
 		if (value > 0 && dataList.size() >= 3) {
-			Set<Trait> first = dataList.get(0).getTraits();
+			Set<Trait> first = dataList.get(0).traits();
 			for (int i = 1; i < dataList.size(); i++) {
-				if (!first.equals(dataList.get(i).getTraits())) {
+				if (!first.equals(dataList.get(i).traits())) {
 					break combo;
 				}
 			}

@@ -100,7 +100,7 @@ public class HauntingManager {
 		if (bee.level().isClientSide()) {
 			return;
 		}
-		traits = ImmutableSet.copyOf(BeeAttributes.of(bee).getGenes().getTraits());
+		traits = ImmutableSet.copyOf(BeeAttributes.of(bee).genes().traits());
 		storedBee = new CompoundTag();
 		storedBee.putString("id", bee.getEncodeId());
 		bee.saveWithoutId(storedBee);

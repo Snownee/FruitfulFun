@@ -20,6 +20,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +34,7 @@ import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Locus;
+import snownee.fruits.bee.genetics.MutationRate;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFPlayer;
 import snownee.jade.api.Accessor;
@@ -68,7 +70,7 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 			}
 			data.put("Pollens", list);
 		}
-		Set<Trait> traits = attributes.getGenes().getTraits();
+		Set<Trait> traits = attributes.genes().traits();
 		if (!traits.isEmpty()) {
 			ListTag list = new ListTag();
 			for (Trait trait : traits) {
@@ -91,8 +93,8 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 								key,
 								createPotentialList(
 										list = new ListTag(),
-										attributes.getGenes(),
-										BeeAttributes.of(boundBee).getGenes(),
+										attributes.genes(),
+										BeeAttributes.of(boundBee).genes(),
 										level.getRandom()));
 					}
 					data.put("Potential", list);
@@ -104,31 +106,37 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 			CompoundTag tag = new CompoundTag();
 			Locus locus = attributes.getLocus(allele);
 			tag.putString("Code", String.valueOf(allele.codename));
-			tag.putInt("High", locus.getHigh());
-			tag.putInt("Low", locus.getLow());
+			tag.putInt("High", locus.high());
+			tag.putInt("Low", locus.low());
 			list.add(tag);
 		}
 		data.put("Loci", list);
 	}
 
-	private static ListTag createPotentialList(ListTag tag, GeneData genes1, GeneData genes2, net.minecraft.util.RandomSource random) {
-		Set<String> parentTraits = Sets.newHashSet();
-		genes1.getTraits().forEach(trait -> parentTraits.add(trait.name()));
-		genes2.getTraits().forEach(trait -> parentTraits.add(trait.name()));
+	private static ListTag createPotentialList(ListTag tag, GeneData genes1, GeneData genes2, RandomSource random) {
+		Set<String> potentialTraits = Sets.newHashSet();
+		genes1.traits().forEach(trait -> potentialTraits.add(trait.name()));
+		genes2.traits().forEach(trait -> potentialTraits.add(trait.name()));
 		Object2IntOpenHashMap<String> traitCounts = new Object2IntOpenHashMap<>();
-		for (String trait : parentTraits) {
+		for (String trait : potentialTraits) {
 			traitCounts.put(trait, 0);
 		}
 		for (int i = 0; i < 200; i++) {
 			GeneData offspring = new GeneData();
-			offspring.breedFrom(genes1, null, genes2, null, random);
+			offspring.breedFrom(
+					genes1,
+					MutationRate.neverMutate(),
+					genes2,
+					MutationRate.neverMutate(),
+					random);
 			offspring.updateTraits();
-			for (Trait trait : offspring.getTraits()) {
+			for (Trait trait : offspring.traits()) {
+				potentialTraits.add(trait.name());
 				traitCounts.addTo(trait.name(), 1);
 			}
 		}
 		List<Pair<String, String>> results = Lists.newArrayList();
-		for (String trait : parentTraits) {
+		for (String trait : potentialTraits) {
 			int count = traitCounts.getInt(trait);
 			int parentTraitBasis = 0;
 			if (genes1.hasTrait(Trait.REGISTRY.get(trait))) {
@@ -187,8 +195,9 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 				showGenes(tooltip, data, FFPlayer.of(accessor.getPlayer()));
 				break;
 		}
-		tooltip.add(new ScaledTextElement(Component.translatable("tip.fruitfulfun.pressAlt")
-				.withStyle(IThemeHelper.get().isLightColorScheme() ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), 0.75f));
+		tooltip.add(new ScaledTextElement(
+				Component.translatable("tip.fruitfulfun.pressAlt")
+						.withStyle(IThemeHelper.get().isLightColorScheme() ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), 0.75f));
 	}
 
 	public static void showPollens(ITooltip tooltip, CompoundTag data) {

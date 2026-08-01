@@ -76,13 +76,13 @@ public class FFJEIREI {
 		MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		attributes.getGenes().getTraits().clear();
+		attributes.genes().traits().clear();
 		for (ContextualCondition condition : recipe.getConditions()) {
 			if (!BeeModule.BEE_HAS_TRAIT.is(condition.getType())) {
 				continue;
 			}
 			BeeHasTrait beeHasTrait = (BeeHasTrait) condition;
-			attributes.getGenes().getTraits().add(beeHasTrait.trait());
+			attributes.genes().traits().add(beeHasTrait.trait());
 		}
 		attributes.updateTexture();
 		renderDispatcher.render(bee, 0.0D, 0.0D, 0.0D, mc.getFrameTime(), 1, matrixStack, bufferSource, 15728880);
