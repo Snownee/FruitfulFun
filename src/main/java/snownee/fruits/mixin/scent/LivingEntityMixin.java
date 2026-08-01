@@ -1,7 +1,5 @@
 package snownee.fruits.mixin.scent;
 
-import java.util.Objects;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,6 +21,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.ScentType;
+import snownee.fruits.util.CommonProxy;
 
 @Mixin(value = LivingEntity.class, priority = 600)
 public abstract class LivingEntityMixin extends Entity {
@@ -32,7 +31,11 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@Inject(method = "randomTeleport", at = @At("HEAD"), cancellable = true)
 	private void randomTeleport(double x, double y, double z, boolean broadcastTeleport, CallbackInfoReturnable<Boolean> cir) {
-		if (Hooks.gadget && GadgetModule.ENDER.get().isActiveAt(Objects.requireNonNull(level()).getChunkAt(blockPosition()))) {
+		if (!Hooks.gadget) {
+			return;
+		}
+		LevelChunk chunk = CommonProxy.getLoadedChunkAt(level(), blockPosition());
+		if (chunk != null && GadgetModule.ENDER.get().isActiveAt(chunk)) {
 			cir.setReturnValue(false);
 		}
 	}
@@ -61,8 +64,8 @@ public abstract class LivingEntityMixin extends Entity {
 		if (level().isClientSide() || !Hooks.gadget) {
 			return;
 		}
-		LevelChunk chunk = level().getChunkAt(blockPosition());
-		if (chunk.isEmpty()) {
+		LevelChunk chunk = CommonProxy.getLoadedChunkAt(level(), blockPosition());
+		if (chunk == null || chunk.isEmpty()) {
 			return;
 		}
 		for (ScentType type : FFRegistries.SCENT_TYPE) {

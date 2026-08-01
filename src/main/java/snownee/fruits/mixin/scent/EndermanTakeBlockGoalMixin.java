@@ -9,8 +9,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.util.CommonProxy;
 
 @Mixin(EnderMan.EndermanLeaveBlockGoal.class)
 public class EndermanTakeBlockGoalMixin {
@@ -23,7 +25,11 @@ public class EndermanTakeBlockGoalMixin {
 			BlockState belowDestinationState,
 			BlockPos belowDestinationPos,
 			CallbackInfoReturnable<Boolean> cir) {
-		if (Hooks.gadget && GadgetModule.ENDER.get().isActiveAt(level.getChunkAt(destinationPos))) {
+		if (!Hooks.gadget) {
+			return;
+		}
+		LevelChunk chunk = CommonProxy.getLoadedChunkAt(level, destinationPos);
+		if (chunk != null && GadgetModule.ENDER.get().isActiveAt(chunk)) {
 			cir.setReturnValue(false);
 		}
 	}

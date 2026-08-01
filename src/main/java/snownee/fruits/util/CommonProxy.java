@@ -38,6 +38,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
@@ -74,6 +75,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -220,6 +222,20 @@ public class CommonProxy implements ModInitializer {
 	public static boolean isBeehive(ItemStack itemStack) {
 		return itemStack.is(Items.BEEHIVE) || itemStack.is(Items.BEE_NEST) || Block.byItem(itemStack.getItem()).defaultBlockState().is(
 				BlockTags.BEEHIVES);
+	}
+
+	/**
+	 * Unlike {@link Level#getChunkAt(BlockPos)}, never schedules or waits for a chunk load. Also null off-thread.
+	 * <p>
+	 * Do not "fix" a null return by loading the chunk: scent lives in a chunk attachment, so an unloaded chunk cannot
+	 * hold an active scent and loading cannot change the answer. It can only re-enter the chunk system from entity
+	 * unload, where vanilla dismounts and repositions passengers while the section manager iterates pending unloads.
+	 */
+	@Nullable
+	public static LevelChunk getLoadedChunkAt(Level level, BlockPos pos) {
+		return level.getChunkSource().getChunkNow(
+				SectionPos.blockToSectionCoord(pos.getX()),
+				SectionPos.blockToSectionCoord(pos.getZ()));
 	}
 
 	public static void setScentTime(ChunkAccess chunk, ScentType type, long time) {

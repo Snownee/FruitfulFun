@@ -1,7 +1,5 @@
 package snownee.fruits.mixin.scent;
 
-import java.util.Objects;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,8 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.util.CommonProxy;
 
 @Mixin(value = Entity.class, priority = 600)
 public abstract class EntityMixin {
@@ -26,8 +26,11 @@ public abstract class EntityMixin {
 	@Inject(method = "teleportTo(DDD)V", at = @At("HEAD"), cancellable = true)
 	private void teleportTo(double x, double y, double z, CallbackInfo ci) {
 		Entity entity = (Entity) (Object) this;
-		if (Hooks.gadget && entity instanceof LivingEntity && GadgetModule.ENDER.get().isActiveAt(Objects.requireNonNull(level())
-				.getChunkAt(blockPosition()))) {
+		if (!Hooks.gadget || !(entity instanceof LivingEntity)) {
+			return;
+		}
+		LevelChunk chunk = CommonProxy.getLoadedChunkAt(level(), blockPosition());
+		if (chunk != null && GadgetModule.ENDER.get().isActiveAt(chunk)) {
 			ci.cancel();
 		}
 	}
