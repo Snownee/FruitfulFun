@@ -24,14 +24,14 @@ public class SInspectBeeReplyPacket extends PacketHandler {
 
 	public static void send(ServerPlayer player, BeeAttributes attributes) {
 		SInspectBeeReplyPacket.I.send(player, buf0 -> {
-			buf0.writeCollection(attributes.getGenes().getTraits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
+			buf0.writeCollection(attributes.genes().traits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf0.writeCollection(attributes.getPollens(), FriendlyByteBuf::writeUtf);
 			buf0.writeVarInt(Allele.sortedByCode().size());
 			for (Allele allele : Allele.sortedByCode()) {
 				Locus locus = attributes.getLocus(allele);
 				buf0.writeChar(allele.codename);
-				buf0.writeVarInt(locus.getHigh());
-				buf0.writeVarInt(locus.getLow());
+				buf0.writeVarInt(locus.high());
+				buf0.writeVarInt(locus.low());
 			}
 		});
 	}

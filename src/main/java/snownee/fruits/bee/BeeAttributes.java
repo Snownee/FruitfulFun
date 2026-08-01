@@ -2,11 +2,13 @@ package snownee.fruits.bee;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +20,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.genetics.Allele;
@@ -35,6 +38,7 @@ public class BeeAttributes {
 	public boolean dirty;
 	private ItemStack saddle = ItemStack.EMPTY;
 	private List<UUID> trusted = List.of();
+	private Set<UUID> inspected = Set.of();
 	@Nullable
 	private ResourceLocation texture;
 	private long mutagenEndsIn;
@@ -53,6 +57,13 @@ public class BeeAttributes {
 				trustedList.add(StringTag.valueOf(uuid.toString()));
 			}
 			data.put("Trusted", trustedList);
+		}
+		if (!inspected.isEmpty()) {
+			ListTag inspectedList = new ListTag();
+			for (UUID uuid : inspected) {
+				inspectedList.add(StringTag.valueOf(uuid.toString()));
+			}
+			data.put("Inspected", inspectedList);
 		}
 		if (!pollens.isEmpty()) {
 			ListTag pollensList = new ListTag();
@@ -78,6 +89,13 @@ public class BeeAttributes {
 			builder.add(UUID.fromString(tag.getAsString()));
 		}
 		trusted = builder.build();
+		ImmutableSet.Builder<UUID> inspectedBuilder = ImmutableSet.builder();
+		if (data.contains("Inspected")) {
+			for (Tag tag : data.getList("Inspected", Tag.TAG_STRING)) {
+				inspectedBuilder.add(UUID.fromString(tag.getAsString()));
+			}
+		}
+		inspected = inspectedBuilder.build();
 		pollens.clear();
 		for (Tag tag : data.getList("Pollens", Tag.TAG_STRING)) {
 			pollens.add(tag.getAsString());
@@ -102,6 +120,30 @@ public class BeeAttributes {
 
 	public List<UUID> getTrusted() {
 		return trusted;
+	}
+
+	public void addInspected(UUID uuid) {
+		if (inspected.contains(uuid)) {
+			return;
+		}
+		int max = 20;
+		ImmutableSet.Builder<UUID> builder = ImmutableSet.builderWithExpectedSize(Math.min(inspected.size() + 1, max));
+		builder.add(uuid);
+		for (UUID id : inspected) {
+			if (builder.build().size() >= max) {
+				break;
+			}
+			builder.add(id);
+		}
+		inspected = builder.build();
+	}
+
+	public List<UUID> getInspected() {
+		return List.copyOf(inspected);
+	}
+
+	public boolean isInspected(Player player) {
+		return inspected.contains(player.getUUID());
 	}
 
 	public List<String> getPollens() {
@@ -186,7 +228,7 @@ public class BeeAttributes {
 		}
 	}
 
-	public @Nullable ResourceLocation getTexture() {
+	public @Nullable ResourceLocation texture() {
 		return texture;
 	}
 
@@ -214,7 +256,7 @@ public class BeeAttributes {
 		return genes.hasTrait(trait);
 	}
 
-	public GeneData getGenes() {
+	public GeneData genes() {
 		return genes;
 	}
 

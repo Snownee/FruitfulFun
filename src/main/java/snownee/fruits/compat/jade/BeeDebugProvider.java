@@ -37,13 +37,13 @@ public class BeeDebugProvider implements IEntityComponentProvider, IServerDataPr
 		BeeAttributes attributes = new BeeAttributes();
 		attributes.fromNBT(data.getCompound("BeeAttributes"), (Bee) accessor.getEntity());
 		List<String> genes = Lists.newArrayList();
-		attributes.getGenes().getLoci().forEach((allele, locus) -> {
-			genes.add(allele.getDisplayName(locus.getHigh()).getString());
-			genes.add(allele.getDisplayName(locus.getLow()).getString());
+		attributes.genes().loci().forEach((allele, locus) -> {
+			genes.add(allele.getDisplayName(locus.high()).getString());
+			genes.add(allele.getDisplayName(locus.low()).getString());
 		});
 		tooltip.add(Component.literal(String.join(" ", genes)));
 		List<String> traits = Lists.newArrayList();
-		attributes.getGenes().getTraits().forEach(trait -> traits.add(trait.name()));
+		attributes.genes().traits().forEach(trait -> traits.add(trait.name()));
 		if (!traits.isEmpty()) {
 			traits.sort(String::compareTo);
 			tooltip.add(Component.literal(String.join(" ", traits)));

@@ -43,7 +43,7 @@ public abstract class BeeRendererMixin extends MobRenderer<Bee, BeeModel<Bee>> {
 			return;
 		}
 		BeeAttributes attributes = BeeAttributes.of(bee);
-		ResourceLocation texture = attributes.getTexture();
+		ResourceLocation texture = attributes.texture();
 		if (texture != null) {
 			texture = texture.withPath($ -> {
 				if (bee.isAngry() && bee.hasNectar()) {
