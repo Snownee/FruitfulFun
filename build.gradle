@@ -1,13 +1,13 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version '1.17-SNAPSHOT'
     id 'maven-publish'
     id "me.modmuss50.mod-publish-plugin" version "2.+"
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+base {
+    archivesName = project.archives_base_name
+}
 
-archivesBaseName = project.archives_base_name
 version = project.minecraft_version + "-Fabric-" + project.mod_version
 group = project.maven_group
 var realVersion = mod_version + '+fabric'
@@ -79,13 +79,13 @@ dependencies {
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
     modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 
-    modCompileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
+//    modCompileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     modImplementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 
     //modImplementation "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
     //annotationProcessor "libs:Kiwi-1.20.1-fabric:${project.kiwi_version}"
     modImplementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+//    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
     //modImplementation "libs:Lychee-1.20.1-fabric:${project.lychee_version}"
     modImplementation "maven.modrinth:lychee:zCrffyJ6"
     modImplementation "maven.modrinth:jade:${project.jade_version}+fabric"
@@ -103,8 +103,6 @@ dependencies {
     modImplementation "maven.modrinth:advancementinfo:gfcbMV82"
     // in order to change tick rate
     modImplementation "maven.modrinth:carpet:1.4.112"
-
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.0"))
 }
 
 loom {
@@ -173,7 +171,6 @@ jar {
 configurations.all {
     resolutionStrategy {
         force "dev.architectury:architectury-fabric:${project.architectury_version}"
-        force "net.fabricmc:sponge-mixin:0.15.3+mixin.0.8.7"
     }
 }
 

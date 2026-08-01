@@ -228,7 +228,7 @@ public class BeeAttributes {
 		}
 	}
 
-	public @Nullable ResourceLocation texture() {
+	public @Nullable ResourceLocation getTexture() {
 		return texture;
 	}
 

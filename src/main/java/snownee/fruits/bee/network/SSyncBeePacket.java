@@ -71,7 +71,7 @@ public class SSyncBeePacket extends PacketHandler {
 			buf.writeVarInt(bee.getId());
 			buf.writeItem(attributes.getSaddle());
 			buf.writeCollection(attributes.getTrusted(), FriendlyByteBuf::writeUUID);
-			ResourceLocation texture = attributes.texture();
+			ResourceLocation texture = attributes.getTexture();
 			buf.writeUtf(texture == null ? "" : texture.toString());
 			buf.writeCollection(attributes.genes().traits().stream().map(Trait::name).toList(), FriendlyByteBuf::writeUtf);
 			buf.writeLong(attributes.getMutagenEndsIn());
