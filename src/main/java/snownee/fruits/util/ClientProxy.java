@@ -30,10 +30,10 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
@@ -316,6 +316,10 @@ public class ClientProxy implements ClientModInitializer {
 				ItemProperties.register(GadgetModule.BUZZY_SHIELD.getOrCreate(), blocking, function);
 			} else {
 				FruitfulFun.LOGGER.warn("Failed to register shield blocking property");
+			}
+
+			if (Hooks.supplementaries) {
+				ColorProviderRegistry.BLOCK.register(ColorProviderUtil.delegate(Blocks.BREWING_STAND), GadgetModule.BREWER.getOrCreate());
 			}
 		}
 
