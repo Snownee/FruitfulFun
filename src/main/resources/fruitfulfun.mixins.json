@@ -62,7 +62,6 @@
 		"scent.CandleBlockMixin",
 		"scent.EndermanLeaveBlockGoalMixin",
 		"scent.EndermanTakeBlockGoalMixin",
-		"scent.EntityMixin",
 		"scent.LivingEntityMixin",
 		"scent.NaturalSpawnerMixin",
 		"scent.PhantomSpawnerMixin",
