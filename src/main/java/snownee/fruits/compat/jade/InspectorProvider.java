@@ -1,10 +1,17 @@
 package snownee.fruits.compat.jade;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.mojang.datafixers.util.Pair;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -12,13 +19,19 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.FruitType;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.InspectorClientHandler;
 import snownee.fruits.bee.genetics.Allele;
+import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Locus;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.duck.FFPlayer;
@@ -38,8 +51,11 @@ import snownee.jade.impl.ui.ScaledTextElement;
 
 public class InspectorProvider implements IEntityComponentProvider, IBlockComponentProvider, IServerDataProvider<EntityAccessor> {
 
+	public static final Cache<Pair<UUID, UUID>, ListTag> POTENTIAL_CACHE = CacheBuilder.newBuilder().maximumSize(100).build();
+
 	public static void appendServerData(Accessor<?> accessor, Bee bee) {
-		if (!BeeModule.INSPECTOR.is(accessor.getPlayer().getUseItem())) {
+		ItemStack inspector = accessor.getPlayer().getUseItem();
+		if (!BeeModule.INSPECTOR.is(inspector)) {
 			return;
 		}
 		CompoundTag data = accessor.getServerData();
@@ -60,6 +76,29 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 			}
 			data.put("Traits", list);
 		}
+		CompoundTag inspectorTag = inspector.getTag();
+		if (FFCommonConfig.inspectorShowOffspringPotential && inspectorTag != null && inspectorTag.hasUUID("BoundEntityUUID")
+				&& BeeModule.canBreed(bee)) {
+			UUID boundUuid = inspectorTag.getUUID("BoundEntityUUID");
+			if (!boundUuid.equals(bee.getUUID())) {
+				Level level = accessor.getLevel();
+				Entity boundEntity = ((ServerLevel) level).getEntity(boundUuid);
+				if (boundEntity instanceof Bee boundBee && BeeModule.canBreed(boundBee)) {
+					Pair<UUID, UUID> key = Pair.of(boundUuid, bee.getUUID());
+					ListTag list = POTENTIAL_CACHE.getIfPresent(key);
+					if (list == null) {
+						POTENTIAL_CACHE.put(
+								key,
+								createPotentialList(
+										list = new ListTag(),
+										attributes.getGenes(),
+										BeeAttributes.of(boundBee).getGenes(),
+										level.getRandom()));
+					}
+					data.put("Potential", list);
+				}
+			}
+		}
 		ListTag list = new ListTag();
 		for (Allele allele : Allele.sortedByCode()) {
 			CompoundTag tag = new CompoundTag();
@@ -70,6 +109,54 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 			list.add(tag);
 		}
 		data.put("Loci", list);
+	}
+
+	private static ListTag createPotentialList(ListTag tag, GeneData genes1, GeneData genes2, net.minecraft.util.RandomSource random) {
+		Set<String> parentTraits = Sets.newHashSet();
+		genes1.getTraits().forEach(trait -> parentTraits.add(trait.name()));
+		genes2.getTraits().forEach(trait -> parentTraits.add(trait.name()));
+		Object2IntOpenHashMap<String> traitCounts = new Object2IntOpenHashMap<>();
+		for (String trait : parentTraits) {
+			traitCounts.put(trait, 0);
+		}
+		for (int i = 0; i < 200; i++) {
+			GeneData offspring = new GeneData();
+			offspring.breedFrom(genes1, null, genes2, null, random);
+			offspring.updateTraits();
+			for (Trait trait : offspring.getTraits()) {
+				traitCounts.addTo(trait.name(), 1);
+			}
+		}
+		List<Pair<String, String>> results = Lists.newArrayList();
+		for (String trait : parentTraits) {
+			int count = traitCounts.getInt(trait);
+			int parentTraitBasis = 0;
+			if (genes1.hasTrait(Trait.REGISTRY.get(trait))) {
+				parentTraitBasis += 100;
+			}
+			if (genes2.hasTrait(Trait.REGISTRY.get(trait))) {
+				parentTraitBasis += 100;
+			}
+			int gap = count - parentTraitBasis;
+			if (gap > 0) {
+				results.add(Pair.of(trait, gap >= parentTraitBasis / 2 ? "++" : "+"));
+			} else if (gap < 0) {
+				results.add(Pair.of(trait, gap <= -parentTraitBasis / 2 ? "--" : "-"));
+			}
+		}
+		results.sort(Comparator.<Pair<String, String>>comparingInt(pair -> pair.getSecond().length())
+				.thenComparing(Pair::getFirst));
+		int limit = 3;
+		for (Pair<String, String> pair : results) {
+			CompoundTag traitTag = new CompoundTag();
+			traitTag.putString("Trait", pair.getFirst());
+			traitTag.putString("State", pair.getSecond());
+			tag.add(traitTag);
+			if (--limit <= 0) {
+				break;
+			}
+		}
+		return tag;
 	}
 
 	public static void appendTooltip(ITooltip tooltip, Accessor<?> accessor) {
@@ -132,6 +219,29 @@ public class InspectorProvider implements IEntityComponentProvider, IBlockCompon
 				}
 			}
 			tooltip.add(Component.literal(String.join("/", strings)));
+		}
+
+		if (!data.contains("Potential")) {
+			return;
+		}
+		title(tooltip, "text.fruitfulfun.offspringPotential");
+		ListTag potential = data.getList("Potential", Tag.TAG_COMPOUND);
+		if (potential.isEmpty()) {
+			tooltip.add(Component.translatable("text.fruitfulfun.offspringPotential.none"));
+		} else {
+			List<String> strings = Lists.newArrayList();
+			for (Tag e : potential) {
+				CompoundTag tag = (CompoundTag) e;
+				Trait trait = Trait.REGISTRY.get(tag.getString("Trait"));
+				if (trait == null) {
+					continue;
+				}
+				String state = tag.getString("State");
+				strings.add(Component.translatable(
+						"text.fruitfulfun.offspringPotential." + state,
+						trait.getDisplayName().getString()).getString());
+			}
+			tooltip.add(Component.literal(String.join(" ", strings)));
 		}
 	}
 

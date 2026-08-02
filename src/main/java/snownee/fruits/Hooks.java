@@ -21,6 +21,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.VibrationParticleOption;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -197,10 +198,16 @@ public final class Hooks {
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		Saddleable saddleable = (Saddleable) bee;
 		ItemStack held = player.getItemInHand(hand);
+		boolean isClientSide = player.level().isClientSide();
 		if (BeeModule.INSPECTOR.is(held)) {
+			if (jade && FFCommonConfig.inspectorShowOffspringPotential && !isClientSide && player.isShiftKeyDown()) {
+				CompoundTag tag = held.getOrCreateTag();
+				tag.putUUID("BoundEntityUUID", bee.getUUID());
+				tag.putString("BoundEntityName", Component.Serializer.toJson(bee.getName()));
+				player.displayClientMessage(Component.translatable("tip.fruitfulfun.boundEntity.set", bee.getName()), true);
+			}
 			return InteractionResult.PASS;
 		}
-		boolean isClientSide = player.level().isClientSide();
 		if (held.is(Items.DEBUG_STICK)) {
 			if (!isClientSide) {
 				boolean hasPink = attributes.hasTrait(Trait.PINK);

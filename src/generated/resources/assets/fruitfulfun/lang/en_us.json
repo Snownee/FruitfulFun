@@ -524,5 +524,15 @@
   "tip.fruitfulfun.whenPerfectBlock": "When Perfect Block:",
   "tip.fruitfulfun.whenUseOnAnimal": "Use on Animal:",
   "tip.fruitfulfun.whenUseOnBlock": "Use on Block:",
-  "tip.fruitfulfun.whenUseOnBookshelf": "Use on Bookshelf:"
+  "tip.fruitfulfun.whenUseOnBookshelf": "Use on Bookshelf:",
+  "tip.fruitfulfun.whenSneakUseOnBee": "Sneak + Use on Bee:",
+  "tip.fruitfulfun.lockBee": " Lock the bee for offspring potential analysis",
+  "tip.fruitfulfun.boundEntity.set": "Bound entity set to %s",
+  "tip.fruitfulfun.boundEntity.status": "Bound to: %s",
+  "text.fruitfulfun.offspringPotential": "Offspring Potential",
+  "text.fruitfulfun.offspringPotential.none": "No changes",
+  "text.fruitfulfun.offspringPotential.+": "%s▲",
+  "text.fruitfulfun.offspringPotential.-": "%s▼",
+  "text.fruitfulfun.offspringPotential.++": "%s▲▲",
+  "text.fruitfulfun.offspringPotential.--": "%s▼▼"
 }

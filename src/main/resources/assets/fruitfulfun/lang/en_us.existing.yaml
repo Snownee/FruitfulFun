@@ -104,6 +104,10 @@ tip.fruitfulfun.recommendJade: >-
 tip.fruitfulfun.pressAlt: Press Alt for next page
 tip.fruitfulfun.noGeneNames: You haven't found any gene yet.
 tip.fruitfulfun.whenUseOnBookshelf: 'Use on Bookshelf:'
+tip.fruitfulfun.whenSneakUseOnBee: 'Sneak + Use on Bee:'
+tip.fruitfulfun.lockBee: ' Lock the bee for offspring potential analysis'
+tip.fruitfulfun.boundEntity.set: Bound entity set to %s
+tip.fruitfulfun.boundEntity.status: 'Bound to: %s'
 tip.fruitfulfun.renameGenes: ' Rename genes'
 tip.fruitfulfun.whenUseOnBlock: 'Use on Block:'
 tip.fruitfulfun.viewScents: ' View current scents'
@@ -161,6 +165,12 @@ text.fruitfulfun.trait.pink: Pink
 text.fruitfulfun.trait.pink.desc: Pink color.
 text.fruitfulfun.trait.ghost: Ghost
 text.fruitfulfun.trait.ghost.desc: Can haunt the living. Cannot breed or pollinate.
+text.fruitfulfun.offspringPotential: Offspring Potential
+text.fruitfulfun.offspringPotential.none: No changes
+text.fruitfulfun.offspringPotential.+: '%s▲'
+text.fruitfulfun.offspringPotential.-: '%s▼'
+text.fruitfulfun.offspringPotential.++: '%s▲▲'
+text.fruitfulfun.offspringPotential.--: '%s▼▼'
 text.fruitfulfun.pollen: Pollens
 text.fruitfulfun.pollen.none: This bee doesn't have any pollens.
 text.fruitfulfun.gene: Genes

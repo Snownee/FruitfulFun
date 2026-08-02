@@ -5,6 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.util.ClientProxy;
@@ -57,10 +59,10 @@ public class InspectorItem extends ModItem {
 
 	@Override
 	public InteractionResult useOn(UseOnContext useOnContext) {
+		Player player = useOnContext.getPlayer();
 		BlockState blockState = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
 		if (CommonProxy.isBookshelf(blockState)) {
 			if (useOnContext.getLevel().isClientSide()) {
-				Player player = useOnContext.getPlayer();
 				if (player == null) {
 					return InteractionResult.FAIL;
 				}
@@ -71,6 +73,13 @@ public class InspectorItem extends ModItem {
 				ClientProxy.openEditGeneNameScreen();
 			}
 			return InteractionResult.SUCCESS;
+		} else if (player != null && player.isShiftKeyDown() && !useOnContext.getLevel().isClientSide()) {
+			CompoundTag tag = useOnContext.getItemInHand().getTag();
+			if (tag != null && tag.hasUUID("BoundEntityUUID")) {
+				tag.remove("BoundEntityUUID");
+				tag.remove("BoundEntityName");
+				return InteractionResult.SUCCESS;
+			}
 		}
 		return InteractionResult.PASS;
 	}
@@ -80,6 +89,10 @@ public class InspectorItem extends ModItem {
 		tooltip.add(Component.empty());
 		tooltip.add(Component.translatable("tip.fruitfulfun.whenUseOnBookshelf").withStyle(ChatFormatting.GRAY));
 		tooltip.add(Component.translatable("tip.fruitfulfun.renameGenes").withStyle(ChatFormatting.BLUE));
+		if (Hooks.jade && FFCommonConfig.inspectorShowOffspringPotential) {
+			tooltip.add(Component.translatable("tip.fruitfulfun.whenSneakUseOnBee").withStyle(ChatFormatting.GRAY));
+			tooltip.add(Component.translatable("tip.fruitfulfun.lockBee").withStyle(ChatFormatting.BLUE));
+		}
 		if (Hooks.gadget) {
 			tooltip.add(Component.translatable("tip.fruitfulfun.whenUseOnBlock").withStyle(ChatFormatting.GRAY));
 			tooltip.add(Component.translatable("tip.fruitfulfun.viewScents").withStyle(ChatFormatting.BLUE));
