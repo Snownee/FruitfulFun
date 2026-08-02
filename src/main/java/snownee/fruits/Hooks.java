@@ -1,6 +1,7 @@
 package snownee.fruits;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,18 +55,25 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import snownee.fruits.CoreModule;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.Allele;
 import snownee.fruits.bee.genetics.GeneData;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.block.SlidingDoorBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
+import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
 import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFPlayer;
@@ -116,18 +124,33 @@ public final class Hooks {
 			return;
 		}
 		Entity entity = ((EntityHitResult) hitResult).getEntity();
-		if (!CoreModule.SLIDING_DOOR.is(entity.getType())) {
+		if (!(entity instanceof SlidingDoorEntity door)) {
 			return;
 		}
 		Vec3 vec = hitResult.getLocation();
-		BlockPos pos = entity.blockPosition();
+		BlockPos pos = door.doorPos();
+		if (pos == null) {
+			return;
+		}
 		if (vec.y - pos.getY() >= 1) {
 			pos = pos.above();
 		}
-		AABB intersection = entity.getBoundingBox().intersect(new AABB(pos));
+		AABB intersection = door.getBoundingBox().intersect(new AABB(pos));
 		vec = intersection.getCenter();
-		//mc.level.addParticle(ParticleTypes.ANGRY_VILLAGER, vec.x, vec.y, vec.z, 0, 0, 0);
 		consumer.accept(new BlockHitResult(vec, Direction.UP, pos, false));
+	}
+
+	public static VoxelShape handleSlidingDoorOutline(BlockState blockState, Level level, BlockPos pos, float partialTick) {
+		BlockPos bottomPos = blockState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos : pos.below();
+		SlidingDoorEntity door = level.getEntities(
+				CoreModule.SLIDING_DOOR.get(),
+				new AABB(bottomPos),
+				e -> Objects.equals(e.doorPos(), bottomPos)).stream().findFirst().orElse(null);
+		if (door == null) {
+			return Shapes.empty();
+		}
+		Vec3 offset = door.getLerpedOffset(partialTick);
+		return SlidingDoorBlock.getActualShape(door.bottomState).move(offset.x, offset.y, offset.z);
 	}
 
 	public static void hornHarvest(ServerLevel level, ServerPlayer player) {
