@@ -18,7 +18,7 @@ import snownee.fruits.FFCommonConfig;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.MutagenItem;
-import snownee.fruits.compat.lychee.LycheeCompat;
+import snownee.fruits.compat.lychee.LycheeCompatClient;
 import snownee.fruits.gadget.GadgetModule;
 
 public class FFREICompat implements REIClientPlugin {
@@ -46,7 +46,7 @@ public class FFREICompat implements REIClientPlugin {
 					EntryIngredients.of(new ItemStack(BeeModule.MUTAGEN.get()))));
 		}
 
-		LycheeCompat.addInformation((items, component) -> {
+		LycheeCompatClient.addInformation((items, component) -> {
 			registry.add(DefaultInformationDisplay.createFromEntries(EntryIngredients.ofItemStacks(items), items.getFirst().getHoverName())
 					.line(component));
 		});
