@@ -48,6 +48,7 @@ public final class FFCommonConfig {
 	public static float beeRidingVerticalSpeedMultiplier = 1.0f;
 	public static boolean mutagenRecipe = true;
 	public static boolean redloveFruitUse = true;
+	public static boolean randomBeeNames = true;
 	@KiwiConfig.Path("dragonBreath.fixExploit") // fix MC-114618
 	public static boolean fixDragonBreathExploit = true;
 	@KiwiConfig.GameRestart

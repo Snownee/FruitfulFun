@@ -2,6 +2,7 @@ package snownee.fruits.bee;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -283,5 +284,13 @@ public class BeeModule extends AbstractModule {
 		if (newSpectator instanceof FFPlayer ffPlayer) {
 			ffPlayer.fruits$setHauntingTarget(newEntity);
 		}
+	}
+
+	public static Component randomName(UUID uuid) {
+		RandomSource random = RandomSource.create(uuid.hashCode() >> 2);
+		return Component.translatable(
+				"fruitfulfun.beeName",
+				Component.translatable("fruitfulfun.beeName." + random.nextInt(150)),
+				Component.translatable("fruitfulfun.beeName." + random.nextInt(150)));
 	}
 }
