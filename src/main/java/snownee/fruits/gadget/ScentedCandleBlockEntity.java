@@ -28,9 +28,11 @@ public class ScentedCandleBlockEntity extends BlockEntity {
 	public static final float BASE_POWER_RATE = 1.2f;
 	private BuzzyPowerStorage power = new BuzzyPowerStorage(50000f);
 	private boolean creative;
+	private final ScentType type;
 
 	public ScentedCandleBlockEntity(BlockPos pos, BlockState state) {
 		super(GadgetModule.SCENTED_CANDLE_ENTITY.getOrCreate(), pos, state);
+		type = ((ScentedCandleBlock) state.getBlock()).type;
 	}
 
 	@Override
@@ -111,7 +113,9 @@ public class ScentedCandleBlockEntity extends BlockEntity {
 			CommonProxy.extinguishCandle(null, state, level, pos);
 			return;
 		}
-		be.power().useLife(BASE_POWER_RATE * state.getValue(CandleBlock.CANDLES));
+		if (be.type.rate() > 0) {
+			be.power().useLife(BASE_POWER_RATE * be.type.rate() * state.getValue(CandleBlock.CANDLES));
+		}
 		be.updateChunks();
 	}
 

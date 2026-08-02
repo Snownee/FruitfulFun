@@ -18,6 +18,10 @@
       "required": false
     },
     {
+      "id": "fruitfulfun:peace_candle",
+      "required": false
+    },
+    {
       "id": "#minecraft:candles",
       "required": false
     },

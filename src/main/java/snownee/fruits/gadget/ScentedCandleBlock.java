@@ -4,8 +4,14 @@ import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import snownee.kiwi.block.IKiwiBlock;
 
 public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiwiBlock {
@@ -104,6 +111,44 @@ public class ScentedCandleBlock extends CandleBlock implements EntityBlock, IKiw
 			dropResources(state, level, pos, be);
 		}
 		super.playerWillDestroy(level, pos, state, player);
+	}
+
+	@Override
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+		if (state.getValue(LIT)) {
+			this.getParticleOffsets(state).forEach(particlePos -> addParticlesAndSound(
+					level,
+					particlePos.add(pos.getX(), pos.getY(), pos.getZ()),
+					random));
+		}
+	}
+
+	private void addParticlesAndSound(final Level level, final Vec3 pos, final RandomSource random) {
+		float chance = random.nextFloat();
+		if (chance < 0.3F) {
+			int color = type.color();
+			float red = (color >> 16 & 0xFF) / 255.0F;
+			float green = (color >> 8 & 0xFF) / 255.0F;
+			float blue = (color & 0xFF) / 255.0F;
+			Particle particle = Minecraft.getInstance().particleEngine.createParticle(
+					ParticleTypes.EFFECT, pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
+			if (particle != null) {
+				particle.setColor(red, green, blue);
+			}
+			if (chance < 0.17F) {
+				level.playLocalSound(
+						pos.x + 0.5,
+						pos.y + 0.5,
+						pos.z + 0.5,
+						SoundEvents.CANDLE_AMBIENT,
+						SoundSource.BLOCKS,
+						1.0F + random.nextFloat(),
+						random.nextFloat() * 0.7F + 0.3F,
+						false);
+			}
+		}
+
+		level.addParticle(ParticleTypes.SMALL_FLAME, pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
 	}
 
 	@Override
