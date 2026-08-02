@@ -20,7 +20,7 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.genetics.Mutagen;
 import snownee.fruits.bee.genetics.MutagenItem;
-import snownee.fruits.compat.lychee.LycheeCompat;
+import snownee.fruits.compat.lychee.LycheeCompatClient;
 import snownee.fruits.gadget.GadgetModule;
 
 @JeiPlugin
@@ -45,7 +45,7 @@ public class FFJEICompat implements IModPlugin {
 			registration.addRecipes(RecipeTypes.BREWING, List.of(brewingRecipe));
 		}
 
-		LycheeCompat.addInformation(registration::addItemStackInfo);
+		LycheeCompatClient.addInformation(registration::addItemStackInfo);
 	}
 
 	@Override
