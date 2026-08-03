@@ -50,6 +50,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
@@ -81,6 +82,7 @@ import snownee.fruits.food.FoodModule;
 import snownee.fruits.mixin.EntityAccess;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
+import net.minecraft.world.Container;
 
 public final class Hooks {
 
@@ -96,6 +98,35 @@ public final class Hooks {
 	public static final Set<MobEffect> scentEffects = Sets.newHashSet();
 
 	private Hooks() {
+	}
+
+	public static void popItemBelow(BlockEntity blockEntity, boolean dropItem, int... slots) {
+		BlockPos pos = blockEntity.getBlockPos();
+		BlockPos below = pos.below();
+		Level level = Objects.requireNonNull(blockEntity.getLevel());
+		BlockState belowState = level.getBlockState(below);
+		BlockEntity belowEntity = level.getBlockEntity(below);
+		Container container = (Container) blockEntity;
+		for (int slot : slots) {
+			ItemStack item = container.removeItem(slot, container.getMaxStackSize());
+			if (item.isEmpty()) {
+				continue;
+			}
+			if (!belowState.isAir()) {
+				CommonProxy.insertItem(level, below, belowState, belowEntity, Direction.UP, item);
+				if (item.isEmpty()) {
+					continue;
+				}
+			}
+			if (dropItem) {
+				ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() - 0.25, pos.getZ() + 0.5, item);
+				itemEntity.setDefaultPickUpDelay();
+				itemEntity.setDeltaMovement(0, -0.1, 0);
+				level.addFreshEntity(itemEntity);
+			} else {
+				container.setItem(slot, item);
+			}
+		}
 	}
 
 	public static Predicate<BlockState> wrapPollinationPredicate(Predicate<BlockState> original) {

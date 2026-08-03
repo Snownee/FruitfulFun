@@ -83,6 +83,11 @@ block.fruitfulfun.ender_candle.tip.shift: Prevent teleportation and Endermen fro
 block.fruitfulfun.peace_candle: Rose Scented Candle
 block.fruitfulfun.peace_candle.tip.shift: Prevent hostile mobs and bats from spawning nearby.
 block.fruitfulfun.buzzy_crafter.tip.shift: Collect power from returning bees.
+block.fruitfulfun.rain_detector: Rain Detector
+block.fruitfulfun.brewer: Brewer
+block.fruitfulfun.brewer.tip.shift: A brewing stand that dispenses products. After continuously brewing the same product, it provides a speed bonus of up to +100%%.
+tip.fruitfulfun.speedBonus: 'Speed Bonus: +%s%%'
+container.fruitfulfun.brewer: Brewer
 item.fruitfulfun.vac_gun: V.C.D.
 item.fruitfulfun.vac_gun_casing: V.C.D. Casing
 

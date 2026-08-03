@@ -11,6 +11,8 @@ import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import snownee.fruits.Hooks;
+import snownee.fruits.gadget.GadgetModule;
 
 @Mixin(BlockEntityType.class)
 public class BlockEntityTypeMixin {
@@ -25,6 +27,9 @@ public class BlockEntityTypeMixin {
 		}
 		if (type == BlockEntityType.HANGING_SIGN &&
 				(blockClass == WallHangingSignBlock.class || blockClass == CeilingHangingSignBlock.class)) {
+			cir.setReturnValue(true);
+		}
+		if (Hooks.gadget && type == BlockEntityType.BREWING_STAND && GadgetModule.BREWER.is(pState)) {
 			cir.setReturnValue(true);
 		}
 	}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "redlove_sliding_door_from_door",
+  "ingredients": [
+    {
+      "item": "fruitfulfun:redlove_door"
+    }
+  ],
+  "result": {
+    "item": "fruitfulfun:redlove_sliding_door"
+  }
+}

@@ -8,6 +8,10 @@
     {
       "id": "fruitfulfun:redlove_cabinet",
       "required": false
+    },
+    {
+      "id": "fruitfulfun:rain_detector",
+      "required": false
     }
   ]
 }
