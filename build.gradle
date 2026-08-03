@@ -176,6 +176,9 @@ repositories {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.dev"
+        content {
+            includeGroup "mezz.jei"
+        }
     }
     maven { url "https://maven.shedaniel.me/" }
     maven {
