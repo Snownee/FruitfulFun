@@ -6,13 +6,14 @@ import java.util.Set;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.core.Holder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,10 +22,9 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -110,26 +110,26 @@ public class GadgetModule extends AbstractModule {
 	public static final KiwiGO<MobEffect> WANDERING_TRADER_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xFFAA00));
 	public static final KiwiGO<MobEffect> WEAK_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xAAAAAA));
 	//	public static final KiwiGO<MobEffect> HEAVY_SCENT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0x555555));
-	public static final KiwiGO<ScentType> PHANTOM = go(() -> new ScentType(List.of(new MobEffectInstance(
+	public static final KiwiGO<ScentType> PHANTOM = go(() -> new ScentType(() -> List.of(new MobEffectInstance(
 			PHANTOM_SCENT.getOrCreate(),
 			600,
 			0,
 			true,
 			false,
 			false))));
-	public static final KiwiGO<ScentType> WANDERING_TRADER = go(() -> new ScentType(List.of(new MobEffectInstance(
+	public static final KiwiGO<ScentType> WANDERING_TRADER = go(() -> new ScentType(() -> List.of(new MobEffectInstance(
 			WANDERING_TRADER_SCENT.getOrCreate(),
 			600,
 			0,
 			true,
 			false,
 			false))));
-	public static final KiwiGO<ScentType> ENDER = go(() -> new ScentType(List.of(), 0x6e6bca, 1));
-	public static final KiwiGO<ScentType> WEAK = go(() -> new ScentType(List.of(
+	public static final KiwiGO<ScentType> ENDER = go(() -> new ScentType(List::of, 0x6e6bca, 1));
+	public static final KiwiGO<ScentType> WEAK = go(() -> new ScentType(() -> List.of(
 			new MobEffectInstance(WEAK_SCENT.getOrCreate(), 600, 0, true, false, false),
 			new MobEffectInstance(MobEffects.WEAKNESS, 600),
 			new MobEffectInstance(CoreModule.FRAGILITY.getOrCreate(), 600))));
-	public static final KiwiGO<ScentType> PEACE = go(() -> new ScentType(List.of(), 0xee2c28, 2));
+	public static final KiwiGO<ScentType> PEACE = go(() -> new ScentType(List::of, 0xee2c28, 2));
 	//	public static final KiwiGO<ScentType> HEAVY = go(() -> new ScentType(List.of(new MobEffectInstance(
 //			HEAVY_SCENT.getOrCreate(),
 //			600,

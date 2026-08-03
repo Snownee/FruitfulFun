@@ -199,8 +199,8 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.0"))
-    implementation("io.github.llamalad7:mixinextras-forge:0.4.0")
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
 
     compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}-forge:${project.jei_version}")
@@ -224,8 +224,8 @@ dependencies {
     implementation fg.deobf("maven.modrinth:suggestion-tweaker:1.20-1.5.1+forge")
 
 //    compileOnly "dev.su5ed.sinytra.fabric-api:fabric-api:${project.ffapi_version}"
-    compileOnly(jarJar("dev.su5ed.sinytra:fabric-loader:2.7.4+0.15.3+1.20.1")) {
-        jarJar.ranged(it, "[2,)")
+    compileOnly(jarJar("dev.su5ed.sinytra:fabric-loader:2.6.0+0.15.0+1.20.1")) {
+        jarJar.ranged(it, "[2.6.0+0.15.0+1.20.1,)")
         transitive(false)
     }
     compileOnly(jarJar("dev.su5ed.sinytra.fabric-api:fabric-biome-api-v1:13.0.14+dc36698e77")) {

@@ -1,6 +1,10 @@
 package snownee.fruits.gadget;
 
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.function.Supplier;
+
+import com.google.common.base.Suppliers;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,21 +14,22 @@ import snownee.fruits.gadget.network.SScentAddedPacket;
 import snownee.fruits.util.CommonProxy;
 
 public class ScentType {
-	private final List<MobEffectInstance> effects;
-	private final int color;
+	private final Supplier<List<MobEffectInstance>> effects;
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private OptionalInt color;
 	private final float rate;
 
-	public ScentType(List<MobEffectInstance> effects) {
+	public ScentType(Supplier<List<MobEffectInstance>> effects) {
 		this(effects, 1.0f);
 	}
 
-	public ScentType(List<MobEffectInstance> effects, float rate) {
-		this(effects, effects.isEmpty() ? -1 : effects.get(0).getEffect().getColor(), rate);
+	public ScentType(Supplier<List<MobEffectInstance>> effects, float rate) {
+		this(effects, -1, rate);
 	}
 
-	public ScentType(List<MobEffectInstance> effects, int color, float rate) {
-		this.effects = effects;
-		this.color = color;
+	public ScentType(Supplier<List<MobEffectInstance>> effects, int color, float rate) {
+		this.effects = Suppliers.memoize(effects::get);
+		this.color = color == -1 ? OptionalInt.empty() : OptionalInt.of(color);
 		this.rate = rate;
 	}
 
@@ -41,7 +46,7 @@ public class ScentType {
 	}
 
 	public void tick(LivingEntity entity, LevelChunk chunk) {
-		for (MobEffectInstance effect : effects) {
+		for (MobEffectInstance effect : effects.get()) {
 			if (!entity.canBeAffected(effect)) {
 				continue;
 			}
@@ -61,11 +66,14 @@ public class ScentType {
 	}
 
 	public List<MobEffectInstance> effects() {
-		return effects;
+		return effects.get();
 	}
 
 	public int color() {
-		return color;
+		if (color.isEmpty() && !effects().isEmpty()) {
+			this.color = OptionalInt.of(effects().get(0).getEffect().getColor());
+		}
+		return color.orElse(-1);
 	}
 
 	public float rate() {
