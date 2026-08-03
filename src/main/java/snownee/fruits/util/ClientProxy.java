@@ -263,6 +263,12 @@ public class ClientProxy {
 			} else {
 				FruitfulFun.LOGGER.warn("Failed to register shield blocking property");
 			}
+
+			if (Hooks.supplementaries) {
+				eventBus.addListener((RegisterColorHandlersEvent.Block event) -> {
+					event.register(ColorProviderUtil.delegate(Blocks.BREWING_STAND), GadgetModule.BREWER.getOrCreate());
+				});
+			}
 		}
 
 		if (Hooks.ritual) {
