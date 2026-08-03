@@ -1,23 +1,23 @@
 {
-	"type": "fruitfulfun:dragon_ritual",
-	"fabric:load_conditions": [
-		{
-			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:ritual"
-		},
-		{
-			"condition": "kiwi:is_loaded",
-			"module": "fruitfulfun:gadget"
-		}
-	],
-	"item_in": {
-		"item": "brewing_stand"
-	},
-	"post": [
-		{
-			"type": "drop_item",
-			"item": "fruitfulfun:brewer"
-		}
-	],
-	"max_repeats": 1
+  "type": "fruitfulfun:dragon_ritual",
+  "item_in": {
+    "item": "brewing_stand"
+  },
+  "post": [
+    {
+      "type": "drop_item",
+      "item": "fruitfulfun:brewer"
+    }
+  ],
+  "max_repeats": 1,
+  "conditions": [
+    {
+      "module": "fruitfulfun:ritual",
+      "type": "kiwi:is_loaded"
+    },
+    {
+      "module": "fruitfulfun:gadget",
+      "type": "kiwi:is_loaded"
+    }
+  ]
 }

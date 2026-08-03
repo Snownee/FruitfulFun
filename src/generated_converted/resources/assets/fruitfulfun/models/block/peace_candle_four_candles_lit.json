@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_four_candles",
+  "textures": {
+    "all": "fruitfulfun:block/peace_candle_lit",
+    "particle": "fruitfulfun:block/peace_candle_lit"
+  }
+}
