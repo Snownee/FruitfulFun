@@ -38,7 +38,7 @@ public abstract class LivingEntityMixin extends Entity {
 		super(entityType, level);
 	}
 
-	@Inject(method = "randomTeleport", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "randomTeleport*", at = @At("HEAD"), cancellable = true)
 	private void randomTeleport(double xx, double yy, double zz, boolean showParticles, CallbackInfoReturnable<Boolean> cir) {
 		if (Hooks.gadget && GadgetModule.ENDER.get().isActiveAt(Objects.requireNonNull(level()).getChunkAt(blockPosition()))) {
 			cir.setReturnValue(false);

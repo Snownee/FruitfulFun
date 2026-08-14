@@ -1,5 +1,13 @@
 pluginManagement {
 	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		maven {
+			name = 'RelativityMC'
+			url = 'https://repo.codemc.io/repository/relativitymc/'
+		}
 		gradlePluginPortal()
 		mavenCentral()
 		maven { url "https://maven.neoforged.net/releases" }

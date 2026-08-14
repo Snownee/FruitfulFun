@@ -28,9 +28,6 @@
 		"client": [
 			"snownee.fruits.util.ClientProxy"
 		],
-		"fabric-datagen": [
-			"snownee.fruits.datagen.FFDataGen"
-		],
 		"rei_client": [
 			"snownee.fruits.compat.rei.FFREICompat"
 		],
