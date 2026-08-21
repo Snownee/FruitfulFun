@@ -121,7 +121,7 @@ public class ServerGamePacketListenerImplMixin {
 	@Inject(
 			method = "handleUseItemOn", at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;ackBlockChangesUpTo(I)V"), cancellable = true)
+			target = "Lnet/minecraft/network/protocol/game/ServerboundUseItemOnPacket;getHand()Lnet/minecraft/world/InteractionHand;"), cancellable = true)
 	private void handleUseItemOn(ServerboundUseItemOnPacket packet, CallbackInfo ci) {
 		if (!Hooks.bee || !FFPlayer.of(player).fruits$isHaunting()) {
 			return;
