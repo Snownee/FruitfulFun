@@ -199,16 +199,16 @@ publishMods {
         requires("launchpad")
         optional("jade")
     }
-//    modrinth {
-//        projectId = "4bZDWNlG"
-//        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-//        minecraftVersions.add(minecraft_version)
-//        minecraftVersions.add("26.1")
-//        minecraftVersions.add("26.1.1")
-//        requires("kiwi")
-//        requires("lychee")
-//        requires("forgified-fabric-api")
-//        requires("launchpad")
-//        optional("jade")
-//    }
+    modrinth {
+        projectId = "4bZDWNlG"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add(minecraft_version)
+        minecraftVersions.add("26.1")
+        minecraftVersions.add("26.1.1")
+        requires("kiwi")
+        requires("lychee")
+        requires("forgified-fabric-api")
+        requires("launchpad")
+        optional("jade")
+    }
 }
