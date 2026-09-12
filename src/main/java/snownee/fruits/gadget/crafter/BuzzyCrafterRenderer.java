@@ -13,10 +13,13 @@ import net.minecraft.client.renderer.entity.state.ItemClusterRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.util.ClientProxy;
 
@@ -54,6 +57,10 @@ public final class BuzzyCrafterRenderer implements BlockEntityRenderer<BuzzyCraf
 		state.item.seed = ItemClusterRenderState.getSeedForItemStack(item);
 		state.item.setData(ClientProxy.NO_BOB, Unit.INSTANCE);
 		itemRenderer.updateForTopItem(state.item.item, item, ItemDisplayContext.GROUND, null, null, state.item.seed);
+		BlockPos pos = blockEntity.getBlockPos();
+		state.item.lightCoords = LightCoordsUtil.pack(
+				blockEntity.getLevel().getBrightness(LightLayer.BLOCK, pos),
+				blockEntity.getLevel().getBrightness(LightLayer.SKY, pos));
 	}
 
 	@Override
