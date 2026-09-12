@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:beekeeping",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "description": "book.fruitfulfun.guide.beekeeping.bee_intro.description",
+  "icon": {
+    "id": "minecraft:bee_spawn_egg"
+  },
+  "id": "fruitfulfun:beekeeping/bee_intro",
+  "name": "book.fruitfulfun.guide.beekeeping.bee_intro.name",
+  "sort_number": 0,
+  "x": 0,
+  "y": 0
+}

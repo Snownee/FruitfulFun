@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "honey_pomelo_tea",
+  "show_title_separator": true,
+  "sort_number": 3,
+  "text": "book.fruitfulfun.guide.cooking.dishes.honey_pomelo_tea.text",
+  "title": "book.fruitfulfun.guide.cooking.dishes.honey_pomelo_tea.title"
+}

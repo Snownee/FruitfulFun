@@ -1,0 +1,66 @@
+{
+  "type": "modonomicon:dense",
+  "mapping": {
+    "*": {
+      "type": "modonomicon:display",
+      "display": "minecraft:basalt"
+    },
+    "+": {
+      "type": "modonomicon:display",
+      "display": "minecraft:stone"
+    },
+    "0": {
+      "type": "modonomicon:any"
+    },
+    "C": {
+      "type": "modonomicon:tag",
+      "display": "minecraft:candle[lit=true]",
+      "tag": "#fruitfulfun:candles[lit=true]"
+    },
+    "H": {
+      "type": "modonomicon:blockstate",
+      "block": "minecraft:dragon_head[rotation=4]"
+    }
+  },
+  "pattern": [
+    [
+      "___________",
+      "_____H_____",
+      "___________",
+      "___C___C___",
+      "___________",
+      "___________",
+      "___________",
+      "___C___C___",
+      "___________",
+      "___________",
+      "___________"
+    ],
+    [
+      "___________",
+      "___________",
+      "___________",
+      "____C_C____",
+      "___C___C___",
+      "_____0_____",
+      "___C___C___",
+      "____C_C____",
+      "___________",
+      "___________",
+      "___________"
+    ],
+    [
+      "*+*+*+*+*+*",
+      "+*+*+*+*+*+",
+      "*+*+*+*+*+*",
+      "+*+*+*+*+*+",
+      "*+*+*+*+*+*",
+      "+*+*+*+*+*+",
+      "*+*+*+*+*+*",
+      "+*+*+*+*+*+",
+      "*+*+*+*+*+*",
+      "+*+*+*+*+*+",
+      "*+*+*+*+*+*"
+    ]
+  ]
+}

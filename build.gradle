@@ -132,6 +132,8 @@ dependencies {
         exclude(group: "net.fabricmc")
     }
 
+    implementation "maven.modrinth:modonomicon:MHAZ9gLw"
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     annotationProcessor fileTree(dir: "libs", include: ["*.jar"])
 

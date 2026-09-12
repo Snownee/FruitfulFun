@@ -1,5 +1,9 @@
 package snownee.fruits.datagen;
 
+import com.klikli_dev.modonomicon.api.datagen.FabricBookProvider;
+import com.klikli_dev.modonomicon.api.datagen.LanguageProviderCache;
+import com.klikli_dev.modonomicon.api.datagen.research.ResearchCache;
+
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
@@ -11,6 +15,8 @@ import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeVariants;
 import snownee.fruits.cherry.datagen.CherryBlockLoot;
 import snownee.fruits.compat.farmersdelight.FarmersDelightBlockLoot;
+import snownee.fruits.datagen.guide.FruitfulFunBook;
+import snownee.fruits.datagen.guide.RitualMultiblockProvider;
 import snownee.fruits.food.datagen.FoodBlockLoot;
 import snownee.fruits.gadget.datagen.GadgetBlockLoot;
 import snownee.fruits.pomegranate.datagen.PomegranateBlockLoot;
@@ -38,6 +44,12 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 //		pack.addProvider(($, _) -> new FFEquipmentAssetProvider($));
 		pack.addProvider(CherryBlockLoot::new);
 		pack.addProvider(PomegranateBlockLoot::new);
+		pack.addProvider((output, registries) -> new RitualMultiblockProvider(output));
+		pack.addProvider(FabricBookProvider.of(
+				FruitfulFun.ID,
+				new LanguageProviderCache("zh_cn"),
+				new ResearchCache(),
+				new FruitfulFunBook()));
 		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("food"));
 		pack.addProvider(FoodBlockLoot::new);
 		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("gadget"));

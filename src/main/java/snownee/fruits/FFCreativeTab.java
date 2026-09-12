@@ -20,6 +20,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.handbook.HandbookModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
@@ -55,6 +56,9 @@ public final class FFCreativeTab extends AbstractModule {
 
 		void run() {
 			map.remove(CherryModule.REDLOVE_CROWN.get());
+			if (Hooks.handbook) {
+				add(HandbookModule.HANDBOOK);
+			}
 			for (FruitType type : FFRegistries.FRUIT_TYPE) {
 				add(type.fruit.get());
 			}

@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:fruit_tree",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "description": "book.fruitfulfun.guide.fruit_tree.planting.description",
+  "icon": {
+    "id": "fruitfulfun:apple_sapling"
+  },
+  "id": "fruitfulfun:fruit_tree/planting",
+  "name": "book.fruitfulfun.guide.fruit_tree.planting.name",
+  "sort_number": 1,
+  "x": 0,
+  "y": 0
+}

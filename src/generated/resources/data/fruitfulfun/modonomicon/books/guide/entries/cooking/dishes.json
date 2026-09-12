@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:cooking",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "description": "book.fruitfulfun.guide.cooking.dishes.description",
+  "icon": {
+    "id": "fruitfulfun:grapefruit_panna_cotta"
+  },
+  "id": "fruitfulfun:cooking/dishes",
+  "name": "book.fruitfulfun.guide.cooking.dishes.name",
+  "sort_number": 1,
+  "x": 0,
+  "y": 0
+}
