@@ -279,6 +279,7 @@ public final class CoreModule extends AbstractModule {
 			ExtinguishFireConsumeEffect.CODEC,
 			ExtinguishFireConsumeEffect.STREAM_CODEC));
 	public static final TagKey<Instrument> HORN_HARVESTING_INSTRUMENT = tag(Registries.INSTRUMENT, "horn_harvesting_instrument");
+	public static final TagKey<Instrument> HORN_BEE_RETURN_INSTRUMENT = tag(Registries.INSTRUMENT, "horn_bee_return_instrument");
 
 	@Override
 	protected void addEntries() {

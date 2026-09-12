@@ -66,6 +66,7 @@ import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.entity.SlidingDoorEntity;
 import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFPlayer;
+import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.mixin.EntityAccess;
 import snownee.fruits.util.CommonProxy;
 import snownee.kiwi.loader.Platform;
@@ -123,6 +124,27 @@ public final class Hooks {
 				});
 		if (count.get() > 0) {
 			awardSimpleAdvancement(player, "horn");
+		}
+	}
+
+	private static final int HORN_RETURN_TICKS = 2400;
+
+	public static void hornCallBees(ServerPlayer player) {
+		if (!bee) {
+			return;
+		}
+		Vec3 eye = player.getEyePosition();
+		List<Bee> bees = player.level().getEntitiesOfClass(
+				Bee.class,
+				new AABB(eye.x - 24, eye.y - 24, eye.z - 24, eye.x + 24, eye.y + 24, eye.z + 24),
+				bee -> bee.getHivePos() != null
+						&& !GadgetModule.SUMMONED_BEE.is(bee.getType())
+						&& bee.getControllingPassenger() == null
+						&& bee.getTarget() == null
+						&& bee.getLeashHolder() == null
+						&& !((FFBee) bee).fruits$isHornReturnActive());
+		for (Bee bee : bees) {
+			((FFBee) bee).fruits$hornReturn(HORN_RETURN_TICKS);
 		}
 	}
 

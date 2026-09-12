@@ -18,5 +18,6 @@ public class FFInstrumentTags extends FabricTagsProvider<Instrument> {
 	@Override
 	protected void addTags(HolderLookup.Provider registries) {
 		builder(CoreModule.HORN_HARVESTING_INSTRUMENT).add(Instruments.SING_GOAT_HORN);
+		builder(CoreModule.HORN_BEE_RETURN_INSTRUMENT).add(Instruments.CALL_GOAT_HORN);
 	}
 }
