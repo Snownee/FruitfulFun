@@ -74,7 +74,7 @@ import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
-import snownee.fruits.handbook.HandbookModule;
+import snownee.fruits.guide.GuideModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.recipe.AlternativesIngredientBuilder;
@@ -346,14 +346,14 @@ public class FFRecipes extends FabricRecipeProvider {
 						.unlocks("has_crafter", has(GadgetModule.BUZZY_CRAFTER.get()))
 						.save(gadgetExporter, getSimpleRecipeName(GadgetModule.BUZZY_SHIELD.get()));
 
-				RecipeOutput handbookExporter = withConditions(
+RecipeOutput guideExporter = withConditions(
 						output,
-						new ModuleLoadedCondition(FruitfulFun.id("handbook")));
-				shapeless(RecipeCategory.MISC, HandbookModule.HANDBOOK.get())
+						new ModuleLoadedCondition(FruitfulFun.id("guide")));
+				shapeless(RecipeCategory.MISC, GuideModule.GUIDE.get())
 						.requires(Items.BOOK)
 						.requires(CoreModule.CITRUS_FRUITS)
 						.unlockedBy("has_item", has(Items.BOOK))
-						.save(handbookExporter);
+						.save(guideExporter);
 			}
 
 			public void scentedCandle(RecipeOutput output, Ingredient addition, KiwiGO<? extends ItemLike> result) {

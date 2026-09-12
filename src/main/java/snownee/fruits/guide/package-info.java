@@ -1,4 +1,4 @@
 @NullMarked
-package snownee.fruits.handbook;
+package snownee.fruits.guide;
 
 import org.jspecify.annotations.NullMarked;

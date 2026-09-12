@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:handbook"
+      "module": "fruitfulfun:guide"
     }
   ],
   "type": "minecraft:crafting_shapeless",
@@ -12,6 +12,6 @@
     "#c:crops/citrus"
   ],
   "result": {
-    "id": "fruitfulfun:handbook"
+    "id": "fruitfulfun:guide"
   }
 }

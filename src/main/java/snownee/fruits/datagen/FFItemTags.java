@@ -49,6 +49,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.guide.GuideModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModules;
 
@@ -153,6 +154,8 @@ public class FFItemTags extends FabricTagsProvider.ItemTagsProvider {
 					.addOptionalElement(REDLOVE_CABINET.key());
 		}
 
+		valueLookupBuilder(ItemTags.BOOKSHELF_BOOKS).addOptional(GuideModule.GUIDE.get());
+		valueLookupBuilder(ItemTags.LECTERN_BOOKS).addOptional(GuideModule.GUIDE.get());
 		valueLookupBuilder(ConventionalItemTags.HIDDEN_FROM_RECIPE_VIEWERS).add(VAC_GUN_CASING.get(), VAC_GUN.get());
 	}
 }

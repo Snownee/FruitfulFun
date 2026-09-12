@@ -39,11 +39,11 @@ modules:
       dependencies: '@core'
       modId: fruitfulfun
       value: gadget
-  - target: snownee.fruits.handbook.HandbookModule
+  - target: snownee.fruits.guide.GuideModule
     data:
       dependencies: modonomicon
       modId: fruitfulfun
-      value: handbook
+      value: guide
   - target: snownee.fruits.pomegranate.PomegranateModule
     data:
       dependencies: '@fruit_types'
@@ -58,7 +58,7 @@ optionals:
   - target: snownee.fruits.CreativeTabModule
   - target: snownee.fruits.food.FoodModule
   - target: snownee.fruits.gadget.GadgetModule
-  - target: snownee.fruits.handbook.HandbookModule
+  - target: snownee.fruits.guide.GuideModule
   - target: snownee.fruits.ritual.RitualModule
 packets:
   - target: snownee.fruits.bee.network.CHauntingActionPacket
