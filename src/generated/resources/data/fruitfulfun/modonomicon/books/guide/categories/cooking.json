@@ -1,0 +1,17 @@
+{
+  "background": "modonomicon:textures/gui/dark_slate_seamless.png",
+  "background_height": 512,
+  "background_parallax_layers": [],
+  "background_texture_zoom_multiplier": 1.0,
+  "background_width": 512,
+  "description": "book.fruitfulfun.guide.cooking.description",
+  "display_mode": "index",
+  "icon": {
+    "id": "fruitfulfun:grapefruit_panna_cotta"
+  },
+  "max_scroll_x": 512,
+  "max_scroll_y": 512,
+  "name": "book.fruitfulfun.guide.cooking.name",
+  "show_category_button": true,
+  "sort_number": 4
+}

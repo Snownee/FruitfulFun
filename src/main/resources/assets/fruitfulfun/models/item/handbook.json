@@ -1,0 +1,7 @@
+{
+	"format_version": "1.21.11",
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "fruitfulfun:item/handbook"
+	}
+}

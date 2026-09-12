@@ -1,0 +1,15 @@
+{
+  "allow_open_book_with_invalid_links": false,
+  "creative_tab": "modonomicon:modonomicon",
+  "custom_book_item": "fruitfulfun:handbook",
+  "description": "book.fruitfulfun.guide.description",
+  "display_mode": "index",
+  "font": "modonomicon:default",
+  "generate_book_item": false,
+  "model": "modonomicon:modonomicon_purple",
+  "name": "book.fruitfulfun.guide.name",
+  "page_display_mode": "double_page",
+  "show_recently_unlocked": false,
+  "tooltip": "book.fruitfulfun.guide.tooltip",
+  "turn_page_sound": "modonomicon:turn_page"
+}

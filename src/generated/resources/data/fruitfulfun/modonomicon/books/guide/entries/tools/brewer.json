@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:tools",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "description": "book.fruitfulfun.guide.tools.brewer.description",
+  "icon": {
+    "id": "fruitfulfun:brewer"
+  },
+  "id": "fruitfulfun:tools/brewer",
+  "name": "book.fruitfulfun.guide.tools.brewer.name",
+  "sort_number": 3,
+  "x": 0,
+  "y": 0
+}

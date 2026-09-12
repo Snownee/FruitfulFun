@@ -1,0 +1,10 @@
+{
+  "type": "modonomicon:crafting_recipe",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "donauwelle",
+  "recipe_id_1": "fruitfulfun:donauwelle",
+  "sort_number": 2,
+  "title1": "book.fruitfulfun.guide.cooking.dishes.donauwelle.title"
+}

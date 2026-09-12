@@ -1,0 +1,12 @@
+{
+  "type": "modonomicon:multiblock",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "multiblock",
+  "multiblock_id": "fruitfulfun:ritual",
+  "multiblock_name": "",
+  "show_visualize_button": true,
+  "sort_number": 1,
+  "text": "book.fruitfulfun.guide.ritual.dragon_ritual.multiblock.text"
+}

@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:beekeeping",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "description": "book.fruitfulfun.guide.beekeeping.hybridizing.description",
+  "icon": {
+    "id": "fruitfulfun:cherry"
+  },
+  "id": "fruitfulfun:beekeeping/hybridizing",
+  "name": "book.fruitfulfun.guide.beekeeping.hybridizing.name",
+  "sort_number": 3,
+  "x": 0,
+  "y": 0
+}

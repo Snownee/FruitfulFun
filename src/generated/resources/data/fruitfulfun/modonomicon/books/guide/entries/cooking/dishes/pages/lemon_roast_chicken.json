@@ -1,0 +1,10 @@
+{
+  "type": "modonomicon:crafting_recipe",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "lemon_roast_chicken",
+  "recipe_id_1": "fruitfulfun:lemon_roast_chicken",
+  "sort_number": 5,
+  "title1": "book.fruitfulfun.guide.cooking.dishes.lemon_roast_chicken.title"
+}

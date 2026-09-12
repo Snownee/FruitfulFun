@@ -1,0 +1,10 @@
+{
+  "type": "modonomicon:crafting_recipe",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "chorus_fruit_pie",
+  "recipe_id_1": "fruitfulfun:chorus_fruit_pie",
+  "sort_number": 6,
+  "title1": "book.fruitfulfun.guide.cooking.dishes.chorus_fruit_pie.title"
+}

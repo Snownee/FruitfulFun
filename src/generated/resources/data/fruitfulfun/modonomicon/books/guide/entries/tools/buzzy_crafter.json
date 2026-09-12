@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:tools",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "description": "book.fruitfulfun.guide.tools.buzzy_crafter.description",
+  "icon": {
+    "id": "fruitfulfun:buzzy_crafter"
+  },
+  "id": "fruitfulfun:tools/buzzy_crafter",
+  "name": "book.fruitfulfun.guide.tools.buzzy_crafter.name",
+  "sort_number": 0,
+  "x": 0,
+  "y": 0
+}
