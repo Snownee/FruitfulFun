@@ -42,6 +42,8 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	private int underWaterTicks;
 	@Unique
 	private int rollTicks;
+	@Unique
+	private int hornReturnTicks;
 
 	public BeeMixin(EntityType<? extends Animal> type, Level level) {
 		super(type, level);
@@ -56,6 +58,16 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	@Override
 	public void fruits$roll() {
 		rollTicks = 6;
+	}
+
+	@Override
+	public void fruits$hornReturn(int ticks) {
+		hornReturnTicks = ticks;
+	}
+
+	@Override
+	public boolean fruits$isHornReturnActive() {
+		return hornReturnTicks > 0;
 	}
 
 	@Inject(method = "<init>", at = @At("RETURN"))
@@ -104,6 +116,9 @@ public abstract class BeeMixin extends Animal implements FFBee {
 		}
 		if (rollTicks > 0) {
 			setRolling(--rollTicks != 0);
+		}
+		if (hornReturnTicks > 0) {
+			hornReturnTicks--;
 		}
 	}
 
@@ -182,8 +197,13 @@ public abstract class BeeMixin extends Animal implements FFBee {
 	@Inject(method = "wantsToEnterHive", at = @At("HEAD"), cancellable = true)
 	private void wantsToEnterHive(CallbackInfoReturnable<Boolean> cir) {
 		Bee bee = (Bee) (Object) this;
-		if (Hooks.bee && bee.getControllingPassenger() != null) {
+		if (!Hooks.bee) {
+			return;
+		}
+		if (bee.getControllingPassenger() != null) {
 			cir.setReturnValue(false);
+		} else if (hornReturnTicks > 0) {
+			cir.setReturnValue(true);
 		}
 	}
 }

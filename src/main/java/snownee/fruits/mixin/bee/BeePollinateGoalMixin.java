@@ -15,6 +15,7 @@ import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.bee.HybridizingRecipeType;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.duck.FFBee;
 
 @Mixin(Bee.BeePollinateGoal.class)
 public abstract class BeePollinateGoalMixin {
@@ -39,6 +40,13 @@ public abstract class BeePollinateGoalMixin {
 	@Inject(method = "canBeeUse", at = @At("HEAD"), cancellable = true)
 	private void canBeeUse(CallbackInfoReturnable<Boolean> cir) {
 		if (BeeAttributes.of(this$0).hasTrait(Trait.GHOST)) {
+			cir.setReturnValue(false);
+		}
+	}
+
+	@Inject(method = "canBeeContinueToUse", at = @At("HEAD"), cancellable = true)
+	private void canBeeContinueToUse(CallbackInfoReturnable<Boolean> cir) {
+		if (((FFBee) (Object) this$0).fruits$isHornReturnActive()) {
 			cir.setReturnValue(false);
 		}
 	}
