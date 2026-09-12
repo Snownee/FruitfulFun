@@ -30,12 +30,14 @@ c3bbd8db74775f8f6b1e5df5535223b30ce6da30 data/farmersdelight/tags/item/offhand_e
 0e0c0feb4a8835a0c65177a9d393fce230258d8d data/fruitfulfun/tags/item/gadget_token.json
 d26dc07bee99857723898a2668a02ee0352edab4 data/fruitfulfun/tags/item/redlove_logs.json
 c8b884ed2c3b957c4e963008514a0cfdbe3a7b8d data/minecraft/tags/item/boats.json
+6b338e05d7f2f081af486bcc41e95ea96a6e877a data/minecraft/tags/item/bookshelf_books.json
 3acce5cefa1402d665326c5194b555dc4931b3c9 data/minecraft/tags/item/chest_boats.json
 68185b79d9b183920682f0887762895bb408ae50 data/minecraft/tags/item/fence_gates.json
 b67afa82632f0f3048b9dcd0652c20597d847501 data/minecraft/tags/item/flowers.json
 09b651e069e349db8517d5fd55dffff9dbc93d66 data/minecraft/tags/item/fox_food.json
 3d2435778356f8eea0acb2f3f7c25b3a00f18c6f data/minecraft/tags/item/hanging_signs.json
 68e369e8c8c9065dd827deb783b798d2717ec40a data/minecraft/tags/item/leaves.json
+6b338e05d7f2f081af486bcc41e95ea96a6e877a data/minecraft/tags/item/lectern_books.json
 201e08556f142277d0e9dc5675216f1d63b44e7d data/minecraft/tags/item/logs_that_burn.json
 5479acecdd44eb7118f5a347d8487715aa321578 data/minecraft/tags/item/loom_patterns.json
 def3bf46e04ef2963f33965c64b3bcda9c5d925f data/minecraft/tags/item/panda_food.json

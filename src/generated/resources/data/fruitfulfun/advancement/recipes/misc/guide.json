@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "kiwi:is_loaded",
-      "module": "fruitfulfun:handbook"
+      "module": "fruitfulfun:guide"
     }
   ],
   "parent": "minecraft:recipes/root",
@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "fruitfulfun:handbook"
+        "recipe": "fruitfulfun:guide"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -32,7 +32,7 @@
   ],
   "rewards": {
     "recipes": [
-      "fruitfulfun:handbook"
+      "fruitfulfun:guide"
     ]
   }
 }

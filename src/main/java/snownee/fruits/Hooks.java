@@ -79,7 +79,7 @@ public final class Hooks {
 	public static boolean farmersdelight;
 	public static boolean ritual;
 	public static boolean gadget;
-	public static boolean handbook;
+	public static boolean guide;
 	public static boolean supplementaries = Platform.isModLoaded("supplementaries");
 	public static boolean jade = Platform.isModLoaded("jade");
 	public static boolean hauntedHarvest = Platform.isModLoaded("hauntedharvest");

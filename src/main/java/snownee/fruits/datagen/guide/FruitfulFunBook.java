@@ -18,7 +18,7 @@ public class FruitfulFunBook extends SingleBookSubProvider {
 	protected BookModel additionalSetup(BookModel book) {
 		return book.withDisplayMode(BookDisplayMode.INDEX)
 				.withGenerateBookItem(false)
-				.withCustomBookItem(modLoc("handbook"))
+				.withCustomBookItem(modLoc("guide"))
 				.withShowRecentlyUnlocked(false);
 	}
 
@@ -37,18 +37,18 @@ public class FruitfulFunBook extends SingleBookSubProvider {
 
 	@Override
 	protected String bookName() {
-		return "果实乐趣手册";
+		return "果实乐趣指南";
 	}
 
 	@Override
 	protected String bookTooltip() {
-		return "一本记录水果、蜜蜂与仪式的手册。";
+		return "一本记录水果、蜜蜂与仪式的指南。";
 	}
 
 	@Override
 	protected String bookDescription() {
 		return lines("""
-				欢迎阅读《果实乐趣手册》！
+				欢迎阅读《果实乐趣指南》！
 
 				这本书记录了 Fruitful Fun 模组的种种玩法：
 				果树、养蜂、仪式、工具与烹饪。

@@ -46,6 +46,7 @@ import snownee.fruits.client.Head;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentedCandleBlock;
+import snownee.fruits.guide.GuideModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.ItemObject;
 
@@ -194,6 +195,8 @@ public class FFModels extends FabricModelProvider {
 
 		flowerCrown(CherryModule.CHERRY_CROWN);
 		flowerCrown(CherryModule.REDLOVE_CROWN);
+
+		flat(GuideModule.GUIDE);
 	}
 
 	private void createBrewer(BlockModelGenerators generators) {
