@@ -57,10 +57,12 @@ public final class BuzzyCrafterRenderer implements BlockEntityRenderer<BuzzyCraf
 		state.item.seed = ItemClusterRenderState.getSeedForItemStack(item);
 		state.item.setData(ClientProxy.NO_BOB, Unit.INSTANCE);
 		itemRenderer.updateForTopItem(state.item.item, item, ItemDisplayContext.GROUND, null, null, state.item.seed);
-		BlockPos pos = blockEntity.getBlockPos();
-		state.item.lightCoords = LightCoordsUtil.pack(
-				blockEntity.getLevel().getBrightness(LightLayer.BLOCK, pos),
-				blockEntity.getLevel().getBrightness(LightLayer.SKY, pos));
+		if (blockEntity.getLevel() != null) {
+			BlockPos pos = blockEntity.getBlockPos().above();
+			state.item.lightCoords = LightCoordsUtil.pack(
+					blockEntity.getLevel().getBrightness(LightLayer.BLOCK, pos),
+					blockEntity.getLevel().getBrightness(LightLayer.SKY, pos));
+		}
 	}
 
 	@Override
