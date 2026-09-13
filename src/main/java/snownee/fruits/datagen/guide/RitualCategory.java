@@ -6,6 +6,7 @@ import com.klikli_dev.modonomicon.api.datagen.CategoryProviderBase;
 import com.klikli_dev.modonomicon.api.datagen.IndexModeCategoryProvider;
 import com.klikli_dev.modonomicon.api.datagen.IndexModeEntryProvider;
 import com.klikli_dev.modonomicon.api.datagen.SingleBookSubProvider;
+import com.klikli_dev.modonomicon.api.datagen.book.BookCategoryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookIconModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookMultiblockPageModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookTextPageModel;
@@ -23,6 +24,13 @@ public class RitualCategory extends IndexModeCategoryProvider {
 	protected void generateEntries() {
 		add(new DragonRitualEntry(this).generate());
 		add(new RitualRecipesEntry(this).generate());
+	}
+
+	@Override
+	protected BookCategoryModel additionalSetup(BookCategoryModel category) {
+		return super.additionalSetup(category)
+				.withCondition(GuideUtil.moduleLoaded("ritual"))
+				.withEntryToOpen(modLoc("ritual/dragon_ritual"), false);
 	}
 
 	@Override
@@ -53,25 +61,27 @@ public class RitualCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page(
+					"intro", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
 			pageTitle("搭建阵型");
 			pageText(lines("""
 					在平坦的地面上摆好阵型：
 					中央放一块完整的紫颂果派
 					一个（或多个）龙首朝向中央
 					四周按图摆放点燃的蜡烛
-
+					
 					支撑方块是什么并不重要。
-
+					
 					把物品投入中央，仪式会将其转化为另一种物品。
-
+					
 					龙首越多，产出的龙息越多。仪式进行时会生成危险的龙息，当心别靠太近！
 					"""));
-			page("multiblock", () -> BookMultiblockPageModel.create()
-					.withMultiblockId(modLoc("ritual"))
-					.withText(context().pageText()));
+			page(
+					"multiblock", () -> BookMultiblockPageModel.create()
+							.withMultiblockId(modLoc("ritual"))
+							.withText(context().pageText()));
 			pageText(lines("图中展示了完整的仪式结构。"));
 		}
 
@@ -104,19 +114,20 @@ public class RitualCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page(
+					"intro", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
 			pageTitle("已知的配方");
 			pageText(lines("""
 					仪式可以把普通物品转化为稀有之物。以下是一些已为人知的配方：
-
+					
 					玻璃瓶 → 龙息
 					酿造台 → 酿造机
 					阳光探测器 → 雨探测器
 					石榴 → 附魔石榴
 					蜂箱（夜晚的苍白花园）→ 鬼魂蜂
-
+					
 					还有更多配方等待你去发现。
 					"""));
 		}

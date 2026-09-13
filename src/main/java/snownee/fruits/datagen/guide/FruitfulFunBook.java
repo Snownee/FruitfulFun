@@ -15,10 +15,15 @@ public class FruitfulFunBook extends SingleBookSubProvider {
 	@Override
 	protected BookModel additionalSetup(BookModel book) {
 		return book.withDisplayMode(BookDisplayMode.INDEX)
+				.withAllowOpenBooksWithInvalidLinks(true)
 				.withGenerateBookItem(false)
 				.withCustomBookItem(modLoc("guide"))
 				.withShowRecentlyUnlocked(false)
-				.withTheme(theme -> theme.withId(modLoc("theme")));
+				.withTheme(theme -> theme
+						.withId(modLoc("theme"))
+						.withLayout(layout -> layout
+								.withBookTextOffsetWidth(-3)
+								.withBookTextOffsetX(3)));
 	}
 
 	@Override
@@ -36,11 +41,23 @@ public class FruitfulFunBook extends SingleBookSubProvider {
 
 	@Override
 	protected String bookName() {
-		return "book.fruitfulfun.guide.name";
+		return "妙趣果园指南（未完成）";
 	}
 
 	@Override
 	protected String bookTooltip() {
-		return "book.fruitfulfun.guide.tooltip";
+		return "一本记录水果、蜜蜂与仪式的指南。";
+	}
+
+	@Override
+	protected String bookDescription() {
+		return GuideUtil.lines("""
+				欢迎阅读《妙趣果园指南》！
+				
+				这本书记录了 Fruitful Fun 模组的种种玩法：
+				果树、养蜂、仪式、工具与烹饪。
+				
+				有些内容需要你亲自去发现。
+				""");
 	}
 }

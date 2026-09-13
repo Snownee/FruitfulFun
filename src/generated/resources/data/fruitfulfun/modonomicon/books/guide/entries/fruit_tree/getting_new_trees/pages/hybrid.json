@@ -1,7 +1,8 @@
 {
   "type": "modonomicon:text",
   "condition": {
-    "type": "modonomicon:none"
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:bee"
   },
   "id": "hybrid",
   "show_title_separator": true,

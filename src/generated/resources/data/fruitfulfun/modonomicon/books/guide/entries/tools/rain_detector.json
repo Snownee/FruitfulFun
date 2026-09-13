@@ -7,7 +7,8 @@
   },
   "category": "fruitfulfun:tools",
   "condition": {
-    "type": "modonomicon:none"
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:ritual"
   },
   "description": "book.fruitfulfun.guide.tools.rain_detector.description",
   "icon": {

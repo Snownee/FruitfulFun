@@ -3,8 +3,8 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "id": "lemon_roast_chicken",
+  "id": "recipe",
   "recipe_id_1": "fruitfulfun:lemon_roast_chicken",
-  "sort_number": 5,
-  "title1": "book.fruitfulfun.guide.cooking.dishes.lemon_roast_chicken.title"
+  "sort_number": 1,
+  "title1": "book.fruitfulfun.guide.cooking.lemon_roast_chicken.recipe.title"
 }

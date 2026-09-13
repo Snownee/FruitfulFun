@@ -3,8 +3,8 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "id": "chorus_fruit_pie",
+  "id": "recipe",
   "recipe_id_1": "fruitfulfun:chorus_fruit_pie",
-  "sort_number": 6,
-  "title1": "book.fruitfulfun.guide.cooking.dishes.chorus_fruit_pie.title"
+  "sort_number": 1,
+  "title1": "book.fruitfulfun.guide.cooking.chorus_fruit_pie.recipe.title"
 }

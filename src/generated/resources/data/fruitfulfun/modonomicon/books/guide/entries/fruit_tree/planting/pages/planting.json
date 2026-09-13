@@ -1,7 +1,8 @@
 {
   "type": "modonomicon:text",
   "condition": {
-    "type": "modonomicon:none"
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:bee"
   },
   "id": "planting",
   "show_title_separator": true,

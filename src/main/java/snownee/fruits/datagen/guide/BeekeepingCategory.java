@@ -6,6 +6,8 @@ import com.klikli_dev.modonomicon.api.datagen.CategoryProviderBase;
 import com.klikli_dev.modonomicon.api.datagen.IndexModeCategoryProvider;
 import com.klikli_dev.modonomicon.api.datagen.IndexModeEntryProvider;
 import com.klikli_dev.modonomicon.api.datagen.SingleBookSubProvider;
+import com.klikli_dev.modonomicon.api.datagen.book.BookCategoryModel;
+import com.klikli_dev.modonomicon.api.datagen.book.BookEntryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookIconModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookCraftingRecipePageModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookTextPageModel;
@@ -30,6 +32,11 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 		add(new HauntingEntry(this).generate());
 		add(new MerchantsEntry(this).generate());
 		add(new MutagenEntry(this).generate());
+	}
+
+	@Override
+	protected BookCategoryModel additionalSetup(BookCategoryModel category) {
+		return super.additionalSetup(category).withCondition(GuideUtil.moduleLoaded("bee"));
 	}
 
 	@Override
@@ -296,8 +303,13 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 
 					粉红蜂还藏着属于自己的特殊技能。
 
-					至于如何得到鬼魂蜂——见 {0} 章节。
+					至于如何得到鬼魂蜂——见{0}章节。
 					"""), categoryLink("仪式", "ritual"));
+		}
+
+		@Override
+		protected BookEntryModel additionalSetup(BookEntryModel entry) {
+			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("ritual"));
 		}
 
 		@Override

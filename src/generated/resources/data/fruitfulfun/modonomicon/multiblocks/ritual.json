@@ -1,60 +1,60 @@
 {
-	"type": "modonomicon:dense",
-	"mapping": {
-		"*": {
-			"type": "modonomicon:display",
-			"display": "minecraft:lime_terracotta"
-		},
-		"+": {
-			"type": "modonomicon:display",
-			"display": "minecraft:white_concrete"
-		},
-		"0": {
-			"type": "modonomicon:display",
-			"display": "fruitfulfun:chorus_fruit_pie[servings=4]"
-		},
-		"C": {
-			"type": "modonomicon:tag",
-			"tag": "#fruitfulfun:candles[lit=true]"
-		},
-		"H": {
-			"type": "modonomicon:blockstate",
-			"block": "minecraft:dragon_wall_head[facing=south]"
-		}
-	},
-	"pattern": [
-		[
-			"_________",
-			"_________",
-			"__C___C__",
-			"_________",
-			"H________",
-			"_________",
-			"__C___C__",
-			"_________",
-			"_________"
-		],
-		[
-			"_________",
-			"_________",
-			"__*C_C*__",
-			"__C___C__",
-			"____0____",
-			"__C___C__",
-			"__*C_C*__",
-			"_________",
-			"_________"
-		],
-		[
-			"*+*+*+*+*",
-			"+*+*+*+*+",
-			"*+*+*+*+*",
-			"+*+*+*+*+",
-			"*+*+*+*+*",
-			"+*+*+*+*+",
-			"*+*+*+*+*",
-			"+*+*+*+*+",
-			"*+*+*+*+*"
-		]
-	]
+  "type": "modonomicon:dense",
+  "mapping": {
+    "*": {
+      "type": "modonomicon:display",
+      "display": "minecraft:lime_terracotta"
+    },
+    "+": {
+      "type": "modonomicon:display",
+      "display": "minecraft:white_concrete"
+    },
+    "0": {
+      "type": "modonomicon:display",
+      "display": "fruitfulfun:chorus_fruit_pie[servings=4]"
+    },
+    "C": {
+      "type": "modonomicon:tag",
+      "tag": "#fruitfulfun:candles[lit=true]"
+    },
+    "H": {
+      "type": "modonomicon:blockstate",
+      "block": "minecraft:dragon_wall_head[facing=south]"
+    }
+  },
+  "pattern": [
+    [
+      "_________",
+      "_________",
+      "__C___C__",
+      "_________",
+      "H________",
+      "_________",
+      "__C___C__",
+      "_________",
+      "_________"
+    ],
+    [
+      "_________",
+      "_________",
+      "__*C_C*__",
+      "__C___C__",
+      "____0____",
+      "__C___C__",
+      "__*C_C*__",
+      "_________",
+      "_________"
+    ],
+    [
+      "*+*+*+*+*",
+      "+*+*+*+*+",
+      "*+*+*+*+*",
+      "+*+*+*+*+",
+      "*+*+*+*+*",
+      "+*+*+*+*+",
+      "*+*+*+*+*",
+      "+*+*+*+*+",
+      "*+*+*+*+*"
+    ]
+  ]
 }

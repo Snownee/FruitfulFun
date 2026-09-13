@@ -1,0 +1,22 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:cooking",
+  "condition": {
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:food"
+  },
+  "description": "book.fruitfulfun.guide.cooking.rice_with_fruits.description",
+  "icon": {
+    "id": "fruitfulfun:rice_with_fruits"
+  },
+  "id": "fruitfulfun:cooking/rice_with_fruits",
+  "name": "book.fruitfulfun.guide.cooking.rice_with_fruits.name",
+  "sort_number": 3,
+  "x": 0,
+  "y": 0
+}

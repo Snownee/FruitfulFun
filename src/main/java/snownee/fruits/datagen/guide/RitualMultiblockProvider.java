@@ -1,11 +1,13 @@
 package snownee.fruits.datagen.guide;
 
+import com.google.gson.JsonObject;
 import com.klikli_dev.modonomicon.api.datagen.MultiblockProvider;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Blocks;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.food.FoodModule;
 
 public class RitualMultiblockProvider extends MultiblockProvider {
 
@@ -15,31 +17,52 @@ public class RitualMultiblockProvider extends MultiblockProvider {
 
 	@Override
 	public void buildMultiblocks() {
-		add(modLoc("ritual"), new DenseMultiblockBuilder()
-				// 顶层：四角蜡烛 + 一个龙首（朝南，指向中央）
+		JsonObject json = new DenseMultiblockBuilder()
+				// 顶层：北侧边缘一个龙首（朝南，指向中央），四角蜡烛
 				.layer(
-						"____H____",
+						"_________",
 						"_________",
 						"__C___C__",
 						"_________",
-						"_________",
+						"H________",
 						"_________",
 						"__C___C__",
 						"_________",
 						"_________")
-				// 底层：八根蜡烛围成菱形环，中央留空（放紫颂果派）
+				// 中层：八根蜡烛围成菱形环，中央放紫颂果派
 				.layer(
 						"_________",
 						"_________",
-						"___C_C___",
+						"__*C_C*__",
 						"__C___C__",
 						"____0____",
 						"__C___C__",
-						"___C_C___",
+						"__*C_C*__",
 						"_________",
 						"_________")
+				// 底层：棋盘格地面
+				.layer(
+						"*+*+*+*+*",
+						"+*+*+*+*+",
+						"*+*+*+*+*",
+						"+*+*+*+*+",
+						"*+*+*+*+*",
+						"+*+*+*+*+",
+						"*+*+*+*+*",
+						"+*+*+*+*+",
+						"*+*+*+*+*")
+				.display('*', () -> Blocks.LIME_TERRACOTTA)
+				.display('+', () -> Blocks.WHITE_CONCRETE)
+				.display('0', () -> FoodModule.CHORUS_FRUIT_PIE.get(), "[servings=4]")
 				.tag('C', CoreModule.CANDLES, "[lit=true]", () -> Blocks.CANDLE, "[lit=true]")
-				.any('0')
-				.blockstate('H', () -> Blocks.DRAGON_HEAD, "[rotation=4]"));
+				.blockstate('H', () -> Blocks.DRAGON_WALL_HEAD, "[facing=south]")
+				.build(false);
+
+		JsonObject ordered = new JsonObject();
+		ordered.add("type", json.remove("type"));
+		ordered.add("mapping", json.remove("mapping"));
+		ordered.add("pattern", json.remove("pattern"));
+		ordered.getAsJsonObject("mapping").getAsJsonObject("C").remove("display");
+		add(modLoc("ritual"), ordered);
 	}
 }

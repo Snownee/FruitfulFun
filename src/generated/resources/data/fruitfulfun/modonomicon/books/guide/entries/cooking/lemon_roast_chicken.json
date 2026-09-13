@@ -1,0 +1,22 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:cooking",
+  "condition": {
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:food"
+  },
+  "description": "book.fruitfulfun.guide.cooking.lemon_roast_chicken.description",
+  "icon": {
+    "id": "fruitfulfun:lemon_roast_chicken"
+  },
+  "id": "fruitfulfun:cooking/lemon_roast_chicken",
+  "name": "book.fruitfulfun.guide.cooking.lemon_roast_chicken.name",
+  "sort_number": 4,
+  "x": 0,
+  "y": 0
+}
