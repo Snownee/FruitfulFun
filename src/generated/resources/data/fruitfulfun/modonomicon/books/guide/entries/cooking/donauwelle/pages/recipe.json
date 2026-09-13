@@ -3,8 +3,8 @@
   "condition": {
     "type": "modonomicon:none"
   },
-  "id": "donauwelle",
+  "id": "recipe",
   "recipe_id_1": "fruitfulfun:donauwelle",
-  "sort_number": 2,
-  "title1": "book.fruitfulfun.guide.cooking.dishes.donauwelle.title"
+  "sort_number": 1,
+  "title1": "book.fruitfulfun.guide.cooking.donauwelle.recipe.title"
 }

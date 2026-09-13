@@ -1,0 +1,31 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:cooking",
+  "condition": {
+    "type": "modonomicon:and",
+    "children": [
+      {
+        "type": "fruitfulfun:module_loaded",
+        "module": "fruitfulfun:food"
+      },
+      {
+        "type": "fruitfulfun:module_loaded",
+        "module": "fruitfulfun:cherry"
+      }
+    ]
+  },
+  "description": "book.fruitfulfun.guide.cooking.donauwelle.description",
+  "icon": {
+    "id": "fruitfulfun:donauwelle"
+  },
+  "id": "fruitfulfun:cooking/donauwelle",
+  "name": "book.fruitfulfun.guide.cooking.donauwelle.name",
+  "sort_number": 1,
+  "x": 0,
+  "y": 0
+}

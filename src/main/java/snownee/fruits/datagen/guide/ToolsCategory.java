@@ -6,6 +6,8 @@ import com.klikli_dev.modonomicon.api.datagen.CategoryProviderBase;
 import com.klikli_dev.modonomicon.api.datagen.IndexModeCategoryProvider;
 import com.klikli_dev.modonomicon.api.datagen.IndexModeEntryProvider;
 import com.klikli_dev.modonomicon.api.datagen.SingleBookSubProvider;
+import com.klikli_dev.modonomicon.api.datagen.book.BookCategoryModel;
+import com.klikli_dev.modonomicon.api.datagen.book.BookEntryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookIconModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookCraftingRecipePageModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookSmithingRecipePageModel;
@@ -26,6 +28,11 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 		add(new ScentedCandlesEntry(this).generate());
 		add(new BrewerEntry(this).generate());
 		add(new RainDetectorEntry(this).generate());
+	}
+
+	@Override
+	protected BookCategoryModel additionalSetup(BookCategoryModel category) {
+		return super.additionalSetup(category).withCondition(GuideUtil.moduleLoaded("gadget"));
 	}
 
 	@Override
@@ -194,12 +201,17 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 					.withText(context().pageText()));
 			pageTitle("自动酿造");
 			pageText(lines("""
-					通过龙之仪式，酿造台会转化为酿造机（见 {0} 章节）。
+					通过龙之仪式，酿造台会转化为酿造机（见{0}章节）。
 
 					酿造机会把产物自动输送到下方的容器。
 
 					持续酿造同一种产物，它还会越酿越快，最高提速 100%。
 					"""), categoryLink("仪式", "ritual"));
+		}
+
+		@Override
+		protected BookEntryModel additionalSetup(BookEntryModel entry) {
+			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("ritual"));
 		}
 
 		@Override
@@ -236,10 +248,15 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 					.withText(context().pageText()));
 			pageTitle("探测降雨");
 			pageText(lines("""
-					通过龙之仪式获得（见 {0} 章节）。
+					通过龙之仪式获得（见{0}章节）。
 
 					它会像阳光探测器一样输出红石信号，只不过检测的是降雨而非阳光。
 					"""), categoryLink("仪式", "ritual"));
+		}
+
+		@Override
+		protected BookEntryModel additionalSetup(BookEntryModel entry) {
+			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("ritual"));
 		}
 
 		@Override

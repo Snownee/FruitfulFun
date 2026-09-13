@@ -22,6 +22,7 @@ public class FruitTreeCategory extends IndexModeCategoryProvider {
 	protected void generateEntries() {
 		add(new GettingNewTreesEntry(this).generate());
 		add(new PlantingEntry(this).generate());
+		add(new FruitEatingEntry(this).generate());
 	}
 
 	@Override
@@ -76,14 +77,15 @@ public class FruitTreeCategory extends IndexModeCategoryProvider {
 
 			page("hybrid", () -> BookTextPageModel.create()
 					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+					.withText(context().pageText())
+					.withCondition(GuideUtil.moduleLoaded("bee")));
 			pageTitle("杂交与授粉");
 			pageText(lines("""
 					更多的新树种需要借助蜜蜂来完成杂交。
 
 					让蜜蜂携带不同来源的花粉为果树授粉，就可能得到全新的树种。
 
-					具体方法见 {0} 章节。
+					具体方法见{0}章节。
 					"""), categoryLink("养蜂", "beekeeping"));
 		}
 
@@ -108,6 +110,50 @@ public class FruitTreeCategory extends IndexModeCategoryProvider {
 		}
 	}
 
+	public static class FruitEatingEntry extends IndexModeEntryProvider {
+
+		public FruitEatingEntry(CategoryProviderBase parent) {
+			super(parent);
+		}
+
+		@Override
+		protected void generatePages() {
+			page("intro", () -> BookTextPageModel.create()
+					.withTitle(context().pageTitle())
+					.withText(context().pageText()));
+			pageTitle("水果的妙用");
+			pageText(lines("""
+					模组的果实都能直接食用。
+
+					柠檬的食用速度最快。
+
+					食用柑橘类水果可以扑灭身上的火焰。
+
+					红心果能少量回复生命，并加速生物的繁殖冷却。
+					"""));
+		}
+
+		@Override
+		protected String entryName() {
+			return "水果的食用";
+		}
+
+		@Override
+		protected String entryDescription() {
+			return "直接食用水果的种种妙用。";
+		}
+
+		@Override
+		protected BookIconModel entryIcon() {
+			return BookIconModel.create(CherryModule.REDLOVE.get());
+		}
+
+		@Override
+		protected String entryId() {
+			return "fruit_eating";
+		}
+	}
+
 	public static class PlantingEntry extends IndexModeEntryProvider {
 
 		public PlantingEntry(CategoryProviderBase parent) {
@@ -118,7 +164,8 @@ public class FruitTreeCategory extends IndexModeCategoryProvider {
 		protected void generatePages() {
 			page("planting", () -> BookTextPageModel.create()
 					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+					.withText(context().pageText())
+					.withCondition(GuideUtil.moduleLoaded("bee")));
 			pageTitle("种植与生长");
 			pageText(lines("""
 					像种植原版树木一样种下树苗，等待它慢慢长大。
@@ -127,7 +174,7 @@ public class FruitTreeCategory extends IndexModeCategoryProvider {
 
 					光照充足、空间足够时，果树会长得更快。
 
-					如果没有蜜蜂授粉，果树最终会停止结果；有些果树甚至必须靠蜜蜂授粉才能结果，详见 {0} 章节。
+					如果没有蜜蜂授粉，果树最终会停止结果；有些果树甚至必须靠蜜蜂授粉才能结果，详见{0}章节。
 					"""), categoryLink("养蜂", "beekeeping"));
 
 			page("harvesting", () -> BookTextPageModel.create()

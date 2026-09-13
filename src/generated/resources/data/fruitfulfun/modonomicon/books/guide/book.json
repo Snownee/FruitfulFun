@@ -1,5 +1,5 @@
 {
-  "allow_open_book_with_invalid_links": false,
+  "allow_open_book_with_invalid_links": true,
   "creative_tab": "modonomicon:modonomicon",
   "custom_book_item": "fruitfulfun:guide",
   "description": "book.fruitfulfun.guide.description",

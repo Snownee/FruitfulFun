@@ -4,14 +4,20 @@
   "background_parallax_layers": [],
   "background_texture_zoom_multiplier": 1.0,
   "background_width": 512,
+  "condition": {
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:ritual"
+  },
   "description": "book.fruitfulfun.guide.ritual.description",
   "display_mode": "index",
+  "entry_to_open": "fruitfulfun:ritual/dragon_ritual",
   "icon": {
     "id": "minecraft:dragon_head"
   },
   "max_scroll_x": 512,
   "max_scroll_y": 512,
   "name": "book.fruitfulfun.guide.ritual.name",
+  "open_entry_to_open_only_once": false,
   "show_category_button": true,
   "sort_number": 2
 }

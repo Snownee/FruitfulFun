@@ -1,0 +1,12 @@
+{
+  "type": "modonomicon:crafting_recipe",
+  "condition": {
+    "type": "fruitfulfun:module_loaded",
+    "inverted": true,
+    "module": "fruitfulfun:farmersdelight"
+  },
+  "id": "recipe",
+  "recipe_id_1": "fruitfulfun:rice_with_fruits",
+  "sort_number": 1,
+  "title1": "book.fruitfulfun.guide.cooking.rice_with_fruits.recipe.title"
+}

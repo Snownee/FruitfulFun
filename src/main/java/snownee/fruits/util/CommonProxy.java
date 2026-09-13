@@ -93,6 +93,7 @@ import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentType;
 import snownee.fruits.gadget.vac.VacGunItem;
+import snownee.fruits.guide.BookFFConditionTypes;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Kiwi;
 import snownee.kiwi.KiwiModuleContainer;
@@ -227,6 +228,9 @@ public class CommonProxy implements ModInitializer {
 	public void onInitialize() {
 		if (!Hooks.neoforge) {
 			Kiwi.onInitialize();
+		}
+		if (Platform.isModLoaded("modonomicon")) {
+			BookFFConditionTypes.init();
 		}
 		addFeature("citron");
 		addFeature("tangerine");

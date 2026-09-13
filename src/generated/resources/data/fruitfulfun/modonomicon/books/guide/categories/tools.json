@@ -4,6 +4,10 @@
   "background_parallax_layers": [],
   "background_texture_zoom_multiplier": 1.0,
   "background_width": 512,
+  "condition": {
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:gadget"
+  },
   "description": "book.fruitfulfun.guide.tools.description",
   "display_mode": "index",
   "icon": {

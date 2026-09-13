@@ -7,15 +7,16 @@
   },
   "category": "fruitfulfun:cooking",
   "condition": {
-    "type": "modonomicon:none"
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:food"
   },
-  "description": "book.fruitfulfun.guide.cooking.dishes.description",
+  "description": "book.fruitfulfun.guide.cooking.grapefruit_panna_cotta.description",
   "icon": {
     "id": "fruitfulfun:grapefruit_panna_cotta"
   },
-  "id": "fruitfulfun:cooking/dishes",
-  "name": "book.fruitfulfun.guide.cooking.dishes.name",
-  "sort_number": 1,
+  "id": "fruitfulfun:cooking/grapefruit_panna_cotta",
+  "name": "book.fruitfulfun.guide.cooking.grapefruit_panna_cotta.name",
+  "sort_number": 0,
   "x": 0,
   "y": 0
 }

@@ -1,11 +1,13 @@
 package snownee.fruits.datagen;
 
+import com.klikli_dev.modonomicon.api.datagen.AddToModonomiconLanguageProvider;
 import com.klikli_dev.modonomicon.api.datagen.FabricBookProvider;
 import com.klikli_dev.modonomicon.api.datagen.LanguageProviderCache;
 import com.klikli_dev.modonomicon.api.datagen.research.ResearchCache;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -45,11 +47,13 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(CherryBlockLoot::new);
 		pack.addProvider(PomegranateBlockLoot::new);
 		pack.addProvider((output, registries) -> new RitualMultiblockProvider(output));
+		LanguageProviderCache zhCnLang = new LanguageProviderCache("zh_cn");
 		pack.addProvider(FabricBookProvider.of(
 				FruitfulFun.ID,
-				new LanguageProviderCache("zh_cn"),
+				zhCnLang,
 				new ResearchCache(),
 				new FruitfulFunBook()));
+		pack.addProvider((FabricPackOutput output) -> new AddToModonomiconLanguageProvider(output, "fruitfulfunguide", "zh_cn", zhCnLang));
 		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("food"));
 		pack.addProvider(FoodBlockLoot::new);
 		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("gadget"));

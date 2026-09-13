@@ -1,0 +1,12 @@
+{
+  "type": "modonomicon:crafting_recipe",
+  "condition": {
+    "type": "fruitfulfun:module_loaded",
+    "inverted": true,
+    "module": "fruitfulfun:farmersdelight"
+  },
+  "id": "recipe",
+  "recipe_id_1": "fruitfulfun:honey_pomelo_tea",
+  "sort_number": 1,
+  "title1": "book.fruitfulfun.guide.cooking.honey_pomelo_tea.recipe.title"
+}

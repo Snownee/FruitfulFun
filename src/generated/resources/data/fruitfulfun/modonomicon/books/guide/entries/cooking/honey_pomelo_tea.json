@@ -1,0 +1,22 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:cooking",
+  "condition": {
+    "type": "fruitfulfun:module_loaded",
+    "module": "fruitfulfun:food"
+  },
+  "description": "book.fruitfulfun.guide.cooking.honey_pomelo_tea.description",
+  "icon": {
+    "id": "fruitfulfun:honey_pomelo_tea"
+  },
+  "id": "fruitfulfun:cooking/honey_pomelo_tea",
+  "name": "book.fruitfulfun.guide.cooking.honey_pomelo_tea.name",
+  "sort_number": 2,
+  "x": 0,
+  "y": 0
+}
