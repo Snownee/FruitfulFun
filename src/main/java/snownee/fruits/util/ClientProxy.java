@@ -104,6 +104,8 @@ import snownee.fruits.gadget.crafter.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.vac.AirVortexParticle;
 import snownee.fruits.gadget.vac.ItemProjectileColor;
 import snownee.fruits.gadget.vac.ItemProjectileRenderer;
+import snownee.fruits.minigame.FruitBoardScreen;
+import snownee.fruits.minigame.network.SMinigameSyncPacket;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.client.TooltipEvents;
@@ -145,6 +147,16 @@ public class ClientProxy implements ClientModInitializer {
 	public static void openEditGeneNameScreen() {
 		Minecraft.getInstance().setScreen(new EditGeneNameScreen());
 	}
+
+	public static void openMinigameScreen(SMinigameSyncPacket packet) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.screen instanceof FruitBoardScreen screen) {
+			screen.update(packet);
+		} else if (packet.open()) {
+			minecraft.setScreen(new FruitBoardScreen(packet, packet.spectating()));
+		}
+	}
+
 
 	public static @Nullable ItemProjectileColor getItemProjectileColor(ItemStack itemStack) {
 		ItemProjectileColor color;

@@ -47,6 +47,7 @@ import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentedCandleBlock;
 import snownee.fruits.guide.GuideModule;
+import snownee.fruits.minigame.MinigameModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.ItemObject;
 
@@ -152,6 +153,11 @@ public class FFModels extends FabricModelProvider {
 		createCandle(generators, GadgetModule.PEACE_CANDLE.get());
 //		createCandle(generators, GadgetModule.HEAVY_CANDLE.get());
 		generators.createHorizontallyRotatedBlock(GadgetModule.BUZZY_CRAFTER.get(), TexturedModel.ORIENTABLE);
+		generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(
+				MinigameModule.BATTLE_TABLE.get(),
+				plainVariant(ModelLocationUtils.getModelLocation(Blocks.CRAFTING_TABLE))));
+		generators.registerSimpleItemModel(MinigameModule.BATTLE_TABLE.get(),
+				ModelLocationUtils.getModelLocation(Blocks.CRAFTING_TABLE));
 		createSlidingDoor(generators, CherryModule.REDLOVE_SLIDING_DOOR.get());
 		generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(
 				GadgetModule.RAIN_DETECTOR.get(),

@@ -93,6 +93,67 @@ gui.fruitfulfun.editGeneName: Edit Gene Name
 gui.fruitfulfun.cycleGenes: Cycle Genes
 gui.fruitfulfun.geneName: Gene Name
 gui.fruitfulfun.geneDesc: Gene Description
+gui.fruitfulfun.minigame: Fruit Draw
+gui.fruitfulfun.minigame.hud: 'Score: %s   Moves: %s/%s   Time: %ss'
+gui.fruitfulfun.minigame.finished: 'Game Over - Final Score: %s'
+gui.fruitfulfun.minigame.close: Press ESC to close
+gui.fruitfulfun.minigame.vs: 'VS %s: %s'
+gui.fruitfulfun.minigame.status: 'Moves: %s/%s   Time: %ss'
+gui.fruitfulfun.minigame.you: 'You: %s'
+gui.fruitfulfun.minigame.opponentHeader: '%s: %s'
+gui.fruitfulfun.minigame.boardHeader: '%s: %s   Moves: %s/%s'
+gui.fruitfulfun.minigame.time: 'Time: %ss'
+gui.fruitfulfun.minigame.spectatingTitle: Spectating
+gui.fruitfulfun.minigame.spectators: 'Spectators: %s'
+gui.fruitfulfun.minigame.spectatorJoined: '%s is now watching your game'
+gui.fruitfulfun.minigame.spectatorLeft: '%s left the spectator seats'
+gui.fruitfulfun.minigame.spectate.finished: '%s: %s    %s: %s'
+gui.fruitfulfun.minigame.waiting: 'Game Over - Final Score: %s (waiting for opponent)'
+gui.fruitfulfun.minigame.win: 'You Win! Final Score: %s'
+gui.fruitfulfun.minigame.lose: 'You Lose. Final Score: %s'
+gui.fruitfulfun.minigame.tie: 'Tie! Final Score: %s'
+gui.fruitfulfun.minigame.go: GO!
+gui.fruitfulfun.minigame.rewards: Rewards
+gui.fruitfulfun.minigame.hud.untimed: 'Score: %s   Moves: %s/%s'
+gui.fruitfulfun.minigame.start: Start
+gui.fruitfulfun.minigame.goal.header: Goals
+gui.fruitfulfun.minigame.goal.pieces: pieces
+gui.fruitfulfun.minigame.goal.clear_piece: 'Clear %s %s in a game'
+gui.fruitfulfun.minigame.goal.single_move: 'Clear %s+ %s in one move'
+gui.fruitfulfun.minigame.rule.spawn_piece: 'Every clear spawns %3$s %4$s for each %2$s pieces beyond a line of %1$s'
+gui.fruitfulfun.minigame.rule.spawn_piece_low: 'After each clear, spawn 1 %1$s, up to %2$s %1$s at a time'
+gui.fruitfulfun.minigame.rule.scatter_piece: 'At the start, a random board cell becomes %s'
+gui.fruitfulfun.minigame.piece.lootbox: Loot Box
+gui.fruitfulfun.minigame.piece.bee: Bee
+gui.fruitfulfun.minigame.piece.orange: Orange
+gui.fruitfulfun.minigame.piece.lemon: Lemon
+gui.fruitfulfun.minigame.piece.cherry: Cherry
+gui.fruitfulfun.minigame.piece.chorus: Chorus Fruit
+gui.fruitfulfun.minigame.piece.redlove: Redlove Fruit
+gui.fruitfulfun.minigame.piece.pomegranate: Pomegranate
+gui.fruitfulfun.minigame.piece.golden_apple: Golden Apple
+gui.fruitfulfun.minigame.piece.lootbox.effect: 'Click to receive a reward; this does not consume a move.'
+gui.fruitfulfun.minigame.piece.bee.effect: 'A line must start from this piece and can link to any other piece.'
+gui.fruitfulfun.minigame.piece.redlove.effect: 'Never spawns naturally.'
+gui.fruitfulfun.minigame.piece.pomegranate.effect: 'Cannot be linked. Clears itself when it sinks to the bottom.'
+gui.fruitfulfun.minigame.piece.golden_apple.effect: 'Links as if it were any fruit.'
+gui.fruitfulfun.minigame.goals_result: 'Goals: %s/%s'
+command.fruitfulfun.minigame.started: 'Fruit Draw started! Drag across 3 or more connected fruits of the same kind to clear them.'
+command.fruitfulfun.minigame.invited: 'Invitation sent to %s.'
+command.fruitfulfun.minigame.inviteReceived: '%s invited you to a Fruit Draw match.'
+command.fruitfulfun.minigame.acceptButton: '[Accept]'
+command.fruitfulfun.minigame.acceptButton.hover: 'Click to accept the match invitation.'
+command.fruitfulfun.minigame.duration.get: 'Game duration is %s seconds.'
+command.fruitfulfun.minigame.duration.set: 'Game duration set to %s seconds.'
+command.fruitfulfun.minigame.noInvite: 'You have no pending invitation.'
+command.fruitfulfun.minigame.busy: '%s is already in a match.'
+command.fruitfulfun.minigame.accepted: 'Fruit Draw match started!'
+command.fruitfulfun.minigame.declined: 'Invitation declined.'
+command.fruitfulfun.minigame.opponentFinished: '%s has finished their board.'
+command.fruitfulfun.minigame.overtime: 'Tie! Overtime: 10 more seconds!'
+command.fruitfulfun.minigame.spectate.none: '%s is not in a game.'
+command.fruitfulfun.minigame.spectating: 'You are now spectating %s.'
+command.fruitfulfun.minigame.selfInvite: 'You cannot invite yourself.'
 tip.fruitfulfun.appleSaplingFromHeroOfTheVillage: Gift from baby villager when you become hero of the village.
 tip.fruitfulfun.villageAppleTreeWorldGen: Apple trees sometimes grow in villages in plains.
 tip.fruitfulfun.clearHarmfulEffects: Clears Harmful Effects
@@ -214,6 +275,9 @@ advancements.fruitfulfun.all_fruit.description: Eat every fruit that is from Fru
 advancements.fruitfulfun.all_fruit_and_food.description: Eat every food and drink that is from Fruitful Fun
 stat.fruitfulfun.bee_one_cm: Distance by Bee
 stat.fruitfulfun.bees_bred: Bees Bred
+stat.fruitfulfun.minigame_pieces_cleared: 'Fruit Draw: Pieces Cleared'
+stat.fruitfulfun.minigame_line_clears: 'Fruit Draw: Line Clears'
+stat.fruitfulfun.minigame_goals_completed: 'Fruit Draw: Goals Completed'
 effect.fruitfulfun.mutagen_effect: Mutagen-Induced
 effect.fruitfulfun.mutagen_effect.description: Increases the chance of mutation of its baby
 effect.fruitfulfun.fragility: Fragility

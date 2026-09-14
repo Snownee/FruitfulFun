@@ -75,6 +75,7 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.guide.GuideModule;
+import snownee.fruits.minigame.MinigameModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.recipe.AlternativesIngredientBuilder;
@@ -149,6 +150,15 @@ public class FFRecipes extends FabricRecipeProvider {
 						.requires(Items.PAPER)
 						.requires(GRAPEFRUIT.get())
 						.unlockedBy("has_grapefruit", has(GRAPEFRUIT.get()))
+						.save(output);
+				shaped(RecipeCategory.DECORATIONS, MinigameModule.BATTLE_TABLE.get())
+						.pattern("PPP")
+						.pattern("CBC")
+						.pattern("C C")
+						.define('P', CoreModule.CITRUS_PLANKS.get())
+						.define('C', Items.COPPER_INGOT)
+						.define('B', Items.BLACK_CONCRETE)
+						.unlockedBy("has_copper", has(Items.COPPER_INGOT))
 						.save(output);
 
 				RecipeOutput beeExporter = withConditions(

@@ -1,6 +1,7 @@
 // 26.1.2	-999999999-01-01T00:00:00	Fruitful Fun/Model Definitions
 8dc913cc0b9adabe5600269a77acf647fbc657c2 assets/fruitfulfun/blockstates/apple_leaves.json
 0d749abdac67af5f6d8d1c13b6ff6e6a67fa8495 assets/fruitfulfun/blockstates/apple_sapling.json
+73d337b16e2c9e9f6da8c89b9b04a7922dee3a7e assets/fruitfulfun/blockstates/battle_table.json
 1b0f10dce13e72f6999b07f4eaac234b3371c957 assets/fruitfulfun/blockstates/brewer.json
 dc29f242b5752966de927b6e95ff89567defa7a9 assets/fruitfulfun/blockstates/buzzy_crafter.json
 e2909a4b3515d86f126bf0c5ee1ccdda6970aed0 assets/fruitfulfun/blockstates/cherry_leaves.json
@@ -80,6 +81,7 @@ e9292b19f619ddffefec031e7fa95210c334400a assets/fruitfulfun/blockstates/wanderin
 1789af8a9e56ed3fd0e48b99f298aec19241d6dd assets/fruitfulfun/blockstates/weak_candle.json
 4cdafe170cee9d506c02099459d2e5c36c02fc43 assets/fruitfulfun/items/apple_leaves.json
 23b54f88de463a6e20a79e86f426bf7d0edcc589 assets/fruitfulfun/items/apple_sapling.json
+46cb354b77781caa1c413afaac109c0923c49a0e assets/fruitfulfun/items/battle_table.json
 016f09be3295e68df16b525803c3fb94c2748b82 assets/fruitfulfun/items/brewer.json
 fd9e6d83f522a3f80ad0d12b4a6a80fdac91213b assets/fruitfulfun/items/buzzy_crafter.json
 7398ef3491456bcdff5a8d076f2388c8351cdde8 assets/fruitfulfun/items/buzzy_shield.json

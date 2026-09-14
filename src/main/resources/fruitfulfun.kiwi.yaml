@@ -39,6 +39,11 @@ modules:
       dependencies: '@core'
       modId: fruitfulfun
       value: gadget
+  - target: snownee.fruits.minigame.MinigameModule
+    data:
+      dependencies: '@core'
+      modId: fruitfulfun
+      value: minigame
   - target: snownee.fruits.guide.GuideModule
     data:
       dependencies: modonomicon
@@ -73,3 +78,11 @@ packets:
   - target: snownee.fruits.gadget.crafter.CClickCrafterPacket
   - target: snownee.fruits.gadget.scent.SScentAddedPacket
   - target: snownee.fruits.gadget.vac.CGunShotPacket
+  - target: snownee.fruits.minigame.network.SMinigameSyncPacket
+  - target: snownee.fruits.minigame.network.CSubmitPathPacket
+  - target: snownee.fruits.minigame.network.CQuitMinigamePacket
+  - target: snownee.fruits.minigame.network.CStartMinigamePacket
+  - target: snownee.fruits.minigame.network.CUpdatePathPacket
+  - target: snownee.fruits.minigame.network.CBattleTableActionPacket
+  - target: snownee.fruits.minigame.network.SBattleTableSyncPacket
+  - target: snownee.fruits.minigame.network.SMinigameSpectatorPacket

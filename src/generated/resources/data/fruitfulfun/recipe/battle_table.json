@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:black_concrete",
+    "C": "minecraft:copper_ingot",
+    "P": "fruitfulfun:citrus_planks"
+  },
+  "pattern": [
+    "PPP",
+    "CBC",
+    "C C"
+  ],
+  "result": {
+    "id": "fruitfulfun:battle_table"
+  }
+}

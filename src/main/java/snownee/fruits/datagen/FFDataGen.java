@@ -21,6 +21,8 @@ import snownee.fruits.datagen.guide.FruitfulFunBook;
 import snownee.fruits.datagen.guide.RitualMultiblockProvider;
 import snownee.fruits.food.datagen.FoodBlockLoot;
 import snownee.fruits.gadget.datagen.GadgetBlockLoot;
+import snownee.fruits.minigame.datagen.MinigameBlockLoot;
+import snownee.fruits.minigame.datagen.MinigameLootTables;
 import snownee.fruits.pomegranate.datagen.PomegranateBlockLoot;
 
 public class FFDataGen implements DataGeneratorEntrypoint {
@@ -46,6 +48,8 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 //		pack.addProvider(($, _) -> new FFEquipmentAssetProvider($));
 		pack.addProvider(CherryBlockLoot::new);
 		pack.addProvider(PomegranateBlockLoot::new);
+		pack.addProvider(MinigameBlockLoot::new);
+		pack.addProvider(MinigameLootTables::new);
 		pack.addProvider((output, registries) -> new RitualMultiblockProvider(output));
 		LanguageProviderCache zhCnLang = new LanguageProviderCache("zh_cn");
 		pack.addProvider(FabricBookProvider.of(
