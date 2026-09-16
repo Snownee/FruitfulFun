@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import snownee.fruits.minigame.BoardStep;
 import snownee.fruits.minigame.MinigameConfig;
 import snownee.fruits.minigame.MinigameSession;
+import snownee.fruits.minigame.PathRules;
 import snownee.fruits.minigame.goal.MinigameGoal;
 
 public record PlayerSync(
@@ -47,7 +48,7 @@ public record PlayerSync(
 			PlayerSync::locked,
 			BoardStep.STREAM_CODEC.apply(ByteBufCodecs.list(MinigameConfig.CELL_COUNT)),
 			PlayerSync::steps,
-			ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(MinigameConfig.CELL_COUNT)),
+			ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(PathRules.MAX_PATH)),
 			PlayerSync::path,
 			ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(MinigameConfig.REWARD_SLOTS)),
 			PlayerSync::rewards,

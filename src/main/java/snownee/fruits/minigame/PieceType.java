@@ -30,7 +30,8 @@ public enum PieceType {
 	REDLOVE("redlove", CherryModule.REDLOVE, false, false, true),
 	POMEGRANATE("pomegranate", PomegranateModule.POMEGRANATE_ITEM, true, false, true),
 	GOLDEN_APPLE("golden_apple", () -> Items.GOLDEN_APPLE, false, true, true),
-	BEE("bee", () -> Items.BEE_SPAWN_EGG, false, true, true);
+	BEE("bee", () -> Items.BEE_SPAWN_EGG, false, true, true),
+	BEEHIVE("beehive", () -> Items.BEE_NEST, false, false, true, true);
 
 	public static final WeightedList<PieceType> FRUITS = WeightedList.<PieceType>builder()
 			.add(ORANGE, 20)
@@ -46,27 +47,39 @@ public enum PieceType {
 	private final Supplier<? extends Item> item;
 	private final boolean unlinkable;
 	private final boolean wildcard;
+	private final boolean passThrough;
 	private final Component displayName;
 	private final @Nullable Component tooltip;
 	private volatile @Nullable ItemStackTemplate template;
 
 	PieceType(String name, Supplier<? extends Item> item) {
-		this(name, item, false, false, false);
+		this(name, item, false, false, false, false);
 	}
 
 	PieceType(String name, Supplier<? extends Item> item, boolean unlinkable) {
-		this(name, item, unlinkable, false, false);
+		this(name, item, unlinkable, false, false, false);
 	}
 
 	PieceType(String name, Supplier<? extends Item> item, boolean unlinkable, boolean wildcard) {
-		this(name, item, unlinkable, wildcard, false);
+		this(name, item, unlinkable, wildcard, false, false);
 	}
 
 	PieceType(String name, Supplier<? extends Item> item, boolean unlinkable, boolean wildcard, boolean hasTooltip) {
+		this(name, item, unlinkable, wildcard, false, hasTooltip);
+	}
+
+	PieceType(
+			String name,
+			Supplier<? extends Item> item,
+			boolean unlinkable,
+			boolean wildcard,
+			boolean passThrough,
+			boolean hasTooltip) {
 		this.name = name;
 		this.item = item;
 		this.unlinkable = unlinkable;
 		this.wildcard = wildcard;
+		this.passThrough = passThrough;
 		this.tooltip = hasTooltip ? Component.translatable("gui.fruitfulfun.minigame.piece." + name + ".effect") : null;
 		Component displayName = Component.translatable("gui.fruitfulfun.minigame.piece." + name);
 		this.displayName = tooltip == null
@@ -86,8 +99,12 @@ public enum PieceType {
 		return wildcard;
 	}
 
+	public boolean passThrough() {
+		return passThrough;
+	}
+
 	public boolean matches(@Nullable PieceType base) {
-		return !unlinkable && (base == null || wildcard || base == this);
+		return !unlinkable && (base == null || wildcard || passThrough || base == this);
 	}
 
 	public boolean clearsAtBottom() {

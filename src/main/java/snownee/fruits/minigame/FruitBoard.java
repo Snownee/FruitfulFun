@@ -3,14 +3,18 @@ package snownee.fruits.minigame;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.IntPredicate;
 
 import org.jspecify.annotations.Nullable;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import snownee.fruits.minigame.ClearResult.ClearedPiece;
 
 public final class FruitBoard implements PathRules.Board {
 	private static final int[][] ORTHOGONAL = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+	private static final int BEE_MOVE_MS = 100;
 
 	private final @Nullable Piece[] cells = new @Nullable Piece[MinigameConfig.CELL_COUNT];
 	private final boolean[] locked = new boolean[MinigameConfig.CELL_COUNT];
@@ -61,19 +65,22 @@ public final class FruitBoard implements PathRules.Board {
 		return PathRules.validPath(path, this);
 	}
 
-	public @Nullable ClearResult clear(List<Integer> path) {
+	public @Nullable ClearResult clear(List<Integer> path, Consumer<ClearResult> onWave) {
 		if (!isValidPath(path)) {
 			return null;
 		}
 		steps.clear();
-		return removeAndRefill(path, path.getLast());
+		return removeAndRefill(path, path.getLast(), onWave);
 	}
 
 	public ClearResult clearCells(List<Integer> indices) {
-		return removeAndRefill(indices, null);
+		return removeAndRefill(indices, null, null);
 	}
 
-	private ClearResult removeAndRefill(List<Integer> indices, @Nullable Integer beeTarget) {
+	private ClearResult removeAndRefill(
+			List<Integer> indices,
+			@Nullable Integer beeTarget,
+			@Nullable Consumer<ClearResult> onWave) {
 		List<ClearedPiece> cleared = new ArrayList<>();
 		List<Integer> removed = new ArrayList<>();
 		int beeIndex = -1;
@@ -83,6 +90,9 @@ public final class FruitBoard implements PathRules.Board {
 				beeIndex = index;
 				continue;
 			}
+			if (piece.type().passThrough()) {
+				continue;
+			}
 			cleared.add(new ClearedPiece(index, piece));
 			removed.add(index);
 			cells[index] = null;
@@ -90,15 +100,34 @@ public final class FruitBoard implements PathRules.Board {
 		steps.add(new BoardStep.Clear(List.copyOf(removed)));
 		if (beeIndex >= 0 && beeTarget != null) {
 			Piece bee = Objects.requireNonNull(cells[beeIndex]);
-			cells[beeIndex] = cells[beeTarget];
-			cells[beeTarget] = bee;
-			steps.add(new BoardStep.Move(beeIndex, beeTarget));
+			cells[beeIndex] = null;
+			int duration = (indices.size() - 1) * BEE_MOVE_MS;
+			Piece target = cells[beeTarget];
+			if (target != null && target.type().passThrough()) {
+				CompoundTag data = target.data() == null ? new CompoundTag() : target.data().copy();
+				data.putInt(Piece.BEES_KEY, data.getInt(Piece.BEES_KEY).orElse(0) + 1);
+				cells[beeTarget] = new Piece(target.type(), data, target.serverData());
+				cleared.add(new ClearedPiece(beeIndex, bee));
+				steps.add(new BoardStep.BeeMove(List.copyOf(indices), true, data, duration));
+			} else {
+				cells[beeTarget] = bee;
+				steps.add(new BoardStep.BeeMove(List.copyOf(indices), false, null, duration));
+			}
+		}
+		if (onWave != null) {
+			onWave.accept(new ClearResult(
+					cleared.size() * MinigameConfig.BASE_SCORE,
+					List.copyOf(cleared),
+					ClearResult.Cause.PATH));
 		}
 		unlockAdjacent(indices);
 		applyGravity();
-		removeBottom(cleared);
+		removeBottom(cleared, onWave);
 		refill();
-		return new ClearResult(cleared.size() * MinigameConfig.BASE_SCORE, List.copyOf(cleared));
+		return new ClearResult(
+				cleared.size() * MinigameConfig.BASE_SCORE,
+				List.copyOf(cleared),
+				ClearResult.Cause.NONE);
 	}
 
 	public ClearResult clearLootboxes() {
@@ -113,14 +142,14 @@ public final class FruitBoard implements PathRules.Board {
 			}
 		}
 		if (removed.isEmpty()) {
-			return new ClearResult(0, List.of());
+			return ClearResult.EMPTY;
 		}
 		steps.add(new BoardStep.Clear(List.copyOf(removed)));
 		unlockAdjacent(removed);
 		applyGravity();
-		removeBottom(cleared);
+		removeBottom(cleared, null);
 		refill();
-		return new ClearResult(0, List.copyOf(cleared));
+		return new ClearResult(0, List.copyOf(cleared), ClearResult.Cause.NONE);
 	}
 
 	public List<Integer> findGroup(int index) {
@@ -160,7 +189,7 @@ public final class FruitBoard implements PathRules.Board {
 		List<Integer> candidates = new ArrayList<>();
 		for (int i = 0; i < cells.length; i++) {
 			Piece piece = cells[i];
-			if (piece != null && !piece.is(PieceType.BEE) && !piece.type().unlinkable()) {
+			if (piece != null && !piece.is(PieceType.BEE) && !piece.type().unlinkable() && !piece.type().passThrough()) {
 				candidates.add(i);
 			}
 		}
@@ -181,9 +210,9 @@ public final class FruitBoard implements PathRules.Board {
 		steps.add(new BoardStep.Clear(List.of(index)));
 		unlockAdjacent(List.of(index));
 		applyGravity();
-		removeBottom(cleared);
+		removeBottom(cleared, null);
 		refill();
-		return new ClearResult(0, List.copyOf(cleared));
+		return new ClearResult(0, List.copyOf(cleared), ClearResult.Cause.NONE);
 	}
 
 	public void addSpawn(Piece piece, int count) {
@@ -192,36 +221,33 @@ public final class FruitBoard implements PathRules.Board {
 		}
 	}
 
-	public void replaceRandom(Piece piece) {
-		cells[random.nextInt(cells.length)] = piece;
-	}
-
-	public int countRemovals(List<Integer> path, PieceType type) {
+	public int pendingCount(PieceType type) {
 		int count = 0;
-		boolean[] removed = new boolean[MinigameConfig.CELL_COUNT];
-		for (int index : path) {
-			removed[index] = true;
-			Piece piece = Objects.requireNonNull(cells[index]);
-			if (piece.is(type) && !piece.is(PieceType.BEE)) {
+		for (Piece piece : pendingSpawns) {
+			if (piece.is(type)) {
 				count++;
 			}
 		}
-		if (type.clearsAtBottom()) {
-			for (int x = 0; x < MinigameConfig.SIZE; x++) {
-				for (int y = MinigameConfig.SIZE - 1; y >= 0; y--) {
-					int index = x + y * MinigameConfig.SIZE;
-					if (removed[index]) {
-						continue;
-					}
-					Piece piece = cells[index];
-					if (piece == null || !piece.is(type)) {
-						break;
-					}
-					count++;
-				}
+		return count;
+	}
+
+	public int replaceRandom(Piece piece) {
+		return replaceRandom(piece, $ -> true);
+	}
+
+	public int replaceRandom(Piece piece, IntPredicate allowed) {
+		List<Integer> candidates = new ArrayList<>();
+		for (int i = 0; i < cells.length; i++) {
+			if (allowed.test(i)) {
+				candidates.add(i);
 			}
 		}
-		return count;
+		if (candidates.isEmpty()) {
+			return -1;
+		}
+		int index = candidates.get(random.nextInt(candidates.size()));
+		cells[index] = piece;
+		return index;
 	}
 
 	public void addJunk(List<Integer> indices) {
@@ -247,14 +273,17 @@ public final class FruitBoard implements PathRules.Board {
 		}
 	}
 
-	private void removeBottom(List<ClearedPiece> cleared) {
+	private void removeBottom(List<ClearedPiece> cleared, @Nullable Consumer<ClearResult> onWave) {
 		while (true) {
 			List<Integer> bottom = new ArrayList<>();
+			List<ClearedPiece> wave = new ArrayList<>();
 			for (int x = 0; x < MinigameConfig.SIZE; x++) {
 				int index = x + (MinigameConfig.SIZE - 1) * MinigameConfig.SIZE;
 				Piece piece = cells[index];
 				if (piece != null && piece.type().clearsAtBottom()) {
-					cleared.add(new ClearedPiece(index, piece));
+					ClearedPiece clearedPiece = new ClearedPiece(index, piece);
+					cleared.add(clearedPiece);
+					wave.add(clearedPiece);
 					cells[index] = null;
 					bottom.add(index);
 				}
@@ -263,6 +292,12 @@ public final class FruitBoard implements PathRules.Board {
 				return;
 			}
 			steps.add(new BoardStep.Clear(bottom));
+			if (onWave != null) {
+				onWave.accept(new ClearResult(
+						wave.size() * MinigameConfig.BASE_SCORE,
+						List.copyOf(wave),
+						ClearResult.Cause.BOTTOM));
+			}
 			unlockAdjacent(bottom);
 			applyGravity();
 		}

@@ -81,7 +81,7 @@ public final class MinigameSession {
 		this.started = autoStart;
 		this.endAtMillis = autoStart ? Util.getMillis() + MinigameManager.duration() * 1000L : 0L;
 		this.moveLimit = MinigameConfig.MOVE_LIMIT;
-		MinigameRuleContext context = new MinigameRuleContext(this, List.of(), opponent);
+		MinigameRuleContext context = new MinigameRuleContext(this, List.of(), ClearResult.EMPTY, opponent);
 		for (MinigameRule rule : rules) {
 			rule.onStart(context);
 		}
@@ -234,11 +234,16 @@ public final class MinigameSession {
 		if (!board.isValidPath(path)) {
 			return -1;
 		}
-		MinigameRuleContext context = new MinigameRuleContext(this, path, opponent);
-		for (MinigameRule rule : rules) {
-			rule.onClear(context);
-		}
-		ClearResult result = board.clear(path);
+		ClearResult result = board.clear(path, wave -> {
+			MinigameRuleContext context = new MinigameRuleContext(
+					this,
+					wave.cause() == ClearResult.Cause.PATH ? path : List.of(),
+					wave,
+					opponent);
+			for (MinigameRule rule : rules) {
+				rule.onClear(context);
+			}
+		});
 		if (result == null) {
 			return -1;
 		}
@@ -269,7 +274,7 @@ public final class MinigameSession {
 		}
 		if (allDone && !goalsDone) {
 			goalsDone = true;
-			MinigameRuleContext context = new MinigameRuleContext(this, List.of(), opponent);
+			MinigameRuleContext context = new MinigameRuleContext(this, List.of(), ClearResult.EMPTY, opponent);
 			for (MinigameRule rule : rules) {
 				rule.onGoalsComplete(context);
 			}
@@ -320,10 +325,6 @@ public final class MinigameSession {
 	}
 
 	private void cascadeClear(List<Integer> indices) {
-		MinigameRuleContext context = new MinigameRuleContext(this, indices, opponent);
-		for (MinigameRule rule : rules) {
-			rule.onClear(context);
-		}
 		ClearResult result = board.clearCells(indices);
 		score += result.score();
 		player.awardStat(MinigameModule.MINIGAME_PIECES_CLEARED, result.size());

@@ -120,11 +120,14 @@ gui.fruitfulfun.minigame.goal.header: Goals
 gui.fruitfulfun.minigame.goal.pieces: pieces
 gui.fruitfulfun.minigame.goal.clear_piece: 'Clear %s %s in a game'
 gui.fruitfulfun.minigame.goal.single_move: 'Clear %s+ %s in one move'
+gui.fruitfulfun.minigame.goal.beehive: 'Feed %s bee to a beehive'
 gui.fruitfulfun.minigame.rule.spawn_piece: 'Every clear spawns %3$s %4$s for each %2$s pieces beyond a line of %1$s'
 gui.fruitfulfun.minigame.rule.spawn_piece_low: 'After each clear, spawn 1 %1$s, up to %2$s %1$s at a time'
-gui.fruitfulfun.minigame.rule.scatter_piece: 'At the start, a random board cell becomes %s'
+gui.fruitfulfun.minigame.rule.scatter_piece: 'At the start, adds one %s'
+gui.fruitfulfun.minigame.rule.beehive: 'At the start, adds one bee and one beehive'
 gui.fruitfulfun.minigame.piece.lootbox: Loot Box
 gui.fruitfulfun.minigame.piece.bee: Bee
+gui.fruitfulfun.minigame.piece.beehive: Beehive
 gui.fruitfulfun.minigame.piece.orange: Orange
 gui.fruitfulfun.minigame.piece.lemon: Lemon
 gui.fruitfulfun.minigame.piece.cherry: Cherry
@@ -137,6 +140,7 @@ gui.fruitfulfun.minigame.piece.bee.effect: 'A line must start from this piece an
 gui.fruitfulfun.minigame.piece.redlove.effect: 'Never spawns naturally.'
 gui.fruitfulfun.minigame.piece.pomegranate.effect: 'Cannot be linked. Clears itself when it sinks to the bottom.'
 gui.fruitfulfun.minigame.piece.golden_apple.effect: 'Links as if it were any fruit.'
+gui.fruitfulfun.minigame.piece.beehive.effect: 'Only a bee may pass through; a bee that ends its path here is cleared.'
 gui.fruitfulfun.minigame.goals_result: 'Goals: %s/%s'
 command.fruitfulfun.minigame.started: 'Fruit Draw started! Drag across 3 or more connected fruits of the same kind to clear them.'
 command.fruitfulfun.minigame.invited: 'Invitation sent to %s.'

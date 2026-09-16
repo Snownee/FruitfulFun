@@ -25,7 +25,8 @@ public final class SoloGoals {
 			new SingleMoveGoal(null, 8, 1, List.of(new ItemStack(Items.EMERALD))),
 			redloveGoal(),
 			pomegranateGoal(),
-			lootboxGoal());
+			lootboxGoal(),
+			beehiveGoal());
 
 	private SoloGoals() {
 	}
@@ -59,6 +60,11 @@ public final class SoloGoals {
 						"gui.fruitfulfun.minigame.rule.scatter_piece",
 						PieceType.BEE.displayName())));
 		return new ClearPieceGoal(type, 1, List.of(new ItemStack(Items.EMERALD)), rules);
+	}
+
+	private static MinigameGoal beehiveGoal() {
+		PieceType type = PieceType.ORANGE;
+		return new BeehiveGoal(1, fruit(type, 4));
 	}
 
 	private static List<ItemStack> fruit(PieceType type, int count) {

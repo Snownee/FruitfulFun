@@ -5,6 +5,7 @@ import java.util.function.ToIntFunction;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.network.chat.Component;
+import snownee.fruits.minigame.ClearResult;
 import snownee.fruits.minigame.Piece;
 import snownee.fruits.minigame.PieceType;
 
@@ -19,7 +20,9 @@ public final class SpawnPieceRule extends MinigameRule {
 
 	public static Pair<MinigameRule, Component> spawnPiece(PieceType type, int count, int start, int step) {
 		return Pair.of(
-				new SpawnPieceRule(type, context -> count * ((context.pathSize() - start) / step)),
+				new SpawnPieceRule(type, context -> context.cleared().cause() == ClearResult.Cause.PATH
+						? count * ((context.cleared().size() - start) / step)
+						: 0),
 				Component.translatable(
 						"gui.fruitfulfun.minigame.rule.spawn_piece",
 						start,

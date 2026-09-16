@@ -4,7 +4,15 @@ import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 
-public record ClearResult(int score, List<ClearedPiece> pieces) {
+public record ClearResult(int score, List<ClearedPiece> pieces, Cause cause) {
+	public static final ClearResult EMPTY = new ClearResult(0, List.of(), Cause.NONE);
+
+	public enum Cause {
+		PATH,
+		BOTTOM,
+		NONE
+	}
+
 	public record ClearedPiece(int index, Piece piece) {
 	}
 

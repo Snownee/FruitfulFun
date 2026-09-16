@@ -7,8 +7,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import snownee.fruits.FruitfulFun;
-import snownee.fruits.minigame.MinigameConfig;
 import snownee.fruits.minigame.MinigameManager;
+import snownee.fruits.minigame.PathRules;
 import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PayloadContext;
@@ -19,7 +19,7 @@ public record CUpdatePathPacket(List<Integer> path) implements CustomPacketPaylo
 	public static final CustomPacketPayload.Type<CUpdatePathPacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("minigame_update_path"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, CUpdatePathPacket> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(MinigameConfig.CELL_COUNT)),
+			ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(PathRules.MAX_PATH)),
 			CUpdatePathPacket::path,
 			CUpdatePathPacket::new);
 

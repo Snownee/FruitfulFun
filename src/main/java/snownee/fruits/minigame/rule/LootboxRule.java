@@ -1,5 +1,6 @@
 package snownee.fruits.minigame.rule;
 
+import snownee.fruits.minigame.ClearResult;
 import snownee.fruits.minigame.Piece;
 
 public final class LootboxRule extends MinigameRule {
@@ -15,7 +16,7 @@ public final class LootboxRule extends MinigameRule {
 
 	@Override
 	public void onClear(MinigameRuleContext context) {
-		if (context.pathSize() >= threshold) {
+		if (context.cleared().cause() == ClearResult.Cause.PATH && context.cleared().size() >= threshold) {
 			context.spawn(Piece.lootbox(), 1);
 		}
 	}

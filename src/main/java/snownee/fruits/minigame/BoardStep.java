@@ -20,7 +20,10 @@ public sealed interface BoardStep {
 	record Spawn(List<Entry> entries) implements BoardStep {
 	}
 
-	record Move(int from, int to) implements BoardStep {
+	record Move(int from, int to, int duration) implements BoardStep {
+	}
+
+	record BeeMove(List<Integer> cells, boolean consumed, @Nullable CompoundTag hiveData, int duration) implements BoardStep {
 	}
 
 	record Entry(int index, PieceType type, @Nullable CompoundTag data) {
@@ -46,6 +49,7 @@ public sealed interface BoardStep {
 	}
 
 	StreamCodec<ByteBuf, List<Integer>> INT_LIST = ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(MinigameConfig.CELL_COUNT));
+	StreamCodec<ByteBuf, List<Integer>> PATH_LIST = ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(PathRules.MAX_PATH));
 	StreamCodec<RegistryFriendlyByteBuf, List<Entry>> ENTRY_LIST = Entry.STREAM_CODEC.apply(
 			ByteBufCodecs.list(MinigameConfig.CELL_COUNT));
 
@@ -56,7 +60,12 @@ public sealed interface BoardStep {
 				case 0 -> new Clear(INT_LIST.decode(buf));
 				case 1 -> new Fall(INT_LIST.decode(buf));
 				case 2 -> new Spawn(ENTRY_LIST.decode(buf));
-				case 3 -> new Move(buf.readVarInt(), buf.readVarInt());
+				case 3 -> new Move(buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
+				case 4 -> new BeeMove(
+						PATH_LIST.decode(buf),
+						buf.readBoolean(),
+						buf.readBoolean() ? ByteBufCodecs.COMPOUND_TAG.decode(buf) : null,
+						buf.readVarInt());
 				default -> throw new IllegalArgumentException("Unknown board step");
 			};
 		}
@@ -80,6 +89,17 @@ public sealed interface BoardStep {
 					buf.writeVarInt(3);
 					buf.writeVarInt(move.from());
 					buf.writeVarInt(move.to());
+					buf.writeVarInt(move.duration());
+				}
+				case BeeMove beeMove -> {
+					buf.writeVarInt(4);
+					PATH_LIST.encode(buf, beeMove.cells());
+					buf.writeBoolean(beeMove.consumed());
+					buf.writeBoolean(beeMove.hiveData() != null);
+					if (beeMove.hiveData() != null) {
+						ByteBufCodecs.COMPOUND_TAG.encode(buf, beeMove.hiveData());
+					}
+					buf.writeVarInt(beeMove.duration());
 				}
 			}
 		}

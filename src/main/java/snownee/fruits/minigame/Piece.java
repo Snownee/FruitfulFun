@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public record Piece(PieceType type, @Nullable CompoundTag data, @Nullable CompoundTag serverData) {
 	public static final String LOOT_TABLE_KEY = "lootTable";
+	public static final String BEES_KEY = "bees";
 
 	public static Piece of(PieceType type) {
 		return new Piece(type, null, null);

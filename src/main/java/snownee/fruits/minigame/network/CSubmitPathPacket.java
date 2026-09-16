@@ -8,8 +8,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import snownee.fruits.FruitfulFun;
-import snownee.fruits.minigame.MinigameConfig;
 import snownee.fruits.minigame.MinigameManager;
+import snownee.fruits.minigame.PathRules;
 import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
 import snownee.kiwi.network.PayloadContext;
@@ -20,7 +20,7 @@ public record CSubmitPathPacket(List<Integer> path) implements CustomPacketPaylo
 	public static final CustomPacketPayload.Type<CSubmitPathPacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("minigame_submit_path"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, CSubmitPathPacket> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(MinigameConfig.CELL_COUNT)),
+			ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(PathRules.MAX_PATH)),
 			CSubmitPathPacket::path,
 			CSubmitPathPacket::new);
 

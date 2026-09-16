@@ -39,8 +39,8 @@ public class FruitBoardScreen extends Screen {
 	private static final SystemToast.SystemToastId MINIGAME_TOAST = new SystemToast.SystemToastId();
 
 	private final GoalPanel goalPanel;
-	private final BoardView ownBoard = new BoardView(true);
-	private final BoardView opponentBoard = new BoardView(true);
+	private final BoardView ownBoard;
+	private final BoardView opponentBoard;
 	private final List<Integer> path = new ArrayList<>();
 
 	private int score;
@@ -74,6 +74,8 @@ public class FruitBoardScreen extends Screen {
 		super(Component.translatable("gui.fruitfulfun.minigame"));
 		this.spectating = spectating;
 		this.goalPanel = new GoalPanel(font);
+		this.ownBoard = new BoardView(font, true);
+		this.opponentBoard = new BoardView(font, true);
 		update(packet);
 	}
 
@@ -230,6 +232,9 @@ public class FruitBoardScreen extends Screen {
 					return true;
 				}
 				if (!PathRules.canAppend(List.of(), ownBoard, cell)) {
+					if (PathRules.hasBee(ownBoard) && !type.passThrough() && type != PieceType.BEE) {
+						ownBoard.playBeeHint();
+					}
 					return true;
 				}
 				path.clear();
@@ -254,13 +259,13 @@ public class FruitBoardScreen extends Screen {
 		if (event.button() == 0 && !inputBlocked() && !path.isEmpty()) {
 			int cell = ownBoard.cellAt(event.x(), event.y(), Math.max(1, cellSize() / 5));
 			if (cell >= 0) {
-				if (path.size() >= 2 && cell == path.get(path.size() - 2)) {
-					path.removeLast();
-					playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.6f, 0.4f);
-					sendPathUpdate();
-				} else if (PathRules.canAppend(path, ownBoard, cell)) {
+				if (PathRules.canAppend(path, ownBoard, cell)) {
 					path.add(cell);
 					playStepSound();
+					sendPathUpdate();
+				} else if (path.size() >= 2 && cell == path.get(path.size() - 2)) {
+					path.removeLast();
+					playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.6f, 0.4f);
 					sendPathUpdate();
 				}
 			}
@@ -275,7 +280,7 @@ public class FruitBoardScreen extends Screen {
 			return false;
 		}
 		if (event.button() == 0 && !path.isEmpty()) {
-			if (!finished && path.size() >= PathRules.MIN_LENGTH) {
+			if (!finished && PathRules.validPath(path, ownBoard)) {
 				CSubmitPathPacket.send(List.copyOf(path));
 			}
 			path.clear();
