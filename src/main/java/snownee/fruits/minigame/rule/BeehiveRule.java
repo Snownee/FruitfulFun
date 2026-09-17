@@ -15,7 +15,12 @@ public final class BeehiveRule extends MinigameRule {
 	public static final int MIN_DISTANCE = 4;
 
 	public static Pair<MinigameRule, Component> create() {
-		return Pair.of(new BeehiveRule(), Component.translatable("gui.fruitfulfun.minigame.rule.beehive"));
+		return Pair.of(
+				new BeehiveRule(),
+				Component.translatable(
+						"gui.fruitfulfun.minigame.rule.beehive",
+						PieceType.BEE.displayName(),
+						PieceType.BEEHIVE.displayName()));
 	}
 
 	@Override

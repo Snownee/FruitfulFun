@@ -16,6 +16,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -40,6 +42,7 @@ public final class MinigameSession {
 	private final FruitBoard board;
 	private final List<MinigameGoal> goals;
 	private final List<MinigameRule> rules;
+	private final boolean allowDiagonal;
 	private final int[] goalProgress;
 	private final int[] goalSynced;
 	private final List<ServerPlayer> spectators = new ArrayList<>();
@@ -73,9 +76,14 @@ public final class MinigameSession {
 			boolean autoStart) {
 		this.player = player;
 		this.table = table;
-		this.board = new FruitBoard(RandomSource.create());
 		this.goals = goals;
 		this.rules = collectRules(goals);
+		this.allowDiagonal = rules.stream().allMatch(MinigameRule::allowsDiagonal);
+		List<Weighted<PieceType>> pool = new ArrayList<>(PieceType.FRUITS.unwrap());
+		for (MinigameRule rule : rules) {
+			rule.modifyPool(pool);
+		}
+		this.board = new FruitBoard(RandomSource.create(), WeightedList.of(pool), allowDiagonal);
 		this.goalProgress = new int[goals.size()];
 		this.goalSynced = new int[goals.size()];
 		this.started = autoStart;
@@ -111,6 +119,10 @@ public final class MinigameSession {
 		return board;
 	}
 
+	public boolean allowsDiagonal() {
+		return allowDiagonal;
+	}
+
 	public int score() {
 		return score;
 	}
@@ -129,6 +141,10 @@ public final class MinigameSession {
 
 	public int moveLimit() {
 		return moveLimit;
+	}
+
+	public int movesLeft() {
+		return moveLimit - moves;
 	}
 
 	public int timeRemaining() {
@@ -226,7 +242,7 @@ public final class MinigameSession {
 				currentPath = List.of();
 				clears++;
 				player.awardStat(MinigameModule.MINIGAME_PIECES_CLEARED, lootbox.size());
-				rollLoot(Objects.requireNonNull(lootbox.pieces().getFirst().piece().serverData()));
+				reward(lootbox);
 				advanceGoals(lootbox);
 				return 0;
 			}
@@ -234,25 +250,29 @@ public final class MinigameSession {
 		if (!board.isValidPath(path)) {
 			return -1;
 		}
-		ClearResult result = board.clear(path, wave -> {
-			MinigameRuleContext context = new MinigameRuleContext(
-					this,
-					wave.cause() == ClearResult.Cause.PATH ? path : List.of(),
-					wave,
-					opponent);
-			for (MinigameRule rule : rules) {
-				rule.onClear(context);
-			}
-		});
+		ClearResult result = board.clear(
+				path, wave -> {
+					MinigameRuleContext context = new MinigameRuleContext(
+							this,
+							wave.cause() == ClearResult.Cause.PATH ? path : List.of(),
+							wave,
+							opponent);
+					for (MinigameRule rule : rules) {
+						rule.onClear(context);
+					}
+					context.resolveDeferredPlacements();
+				});
 		if (result == null) {
 			return -1;
 		}
 		currentPath = List.of();
 		moves++;
 		clears++;
+		moveLimit += result.countLarge();
 		score += result.score();
 		player.awardStat(MinigameModule.MINIGAME_PIECES_CLEARED, result.size());
 		player.awardStat(MinigameModule.MINIGAME_LINE_CLEARS);
+		reward(result);
 		advanceGoals(result);
 		return result.score();
 	}
@@ -309,13 +329,11 @@ public final class MinigameSession {
 		}
 		cascadeDelay = MinigameConfig.CASCADE_INTERVAL_TICKS;
 		board.steps().clear();
-		clearLootboxes();
 		moves++;
 		int seed = board.randomSeed();
 		if (seed >= 0) {
 			cascadeClear(board.findGroup(seed));
 		}
-		clearLootboxes();
 		clears++;
 		return true;
 	}
@@ -328,20 +346,16 @@ public final class MinigameSession {
 		ClearResult result = board.clearCells(indices);
 		score += result.score();
 		player.awardStat(MinigameModule.MINIGAME_PIECES_CLEARED, result.size());
+		reward(result);
 		advanceGoals(result);
 	}
 
-	private void clearLootboxes() {
-		ClearResult result = board.clearLootboxes();
-		if (result.pieces().isEmpty()) {
-			return;
-		}
+	private void reward(ClearResult result) {
 		for (ClearResult.ClearedPiece cleared : result.pieces()) {
 			if (cleared.piece().is(PieceType.LOOTBOX)) {
 				rollLoot(Objects.requireNonNull(cleared.piece().serverData()));
 			}
 		}
-		player.awardStat(MinigameModule.MINIGAME_PIECES_CLEARED, result.size());
 	}
 
 	public List<MinigameGoal> goals() {
@@ -381,6 +395,9 @@ public final class MinigameSession {
 	}
 
 	public void finish() {
+		ClearResult result = board.clearLootboxes();
+		player.awardStat(MinigameModule.MINIGAME_PIECES_CLEARED, result.size());
+		reward(result);
 		finished = true;
 	}
 

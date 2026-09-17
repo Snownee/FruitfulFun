@@ -30,6 +30,10 @@ public final class PathRules {
 		@Nullable Piece piece(int index);
 
 		boolean locked(int index);
+
+		default boolean allowsDiagonal() {
+			return true;
+		}
 	}
 
 	public static boolean validPath(List<Integer> path, Board board) {
@@ -58,7 +62,8 @@ public final class PathRules {
 			if (index < 0 || index >= MinigameConfig.CELL_COUNT || board.locked(index)) {
 				return i;
 			}
-			PieceType value = Objects.requireNonNull(board.piece(index)).type();
+			Piece piece = Objects.requireNonNull(board.piece(index));
+			PieceType value = piece.type();
 			if (value == PieceType.BEE) {
 				if (i > 0) {
 					return i;
@@ -69,6 +74,10 @@ public final class PathRules {
 			if (value.passThrough() && !beeRequired) {
 				return i;
 			}
+			int need = piece.needLength();
+			if (need > 1 && i < need - 1) {
+				return i;
+			}
 			if (!value.passThrough() && seen[index]) {
 				return i;
 			}
@@ -76,7 +85,7 @@ public final class PathRules {
 				return i;
 			}
 			if (prev >= 0) {
-				if (!adjacent(prev, index)) {
+				if (!connectable(prev, index, board)) {
 					return i;
 				}
 				if (!edges.add(edgeKey(prev, index))) {
@@ -84,8 +93,10 @@ public final class PathRules {
 				}
 			}
 			seen[index] = true;
-			if (!value.wildcard() && !value.passThrough()) {
-				base = value;
+			if (value.converter()) {
+				base = null;
+			} else if (!value.wildcard() && !value.passThrough()) {
+				base = value.base();
 			}
 			prev = index;
 		}
@@ -96,10 +107,14 @@ public final class PathRules {
 		if (cell < 0 || cell >= MinigameConfig.CELL_COUNT || board.locked(cell)) {
 			return false;
 		}
-		PieceType value = Objects.requireNonNull(board.piece(cell)).type();
+		Piece piece = Objects.requireNonNull(board.piece(cell));
+		PieceType value = piece.type();
 		boolean beeRequired = hasBee(board);
 		if (path.isEmpty()) {
-			return !value.unlinkable() && !value.passThrough() && (value == PieceType.BEE || !beeRequired);
+			return !value.unlinkable()
+					&& !value.passThrough()
+					&& piece.needLength() <= 1
+					&& (value == PieceType.BEE || !beeRequired);
 		}
 		if (path.size() >= MAX_PATH || value == PieceType.BEE || (value.passThrough() && !beeRequired)) {
 			return false;
@@ -107,10 +122,14 @@ public final class PathRules {
 		if (!value.passThrough() && path.contains(cell)) {
 			return false;
 		}
-		if (!adjacent(path.getLast(), cell) || hasEdge(path, path.getLast(), cell)) {
+		if (!connectable(path.getLast(), cell, board) || hasEdge(path, path.getLast(), cell)) {
 			return false;
 		}
-		return value.matches(baseType(path, board));
+		if (!value.matches(baseType(path, board))) {
+			return false;
+		}
+		int need = piece.needLength();
+		return need <= 1 || path.size() >= need - 1;
 	}
 
 	public static boolean hasBee(Board board) {
@@ -124,13 +143,16 @@ public final class PathRules {
 	}
 
 	public static @Nullable PieceType baseType(List<Integer> path, Board board) {
+		PieceType base = null;
 		for (int index : path) {
 			PieceType type = Objects.requireNonNull(board.piece(index)).type();
-			if (!type.wildcard() && !type.passThrough()) {
-				return type;
+			if (type.converter()) {
+				base = null;
+			} else if (!type.wildcard() && !type.passThrough()) {
+				base = type.base();
 			}
 		}
-		return null;
+		return base;
 	}
 
 	public static boolean adjacent(int a, int b) {
@@ -139,6 +161,18 @@ public final class PathRules {
 		int bx = b % MinigameConfig.SIZE;
 		int by = b / MinigameConfig.SIZE;
 		return Math.abs(ax - bx) <= 1 && Math.abs(ay - by) <= 1 && (ax != bx || ay != by);
+	}
+
+	public static boolean connectable(int a, int b, Board board) {
+		return adjacent(a, b) && (board.allowsDiagonal() || !diagonal(a, b));
+	}
+
+	public static boolean diagonal(int a, int b) {
+		int ax = a % MinigameConfig.SIZE;
+		int ay = a / MinigameConfig.SIZE;
+		int bx = b % MinigameConfig.SIZE;
+		int by = b / MinigameConfig.SIZE;
+		return Math.abs(ax - bx) == 1 && Math.abs(ay - by) == 1;
 	}
 
 	public static int distance(int a, int b) {

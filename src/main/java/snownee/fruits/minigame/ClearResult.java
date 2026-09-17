@@ -10,6 +10,7 @@ public record ClearResult(int score, List<ClearedPiece> pieces, Cause cause) {
 	public enum Cause {
 		PATH,
 		BOTTOM,
+		LOOTBOX,
 		NONE
 	}
 
@@ -23,7 +24,17 @@ public record ClearResult(int score, List<ClearedPiece> pieces, Cause cause) {
 	public int count(@Nullable PieceType type) {
 		int count = 0;
 		for (ClearedPiece piece : pieces) {
-			if (type == null || piece.piece().is(type)) {
+			if (type == null || piece.piece().type().sameFamily(type)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public int countLarge() {
+		int count = 0;
+		for (ClearedPiece piece : pieces) {
+			if (piece.piece().type().isLarge()) {
 				count++;
 			}
 		}

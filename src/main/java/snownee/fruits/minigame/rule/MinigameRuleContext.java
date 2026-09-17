@@ -16,6 +16,10 @@ public final class MinigameRuleContext {
 	private final List<Integer> path;
 	private final ClearResult cleared;
 	private final @Nullable MinigameSession opponent;
+	private final List<DeferredPlacement> deferredPlacements = new ArrayList<>();
+
+	private record DeferredPlacement(Piece piece, List<Integer> candidates) {
+	}
 
 	public MinigameRuleContext(
 			MinigameSession session,
@@ -39,7 +43,7 @@ public final class MinigameRuleContext {
 	public int remainingCount(PieceType type) {
 		int count = session.board().pendingCount(type);
 		for (Piece piece : session.board().cells()) {
-			if (piece != null && piece.is(type)) {
+			if (piece != null && piece.type().sameFamily(type)) {
 				count++;
 			}
 		}
@@ -60,6 +64,22 @@ public final class MinigameRuleContext {
 
 	public void spawn(Piece piece, int count) {
 		session.board().addSpawn(piece, count);
+	}
+
+	/**
+	 * Places {@code piece} at {@code index}, deferring to a random free candidate when the cell is occupied.
+	 */
+	public void place(int index, Piece piece, List<Integer> candidates) {
+		if (!session.board().place(index, piece)) {
+			deferredPlacements.add(new DeferredPlacement(piece, candidates));
+		}
+	}
+
+	public void resolveDeferredPlacements() {
+		for (DeferredPlacement deferred : deferredPlacements) {
+			session.board().placeRandom(deferred.candidates(), deferred.piece());
+		}
+		deferredPlacements.clear();
 	}
 
 	public int replaceRandom(Piece piece) {

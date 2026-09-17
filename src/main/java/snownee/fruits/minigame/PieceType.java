@@ -1,5 +1,7 @@
 package snownee.fruits.minigame;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -20,18 +22,30 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.lychee.util.codec.LycheeCodecs;
 
-public enum PieceType {
-	ORANGE("orange", CoreModule.ORANGE),
-	LEMON("lemon", CoreModule.LEMON),
-	CHERRY("cherry", CherryModule.CHERRY),
-	CHORUS("chorus", () -> Items.CHORUS_FRUIT),
-	LOOTBOX("lootbox", () -> Items.BUNDLE, true, false, true),
-	// 非基础但普通的piece，某些规则中连续消除后会生成
-	REDLOVE("redlove", CherryModule.REDLOVE, false, false, true),
-	POMEGRANATE("pomegranate", PomegranateModule.POMEGRANATE_ITEM, true, false, true),
-	GOLDEN_APPLE("golden_apple", () -> Items.GOLDEN_APPLE, false, true, true),
-	BEE("bee", () -> Items.BEE_SPAWN_EGG, false, true, true),
-	BEEHIVE("beehive", () -> Items.BEE_NEST, false, false, true, true);
+public final class PieceType {
+	private static final List<PieceType> REGISTRY = new ArrayList<>();
+
+	public static final PieceType ORANGE = builder("orange", CoreModule.ORANGE).noTooltip().build();
+	public static final PieceType LEMON = builder("lemon", CoreModule.LEMON).noTooltip().build();
+	public static final PieceType CHERRY = builder("cherry", CherryModule.CHERRY).noTooltip().build();
+	public static final PieceType CHORUS = builder("chorus", () -> Items.CHORUS_FRUIT).noTooltip().build();
+	public static final PieceType LOOTBOX = builder("lootbox", () -> Items.BUNDLE).unlinkable().build();
+	public static final PieceType REDLOVE = builder("redlove", CherryModule.REDLOVE).build();
+	public static final PieceType POMEGRANATE = builder("pomegranate", PomegranateModule.POMEGRANATE_ITEM).unlinkable().build();
+	public static final PieceType GOLDEN_APPLE = builder("golden_apple", () -> Items.GOLDEN_APPLE).wildcard().build();
+	public static final PieceType GOLDEN_CARROT = builder("golden_carrot", () -> Items.GOLDEN_CARROT).converter().build();
+	public static final PieceType BEE = builder("bee", () -> Items.BEE_SPAWN_EGG).wildcard().passiveImmune().build();
+	public static final PieceType BEEHIVE = builder("beehive", () -> Items.BEE_NEST).passThrough().passiveImmune().build();
+	public static final PieceType LARGE_ORANGE = builder("large_orange", CoreModule.ORANGE).base(ORANGE).build();
+	public static final PieceType LARGE_LEMON = builder("large_lemon", CoreModule.LEMON).base(LEMON).build();
+	public static final PieceType LARGE_CHERRY = builder("large_cherry", CherryModule.CHERRY).base(CHERRY).build();
+	public static final PieceType LARGE_CHORUS = builder("large_chorus", () -> Items.CHORUS_FRUIT).base(CHORUS).build();
+	public static final PieceType LARGE_GOLDEN_APPLE = builder("large_golden_apple", () -> Items.GOLDEN_APPLE)
+			.base(GOLDEN_APPLE)
+			.wildcard()
+			.build();
+
+	private static final PieceType[] VALUES = REGISTRY.toArray(PieceType[]::new);
 
 	public static final WeightedList<PieceType> FRUITS = WeightedList.<PieceType>builder()
 			.add(ORANGE, 20)
@@ -41,54 +55,101 @@ public enum PieceType {
 			.add(GOLDEN_APPLE, 10)
 			.build();
 	public static final StreamCodec<ByteBuf, PieceType> STREAM_CODEC = ByteBufCodecs.VAR_INT.map(PieceType::byCode, PieceType::code);
-	private static final PieceType[] VALUES = values();
 
-	private final String name;
+	private final int code;
 	private final Supplier<? extends Item> item;
 	private final boolean unlinkable;
 	private final boolean wildcard;
+	private final boolean converter;
 	private final boolean passThrough;
+	private final boolean passiveImmune;
+	private final PieceType base;
 	private final Component displayName;
 	private final @Nullable Component tooltip;
 	private volatile @Nullable ItemStackTemplate template;
 
-	PieceType(String name, Supplier<? extends Item> item) {
-		this(name, item, false, false, false, false);
-	}
-
-	PieceType(String name, Supplier<? extends Item> item, boolean unlinkable) {
-		this(name, item, unlinkable, false, false, false);
-	}
-
-	PieceType(String name, Supplier<? extends Item> item, boolean unlinkable, boolean wildcard) {
-		this(name, item, unlinkable, wildcard, false, false);
-	}
-
-	PieceType(String name, Supplier<? extends Item> item, boolean unlinkable, boolean wildcard, boolean hasTooltip) {
-		this(name, item, unlinkable, wildcard, false, hasTooltip);
-	}
-
-	PieceType(
-			String name,
-			Supplier<? extends Item> item,
-			boolean unlinkable,
-			boolean wildcard,
-			boolean passThrough,
-			boolean hasTooltip) {
-		this.name = name;
-		this.item = item;
-		this.unlinkable = unlinkable;
-		this.wildcard = wildcard;
-		this.passThrough = passThrough;
-		this.tooltip = hasTooltip ? Component.translatable("gui.fruitfulfun.minigame.piece." + name + ".effect") : null;
-		Component displayName = Component.translatable("gui.fruitfulfun.minigame.piece." + name);
+	private PieceType(Builder builder) {
+		this.code = REGISTRY.size();
+		this.item = builder.item;
+		String name = builder.name;
+		this.unlinkable = builder.unlinkable;
+		this.wildcard = builder.wildcard;
+		this.converter = builder.converter;
+		this.passThrough = builder.passThrough;
+		this.passiveImmune = builder.passiveImmune;
+		this.base = builder.base == null ? this : builder.base;
+		this.tooltip = builder.noTooltip
+				? null
+				: Component.translatable("gui.fruitfulfun.minigame.piece." + name + ".effect");
+		Component base = Component.translatable("gui.fruitfulfun.minigame.piece." + name);
 		this.displayName = tooltip == null
-				? displayName
-				: displayName.copy().withStyle(style -> style.withUnderlined(true).withHoverEvent(new HoverEvent.ShowText(tooltip)));
+				? base
+				: base.copy().withStyle(style -> style.withUnderlined(true).withHoverEvent(new HoverEvent.ShowText(tooltip)));
+		REGISTRY.add(this);
+	}
+
+	public static Builder builder(String name, Supplier<? extends Item> item) {
+		return new Builder(name, item);
+	}
+
+	public static final class Builder {
+		private final String name;
+		private final Supplier<? extends Item> item;
+		private boolean unlinkable;
+		private boolean wildcard;
+		private boolean converter;
+		private boolean passThrough;
+		private boolean passiveImmune;
+		private @Nullable PieceType base;
+		private boolean noTooltip;
+
+		private Builder(String name, Supplier<? extends Item> item) {
+			this.name = name;
+			this.item = item;
+		}
+
+		public Builder unlinkable() {
+			this.unlinkable = true;
+			return this;
+		}
+
+		public Builder wildcard() {
+			this.wildcard = true;
+			return this;
+		}
+
+		public Builder converter() {
+			this.converter = true;
+			return this;
+		}
+
+		public Builder passThrough() {
+			this.passThrough = true;
+			return this;
+		}
+
+		public Builder passiveImmune() {
+			this.passiveImmune = true;
+			return this;
+		}
+
+		public Builder base(PieceType base) {
+			this.base = base;
+			return this;
+		}
+
+		public Builder noTooltip() {
+			this.noTooltip = true;
+			return this;
+		}
+
+		public PieceType build() {
+			return new PieceType(this);
+		}
 	}
 
 	public int code() {
-		return ordinal();
+		return code;
 	}
 
 	public boolean unlinkable() {
@@ -99,12 +160,32 @@ public enum PieceType {
 		return wildcard;
 	}
 
+	public boolean converter() {
+		return converter;
+	}
+
 	public boolean passThrough() {
 		return passThrough;
 	}
 
+	public boolean passiveImmune() {
+		return passiveImmune;
+	}
+
+	public PieceType base() {
+		return base;
+	}
+
+	public boolean isLarge() {
+		return base != this;
+	}
+
+	public boolean sameFamily(PieceType other) {
+		return this == other || base == other;
+	}
+
 	public boolean matches(@Nullable PieceType base) {
-		return !unlinkable && (base == null || wildcard || passThrough || base == this);
+		return !unlinkable && (base == null || wildcard || converter || passThrough || base == this.base);
 	}
 
 	public boolean clearsAtBottom() {

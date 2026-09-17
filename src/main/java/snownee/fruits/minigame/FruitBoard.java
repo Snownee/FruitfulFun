@@ -10,6 +10,7 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.WeightedList;
 import snownee.fruits.minigame.ClearResult.ClearedPiece;
 
 public final class FruitBoard implements PathRules.Board {
@@ -21,9 +22,13 @@ public final class FruitBoard implements PathRules.Board {
 	private final List<BoardStep> steps = new ArrayList<>();
 	private final List<Piece> pendingSpawns = new ArrayList<>();
 	private final RandomSource random;
+	private final WeightedList<PieceType> pool;
+	private final boolean allowDiagonal;
 
-	public FruitBoard(RandomSource random) {
+	public FruitBoard(RandomSource random, WeightedList<PieceType> pool, boolean allowDiagonal) {
 		this.random = random;
+		this.pool = pool;
+		this.allowDiagonal = allowDiagonal;
 		for (int i = 0; i < cells.length; i++) {
 			cells[i] = randomFruit();
 		}
@@ -43,6 +48,11 @@ public final class FruitBoard implements PathRules.Board {
 		return locked[index];
 	}
 
+	@Override
+	public boolean allowsDiagonal() {
+		return allowDiagonal;
+	}
+
 	public long lockedMask() {
 		long mask = 0L;
 		for (int i = 0; i < locked.length; i++) {
@@ -54,7 +64,7 @@ public final class FruitBoard implements PathRules.Board {
 	}
 
 	private Piece randomFruit() {
-		return Piece.of(PieceType.FRUITS.getRandomOrThrow(random));
+		return Piece.of(pool.getRandomOrThrow(random));
 	}
 
 	public List<BoardStep> steps() {
@@ -75,6 +85,31 @@ public final class FruitBoard implements PathRules.Board {
 
 	public ClearResult clearCells(List<Integer> indices) {
 		return removeAndRefill(indices, null, null);
+	}
+
+	/**
+	 * @return whether the piece was placed; fails when the cell is occupied
+	 */
+	public boolean place(int index, Piece piece) {
+		if (index < 0 || index >= cells.length || cells[index] != null) {
+			return false;
+		}
+		cells[index] = piece;
+		steps.add(new BoardStep.Spawn(List.of(new BoardStep.Entry(index, piece.type(), piece.data()))));
+		return true;
+	}
+
+	public boolean placeRandom(List<Integer> candidates, Piece piece) {
+		List<Integer> free = new ArrayList<>();
+		for (int index : candidates) {
+			if (index >= 0 && index < cells.length && cells[index] == null) {
+				free.add(index);
+			}
+		}
+		if (free.isEmpty()) {
+			return false;
+		}
+		return place(free.get(random.nextInt(free.size())), piece);
 	}
 
 	private ClearResult removeAndRefill(
@@ -114,10 +149,12 @@ public final class FruitBoard implements PathRules.Board {
 				steps.add(new BoardStep.BeeMove(List.copyOf(indices), false, null, duration));
 			}
 		}
+		List<ClearedPiece> lineCleared = List.copyOf(cleared);
+		applyLargeEffects(cleared);
 		if (onWave != null) {
 			onWave.accept(new ClearResult(
-					cleared.size() * MinigameConfig.BASE_SCORE,
-					List.copyOf(cleared),
+					lineCleared.size() * MinigameConfig.BASE_SCORE,
+					lineCleared,
 					ClearResult.Cause.PATH));
 		}
 		unlockAdjacent(indices);
@@ -128,6 +165,50 @@ public final class FruitBoard implements PathRules.Board {
 				cleared.size() * MinigameConfig.BASE_SCORE,
 				List.copyOf(cleared),
 				ClearResult.Cause.NONE);
+	}
+
+	private void applyLargeEffects(List<ClearedPiece> cleared) {
+		boolean[] triggered = new boolean[MinigameConfig.CELL_COUNT];
+		while (true) {
+			List<Integer> pending = new ArrayList<>();
+			for (ClearedPiece piece : cleared) {
+				if (piece.piece().type().isLarge() && !triggered[piece.index()]) {
+					triggered[piece.index()] = true;
+					pending.add(piece.index());
+				}
+			}
+			if (pending.isEmpty()) {
+				return;
+			}
+			for (int index : pending) {
+				List<Integer> line = new ArrayList<>();
+				if (random.nextBoolean()) {
+					int y = index / MinigameConfig.SIZE;
+					for (int x = 0; x < MinigameConfig.SIZE; x++) {
+						line.add(x + y * MinigameConfig.SIZE);
+					}
+				} else {
+					int x = index % MinigameConfig.SIZE;
+					for (int y = 0; y < MinigameConfig.SIZE; y++) {
+						line.add(x + y * MinigameConfig.SIZE);
+					}
+				}
+				List<Integer> hit = new ArrayList<>();
+				for (int cell : line) {
+					Piece piece = cells[cell];
+					if (piece == null || piece.type().passiveImmune()) {
+						continue;
+					}
+					cleared.add(new ClearedPiece(cell, piece));
+					hit.add(cell);
+					cells[cell] = null;
+				}
+				if (!hit.isEmpty()) {
+					steps.add(new BoardStep.Clear(List.copyOf(hit)));
+					unlockAdjacent(hit);
+				}
+			}
+		}
 	}
 
 	public ClearResult clearLootboxes() {
@@ -174,7 +255,7 @@ public final class FruitBoard implements PathRules.Board {
 					}
 					int next = nx + ny * MinigameConfig.SIZE;
 					Piece piece = cells[next];
-					if (seen[next] || piece == null || !piece.is(type)) {
+					if (seen[next] || piece == null || !piece.type().sameFamily(type)) {
 						continue;
 					}
 					seen[next] = true;
@@ -189,7 +270,10 @@ public final class FruitBoard implements PathRules.Board {
 		List<Integer> candidates = new ArrayList<>();
 		for (int i = 0; i < cells.length; i++) {
 			Piece piece = cells[i];
-			if (piece != null && !piece.is(PieceType.BEE) && !piece.type().unlinkable() && !piece.type().passThrough()) {
+			if (piece != null
+					&& !piece.is(PieceType.BEE)
+					&& !piece.type().unlinkable()
+					&& !piece.type().passThrough()) {
 				candidates.add(i);
 			}
 		}
@@ -212,7 +296,7 @@ public final class FruitBoard implements PathRules.Board {
 		applyGravity();
 		removeBottom(cleared, null);
 		refill();
-		return new ClearResult(0, List.copyOf(cleared), ClearResult.Cause.NONE);
+		return new ClearResult(0, List.copyOf(cleared), ClearResult.Cause.LOOTBOX);
 	}
 
 	public void addSpawn(Piece piece, int count) {
@@ -224,7 +308,7 @@ public final class FruitBoard implements PathRules.Board {
 	public int pendingCount(PieceType type) {
 		int count = 0;
 		for (Piece piece : pendingSpawns) {
-			if (piece.is(type)) {
+			if (piece.type().sameFamily(type)) {
 				count++;
 			}
 		}

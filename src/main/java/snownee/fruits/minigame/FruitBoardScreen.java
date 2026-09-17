@@ -36,6 +36,7 @@ public class FruitBoardScreen extends Screen {
 	private static final int START_BUTTON_HEIGHT = 20;
 	private static final int TAB_LIST_COLUMN = 80;
 	private static final int TAB_LIST_ROWS = 20;
+	private static final double CLICK_DRAG_THRESHOLD = 6.0;
 	private static final SystemToast.SystemToastId MINIGAME_TOAST = new SystemToast.SystemToastId();
 
 	private final GoalPanel goalPanel;
@@ -43,16 +44,19 @@ public class FruitBoardScreen extends Screen {
 	private final BoardView opponentBoard;
 	private final List<Integer> path = new ArrayList<>();
 
+	private boolean pressing;
+	private boolean clickMode;
+	private double pressX;
+	private double pressY;
 	private int score;
-	private int moves;
+	private int movesLeft;
 	private int clears;
-	private int moveLimit;
 	private int timeRemaining;
 	private boolean finished;
 	private String playerName = "";
 	private String opponentName = "";
 	private int opponentScore = -1;
-	private int opponentMoves;
+	private int opponentMovesLeft;
 	private int opponentClears;
 	private List<ItemStack> rewards = List.of();
 	private List<Integer> selfPath = List.of();
@@ -104,20 +108,25 @@ public class FruitBoardScreen extends Screen {
 		int previousScore = score;
 		int previousResult = result;
 		boolean previousFinished = finished;
-		ownBoard.applySync(packet.board().orElse(null), packet.self().steps(), packet.self().locked(), ownClear);
+		ownBoard.applySync(
+				packet.board().orElse(null),
+				packet.self().steps(),
+				packet.self().locked(),
+				packet.self().allowDiagonal(),
+				ownClear);
 		opponentBoard.applySync(
 				packet.opponentBoard().orElse(null),
 				packet.opponent().steps(),
 				packet.opponent().locked(),
+				packet.opponent().allowDiagonal(),
 				opponentClear);
 		score = packet.self().score();
-		moves = packet.self().moves();
+		movesLeft = packet.self().movesLeft();
 		clears = packet.self().clears();
 		opponentScore = packet.opponent().score();
-		opponentMoves = packet.opponent().moves();
+		opponentMovesLeft = packet.opponent().movesLeft();
 		opponentClears = packet.opponent().clears();
 		rewards = packet.self().rewards();
-		moveLimit = packet.moveLimit();
 		timeRemaining = packet.timeRemaining();
 		playerName = packet.playerName();
 		opponentName = packet.opponentName();
@@ -130,13 +139,16 @@ public class FruitBoardScreen extends Screen {
 		receiveMillis = Util.getMillis();
 		if (packet.open()) {
 			finished = packet.finished();
-			path.clear();
+			resetPath();
 			goalPanel.setDisplays(packet.self().goals());
 		} else {
 			finished = finished || packet.finished();
 			if (finished) {
-				path.clear();
+				resetPath();
 			} else if (prunePath()) {
+				if (path.isEmpty()) {
+					clickMode = false;
+				}
 				sendPathUpdate();
 			}
 		}
@@ -213,14 +225,14 @@ public class FruitBoardScreen extends Screen {
 			return false;
 		}
 		if (event.button() == 1) {
-			if (!path.isEmpty()) {
-				path.clear();
-				playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.5f, 0.4f);
-				CUpdatePathPacket.send(List.of());
-			}
+			cancelPath();
 			return true;
 		}
 		if (event.button() == 0 && !inputBlocked()) {
+			if (clickMode) {
+				completePath(event.x(), event.y());
+				return true;
+			}
 			int cell = ownBoard.cellAt(event.x(), event.y(), 0);
 			if (cell >= 0 && !ownBoard.locked(cell)) {
 				PieceType type = ownBoard.piece(cell).type();
@@ -239,6 +251,9 @@ public class FruitBoardScreen extends Screen {
 				}
 				path.clear();
 				path.add(cell);
+				pressing = true;
+				pressX = event.x();
+				pressY = event.y();
 				playStepSound();
 				sendPathUpdate();
 				return true;
@@ -247,8 +262,71 @@ public class FruitBoardScreen extends Screen {
 		return super.mouseClicked(event, flag);
 	}
 
+	@Override
+	public void mouseMoved(double mouseX, double mouseY) {
+		super.mouseMoved(mouseX, mouseY);
+		if (spectating || !clickMode || pressing || path.isEmpty() || inputBlocked()) {
+			return;
+		}
+		extendPath(mouseX, mouseY);
+	}
+
 	private void sendPathUpdate() {
 		CUpdatePathPacket.send(List.copyOf(path));
+	}
+
+	private void extendPath(double mouseX, double mouseY) {
+		int cell = ownBoard.cellAt(mouseX, mouseY, Math.max(1, cellSize() / 5));
+		if (cell < 0) {
+			return;
+		}
+		if (PathRules.canAppend(path, ownBoard, cell)) {
+			path.add(cell);
+			playStepSound();
+			sendPathUpdate();
+		} else if (path.size() >= 2 && cell == path.get(path.size() - 2)) {
+			path.removeLast();
+			playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.6f, 0.4f);
+			sendPathUpdate();
+		}
+	}
+
+	private void completePath(double mouseX, double mouseY) {
+		int cell = ownBoard.cellAt(mouseX, mouseY, Math.max(1, cellSize() / 5));
+		if (cell < 0) {
+			return;
+		}
+		if (cell != path.getLast()) {
+			if (!PathRules.canAppend(path, ownBoard, cell)) {
+				return;
+			}
+			path.add(cell);
+			playStepSound();
+			sendPathUpdate();
+		}
+		if (PathRules.validPath(path, ownBoard)) {
+			CSubmitPathPacket.send(List.copyOf(path));
+			path.clear();
+			clickMode = false;
+			CUpdatePathPacket.send(List.of());
+		}
+	}
+
+	private void cancelPath() {
+		pressing = false;
+		clickMode = false;
+		if (path.isEmpty()) {
+			return;
+		}
+		path.clear();
+		playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.5f, 0.4f);
+		CUpdatePathPacket.send(List.of());
+	}
+
+	private void resetPath() {
+		path.clear();
+		pressing = false;
+		clickMode = false;
 	}
 
 	@Override
@@ -256,19 +334,8 @@ public class FruitBoardScreen extends Screen {
 		if (spectating) {
 			return false;
 		}
-		if (event.button() == 0 && !inputBlocked() && !path.isEmpty()) {
-			int cell = ownBoard.cellAt(event.x(), event.y(), Math.max(1, cellSize() / 5));
-			if (cell >= 0) {
-				if (PathRules.canAppend(path, ownBoard, cell)) {
-					path.add(cell);
-					playStepSound();
-					sendPathUpdate();
-				} else if (path.size() >= 2 && cell == path.get(path.size() - 2)) {
-					path.removeLast();
-					playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.6f, 0.4f);
-					sendPathUpdate();
-				}
-			}
+		if (event.button() == 0 && pressing && !inputBlocked() && !path.isEmpty()) {
+			extendPath(event.x(), event.y());
 			return true;
 		}
 		return super.mouseDragged(event, deltaX, deltaY);
@@ -279,12 +346,20 @@ public class FruitBoardScreen extends Screen {
 		if (spectating) {
 			return false;
 		}
-		if (event.button() == 0 && !path.isEmpty()) {
-			if (!finished && PathRules.validPath(path, ownBoard)) {
-				CSubmitPathPacket.send(List.copyOf(path));
+		if (event.button() == 0 && pressing) {
+			pressing = false;
+			double dx = event.x() - pressX;
+			double dy = event.y() - pressY;
+			if (path.size() > 1 || dx * dx + dy * dy > CLICK_DRAG_THRESHOLD * CLICK_DRAG_THRESHOLD) {
+				if (!finished && PathRules.validPath(path, ownBoard)) {
+					CSubmitPathPacket.send(List.copyOf(path));
+				}
+				path.clear();
+				clickMode = false;
+				CUpdatePathPacket.send(List.of());
+			} else if (!path.isEmpty()) {
+				clickMode = true;
 			}
-			path.clear();
-			CUpdatePathPacket.send(List.of());
 			return true;
 		}
 		return super.mouseReleased(event);
@@ -299,6 +374,22 @@ public class FruitBoardScreen extends Screen {
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		goalPanel.layout(width);
+
+		if (over()) {
+			renderFinishOverlay(graphics, finishOverlayMessage());
+		} else if (!started) {
+			renderStartOverlay(graphics);
+		} else {
+			renderGameMain(graphics);
+		}
+		if (!over() && (started || spectating) && InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_TAB)) {
+			renderSpectators(graphics);
+		}
+
+		super.extractRenderState(graphics, mouseX, mouseY, a);
+	}
+
+	public void renderGameMain(GuiGraphicsExtractor graphics) {
 		int cell = cellSize();
 		int oy = boardY(cell);
 		int remaining = -1;
@@ -330,14 +421,14 @@ public class FruitBoardScreen extends Screen {
 			}
 			graphics.centeredText(
 					font,
-					boardHeader(playerName, score, moves),
+					boardHeader(playerName, score, movesLeft),
 					ownBoard.centerX(),
 					oy - 12,
 					0xFF66FF66);
 			if (vs) {
 				graphics.centeredText(
 						font,
-						boardHeader(opponentName, opponentScore, opponentMoves),
+						boardHeader(opponentName, opponentScore, opponentMovesLeft),
 						opponentBoard.centerX(),
 						oy - 12,
 						0xFFFF8888);
@@ -345,7 +436,7 @@ public class FruitBoardScreen extends Screen {
 		} else if (vs) {
 			graphics.centeredText(
 					font,
-					Component.translatable("gui.fruitfulfun.minigame.status", moves, moveLimit, remaining),
+					Component.translatable("gui.fruitfulfun.minigame.status", movesLeft, remaining),
 					width / 2,
 					34,
 					0xFFFFFFFF);
@@ -363,8 +454,8 @@ public class FruitBoardScreen extends Screen {
 					0xFFFF8888);
 		} else if (started) {
 			Component hud = remaining < 0
-					? Component.translatable("gui.fruitfulfun.minigame.hud.untimed", score, moves, moveLimit)
-					: Component.translatable("gui.fruitfulfun.minigame.hud", score, moves, moveLimit, remaining);
+					? Component.translatable("gui.fruitfulfun.minigame.hud.untimed", score, movesLeft)
+					: Component.translatable("gui.fruitfulfun.minigame.hud", score, movesLeft, remaining);
 			graphics.centeredText(font, hud, width / 2, 34, 0xFFFFFFFF);
 		}
 		ownBoard.render(graphics, spectating ? selfPath : path);
@@ -385,17 +476,6 @@ public class FruitBoardScreen extends Screen {
 			}
 			renderIntro(graphics);
 		}
-
-		if (over()) {
-			renderFinishOverlay(graphics, finishOverlayMessage());
-		} else if (!started) {
-			renderStartOverlay(graphics);
-		}
-		if (!over() && (started || spectating) && InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_TAB)) {
-			renderSpectators(graphics);
-		}
-
-		super.extractRenderState(graphics, mouseX, mouseY, a);
 	}
 
 	public static void showSpectatorToast(SMinigameSpectatorPacket packet) {
@@ -462,8 +542,8 @@ public class FruitBoardScreen extends Screen {
 		return Component.translatable("gui.fruitfulfun.minigame.finished", score);
 	}
 
-	private Component boardHeader(String name, int score, int moves) {
-		return Component.translatable("gui.fruitfulfun.minigame.boardHeader", name, score, moves, moveLimit);
+	private Component boardHeader(String name, int score, int movesLeft) {
+		return Component.translatable("gui.fruitfulfun.minigame.boardHeader", name, score, movesLeft);
 	}
 
 	private int startBlockHeight() {

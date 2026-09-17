@@ -10,23 +10,29 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import snownee.fruits.minigame.MinigameConfig;
-import snownee.fruits.minigame.Piece;
 import snownee.fruits.minigame.PieceType;
+import snownee.fruits.minigame.rule.FruitPoolRule;
 import snownee.fruits.minigame.rule.MinigameRule;
+import snownee.fruits.minigame.rule.NoDiagonalRule;
+import snownee.fruits.minigame.rule.PlacePieceRule;
 import snownee.fruits.minigame.rule.ScatterPieceRule;
 import snownee.fruits.minigame.rule.SpawnPieceRule;
 
 public final class SoloGoals {
 	private static final List<MinigameGoal> POOL = List.of(
-			new ClearPieceGoal(PieceType.CHERRY, 12, fruit(PieceType.CHERRY, 4)),
-			new ClearPieceGoal(PieceType.LEMON, 12, fruit(PieceType.LEMON, 4)),
-			new ClearPieceGoal(PieceType.ORANGE, 10, fruit(PieceType.ORANGE, 4)),
-			new SingleMoveGoal(null, 5, 3, fruit(PieceType.GOLDEN_APPLE, 2)),
-			new SingleMoveGoal(null, 8, 1, List.of(new ItemStack(Items.EMERALD))),
+			new ClearPieceGoal(PieceType.CHERRY, 12, emerald()),
+			new ClearPieceGoal(PieceType.LEMON, 12, emerald()),
+			new ClearPieceGoal(PieceType.ORANGE, 10, emerald()),
+			new SingleMoveGoal(null, 5, 3, emerald()),
+			new SingleMoveGoal(null, 8, 1, emerald()),
+			new StreakGoal(5, 3, emerald()),
 			redloveGoal(),
 			pomegranateGoal(),
 			lootboxGoal(),
-			beehiveGoal());
+			beehiveGoal(),
+			largeFruitGoal(),
+			noDiagonalGoal(),
+			goldenCarrotGoal());
 
 	private SoloGoals() {
 	}
@@ -43,13 +49,13 @@ public final class SoloGoals {
 	private static MinigameGoal redloveGoal() {
 		PieceType type = PieceType.REDLOVE;
 		int offset = 4;
-		return new ClearPieceGoal(type, 8, fruit(type, 4), List.of(SpawnPieceRule.spawnPiece(type, 1, offset, 1)));
+		return new ClearPieceGoal(type, 8, emerald(), List.of(SpawnPieceRule.spawnPiece(type, 1, offset, 1)));
 	}
 
 	private static MinigameGoal pomegranateGoal() {
 		PieceType type = PieceType.POMEGRANATE;
 		int max = 3;
-		return new ClearPieceGoal(type, 5, fruit(type, 4), List.of(SpawnPieceRule.spawnPieceLow(type, max)));
+		return new ClearPieceGoal(type, 5, emerald(), List.of(SpawnPieceRule.spawnPieceLow(type, max)));
 	}
 
 	private static MinigameGoal lootboxGoal() {
@@ -59,15 +65,31 @@ public final class SoloGoals {
 				Component.translatable(
 						"gui.fruitfulfun.minigame.rule.scatter_piece",
 						PieceType.BEE.displayName())));
-		return new ClearPieceGoal(type, 1, List.of(new ItemStack(Items.EMERALD)), rules);
+		return new ClearPieceGoal(type, 1, emerald(), rules);
 	}
 
 	private static MinigameGoal beehiveGoal() {
-		PieceType type = PieceType.ORANGE;
-		return new BeehiveGoal(1, fruit(type, 4));
+		return new BeehiveGoal(1, emerald());
 	}
 
-	private static List<ItemStack> fruit(PieceType type, int count) {
-		return List.of(type.stack(Piece.of(type)).copyWithCount(count));
+	private static MinigameGoal largeFruitGoal() {
+		return new LargeFruitGoal(3, emerald());
+	}
+
+	private static MinigameGoal noDiagonalGoal() {
+		PieceType type = PieceType.CHORUS;
+		return new ClearPieceGoal(type, 12, emerald(), List.of(NoDiagonalRule.create()));
+	}
+
+	private static MinigameGoal goldenCarrotGoal() {
+		PieceType type = PieceType.ORANGE;
+		List<Pair<MinigameRule, Component>> rules = List.of(
+				FruitPoolRule.remove(PieceType.GOLDEN_APPLE),
+				PlacePieceRule.create(PieceType.GOLDEN_CARROT, 4));
+		return new ClearPieceGoal(type, 12, emerald(), rules);
+	}
+
+	private static List<ItemStack> emerald() {
+		return List.of(new ItemStack(Items.EMERALD));
 	}
 }

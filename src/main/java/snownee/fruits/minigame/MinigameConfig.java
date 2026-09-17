@@ -8,7 +8,7 @@ public final class MinigameConfig {
 	public static final int SIZE = 7;
 	public static final int CELL_COUNT = SIZE * SIZE;
 	public static final int TIME_LIMIT_SECONDS = 30;
-	public static final int MOVE_LIMIT = 40;
+	public static final int MOVE_LIMIT = 20;
 	public static final int BASE_SCORE = 10;
 	public static final int OVERTIME_SECONDS = 10;
 	public static final int OVERTIME_MOVES = 5;

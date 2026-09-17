@@ -6,28 +6,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.minigame.ClearResult;
 import snownee.fruits.minigame.PieceType;
-import snownee.fruits.minigame.rule.BeehiveRule;
+import snownee.fruits.minigame.rule.LargeFruitRule;
 
-public final class BeehiveGoal extends MinigameGoal {
+public final class LargeFruitGoal extends MinigameGoal {
 	private final int count;
 
-	public BeehiveGoal(int count, List<ItemStack> rewards) {
-		super(rewards, List.of(BeehiveRule.create()));
+	public LargeFruitGoal(int count, List<ItemStack> rewards) {
+		super(rewards, List.of(LargeFruitRule.create(count)));
 		this.count = count;
 	}
 
 	@Override
 	public ItemStack icon() {
-		return pieceIcon(PieceType.BEEHIVE, count);
+		return pieceIcon(PieceType.LARGE_ORANGE, count);
 	}
 
 	@Override
 	public Component description() {
-		return Component.translatable(
-				"gui.fruitfulfun.minigame.goal.beehive",
-				count,
-				PieceType.BEE.displayName(),
-				PieceType.BEEHIVE.displayName());
+		return Component.translatable("gui.fruitfulfun.minigame.goal.large_fruit", count);
 	}
 
 	@Override
@@ -37,6 +33,6 @@ public final class BeehiveGoal extends MinigameGoal {
 
 	@Override
 	public int advance(ClearResult clear, int progress) {
-		return Math.min(count, progress + clear.count(PieceType.BEE));
+		return Math.min(count, progress + clear.countLarge());
 	}
 }

@@ -15,7 +15,7 @@ import snownee.fruits.minigame.goal.MinigameGoal;
 
 public record PlayerSync(
 		int score,
-		int moves,
+		int movesLeft,
 		int clears,
 		long locked,
 		List<BoardStep> steps,
@@ -24,9 +24,10 @@ public record PlayerSync(
 		List<MinigameGoal.Display> goals,
 		List<Entry> goalProgress,
 		List<String> spectators,
-		boolean started) {
+		boolean started,
+		boolean allowDiagonal) {
 	public static final PlayerSync EMPTY = new PlayerSync(
-			-1, 0, 0, 0L, List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), true);
+			-1, -1, 0, 0L, List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), true, true);
 
 	public record Entry(int index, int current) {
 		public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
@@ -41,7 +42,7 @@ public record PlayerSync(
 			ByteBufCodecs.VAR_INT,
 			PlayerSync::score,
 			ByteBufCodecs.VAR_INT,
-			PlayerSync::moves,
+			PlayerSync::movesLeft,
 			ByteBufCodecs.VAR_INT,
 			PlayerSync::clears,
 			ByteBufCodecs.LONG,
@@ -60,12 +61,14 @@ public record PlayerSync(
 			PlayerSync::spectators,
 			ByteBufCodecs.BOOL,
 			PlayerSync::started,
+			ByteBufCodecs.BOOL,
+			PlayerSync::allowDiagonal,
 			PlayerSync::new);
 
 	public static PlayerSync of(MinigameSession session, boolean open) {
 		return new PlayerSync(
 				session.score(),
-				session.moves(),
+				session.movesLeft(),
 				session.clears(),
 				session.board().lockedMask(),
 				List.copyOf(session.board().steps()),
@@ -74,6 +77,7 @@ public record PlayerSync(
 				open ? session.goals().stream().map(MinigameGoal::display).toList() : List.of(),
 				session.goalSync(open),
 				session.spectators().stream().map(ServerPlayer::getScoreboardName).toList(),
-				session.isStarted());
+				session.isStarted(),
+				session.allowsDiagonal());
 	}
 }
