@@ -33,6 +33,10 @@ public final class FruitBoard implements PathRules.Board {
 		this.allowDiagonal = allowDiagonal;
 	}
 
+	public RandomSource random() {
+		return random;
+	}
+
 	public void fillRandom() {
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] == null) {
@@ -106,7 +110,7 @@ public final class FruitBoard implements PathRules.Board {
 			return false;
 		}
 		cells[index] = piece;
-		steps.add(new BoardStep.Spawn(List.of(new BoardStep.Entry(index, piece.type(), piece.data()))));
+		steps.add(new BoardStep.Place(new BoardStep.Entry(index, piece.type(), piece.data())));
 		return true;
 	}
 

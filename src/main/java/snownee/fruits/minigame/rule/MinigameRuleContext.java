@@ -6,6 +6,7 @@ import java.util.function.IntPredicate;
 
 import org.jspecify.annotations.Nullable;
 
+import net.minecraft.util.RandomSource;
 import snownee.fruits.minigame.ClearResult;
 import snownee.fruits.minigame.MinigameSession;
 import snownee.fruits.minigame.Piece;
@@ -34,6 +35,10 @@ public final class MinigameRuleContext {
 
 	public List<Integer> path() {
 		return path;
+	}
+
+	public RandomSource random() {
+		return session.board().random();
 	}
 
 	public ClearResult cleared() {

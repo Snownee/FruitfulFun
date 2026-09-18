@@ -29,6 +29,14 @@ public final class FruitPoolRule extends MinigameRule {
 				Component.translatable("gui.fruitfulfun.minigame.rule.pool_remove", type.displayName()));
 	}
 
+	public PieceType type() {
+		return type;
+	}
+
+	public boolean removed() {
+		return weight <= 0;
+	}
+
 	@Override
 	public void modifyPool(List<Weighted<PieceType>> pool) {
 		pool.removeIf(entry -> entry.value() == type);

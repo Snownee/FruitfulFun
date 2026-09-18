@@ -18,6 +18,10 @@ public final class BreakAllGoal extends MinigameGoal {
 		this.count = cells.size();
 	}
 
+	public PieceType piece() {
+		return piece;
+	}
+
 	@Override
 	public ItemStack icon() {
 		return pieceIcon(piece, count);

@@ -20,6 +20,9 @@ public sealed interface BoardStep {
 	record Spawn(List<Entry> entries) implements BoardStep {
 	}
 
+	record Place(Entry entry) implements BoardStep {
+	}
+
 	record Move(int from, int to, int duration) implements BoardStep {
 	}
 
@@ -70,6 +73,7 @@ public sealed interface BoardStep {
 						buf.readBoolean() ? ByteBufCodecs.COMPOUND_TAG.decode(buf) : null,
 						buf.readVarInt());
 				case 5 -> new Ice(buf.readVarInt(), buf.readVarInt());
+				case 6 -> new Place(Entry.STREAM_CODEC.decode(buf));
 				default -> throw new IllegalArgumentException("Unknown board step");
 			};
 		}
@@ -109,6 +113,10 @@ public sealed interface BoardStep {
 					buf.writeVarInt(5);
 					buf.writeVarInt(ice.index());
 					buf.writeVarInt(ice.breaks());
+				}
+				case Place place -> {
+					buf.writeVarInt(6);
+					Entry.STREAM_CODEC.encode(buf, place.entry());
 				}
 			}
 		}

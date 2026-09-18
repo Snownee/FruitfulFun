@@ -36,6 +36,10 @@ public final class SingleMoveGoal extends MinigameGoal {
 		return length;
 	}
 
+	public @Nullable PieceType piece() {
+		return piece;
+	}
+
 	public int times() {
 		return times;
 	}

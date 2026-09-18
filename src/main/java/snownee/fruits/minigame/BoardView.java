@@ -240,6 +240,8 @@ public final class BoardView implements PathRules.Board {
 				stages.add(new Stage(next, null, from, List.of(), FALL_MS));
 				addLandStage(stages, next, from);
 				current = next;
+			} else if (step instanceof BoardStep.Place place) {
+				current = applySpawn(current, List.of(place.entry()));
 			} else if (step instanceof BoardStep.Move move) {
 				@Nullable Piece[] next = current.clone();
 				next[move.to()] = next[move.from()];

@@ -34,7 +34,7 @@ public final class LargeFruitRule extends MinigameRule {
 
 	@Override
 	public void onStart(MinigameRuleContext context) {
-		RandomSource random = RandomSource.create();
+		RandomSource random = context.random();
 		Set<Integer> avoid = new HashSet<>(context.indicesOf(PieceType.BEE));
 		avoid.addAll(context.indicesOf(PieceType.BEEHIVE));
 		for (int i = 0; i < count; i++) {

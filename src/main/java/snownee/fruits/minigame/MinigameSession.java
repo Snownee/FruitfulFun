@@ -25,6 +25,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import snownee.fruits.minigame.goal.MinigameGoal;
+import snownee.fruits.minigame.level.LevelPlan;
 import snownee.fruits.minigame.network.PlayerSync;
 import snownee.fruits.minigame.network.SMinigameSpectatorPacket;
 import snownee.fruits.minigame.network.SMinigameSyncPacket;
@@ -70,11 +71,24 @@ public final class MinigameSession {
 		this(player, table, List.of(), true);
 	}
 
+	public MinigameSession(ServerPlayer player, @Nullable BattleTableBlockEntity table, LevelPlan plan) {
+		this(player, table, plan.goals(), false, RandomSource.create(plan.boardSeed()));
+	}
+
 	public MinigameSession(
 			ServerPlayer player,
 			@Nullable BattleTableBlockEntity table,
 			List<MinigameGoal> goals,
 			boolean autoStart) {
+		this(player, table, goals, autoStart, RandomSource.create());
+	}
+
+	public MinigameSession(
+			ServerPlayer player,
+			@Nullable BattleTableBlockEntity table,
+			List<MinigameGoal> goals,
+			boolean autoStart,
+			RandomSource boardRandom) {
 		this.player = player;
 		this.table = table;
 		this.goals = goals;
@@ -84,7 +98,7 @@ public final class MinigameSession {
 		for (MinigameRule rule : rules) {
 			rule.modifyPool(pool);
 		}
-		this.board = new FruitBoard(RandomSource.create(), WeightedList.of(pool), allowDiagonal);
+		this.board = new FruitBoard(boardRandom, WeightedList.of(pool), allowDiagonal);
 		this.goalProgress = new int[goals.size()];
 		this.goalSynced = new int[goals.size()];
 		this.started = autoStart;

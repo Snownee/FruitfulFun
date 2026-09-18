@@ -23,7 +23,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.SimpleMenuProvider;
-import snownee.fruits.minigame.goal.SoloGoals;
+import snownee.fruits.minigame.level.LevelPlan;
+import snownee.fruits.minigame.level.MinigameLevelGenerator;
 import snownee.fruits.minigame.network.CBattleTableActionPacket;
 import snownee.fruits.minigame.network.SBattleTableSyncPacket;
 import snownee.fruits.minigame.network.SMinigameSyncPacket;
@@ -49,16 +50,24 @@ public final class MinigameManager {
 	}
 
 	public static void startSolo(ServerPlayer player) {
-		startSolo(player, RandomSource.create().nextLong());
+		startSolo(player, randomFloor(), RandomSource.create().nextLong());
 	}
 
-	public static void startSolo(ServerPlayer player, long seed) {
+	public static @Nullable LevelPlan startSolo(ServerPlayer player, int floor, long seed) {
 		MinigameSession session = SESSIONS.get(player.getUUID());
 		if (session == null || session.isFinished()) {
-			session = new MinigameSession(player, null, SoloGoals.random(RandomSource.create(seed)), false);
+			LevelPlan plan = MinigameLevelGenerator.generate(seed, floor);
+			session = new MinigameSession(player, null, plan);
 			SESSIONS.put(player.getUUID(), session);
+			session.open();
+			return plan;
 		}
 		session.open();
+		return null;
+	}
+
+	public static int randomFloor() {
+		return 1 + RandomSource.create().nextInt(10000);
 	}
 
 	public static void startSession(ServerPlayer player) {
