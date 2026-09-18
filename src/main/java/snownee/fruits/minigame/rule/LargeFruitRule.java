@@ -29,13 +29,7 @@ public final class LargeFruitRule extends MinigameRule {
 	}
 
 	public static Pair<MinigameRule, Component> create(int count) {
-		return Pair.of(
-				new LargeFruitRule(count),
-				Component.translatable(
-						"gui.fruitfulfun.minigame.rule.large_fruit",
-						count,
-						MIN_LENGTH,
-						MAX_LENGTH));
+		return Pair.of(new LargeFruitRule(count), Component.translatable("gui.fruitfulfun.minigame.rule.large_fruit", count));
 	}
 
 	@Override

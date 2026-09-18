@@ -8,6 +8,7 @@ public record Piece(PieceType type, @Nullable CompoundTag data, @Nullable Compou
 	public static final String LOOT_TABLE_KEY = "lootTable";
 	public static final String BEES_KEY = "bees";
 	public static final String LENGTH_KEY = "length";
+	public static final String BREAKS_KEY = "breaks";
 
 	public static Piece of(PieceType type) {
 		return new Piece(type, null, null);
@@ -27,6 +28,16 @@ public record Piece(PieceType type, @Nullable CompoundTag data, @Nullable Compou
 
 	public boolean is(PieceType type) {
 		return this.type == type;
+	}
+
+	public int iceBreaks() {
+		return data == null ? 0 : data.getInt(BREAKS_KEY).orElse(0);
+	}
+
+	public Piece withBreaks(int breaks) {
+		CompoundTag result = data == null ? new CompoundTag() : data.copy();
+		result.putInt(BREAKS_KEY, breaks);
+		return new Piece(type, result, serverData);
 	}
 
 	public int needLength() {

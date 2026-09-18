@@ -1,5 +1,7 @@
 package snownee.fruits;
 
+import java.util.Map;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.LevelAccessor;
 import snownee.kiwi.config.ConfigUI;
@@ -7,6 +9,15 @@ import snownee.kiwi.config.KiwiConfig;
 
 @KiwiConfig
 public final class FFCommonConfig {
+
+	@ConfigUI.Typed(key = String.class, value = Integer.class)
+	public static Map<String, Integer> currencyValues = Map.of(
+			"minecraft:emerald", 100,
+			"minecraft:emerald_block", 900);
+	public static String currencyName = "G";
+	public static boolean marketStats = true;
+	@KiwiConfig.Range(min = 1, max = 365)
+	public static int marketStatsDays = 30;
 
 	public enum DropMode {
 		NoDrop, Independent, OneByOne

@@ -6,6 +6,10 @@ import net.minecraft.util.random.Weighted;
 import snownee.fruits.minigame.PieceType;
 
 public abstract class MinigameRule {
+	public int priority() {
+		return 0;
+	}
+
 	public boolean allowsDiagonal() {
 		return true;
 	}

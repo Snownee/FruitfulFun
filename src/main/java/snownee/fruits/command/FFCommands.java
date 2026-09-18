@@ -17,6 +17,12 @@ public class FFCommands {
 		if (Hooks.gadget) {
 			root.then(ScentCommand.register());
 		}
-		return root.then(MinigameCommand.register());
+		if (Hooks.minigame) {
+			root.then(MinigameCommand.register());
+		}
+		if (Hooks.market) {
+			root.then(MarketCommand.register());
+		}
+		return root;
 	}
 }

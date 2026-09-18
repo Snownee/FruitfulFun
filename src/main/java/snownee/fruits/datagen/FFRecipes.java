@@ -75,6 +75,7 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.guide.GuideModule;
+import snownee.fruits.market.MarketModule;
 import snownee.fruits.minigame.MinigameModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.KiwiGO;
@@ -160,6 +161,19 @@ public class FFRecipes extends FabricRecipeProvider {
 						.define('B', Items.BLACK_CONCRETE)
 						.unlockedBy("has_copper", has(Items.COPPER_INGOT))
 						.save(output);
+
+				RecipeOutput marketExporter = withConditions(
+						output,
+						new ModuleLoadedCondition(FruitfulFun.id("market")));
+				shaped(RecipeCategory.DECORATIONS, MarketModule.MARKET.get())
+						.pattern("P P")
+						.pattern("PEP")
+						.pattern("SSS")
+						.define('P', ItemTags.PLANKS)
+						.define('E', Items.EMERALD)
+						.define('S', ItemTags.WOODEN_SLABS)
+						.unlockedBy("has_emerald", has(Items.EMERALD))
+						.save(marketExporter);
 
 				RecipeOutput beeExporter = withConditions(
 						output,

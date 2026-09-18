@@ -1,7 +1,6 @@
 package snownee.fruits.minigame;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +30,10 @@ public final class BoardView implements PathRules.Board {
 	private static final float SQUASH_PER_CELL = 0.06f;
 	private static final float MAX_SQUASH = 0.18f;
 	private static final float LARGE_SCALE = 1.35f;
+	private static final long ICE_MS = 100;
+	private static final float ICE_POP = 0.3f;
+	private static final int PATH_LINE_COLOR = 0x8088CCFF;
+	private static final int PATH_JOINT_COLOR = 0xFF88CCFF;
 
 	private record Stage(
 			@Nullable Piece[] grid,
@@ -67,6 +70,7 @@ public final class BoardView implements PathRules.Board {
 	private Piece[] pieces = new Piece[MinigameConfig.CELL_COUNT];
 	private boolean[] locked = new boolean[MinigameConfig.CELL_COUNT];
 	private boolean allowDiagonal = true;
+	private final long[] iceHitAt = new long[MinigameConfig.CELL_COUNT];
 	private List<Stage> stages = List.of();
 	private long animStart;
 	private long animDuration;
@@ -76,6 +80,7 @@ public final class BoardView implements PathRules.Board {
 	private long lockAnimStart;
 	private long hintStart;
 	private int pathLength;
+	private List<Integer> pathHighlight = List.of();
 
 	private int x;
 	private int y;
@@ -151,6 +156,18 @@ public final class BoardView implements PathRules.Board {
 			boolean allowDiagonal,
 			boolean animateClear) {
 		this.allowDiagonal = allowDiagonal;
+		if (state == null) {
+			long now = Util.getMillis();
+			for (BoardStep step : steps) {
+				if (step instanceof BoardStep.Ice ice) {
+					Piece piece = pieces[ice.index()];
+					if (piece != null) {
+						pieces[ice.index()] = piece.withBreaks(ice.breaks());
+					}
+					iceHitAt[ice.index()] = now;
+				}
+			}
+		}
 		boolean[] newLocked = decodeLocked(lockedMask);
 		if (animated) {
 			locking.clear();
@@ -368,8 +385,9 @@ public final class BoardView implements PathRules.Board {
 		return new float[]{last % MinigameConfig.SIZE, last / MinigameConfig.SIZE};
 	}
 
-	public void render(GuiGraphicsExtractor graphics, Collection<Integer> highlight) {
-		pathLength = highlight.size();
+	public void render(GuiGraphicsExtractor graphics, List<Integer> path) {
+		pathHighlight = path;
+		pathLength = path.size();
 		graphics.enableScissor(x, y, x + gridSize(), y + gridSize());
 		long now = Util.getMillis();
 		float lockT = Math.min(1f, (now - lockAnimStart) / (float) LOCK_MS);
@@ -383,11 +401,12 @@ public final class BoardView implements PathRules.Board {
 				renderStages(graphics, elapsed, lockT);
 			} else {
 				animating = false;
-				renderStatic(graphics, lockT, highlight);
+				renderStatic(graphics, lockT);
 			}
 		} else {
-			renderStatic(graphics, lockT, highlight);
+			renderStatic(graphics, lockT);
 		}
+		renderPath(graphics, path);
 		graphics.disableScissor();
 	}
 
@@ -412,19 +431,62 @@ public final class BoardView implements PathRules.Board {
 		}
 	}
 
-	private void renderStatic(GuiGraphicsExtractor graphics, float lockT, Collection<Integer> highlight) {
+	private void renderStatic(GuiGraphicsExtractor graphics, float lockT) {
 		renderBackground(graphics);
 		long now = Util.getMillis();
 		for (int i = 0; i < MinigameConfig.CELL_COUNT; i++) {
-			float sway = highlight.contains(i) ? 0f : swayAt(i, now);
-			drawCell(graphics, pieces[i], cellX(i), cellY(i), tileScale(), lockVisual(i, lockT), sway);
+			Piece piece = pieces[i];
+			float sway = pathHighlight.contains(i) || (piece != null && piece.type().fixed()) ? 0f : swayAt(i, now);
+			drawCell(graphics, piece, cellX(i), cellY(i), tileScale() * iceScale(i), lockVisual(i, lockT), sway);
 		}
-		for (int index : highlight) {
-			int px = cellX(index);
-			int py = cellY(index);
-			graphics.fill(px + 1, py + 1, px + cell - 1, py + cell - 1, 0x66FFD700);
-			graphics.outline(px, py, cell, cell, 0xFFFFD700);
+	}
+
+	private void renderPath(GuiGraphicsExtractor graphics, List<Integer> path) {
+		if (path.isEmpty()) {
+			return;
 		}
+		int lineWidth = Math.max(2, Math.round(cell * 0.22f));
+		float halfLine = lineWidth / 2f;
+		int jointSize = lineWidth + Math.max(2, Math.round(cell * 0.12f));
+		int halfJoint = jointSize / 2;
+		if (path.size() == 1) {
+			int cx = cellX(path.getFirst()) + cell / 2;
+			int cy = cellY(path.getFirst()) + cell / 2;
+			graphics.fill(cx - halfJoint, cy - halfJoint, cx + halfJoint, cy + halfJoint, PATH_JOINT_COLOR);
+			return;
+		}
+		for (int i = 1; i < path.size(); i++) {
+			float ax = cellX(path.get(i - 1)) + cell / 2f;
+			float ay = cellY(path.get(i - 1)) + cell / 2f;
+			float bx = cellX(path.get(i)) + cell / 2f;
+			float by = cellY(path.get(i)) + cell / 2f;
+			float dx = bx - ax;
+			float dy = by - ay;
+			float length = (float) Math.sqrt(dx * dx + dy * dy);
+			graphics.pose().pushMatrix();
+			graphics.pose().translate((ax + bx) / 2f, (ay + by) / 2f);
+			graphics.pose().rotate((float) Math.atan2(dy, dx));
+			graphics.fill(
+					-Math.round(length / 2f),
+					-Math.round(halfLine),
+					Math.round(length / 2f),
+					Math.round(halfLine),
+					PATH_LINE_COLOR);
+			graphics.pose().popMatrix();
+		}
+		for (int i = 1; i + 1 < path.size(); i++) {
+			if (!isTurn(path.get(i - 1), path.get(i), path.get(i + 1))) {
+				continue;
+			}
+			int cx = cellX(path.get(i)) + cell / 2;
+			int cy = cellY(path.get(i)) + cell / 2;
+			graphics.fill(cx - halfJoint, cy - halfJoint, cx + halfJoint, cy + halfJoint, PATH_JOINT_COLOR);
+		}
+	}
+
+	private static boolean isTurn(int a, int b, int c) {
+		return b % MinigameConfig.SIZE - a % MinigameConfig.SIZE != c % MinigameConfig.SIZE - b % MinigameConfig.SIZE
+				|| b / MinigameConfig.SIZE - a / MinigameConfig.SIZE != c / MinigameConfig.SIZE - b / MinigameConfig.SIZE;
 	}
 
 	private void renderClearStage(GuiGraphicsExtractor graphics, Stage stage, float t, float lockT) {
@@ -436,7 +498,7 @@ public final class BoardView implements PathRules.Board {
 		@Nullable Piece[] grid = stage.grid();
 		for (int i = 0; i < MinigameConfig.CELL_COUNT; i++) {
 			float scale = clear[i] ? base * (1f - t) : base;
-			drawCell(graphics, grid[i], cellX(i), cellY(i), scale, lockVisual(i, lockT));
+			drawCell(graphics, grid[i], cellX(i), cellY(i), scale * iceScale(i), lockVisual(i, lockT));
 		}
 	}
 
@@ -462,7 +524,7 @@ public final class BoardView implements PathRules.Board {
 						piece,
 						x + Math.round(px * cell),
 						y + Math.round(py * cell),
-						scale,
+						scale * iceScale(index),
 						lockVisual(index, lockT));
 			}
 		}
@@ -479,7 +541,7 @@ public final class BoardView implements PathRules.Board {
 					grid[i],
 					cellX(i),
 					cellY(i),
-					tileScale(),
+					tileScale() * iceScale(i),
 					lockVisual(i, lockT),
 					0f,
 					squash[i] * decay);
@@ -490,7 +552,7 @@ public final class BoardView implements PathRules.Board {
 		renderBackground(graphics);
 		@Nullable Piece[] grid = stage.grid();
 		for (int i = 0; i < MinigameConfig.CELL_COUNT; i++) {
-			drawCell(graphics, grid[i], cellX(i), cellY(i), tileScale(), lockVisual(i, lockT));
+			drawCell(graphics, grid[i], cellX(i), cellY(i), tileScale() * iceScale(i), lockVisual(i, lockT));
 		}
 		List<Integer> cells = Objects.requireNonNull(stage.beePath());
 		Piece bee = Objects.requireNonNull(stage.bee());
@@ -639,6 +701,14 @@ public final class BoardView implements PathRules.Board {
 			return locking.contains(index) ? lockT : 1f;
 		}
 		return unlocking.contains(index) ? 1f - lockT : 0f;
+	}
+
+	private float iceScale(int index) {
+		long elapsed = Util.getMillis() - iceHitAt[index];
+		if (iceHitAt[index] <= 0 || elapsed < 0 || elapsed >= ICE_MS) {
+			return 1f;
+		}
+		return 1f + ICE_POP * (1f - elapsed / (float) ICE_MS);
 	}
 
 	private float beeHintScale(Piece piece) {

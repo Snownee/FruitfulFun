@@ -21,6 +21,7 @@ import snownee.fruits.datagen.guide.FruitfulFunBook;
 import snownee.fruits.datagen.guide.RitualMultiblockProvider;
 import snownee.fruits.food.datagen.FoodBlockLoot;
 import snownee.fruits.gadget.datagen.GadgetBlockLoot;
+import snownee.fruits.market.datagen.MarketBlockLoot;
 import snownee.fruits.minigame.datagen.MinigameBlockLoot;
 import snownee.fruits.minigame.datagen.MinigameLootTables;
 import snownee.fruits.pomegranate.datagen.PomegranateBlockLoot;
@@ -62,6 +63,8 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider(FoodBlockLoot::new);
 		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("gadget"));
 		pack.addProvider(GadgetBlockLoot::new);
+		pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("market"));
+		pack.addProvider(MarketBlockLoot::new);
 		if (Hooks.farmersdelight) {
 			pack = fabricDataGenerator.createBuiltinResourcePack(FruitfulFun.id("farmersdelight"));
 			pack.addProvider(FarmersDelightBlockLoot::new);

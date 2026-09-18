@@ -120,6 +120,13 @@ public class FruitBoardScreen extends Screen {
 				packet.opponent().locked(),
 				packet.opponent().allowDiagonal(),
 				opponentClear);
+		if (!packet.open() && !spectating) {
+			for (BoardStep step : packet.self().steps()) {
+				if (step instanceof BoardStep.Ice ice) {
+					playIce(ice.index(), ice.breaks());
+				}
+			}
+		}
 		score = packet.self().score();
 		movesLeft = packet.self().movesLeft();
 		clears = packet.self().clears();
@@ -280,15 +287,26 @@ public class FruitBoardScreen extends Screen {
 		if (cell < 0) {
 			return;
 		}
+		int index = path.lastIndexOf(cell);
+		if (index >= 0 && index < path.size() - 1 && aligned(cell, path.getLast())) {
+			path.subList(index + 1, path.size()).clear();
+			playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.6f, 0.4f);
+			sendPathUpdate();
+			return;
+		}
 		if (PathRules.canAppend(path, ownBoard, cell)) {
 			path.add(cell);
 			playStepSound();
 			sendPathUpdate();
-		} else if (path.size() >= 2 && cell == path.get(path.size() - 2)) {
-			path.removeLast();
-			playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 0.6f, 0.4f);
-			sendPathUpdate();
 		}
+	}
+
+	private static boolean aligned(int a, int b) {
+		int ax = a % MinigameConfig.SIZE;
+		int ay = a / MinigameConfig.SIZE;
+		int bx = b % MinigameConfig.SIZE;
+		int by = b / MinigameConfig.SIZE;
+		return ax == bx || ay == by || Math.abs(ax - bx) == Math.abs(ay - by);
 	}
 
 	private void completePath(double mouseX, double mouseY) {
@@ -376,11 +394,11 @@ public class FruitBoardScreen extends Screen {
 		goalPanel.layout(width);
 
 		if (over()) {
-			renderFinishOverlay(graphics, finishOverlayMessage());
+			renderFinishOverlay(graphics, finishOverlayMessage(), mouseX, mouseY);
 		} else if (!started) {
-			renderStartOverlay(graphics);
+			renderStartOverlay(graphics, mouseX, mouseY);
 		} else {
-			renderGameMain(graphics);
+			renderGameMain(graphics, mouseX, mouseY);
 		}
 		if (!over() && (started || spectating) && InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_TAB)) {
 			renderSpectators(graphics);
@@ -389,7 +407,7 @@ public class FruitBoardScreen extends Screen {
 		super.extractRenderState(graphics, mouseX, mouseY, a);
 	}
 
-	public void renderGameMain(GuiGraphicsExtractor graphics) {
+	public void renderGameMain(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		int cell = cellSize();
 		int oy = boardY(cell);
 		int remaining = -1;
@@ -464,9 +482,9 @@ public class FruitBoardScreen extends Screen {
 		}
 
 		if (started && !over()) {
-			goalPanel.renderPanel(graphics, boardY(cell), height - boardY(cell) - 40);
+			goalPanel.renderPanel(graphics, boardY(cell), height - boardY(cell) - 40, mouseX, mouseY);
 		}
-		renderRewards(graphics);
+		renderRewards(graphics, mouseX, mouseY);
 
 		if (inIntro()) {
 			int step = (int) ((Util.getMillis() - introStart) / 500);
@@ -567,7 +585,7 @@ public class FruitBoardScreen extends Screen {
 		return startEntriesTop() + startBlockHeight() + 10;
 	}
 
-	private void renderStartOverlay(GuiGraphicsExtractor graphics) {
+	private void renderStartOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		graphics.fill(0, 0, width, height, 0x80000000);
 		int top = startOverlayTop();
 		graphics.centeredText(font, title, width / 2, top, 0xFFFFFFFF);
@@ -577,10 +595,10 @@ public class FruitBoardScreen extends Screen {
 				width / 2,
 				top + font.lineHeight + 4,
 				0xFFFFD700);
-		renderGoalEntries(graphics, startEntriesTop(), goalPanel.count());
+		renderGoalEntries(graphics, startEntriesTop(), goalPanel.count(), mouseX, mouseY);
 	}
 
-	private void renderFinishOverlay(GuiGraphicsExtractor graphics, Component message) {
+	private void renderFinishOverlay(GuiGraphicsExtractor graphics, Component message, int mouseX, int mouseY) {
 		graphics.fill(0, 0, width, height, 0x80000000);
 		Component close = Component.translatable("gui.fruitfulfun.minigame.close");
 		if (goalPanel.isEmpty()) {
@@ -605,13 +623,13 @@ public class FruitBoardScreen extends Screen {
 		graphics.centeredText(font, message, width / 2, top, 0xFFFFFFFF);
 		graphics.centeredText(font, goalsResult(), width / 2, top + font.lineHeight + 2, 0xFFFFD700);
 		int entriesTop = top + font.lineHeight * 2 + 6;
-		renderGoalEntries(graphics, entriesTop, limit);
+		renderGoalEntries(graphics, entriesTop, limit, mouseX, mouseY);
 		graphics.centeredText(font, close, width / 2, entriesTop + blockHeight + 6, 0xFFCCCCCC);
 	}
 
-	private void renderGoalEntries(GuiGraphicsExtractor graphics, int top, int limit) {
+	private void renderGoalEntries(GuiGraphicsExtractor graphics, int top, int limit, int mouseX, int mouseY) {
 		int rowWidth = goalPanel.width();
-		goalPanel.renderOverlay(graphics, (width - rowWidth) / 2, top, limit);
+		goalPanel.renderOverlay(graphics, (width - rowWidth) / 2, top, limit, mouseX, mouseY);
 	}
 
 	private Component goalsResult() {
@@ -621,7 +639,7 @@ public class FruitBoardScreen extends Screen {
 				goalPanel.count());
 	}
 
-	private void renderRewards(GuiGraphicsExtractor graphics) {
+	private void renderRewards(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		int size = Math.min(rewards.size(), REWARD_DISPLAY_MAX);
 		if (size <= 0) {
 			return;
@@ -630,22 +648,24 @@ public class FruitBoardScreen extends Screen {
 		int step = 16 + gap;
 		int rows = (size + REWARD_PER_ROW - 1) / REWARD_PER_ROW;
 		int bottom = height - 4;
+		int startX = 4;
 		for (int i = 0; i < size; i++) {
 			int row = i / REWARD_PER_ROW;
 			int col = i % REWARD_PER_ROW;
-			int countInRow = Math.min(REWARD_PER_ROW, size - row * REWARD_PER_ROW);
-			int startX = (width - (countInRow * step - gap)) / 2;
 			int px = startX + col * step;
 			int py = bottom - (rows - row) * step;
 			graphics.fill(px - 1, py - 1, px + 17, py + 17, 0x80000000);
 			graphics.fakeItem(rewards.get(i), px, py);
 			graphics.itemDecorations(font, rewards.get(i), px, py);
+			if (mouseX >= px - 1 && mouseX < px + 17 && mouseY >= py - 1 && mouseY < py + 17) {
+				graphics.setTooltipForNextFrame(font, rewards.get(i), mouseX, mouseY);
+			}
 		}
 		int labelY = bottom - rows * step - 11;
-		graphics.centeredText(
+		graphics.text(
 				font,
 				Component.translatable("gui.fruitfulfun.minigame.rewards"),
-				width / 2,
+				startX,
 				labelY,
 				0xFFFFD700);
 	}
@@ -671,6 +691,15 @@ public class FruitBoardScreen extends Screen {
 
 	private void playStepSound() {
 		playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 1f + Math.min(path.size(), 12) * 0.05f, 0.5f);
+	}
+
+	private static void playIce(int index, int breaks) {
+		int column = index % MinigameConfig.SIZE;
+		float pitch = 0.85f + column * 0.04f;
+		playUi(SoundEvents.GLASS_HIT, pitch, 0.6f);
+		if (breaks >= MinigameConfig.ICE_BREAKS) {
+			playUi(SoundEvents.GLASS_BREAK, pitch, 0.6f);
+		}
 	}
 
 	private void playResultSound(int result) {

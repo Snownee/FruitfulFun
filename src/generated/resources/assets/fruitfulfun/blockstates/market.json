@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "minecraft:block/barrel",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "minecraft:block/barrel"
+    },
+    "facing=south": {
+      "model": "minecraft:block/barrel",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "minecraft:block/barrel",
+      "y": 270
+    }
+  }
+}

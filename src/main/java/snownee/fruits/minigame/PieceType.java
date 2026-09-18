@@ -32,6 +32,7 @@ public final class PieceType {
 	public static final PieceType LOOTBOX = builder("lootbox", () -> Items.BUNDLE).unlinkable().build();
 	public static final PieceType REDLOVE = builder("redlove", CherryModule.REDLOVE).build();
 	public static final PieceType POMEGRANATE = builder("pomegranate", PomegranateModule.POMEGRANATE_ITEM).unlinkable().build();
+	public static final PieceType ICE = builder("ice", () -> Items.BLUE_ICE).unlinkable().fixed().build();
 	public static final PieceType GOLDEN_APPLE = builder("golden_apple", () -> Items.GOLDEN_APPLE).wildcard().build();
 	public static final PieceType GOLDEN_CARROT = builder("golden_carrot", () -> Items.GOLDEN_CARROT).converter().build();
 	public static final PieceType BEE = builder("bee", () -> Items.BEE_SPAWN_EGG).wildcard().passiveImmune().build();
@@ -63,6 +64,7 @@ public final class PieceType {
 	private final boolean converter;
 	private final boolean passThrough;
 	private final boolean passiveImmune;
+	private final boolean fixed;
 	private final PieceType base;
 	private final Component displayName;
 	private final @Nullable Component tooltip;
@@ -77,6 +79,7 @@ public final class PieceType {
 		this.converter = builder.converter;
 		this.passThrough = builder.passThrough;
 		this.passiveImmune = builder.passiveImmune;
+		this.fixed = builder.fixed;
 		this.base = builder.base == null ? this : builder.base;
 		this.tooltip = builder.noTooltip
 				? null
@@ -100,6 +103,7 @@ public final class PieceType {
 		private boolean converter;
 		private boolean passThrough;
 		private boolean passiveImmune;
+		private boolean fixed;
 		private @Nullable PieceType base;
 		private boolean noTooltip;
 
@@ -130,6 +134,11 @@ public final class PieceType {
 
 		public Builder passiveImmune() {
 			this.passiveImmune = true;
+			return this;
+		}
+
+		public Builder fixed() {
+			this.fixed = true;
 			return this;
 		}
 
@@ -172,6 +181,10 @@ public final class PieceType {
 		return passiveImmune;
 	}
 
+	public boolean fixed() {
+		return fixed;
+	}
+
 	public PieceType base() {
 		return base;
 	}
@@ -201,6 +214,13 @@ public final class PieceType {
 	}
 
 	public ItemStackTemplate template(Piece piece) {
+		if (piece.is(ICE)) {
+			return new ItemStackTemplate(switch (piece.iceBreaks()) {
+				case 0 -> Items.BLUE_ICE;
+				case 1 -> Items.PACKED_ICE;
+				default -> Items.ICE;
+			});
+		}
 		if (piece.is(LOOTBOX) && piece.data() != null && piece.data().contains("display")) {
 			Optional<ItemStackTemplate> display = piece.data().read("display", LycheeCodecs.ITEM_STACK_TEMPLATE);
 			if (display.isPresent()) {

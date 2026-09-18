@@ -266,7 +266,7 @@ public final class GoalPanel {
 		return height(entries.size(), true);
 	}
 
-	public void renderPanel(GuiGraphicsExtractor graphics, int top, int available) {
+	public void renderPanel(GuiGraphicsExtractor graphics, int top, int available, int mouseX, int mouseY) {
 		int count = entries.size();
 		if (count == 0) {
 			return;
@@ -283,14 +283,14 @@ public final class GoalPanel {
 		}
 		int iconSize = compact ? ICON_MIN : ICON;
 		graphics.text(font, HEADER, MARGIN, top - font.lineHeight - 2, COLOR_HEADER);
-		int end = renderEntries(graphics, MARGIN, top, panelWidth, shown, iconSize, step, compact, showRules);
+		int end = renderEntries(graphics, MARGIN, top, panelWidth, shown, iconSize, step, compact, showRules, mouseX, mouseY);
 		if (shown < count) {
 			graphics.text(font, Component.literal("+" + (count - shown)), MARGIN, end + 2, COLOR_MORE);
 		}
 	}
 
-	public void renderOverlay(GuiGraphicsExtractor graphics, int x, int top, int limit) {
-		renderEntries(graphics, x, top, panelWidth, limit, ICON, 0, false, true);
+	public void renderOverlay(GuiGraphicsExtractor graphics, int x, int top, int limit, int mouseX, int mouseY) {
+		renderEntries(graphics, x, top, panelWidth, limit, ICON, 0, false, true, mouseX, mouseY);
 	}
 
 	private int renderEntries(
@@ -302,7 +302,9 @@ public final class GoalPanel {
 			int iconSize,
 			int compactStep,
 			boolean compact,
-			boolean showRules) {
+			boolean showRules,
+			int mouseX,
+			int mouseY) {
 		long now = Util.getMillis();
 		int y = top;
 		for (int i = 0; i < limit; i++) {
@@ -334,6 +336,10 @@ public final class GoalPanel {
 				int rewardX = textX;
 				for (ItemStack reward : entry.rewards()) {
 					drawRewardIcon(graphics, reward, rewardX, secondY);
+					if (mouseX >= rewardX - 1 && mouseX < rewardX + ICON + 1
+							&& mouseY >= secondY - 1 && mouseY < secondY + ICON + 1) {
+						graphics.setTooltipForNextFrame(font, reward, mouseX, mouseY);
+					}
 					rewardX += ICON + 2;
 				}
 				String text = progressTexts[i];

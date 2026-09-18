@@ -66,6 +66,10 @@ public final class MinigameRuleContext {
 		session.board().addSpawn(piece, count);
 	}
 
+	public void setCell(int index, Piece piece) {
+		session.board().setCell(index, piece);
+	}
+
 	/**
 	 * Places {@code piece} at {@code index}, deferring to a random free candidate when the cell is occupied.
 	 */

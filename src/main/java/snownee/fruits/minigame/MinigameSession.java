@@ -1,6 +1,7 @@
 package snownee.fruits.minigame;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -93,6 +94,7 @@ public final class MinigameSession {
 		for (MinigameRule rule : rules) {
 			rule.onStart(context);
 		}
+		board.fillRandom();
 	}
 
 	private static List<MinigameRule> collectRules(List<MinigameGoal> goals) {
@@ -100,6 +102,7 @@ public final class MinigameSession {
 		for (MinigameGoal goal : goals) {
 			rules.addAll(goal.rules());
 		}
+		rules.sort(Comparator.comparingInt(MinigameRule::priority));
 		return List.copyOf(rules);
 	}
 

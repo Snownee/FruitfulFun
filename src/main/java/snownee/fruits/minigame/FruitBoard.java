@@ -1,8 +1,10 @@
 package snownee.fruits.minigame;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 
@@ -29,9 +31,18 @@ public final class FruitBoard implements PathRules.Board {
 		this.random = random;
 		this.pool = pool;
 		this.allowDiagonal = allowDiagonal;
+	}
+
+	public void fillRandom() {
 		for (int i = 0; i < cells.length; i++) {
-			cells[i] = randomFruit();
+			if (cells[i] == null) {
+				cells[i] = randomFruit();
+			}
 		}
+	}
+
+	public void setCell(int index, Piece piece) {
+		cells[index] = piece;
 	}
 
 	public @Nullable Piece[] cells() {
@@ -117,7 +128,7 @@ public final class FruitBoard implements PathRules.Board {
 			@Nullable Integer beeTarget,
 			@Nullable Consumer<ClearResult> onWave) {
 		List<ClearedPiece> cleared = new ArrayList<>();
-		List<Integer> removed = new ArrayList<>();
+		List<Integer> targets = new ArrayList<>();
 		int beeIndex = -1;
 		for (int index : indices) {
 			Piece piece = Objects.requireNonNull(cells[index]);
@@ -128,8 +139,12 @@ public final class FruitBoard implements PathRules.Board {
 			if (piece.type().passThrough()) {
 				continue;
 			}
+			targets.add(index);
+		}
+		List<Integer> removed = damageIce(targets);
+		for (int index : removed) {
+			Piece piece = Objects.requireNonNull(cells[index]);
 			cleared.add(new ClearedPiece(index, piece));
-			removed.add(index);
 			cells[index] = null;
 		}
 		steps.add(new BoardStep.Clear(List.copyOf(removed)));
@@ -167,6 +182,57 @@ public final class FruitBoard implements PathRules.Board {
 				ClearResult.Cause.NONE);
 	}
 
+	/**
+	 * Applies ice damage for one clearing wave and returns the cells that are actually removed.
+	 * Surviving ice is replaced with an incremented break count; broken ice joins the result.
+	 */
+	private List<Integer> damageIce(List<Integer> targets) {
+		Set<Integer> involved = new LinkedHashSet<>();
+		for (int index : targets) {
+			Piece piece = cells[index];
+			if (piece != null && piece.is(PieceType.ICE)) {
+				involved.add(index);
+			}
+		}
+		for (int index : targets) {
+			Piece piece = cells[index];
+			if (piece == null || piece.is(PieceType.ICE)) {
+				continue;
+			}
+			int x = index % MinigameConfig.SIZE;
+			int y = index / MinigameConfig.SIZE;
+			for (int[] offset : ORTHOGONAL) {
+				int nx = x + offset[0];
+				int ny = y + offset[1];
+				if (nx < 0 || nx >= MinigameConfig.SIZE || ny < 0 || ny >= MinigameConfig.SIZE) {
+					continue;
+				}
+				int neighbor = nx + ny * MinigameConfig.SIZE;
+				Piece pieceAt = cells[neighbor];
+				if (pieceAt != null && pieceAt.is(PieceType.ICE)) {
+					involved.add(neighbor);
+				}
+			}
+		}
+		List<Integer> result = new ArrayList<>();
+		for (int index : targets) {
+			Piece piece = cells[index];
+			if (piece == null || !piece.is(PieceType.ICE)) {
+				result.add(index);
+			}
+		}
+		for (int index : involved) {
+			Piece piece = Objects.requireNonNull(cells[index]);
+			int breaks = piece.iceBreaks() + 1;
+			cells[index] = piece.withBreaks(breaks);
+			steps.add(new BoardStep.Ice(index, breaks));
+			if (breaks >= MinigameConfig.ICE_BREAKS) {
+				result.add(index);
+			}
+		}
+		return result;
+	}
+
 	private void applyLargeEffects(List<ClearedPiece> cleared) {
 		boolean[] triggered = new boolean[MinigameConfig.CELL_COUNT];
 		while (true) {
@@ -193,14 +259,21 @@ public final class FruitBoard implements PathRules.Board {
 						line.add(x + y * MinigameConfig.SIZE);
 					}
 				}
-				List<Integer> hit = new ArrayList<>();
+				List<Integer> targets = new ArrayList<>();
 				for (int cell : line) {
 					Piece piece = cells[cell];
 					if (piece == null || piece.type().passiveImmune()) {
 						continue;
 					}
+					targets.add(cell);
+				}
+				if (targets.isEmpty()) {
+					continue;
+				}
+				List<Integer> hit = damageIce(targets);
+				for (int cell : hit) {
+					Piece piece = Objects.requireNonNull(cells[cell]);
 					cleared.add(new ClearedPiece(cell, piece));
-					hit.add(cell);
 					cells[cell] = null;
 				}
 				if (!hit.isEmpty()) {
@@ -212,21 +285,24 @@ public final class FruitBoard implements PathRules.Board {
 	}
 
 	public ClearResult clearLootboxes() {
-		List<ClearedPiece> cleared = new ArrayList<>();
-		List<Integer> removed = new ArrayList<>();
+		List<Integer> targets = new ArrayList<>();
 		for (int index = 0; index < cells.length; index++) {
 			Piece piece = cells[index];
 			if (piece != null && piece.is(PieceType.LOOTBOX)) {
-				cleared.add(new ClearedPiece(index, piece));
-				removed.add(index);
-				cells[index] = null;
+				targets.add(index);
 			}
 		}
-		if (removed.isEmpty()) {
+		if (targets.isEmpty()) {
 			return ClearResult.EMPTY;
 		}
+		List<Integer> removed = damageIce(targets);
+		List<ClearedPiece> cleared = new ArrayList<>();
+		for (int index : removed) {
+			cleared.add(new ClearedPiece(index, Objects.requireNonNull(cells[index])));
+			cells[index] = null;
+		}
 		steps.add(new BoardStep.Clear(List.copyOf(removed)));
-		unlockAdjacent(removed);
+		unlockAdjacent(targets);
 		applyGravity();
 		removeBottom(cleared, null);
 		refill();
@@ -287,11 +363,14 @@ public final class FruitBoard implements PathRules.Board {
 		if (index < 0 || index >= cells.length || cells[index] == null || !cells[index].is(PieceType.LOOTBOX)) {
 			return null;
 		}
-		List<ClearedPiece> cleared = new ArrayList<>();
-		cleared.add(new ClearedPiece(index, Objects.requireNonNull(cells[index])));
 		steps.clear();
-		cells[index] = null;
-		steps.add(new BoardStep.Clear(List.of(index)));
+		List<Integer> hit = damageIce(List.of(index));
+		List<ClearedPiece> cleared = new ArrayList<>();
+		for (int cell : hit) {
+			cleared.add(new ClearedPiece(cell, Objects.requireNonNull(cells[cell])));
+			cells[cell] = null;
+		}
+		steps.add(new BoardStep.Clear(List.copyOf(hit)));
 		unlockAdjacent(List.of(index));
 		applyGravity();
 		removeBottom(cleared, null);
@@ -322,7 +401,7 @@ public final class FruitBoard implements PathRules.Board {
 	public int replaceRandom(Piece piece, IntPredicate allowed) {
 		List<Integer> candidates = new ArrayList<>();
 		for (int i = 0; i < cells.length; i++) {
-			if (allowed.test(i)) {
+			if (cells[i] == null && allowed.test(i)) {
 				candidates.add(i);
 			}
 		}
@@ -360,29 +439,32 @@ public final class FruitBoard implements PathRules.Board {
 	private void removeBottom(List<ClearedPiece> cleared, @Nullable Consumer<ClearResult> onWave) {
 		while (true) {
 			List<Integer> bottom = new ArrayList<>();
-			List<ClearedPiece> wave = new ArrayList<>();
 			for (int x = 0; x < MinigameConfig.SIZE; x++) {
 				int index = x + (MinigameConfig.SIZE - 1) * MinigameConfig.SIZE;
 				Piece piece = cells[index];
 				if (piece != null && piece.type().clearsAtBottom()) {
-					ClearedPiece clearedPiece = new ClearedPiece(index, piece);
-					cleared.add(clearedPiece);
-					wave.add(clearedPiece);
-					cells[index] = null;
 					bottom.add(index);
 				}
 			}
 			if (bottom.isEmpty()) {
 				return;
 			}
-			steps.add(new BoardStep.Clear(bottom));
+			List<Integer> hit = damageIce(bottom);
+			List<ClearedPiece> wave = new ArrayList<>();
+			for (int index : hit) {
+				ClearedPiece clearedPiece = new ClearedPiece(index, Objects.requireNonNull(cells[index]));
+				cleared.add(clearedPiece);
+				wave.add(clearedPiece);
+				cells[index] = null;
+			}
+			steps.add(new BoardStep.Clear(List.copyOf(hit)));
 			if (onWave != null) {
 				onWave.accept(new ClearResult(
 						wave.size() * MinigameConfig.BASE_SCORE,
 						List.copyOf(wave),
 						ClearResult.Cause.BOTTOM));
 			}
-			unlockAdjacent(bottom);
+			unlockAdjacent(hit);
 			applyGravity();
 		}
 	}
@@ -394,27 +476,40 @@ public final class FruitBoard implements PathRules.Board {
 		}
 		boolean moved = false;
 		for (int x = 0; x < MinigameConfig.SIZE; x++) {
-			int writeY = MinigameConfig.SIZE - 1;
+			List<Piece> sources = new ArrayList<>();
+			List<Integer> sourceRows = new ArrayList<>();
+			List<Boolean> sourceLocked = new ArrayList<>();
 			for (int y = MinigameConfig.SIZE - 1; y >= 0; y--) {
-				int from = x + y * MinigameConfig.SIZE;
-				Piece value = cells[from];
-				if (value != null) {
-					int to = x + writeY * MinigameConfig.SIZE;
-					cells[to] = value;
-					locked[to] = locked[from];
-					fromRows.set(to, y);
-					if (to != from) {
-						cells[from] = null;
-						locked[from] = false;
-						moved = true;
-					}
-					writeY--;
+				int index = x + y * MinigameConfig.SIZE;
+				Piece piece = cells[index];
+				if (piece != null && !piece.type().fixed()) {
+					sources.add(piece);
+					sourceRows.add(y);
+					sourceLocked.add(locked[index]);
 				}
 			}
-			for (int y = writeY; y >= 0; y--) {
+			int src = 0;
+			for (int y = MinigameConfig.SIZE - 1; y >= 0; y--) {
 				int index = x + y * MinigameConfig.SIZE;
-				cells[index] = null;
-				locked[index] = false;
+				Piece piece = cells[index];
+				if (piece != null && piece.type().fixed()) {
+					fromRows.set(index, y);
+					continue;
+				}
+				if (src < sources.size()) {
+					Piece value = sources.get(src);
+					int from = sourceRows.get(src);
+					cells[index] = value;
+					locked[index] = sourceLocked.get(src);
+					fromRows.set(index, from);
+					if (from != y) {
+						moved = true;
+					}
+					src++;
+				} else {
+					cells[index] = null;
+					locked[index] = false;
+				}
 			}
 		}
 		if (moved) {

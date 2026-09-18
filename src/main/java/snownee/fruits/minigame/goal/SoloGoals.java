@@ -32,7 +32,8 @@ public final class SoloGoals {
 			beehiveGoal(),
 			largeFruitGoal(),
 			noDiagonalGoal(),
-			goldenCarrotGoal());
+			goldenCarrotGoal(),
+			iceGoal());
 
 	private SoloGoals() {
 	}
@@ -87,6 +88,20 @@ public final class SoloGoals {
 				FruitPoolRule.remove(PieceType.GOLDEN_APPLE),
 				PlacePieceRule.create(PieceType.GOLDEN_CARROT, 4));
 		return new ClearPieceGoal(type, 12, emerald(), rules);
+	}
+
+	private static MinigameGoal iceGoal() {
+		return new BreakAllGoal(PieceType.ICE, centerCells(), emerald());
+	}
+
+	private static List<Integer> centerCells() {
+		List<Integer> cells = new ArrayList<>();
+		for (int y = 2; y <= 4; y++) {
+			for (int x = 2; x <= 4; x++) {
+				cells.add(x + y * MinigameConfig.SIZE);
+			}
+		}
+		return cells;
 	}
 
 	private static List<ItemStack> emerald() {

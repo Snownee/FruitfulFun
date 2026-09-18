@@ -129,6 +129,9 @@ public class CommonProxy implements ModInitializer {
 		if (Hooks.farmersdelight) {
 			addBuiltinPack(modContainer, "farmersdelight");
 		}
+		if (Hooks.market) {
+			addBuiltinPack(modContainer, "market");
+		}
 		if (FFCommonConfig.villageAppleTreeWorldGen) {
 			addBuiltinPack(modContainer, "apple_tree_in_village");
 		}

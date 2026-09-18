@@ -26,6 +26,9 @@ public sealed interface BoardStep {
 	record BeeMove(List<Integer> cells, boolean consumed, @Nullable CompoundTag hiveData, int duration) implements BoardStep {
 	}
 
+	record Ice(int index, int breaks) implements BoardStep {
+	}
+
 	record Entry(int index, PieceType type, @Nullable CompoundTag data) {
 		public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = new StreamCodec<>() {
 			@Override
@@ -66,6 +69,7 @@ public sealed interface BoardStep {
 						buf.readBoolean(),
 						buf.readBoolean() ? ByteBufCodecs.COMPOUND_TAG.decode(buf) : null,
 						buf.readVarInt());
+				case 5 -> new Ice(buf.readVarInt(), buf.readVarInt());
 				default -> throw new IllegalArgumentException("Unknown board step");
 			};
 		}
@@ -100,6 +104,11 @@ public sealed interface BoardStep {
 						ByteBufCodecs.COMPOUND_TAG.encode(buf, beeMove.hiveData());
 					}
 					buf.writeVarInt(beeMove.duration());
+				}
+				case Ice ice -> {
+					buf.writeVarInt(5);
+					buf.writeVarInt(ice.index());
+					buf.writeVarInt(ice.breaks());
 				}
 			}
 		}
