@@ -1,26 +1,25 @@
 package snownee.fruits.minigame.rule;
 
-import java.util.List;
+import java.util.Map;
 
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.network.chat.Component;
+import snownee.fruits.minigame.BoardPattern;
+import snownee.fruits.minigame.MinigameConfig;
 import snownee.fruits.minigame.Piece;
-import snownee.fruits.minigame.PieceType;
 
 public final class FillPieceRule extends MinigameRule {
-	private final PieceType type;
-	private final List<Integer> cells;
+	private final BoardPattern pattern;
 
-	private FillPieceRule(PieceType type, List<Integer> cells) {
-		this.type = type;
-		this.cells = List.copyOf(cells);
+	private FillPieceRule(BoardPattern pattern) {
+		this.pattern = pattern;
 	}
 
-	public static Pair<MinigameRule, Component> create(PieceType type, List<Integer> cells) {
+	public static Pair<MinigameRule, Component> create(BoardPattern pattern) {
 		return Pair.of(
-				new FillPieceRule(type, cells),
-				Component.translatable("gui.fruitfulfun.minigame.rule.fill_piece", type.displayName()));
+				new FillPieceRule(pattern),
+				Component.translatable("gui.fruitfulfun.minigame.rule.fill_piece"));
 	}
 
 	@Override
@@ -30,8 +29,8 @@ public final class FillPieceRule extends MinigameRule {
 
 	@Override
 	public void onStart(MinigameRuleContext context) {
-		for (int cell : cells) {
-			context.setCell(cell, Piece.of(type));
+		for (Map.Entry<Integer, Piece> entry : pattern.pieces(MinigameConfig.SIZE).entrySet()) {
+			context.setCell(entry.getKey(), entry.getValue());
 		}
 	}
 }

@@ -37,6 +37,14 @@ public class FruitBoardScreen extends Screen {
 	private static final int TAB_LIST_COLUMN = 80;
 	private static final int TAB_LIST_ROWS = 20;
 	private static final double CLICK_DRAG_THRESHOLD = 6.0;
+	private static final float CLEAR_SELF_VOLUME = 0.7f;
+	private static final float CLEAR_OPPONENT_VOLUME = 0.35f;
+	private static final float ICE_SELF_VOLUME = 0.6f;
+	private static final float ICE_OPPONENT_VOLUME = 0.3f;
+	private static final float BEEHIVE_SELF_VOLUME = 0.7f;
+	private static final float BEEHIVE_OPPONENT_VOLUME = 0.35f;
+	private static final long MOVES_POP_MS = 800;
+	private static final long MOVES_FADE_MS = 350;
 	private static final SystemToast.SystemToastId MINIGAME_TOAST = new SystemToast.SystemToastId();
 
 	private final GoalPanel goalPanel;
@@ -69,6 +77,8 @@ public class FruitBoardScreen extends Screen {
 	private int introSound = -1;
 	private boolean spectating;
 	private @Nullable Button startButton;
+	private int movesPopValue = -1;
+	private long movesPopStart;
 
 	public FruitBoardScreen(SMinigameSyncPacket packet) {
 		this(packet, packet.spectating());
@@ -80,6 +90,10 @@ public class FruitBoardScreen extends Screen {
 		this.goalPanel = new GoalPanel(font);
 		this.ownBoard = new BoardView(font, true);
 		this.opponentBoard = new BoardView(font, true);
+		this.ownBoard.setClearListener(this::playOwnClear);
+		this.opponentBoard.setClearListener(this::playOpponentClear);
+		this.ownBoard.setBeeHiveListener(this::playOwnBeeHive);
+		this.opponentBoard.setBeeHiveListener(this::playOpponentBeeHive);
 		update(packet);
 	}
 
@@ -105,9 +119,10 @@ public class FruitBoardScreen extends Screen {
 	public void update(SMinigameSyncPacket packet) {
 		boolean ownClear = !packet.open() && packet.self().clears() > clears;
 		boolean opponentClear = !packet.open() && packet.opponent().clears() > opponentClears;
-		int previousScore = score;
 		int previousResult = result;
 		boolean previousFinished = finished;
+		ownBoard.setPlaybackSpeed(packet.cascadeSpeed());
+		opponentBoard.setPlaybackSpeed(packet.cascadeSpeed());
 		ownBoard.applySync(
 				packet.board().orElse(null),
 				packet.self().steps(),
@@ -120,15 +135,13 @@ public class FruitBoardScreen extends Screen {
 				packet.opponent().locked(),
 				packet.opponent().allowDiagonal(),
 				opponentClear);
-		if (!packet.open() && !spectating) {
-			for (BoardStep step : packet.self().steps()) {
-				if (step instanceof BoardStep.Ice ice) {
-					playIce(ice.index(), ice.breaks());
-				}
-			}
-		}
 		score = packet.self().score();
+		int previousMovesLeft = movesLeft;
 		movesLeft = packet.self().movesLeft();
+		if (movesLeft != previousMovesLeft && movesLeft >= 0 && movesLeft <= 5 && !packet.open()) {
+			movesPopValue = movesLeft;
+			movesPopStart = Util.getMillis();
+		}
 		clears = packet.self().clears();
 		opponentScore = packet.opponent().score();
 		opponentMovesLeft = packet.opponent().movesLeft();
@@ -143,6 +156,21 @@ public class FruitBoardScreen extends Screen {
 		selfPath = packet.self().path();
 		opponentPath = packet.opponent().path();
 		spectating = spectating || packet.spectating();
+		float ownIceVolume = spectating ? ICE_OPPONENT_VOLUME : ICE_SELF_VOLUME;
+		if (ownClear) {
+			for (BoardStep step : packet.self().steps()) {
+				if (step instanceof BoardStep.Ice ice) {
+					playIce(ice.index(), ice.breaks(), ownIceVolume);
+				}
+			}
+		}
+		if (opponentClear) {
+			for (BoardStep step : packet.opponent().steps()) {
+				if (step instanceof BoardStep.Ice ice) {
+					playIce(ice.index(), ice.breaks(), ICE_OPPONENT_VOLUME);
+				}
+			}
+		}
 		receiveMillis = Util.getMillis();
 		if (packet.open()) {
 			finished = packet.finished();
@@ -162,13 +190,10 @@ public class FruitBoardScreen extends Screen {
 		if (goalPanel.applyProgress(packet.self().goalProgress()) && !packet.open()) {
 			playUi(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.6f, 0.6f);
 		}
-		if (!packet.open() && score > previousScore) {
-			playUi(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 0.7f);
-		}
 		if (result != previousResult) {
 			playResultSound(result);
 		} else if (!previousFinished && finished) {
-			playUi(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1f, 0.6f);
+			playUi(SoundEvents.PLAYER_LEVELUP, 1f, 0.6f);
 		}
 		updateStartButton();
 	}
@@ -480,6 +505,7 @@ public class FruitBoardScreen extends Screen {
 		if (vs) {
 			opponentBoard.render(graphics, opponentPath);
 		}
+		renderMovesPop(graphics);
 
 		if (started && !over()) {
 			goalPanel.renderPanel(graphics, boardY(cell), height - boardY(cell) - 40, mouseX, mouseY);
@@ -689,16 +715,63 @@ public class FruitBoardScreen extends Screen {
 		graphics.pose().popMatrix();
 	}
 
+	private void renderMovesPop(GuiGraphicsExtractor graphics) {
+		if (movesPopValue < 0) {
+			return;
+		}
+		long elapsed = Util.getMillis() - movesPopStart;
+		if (elapsed >= MOVES_POP_MS) {
+			movesPopValue = -1;
+			return;
+		}
+		float alpha;
+		if (elapsed < MOVES_FADE_MS) {
+			alpha = elapsed / (float) MOVES_FADE_MS;
+		} else if (elapsed > MOVES_POP_MS - MOVES_FADE_MS) {
+			alpha = (MOVES_POP_MS - elapsed) / (float) MOVES_FADE_MS;
+		} else {
+			alpha = 1f;
+		}
+		int color = movesPopValue <= 3 ? 0xFF5555 : 0xFFFFFF;
+		color = ((int) (alpha * 0xFF) << 24) | (color & 0xFFFFFF);
+		Component text = Component.literal(Integer.toString(movesPopValue));
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(ownBoard.centerX(), (boardY(cellSize()) + ownBoard.gridSize() / 2f));
+		graphics.pose().scale(5f);
+		graphics.centeredText(font, text, 0, -4, color);
+		graphics.pose().popMatrix();
+	}
+
 	private void playStepSound() {
 		playUi(SoundEvents.NOTE_BLOCK_HAT.value(), 1f + Math.min(path.size(), 12) * 0.05f, 0.5f);
 	}
 
-	private static void playIce(int index, int breaks) {
+	private void playOwnClear(int ordinal) {
+		playClear(ordinal, spectating ? CLEAR_OPPONENT_VOLUME : CLEAR_SELF_VOLUME);
+	}
+
+	private void playOpponentClear(int ordinal) {
+		playClear(ordinal, CLEAR_OPPONENT_VOLUME);
+	}
+
+	private static void playClear(int ordinal, float volume) {
+		playUi(SoundEvents.COMPOSTER_EMPTY, Math.min(1.6f, 1f + ordinal * 0.06f), volume);
+	}
+
+	private void playOwnBeeHive() {
+		playUi(SoundEvents.BEEHIVE_ENTER, 1f, spectating ? BEEHIVE_OPPONENT_VOLUME : BEEHIVE_SELF_VOLUME);
+	}
+
+	private void playOpponentBeeHive() {
+		playUi(SoundEvents.BEEHIVE_ENTER, 1f, BEEHIVE_OPPONENT_VOLUME);
+	}
+
+	private static void playIce(int index, int breaks, float volume) {
 		int column = index % MinigameConfig.SIZE;
 		float pitch = 0.85f + column * 0.04f;
-		playUi(SoundEvents.GLASS_HIT, pitch, 0.6f);
+		playUi(SoundEvents.GLASS_HIT, pitch, volume);
 		if (breaks >= MinigameConfig.ICE_BREAKS) {
-			playUi(SoundEvents.GLASS_BREAK, pitch, 0.6f);
+			playUi(SoundEvents.GLASS_BREAK, pitch, volume);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package snownee.fruits.minigame.level;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.util.RandomSource;
@@ -20,7 +21,7 @@ import snownee.fruits.minigame.goal.MinigameGoal;
  * 难度设计：预算在 1–{@link MinigameLevelTuning#RAMP_FLOOR} 层线性上升后封顶；
  * 上升段要求难度和贴近预算以驱动爬升，封顶后下限固定为 {@link MinigameLevelTuning#CAPPED_MIN_SUM}。
  * 约束：难度和落在 [{@code low}, budget]，且同层过难（≥75）目标不超过 1 个。
- * 正常情况走有界拒绝采样，失败时回退到确定性穷举，尽量满足约束。
+ * 模板按权重无放回抽取；正常情况走有界拒绝采样，失败时回退到确定性穷举，尽量满足约束。
  */
 public final class MinigameLevelGenerator {
 	/** splitmix64 使用的黄金比例常数。 */
@@ -49,10 +50,10 @@ public final class MinigameLevelGenerator {
 		List<GoalTemplate> all = GoalTemplates.all();
 		for (int attempt = 0; attempt < MinigameLevelTuning.MAX_ATTEMPTS; attempt++) {
 			List<GoalTemplate> picked = pick(random, all);
-			if (conflicts(picked)) {
+			List<MinigameGoal> goals = build(picked, random, level);
+			if (conflicts(goals)) {
 				continue;
 			}
-			List<MinigameGoal> goals = build(picked, random, level);
 			int[] difficulties = MinigameDifficulty.evaluate(goals);
 			int sum = sum(difficulties);
 			if (sum < low || sum > budget) {
@@ -88,10 +89,10 @@ public final class MinigameLevelGenerator {
 			for (int j = i + 1; j < all.size(); j++) {
 				for (int k = j + 1; k < all.size(); k++) {
 					List<GoalTemplate> picked = List.of(all.get(i), all.get(j), all.get(k));
-					if (conflicts(picked)) {
+					List<MinigameGoal> goals = build(picked, random, floor);
+					if (conflicts(goals)) {
 						continue;
 					}
-					List<MinigameGoal> goals = build(picked, random, floor);
 					int[] difficulties = MinigameDifficulty.evaluate(goals);
 					int sum = sum(difficulties);
 					int violations = (sum < low ? 1 : 0)
@@ -108,14 +109,33 @@ public final class MinigameLevelGenerator {
 		return best;
 	}
 
-	/** 无放回地抽取 GOAL_COUNT 个模板，顺序由随机源决定。 */
+	/** 按权重无放回地抽取 GOAL_COUNT 个模板，顺序由随机源决定。 */
 	private static List<GoalTemplate> pick(RandomSource random, List<GoalTemplate> all) {
 		List<GoalTemplate> pool = new ArrayList<>(all);
 		List<GoalTemplate> picked = new ArrayList<>(MinigameConfig.GOAL_COUNT);
 		for (int i = 0; i < MinigameConfig.GOAL_COUNT; i++) {
-			picked.add(pool.remove(random.nextInt(pool.size())));
+			picked.add(pickOne(random, pool));
 		}
 		return picked;
+	}
+
+	/** 按 {@link GoalTemplate#weight()} 加权抽取一个模板并从池中移除。 */
+	private static GoalTemplate pickOne(RandomSource random, List<GoalTemplate> pool) {
+		int total = 0;
+		for (GoalTemplate template : pool) {
+			total += template.weight();
+		}
+		int roll = random.nextInt(total);
+		Iterator<GoalTemplate> iterator = pool.iterator();
+		while (iterator.hasNext()) {
+			GoalTemplate template = iterator.next();
+			roll -= template.weight();
+			if (roll < 0) {
+				iterator.remove();
+				return template;
+			}
+		}
+		throw new IllegalStateException("Unreachable weighted pick");
 	}
 
 	/** 按模板生成具体目标，消耗同一个随机源以保证可复现。 */
@@ -127,11 +147,11 @@ public final class MinigameLevelGenerator {
 		return List.copyOf(goals);
 	}
 
-	/** 三元组内是否存在硬冲突。 */
-	private static boolean conflicts(List<GoalTemplate> picked) {
-		for (int i = 0; i < picked.size(); i++) {
-			for (int j = i + 1; j < picked.size(); j++) {
-				if (picked.get(i).conflictsWith(picked.get(j))) {
+	/** 目标之间是否存在硬冲突（实例层面，因为棋子可能在生成时才随机确定）。 */
+	private static boolean conflicts(List<MinigameGoal> goals) {
+		for (int i = 0; i < goals.size(); i++) {
+			for (int j = i + 1; j < goals.size(); j++) {
+				if (MinigameDifficulty.conflicts(goals.get(i), goals.get(j))) {
 					return true;
 				}
 			}

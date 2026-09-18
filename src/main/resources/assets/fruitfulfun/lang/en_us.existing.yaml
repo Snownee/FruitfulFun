@@ -128,7 +128,7 @@ gui.fruitfulfun.minigame.rule.spawn_piece: 'Every clear spawns %3$s %4$s for eac
 gui.fruitfulfun.minigame.rule.spawn_piece_low: 'After each clear, spawn 1 %1$s, up to %2$s %1$s at a time'
 gui.fruitfulfun.minigame.rule.scatter_piece: 'At the start, adds one %s'
 gui.fruitfulfun.minigame.rule.beehive: 'At the start, adds one %1$s and one %2$s'
-gui.fruitfulfun.minigame.rule.fill_piece: 'Turns some cells on the board into %s.'
+gui.fruitfulfun.minigame.rule.fill_piece: 'Turns some cells on the board into special pieces.'
 gui.fruitfulfun.minigame.rule.large_fruit: 'At the start, adds %s large fruits'
 gui.fruitfulfun.minigame.rule.no_diagonal: 'Lines cannot connect diagonally'
 gui.fruitfulfun.minigame.rule.place_piece: 'Clearing a line of %1$s or more places one %2$s at the %1$s position'
@@ -165,7 +165,11 @@ gui.fruitfulfun.minigame.piece.large_cherry.effect: 'Needs a long enough line to
 gui.fruitfulfun.minigame.piece.large_chorus.effect: 'Needs a long enough line to link; counts as a Chorus Fruit when cleared.'
 gui.fruitfulfun.minigame.piece.large_golden_apple.effect: 'Needs a long enough line to link; counts as a Golden Apple when cleared, and links with any fruit.'
 gui.fruitfulfun.minigame.goals_result: 'Goals: %s/%s'
+gui.fruitfulfun.minigame.flower_pot.prompt: Want to play Fruit Draw?
+gui.fruitfulfun.minigame.flower_pot.play: '[Play]'
+gui.fruitfulfun.minigame.flower_pot.play.hover: Click to start a solo game.
 command.fruitfulfun.minigame.started: 'Fruit Draw started! Drag across 3 or more connected fruits of the same kind to clear them.'
+command.fruitfulfun.minigame.soloLimit: You can only start %s solo game(s) each in-game day. Come back tomorrow!
 command.fruitfulfun.minigame.invited: 'Invitation sent to %s.'
 command.fruitfulfun.minigame.inviteReceived: '%s invited you to a Fruit Draw match.'
 command.fruitfulfun.minigame.acceptButton: '[Accept]'
@@ -328,6 +332,8 @@ death.attack.fruitfulfun.explosion.player: '%1$s was blown up by %2$s''s pomegra
 death.attack.fruitfulfun.explosion.player.item: '%1$s was blown up by %2$s using %3$s'
 container.fruitfulfun.brewer: Brewer
 fruitfulfun.config.geneticsDifficulty.desc: Easy - Real gene names will be shown as preset.
+fruitfulfun.config.minigame.soloPerDay: Solo Games Per Day
+fruitfulfun.config.minigame.soloPerDay.desc: Maximum number of solo games a non-operator player can start each in-game day. Set to 0 to disable.
 
 fruitfulfun.beeName: '%s %s'
 fruitfulfun.beeName.0: Acacia

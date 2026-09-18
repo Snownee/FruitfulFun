@@ -60,8 +60,6 @@ public final class MinigameLevelTuning {
 	public static final int LARGE_FRUIT_BASE = 22;
 	/** 清除巨大水果：每个巨大水果贡献的难度。 */
 	public static final int LARGE_FRUIT_PER_COUNT = 20;
-	/** 打碎全部冰块的固定难度。 */
-	public static final int BREAK_ALL_BASE = 82;
 
 	/** 被视为“长连线”的连线长度阈值，用于与“禁止斜向”的上下文修正搭配。 */
 	public static final int LONG_LINE_LENGTH = 6;
@@ -71,8 +69,6 @@ public final class MinigameLevelTuning {
 	// —— 上下文的难度修正 ——
 	/** 关卡中存在“禁止斜向”规则时，长连线类目标追加的难度。 */
 	public static final int DELTA_NO_DIAGONAL_LONG_LINE = 15;
-	/** 某目标所需棋子被另一目标的池移除规则移除时的追加难度。 */
-	public static final int DELTA_MISSING_REQUIRED_PIECE = 20;
 	/** 三个目标所需总消除量超出步数预算时的追加难度。 */
 	public static final int DELTA_MOVE_BUDGET_OVERFLOW = 10;
 	/** 两个目标需要同一种棋子时，可一并推进，双方各减的难度。 */

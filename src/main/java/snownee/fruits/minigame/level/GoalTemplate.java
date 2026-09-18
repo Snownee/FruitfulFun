@@ -1,9 +1,6 @@
 package snownee.fruits.minigame.level;
 
-import org.jspecify.annotations.Nullable;
-
 import net.minecraft.util.RandomSource;
-import snownee.fruits.minigame.PieceType;
 import snownee.fruits.minigame.goal.MinigameGoal;
 
 /**
@@ -11,6 +8,7 @@ import snownee.fruits.minigame.goal.MinigameGoal;
  * <p>
  * 之前的 {@code SoloGoals} 是 14 个固定实例，无法随层数变化；这里改为模板，
  * magnitude（消除数量、连线长度、次数等）随层数在区间内取值，从而支持难度爬升。
+ * 模板携带 {@link #weight()}，供生成器做加权无放回抽取。
  */
 public final class GoalTemplate {
 	/** 具体目标的构造入口；{@code floor} 用于决定 magnitude 的取值区间。 */
@@ -20,20 +18,13 @@ public final class GoalTemplate {
 
 	/** 模板标识，仅用于调试与可读性。 */
 	private final String id;
-	/** 该目标依赖的棋子类型；用于“同棋子重叠”的难度修正，无则为 null。 */
-	private final @Nullable PieceType requiredPiece;
-	/** 该目标会从随机池中移除的棋子类型；用于判定与其他模板的硬冲突，不涉及则为 null。 */
-	private final @Nullable PieceType removedFromPool;
+	/** 抽取权重，越大越容易被选中。 */
+	private final int weight;
 	private final Factory factory;
 
-	GoalTemplate(
-			String id,
-			@Nullable PieceType requiredPiece,
-			@Nullable PieceType removedFromPool,
-			Factory factory) {
+	GoalTemplate(String id, int weight, Factory factory) {
 		this.id = id;
-		this.requiredPiece = requiredPiece;
-		this.removedFromPool = removedFromPool;
+		this.weight = weight;
 		this.factory = factory;
 	}
 
@@ -41,20 +32,11 @@ public final class GoalTemplate {
 		return id;
 	}
 
-	public @Nullable PieceType requiredPiece() {
-		return requiredPiece;
+	public int weight() {
+		return weight;
 	}
 
 	public MinigameGoal build(RandomSource random, int floor) {
 		return factory.build(random, floor);
-	}
-
-	/**
-	 * 判定两个模板能否共存。当前仅处理“一方移除了另一方必需棋子”的硬冲突，
-	 * 其余相互影响交由 {@link MinigameDifficulty} 以难度增减的方式表达。
-	 */
-	public boolean conflictsWith(GoalTemplate other) {
-		return removedFromPool != null && removedFromPool == other.requiredPiece
-				|| other.removedFromPool != null && other.removedFromPool == requiredPiece;
 	}
 }

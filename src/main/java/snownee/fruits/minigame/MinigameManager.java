@@ -14,6 +14,7 @@ import org.jspecify.annotations.Nullable;
 import com.google.common.collect.Maps;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.SimpleMenuProvider;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.minigame.level.LevelPlan;
 import snownee.fruits.minigame.level.MinigameLevelGenerator;
 import snownee.fruits.minigame.network.CBattleTableActionPacket;
@@ -37,6 +39,7 @@ public final class MinigameManager {
 	private static int durationSeconds = MinigameConfig.TIME_LIMIT_SECONDS;
 
 	private static final Map<UUID, MinigameSession> PENDING_REWARDS = Maps.newHashMap();
+	private static final Map<UUID, SoloUsage> SOLO_USAGE = Maps.newHashMap();
 
 	private MinigameManager() {
 	}
@@ -56,6 +59,9 @@ public final class MinigameManager {
 	public static @Nullable LevelPlan startSolo(ServerPlayer player, int floor, long seed) {
 		MinigameSession session = SESSIONS.get(player.getUUID());
 		if (session == null || session.isFinished()) {
+			if (!tryConsumeSolo(player)) {
+				return null;
+			}
 			LevelPlan plan = MinigameLevelGenerator.generate(seed, floor);
 			session = new MinigameSession(player, null, plan);
 			SESSIONS.put(player.getUUID(), session);
@@ -66,8 +72,45 @@ public final class MinigameManager {
 		return null;
 	}
 
+	private static boolean tryConsumeSolo(ServerPlayer player) {
+		if (Commands.hasPermission(Commands.LEVEL_GAMEMASTERS).test(player.createCommandSourceStack())) {
+			return true;
+		}
+		long day = player.level().getOverworldClockTime() / 24000L;
+		SoloUsage usage = SOLO_USAGE.computeIfAbsent(player.getUUID(), $ -> new SoloUsage());
+		if (usage.day != day) {
+			usage.day = day;
+			usage.count = 0;
+		}
+		if (usage.count >= FFCommonConfig.minigameSoloPerDay) {
+			player.sendSystemMessage(Component.translatable(
+					"command.fruitfulfun.minigame.soloLimit",
+					FFCommonConfig.minigameSoloPerDay));
+			return false;
+		}
+		usage.count++;
+		return true;
+	}
+
+	private static final class SoloUsage {
+		private long day = Long.MIN_VALUE;
+		private int count;
+	}
+
 	public static int randomFloor() {
 		return 1 + RandomSource.create().nextInt(10000);
+	}
+
+	public static void promptSolo(ServerPlayer player) {
+		MutableComponent play = Component.translatable("gui.fruitfulfun.minigame.flower_pot.play")
+				.withStyle(style -> style
+						.withColor(ChatFormatting.GREEN)
+						.withClickEvent(new ClickEvent.RunCommand("fruitfulfun minigame solo"))
+						.withHoverEvent(new HoverEvent.ShowText(Component.translatable(
+								"gui.fruitfulfun.minigame.flower_pot.play.hover"))));
+		player.sendSystemMessage(Component.translatable("gui.fruitfulfun.minigame.flower_pot.prompt")
+				.append(Component.literal(" "))
+				.append(play));
 	}
 
 	public static void startSession(ServerPlayer player) {
@@ -425,6 +468,7 @@ public final class MinigameManager {
 	public static void onDisconnect(ServerPlayer player) {
 		UUID id = player.getUUID();
 		PENDING_REWARDS.remove(id);
+		SOLO_USAGE.remove(id);
 		INVITES.remove(id);
 		INVITES.values().removeIf(id::equals);
 		BattleTableBlockEntity table = TABLE_MEMBERS.remove(id);

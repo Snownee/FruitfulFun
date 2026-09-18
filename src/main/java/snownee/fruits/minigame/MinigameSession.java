@@ -62,25 +62,18 @@ public final class MinigameSession {
 	private boolean goalsDone;
 	private boolean cascading;
 	private int cascadeDelay;
+	private int cascadeTicks;
 
 	public MinigameSession(ServerPlayer player) {
-		this(player, null, List.of(), true);
+		this(player, null, List.of(), true, RandomSource.create(), true);
 	}
 
 	public MinigameSession(ServerPlayer player, @Nullable BattleTableBlockEntity table) {
-		this(player, table, List.of(), true);
+		this(player, table, List.of(), true, RandomSource.create(), true);
 	}
 
 	public MinigameSession(ServerPlayer player, @Nullable BattleTableBlockEntity table, LevelPlan plan) {
-		this(player, table, plan.goals(), false, RandomSource.create(plan.boardSeed()));
-	}
-
-	public MinigameSession(
-			ServerPlayer player,
-			@Nullable BattleTableBlockEntity table,
-			List<MinigameGoal> goals,
-			boolean autoStart) {
-		this(player, table, goals, autoStart, RandomSource.create());
+		this(player, table, plan.goals(), false, RandomSource.create(plan.boardSeed()), false);
 	}
 
 	public MinigameSession(
@@ -88,11 +81,12 @@ public final class MinigameSession {
 			@Nullable BattleTableBlockEntity table,
 			List<MinigameGoal> goals,
 			boolean autoStart,
-			RandomSource boardRandom) {
+			RandomSource boardRandom,
+			boolean battle) {
 		this.player = player;
 		this.table = table;
 		this.goals = goals;
-		this.rules = collectRules(goals);
+		this.rules = collectRules(goals, battle);
 		this.allowDiagonal = rules.stream().allMatch(MinigameRule::allowsDiagonal);
 		List<Weighted<PieceType>> pool = new ArrayList<>(PieceType.FRUITS.unwrap());
 		for (MinigameRule rule : rules) {
@@ -111,8 +105,8 @@ public final class MinigameSession {
 		board.fillRandom();
 	}
 
-	private static List<MinigameRule> collectRules(List<MinigameGoal> goals) {
-		List<MinigameRule> rules = new ArrayList<>(MinigameRules.BASE);
+	private static List<MinigameRule> collectRules(List<MinigameGoal> goals, boolean battle) {
+		List<MinigameRule> rules = new ArrayList<>(battle ? MinigameRules.VERSUS : MinigameRules.SINGLE);
 		for (MinigameGoal goal : goals) {
 			rules.addAll(goal.rules());
 		}
@@ -331,6 +325,15 @@ public final class MinigameSession {
 	}
 
 	/**
+	 * @return the animation speed multiplier of the current cascade iteration (1x up to {@link MinigameConfig#CASCADE_MAX_SPEEDUP})
+	 */
+	public float cascadeSpeed() {
+		return Math.min(
+				MinigameConfig.CASCADE_MAX_SPEEDUP,
+				1f + (float) cascadeTicks / MinigameConfig.CASCADE_SPEEDUP_INTERVAL);
+	}
+
+	/**
 	 * @return whether a cascade iteration was performed this tick
 	 */
 	public boolean tickCascade() {
@@ -339,11 +342,13 @@ public final class MinigameSession {
 		}
 		if (cascadeDelay > 0) {
 			cascadeDelay--;
+			cascadeTicks++;
 			return false;
 		}
 		if (moves >= moveLimit) {
 			return false;
 		}
+		cascadeTicks += cascadeDelay;
 		cascadeDelay = MinigameConfig.CASCADE_INTERVAL_TICKS;
 		board.steps().clear();
 		moves++;

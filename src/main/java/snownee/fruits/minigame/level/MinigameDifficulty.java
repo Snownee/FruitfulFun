@@ -24,9 +24,12 @@ import snownee.fruits.minigame.rule.MinigameRule;
  * <ul>
  *     <li>{@code base} 只由目标类型与参数（数量、长度、次数）决定；</li>
  *     <li>规则修正处理目标自身携带规则带来的影响，如“禁止斜向”；</li>
- *     <li>上下文修正处理目标之间的相互作用，如同棋子重叠、池移除必需棋子、步数预算吃紧。</li>
+ *     <li>上下文修正处理目标之间的相互作用，如同棋子重叠、步数预算吃紧。</li>
  * </ul>
  * 评估在生成时静态执行一次，运行期不重估。
+ * <p>
+ * 另外提供 {@link #conflicts(MinigameGoal, MinigameGoal)}，用于判定“一方移除了另一方必需棋子”
+ * 这类近乎不可能的硬冲突（由于模板现在会在运行时随机决定棋子，冲突判定放在实例层面）。
  */
 public final class MinigameDifficulty {
 	private MinigameDifficulty() {
@@ -54,14 +57,8 @@ public final class MinigameDifficulty {
 			PieceType piece = requiredPiece(goal);
 			if (piece != null) {
 				for (int j = 0; j < size; j++) {
-					if (j == i) {
-						continue;
-					}
-					if (requiredPiece(goals.get(j)) == piece) {
+					if (j != i && requiredPiece(goals.get(j)) == piece) {
 						value += MinigameLevelTuning.DELTA_SHARED_PIECE;
-					}
-					if (removesFromPool(goals.get(j), piece)) {
-						value += MinigameLevelTuning.DELTA_MISSING_REQUIRED_PIECE;
 					}
 				}
 			}
@@ -71,6 +68,20 @@ public final class MinigameDifficulty {
 			result[i] = Mth.clamp(value, MinigameLevelTuning.SCALE_MIN, MinigameLevelTuning.SCALE_MAX);
 		}
 		return result;
+	}
+
+	/**
+	 * 判定两个目标是否硬冲突：任一方的池移除规则移除了另一方所需的棋子。
+	 * 这类组合近乎不可能完成，应在生成时直接排除。
+	 */
+	public static boolean conflicts(MinigameGoal first, MinigameGoal second) {
+		return removesRequiredPiece(first, second) || removesRequiredPiece(second, first);
+	}
+
+	/** {@code remover} 是否移除了 {@code requirer} 所需的棋子。 */
+	private static boolean removesRequiredPiece(MinigameGoal remover, MinigameGoal requirer) {
+		PieceType piece = requiredPiece(requirer);
+		return piece != null && removesFromPool(remover, piece);
 	}
 
 	/** 目标自身的基础难度，仅取决于类型与参数。 */
@@ -97,8 +108,9 @@ public final class MinigameDifficulty {
 		} else if (goal instanceof LargeFruitGoal large) {
 			value = MinigameLevelTuning.LARGE_FRUIT_BASE
 					+ large.target() * MinigameLevelTuning.LARGE_FRUIT_PER_COUNT;
-		} else if (goal instanceof BreakAllGoal) {
-			value = MinigameLevelTuning.BREAK_ALL_BASE;
+		} else if (goal instanceof BreakAllGoal breakAll) {
+			// 难度随所选冰块图案自带的值
+			value = breakAll.difficulty();
 		} else {
 			throw new IllegalArgumentException("Unknown goal type: " + goal.getClass());
 		}

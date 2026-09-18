@@ -80,17 +80,20 @@ public class MinigameCommand {
 	}
 
 	private static long randomSeed() {
-		return RandomSource.create().nextLong();
+		return 0;// RandomSource.create().nextLong();
 	}
 
 	private static int solo(CommandSourceStack source, int floor, long seed) throws CommandSyntaxException {
 		ServerPlayer player = source.getPlayerOrException();
 		LevelPlan plan = MinigameManager.startSolo(player, floor, seed);
+		if (plan == null) {
+			return 0;
+		}
 		source.sendSuccess(() -> Component.translatable("command.fruitfulfun.minigame.started"), false);
-		if (plan != null && Commands.hasPermission(Commands.LEVEL_GAMEMASTERS).test(source)) {
+		if (Commands.hasPermission(Commands.LEVEL_GAMEMASTERS).test(source)) {
 			sendPlan(source, plan);
 		}
-		return 0;
+		return 1;
 	}
 
 	private static int plan(CommandSourceStack source, int floor, long seed) {
@@ -130,37 +133,40 @@ public class MinigameCommand {
 		int finalRelaxed = relaxed;
 		boolean finalDeterministic = deterministic;
 		String average = String.format(Locale.ROOT, "%.1f", (double) total / count);
-		source.sendSuccess(() -> Component.translatable(
-				"command.fruitfulfun.minigame.plan.scan",
-				from,
-				to,
-				finalMin,
-				finalMax,
-				average,
-				finalViolations,
-				finalRelaxed,
-				finalDeterministic), false);
+		source.sendSuccess(
+				() -> Component.translatable(
+						"command.fruitfulfun.minigame.plan.scan",
+						from,
+						to,
+						finalMin,
+						finalMax,
+						average,
+						finalViolations,
+						finalRelaxed,
+						finalDeterministic), false);
 		return count;
 	}
 
 	private static void sendPlan(CommandSourceStack source, LevelPlan plan) {
 		boolean relaxed = plan.constraintRelaxed();
-		source.sendSuccess(() -> Component.translatable(
-				"command.fruitfulfun.minigame.plan.header",
-				plan.floor(),
-				plan.seed(),
-				plan.difficulty(),
-				plan.budget()).append(relaxed
+		source.sendSuccess(
+				() -> Component.translatable(
+						"command.fruitfulfun.minigame.plan.header",
+						plan.floor(),
+						plan.seed(),
+						plan.difficulty(),
+						plan.budget()).append(relaxed
 						? Component.translatable("command.fruitfulfun.minigame.plan.relaxed")
 						: Component.empty()), false);
 		List<MinigameGoal> goals = plan.goals();
 		List<Integer> difficulties = plan.goalDifficulties();
 		for (int i = 0; i < goals.size(); i++) {
 			int index = i;
-			source.sendSuccess(() -> Component.translatable(
-					"command.fruitfulfun.minigame.plan.goal",
-					goals.get(index).description(),
-					difficulties.get(index)), false);
+			source.sendSuccess(
+					() -> Component.translatable(
+							"command.fruitfulfun.minigame.plan.goal",
+							goals.get(index).description(),
+							difficulties.get(index)), false);
 		}
 	}
 

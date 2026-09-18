@@ -28,7 +28,8 @@ public record SMinigameSyncPacket(
 		String opponentName,
 		int result,
 		boolean spectating,
-		boolean open) implements CustomPacketPayload {
+		boolean open,
+		float cascadeSpeed) implements CustomPacketPayload {
 	public static final CustomPacketPayload.Type<SMinigameSyncPacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("minigame_sync"));
 
 	private static final StreamCodec<RegistryFriendlyByteBuf, Optional<BoardState>> BOARD = ByteBufCodecs.optional(
@@ -57,6 +58,8 @@ public record SMinigameSyncPacket(
 			SMinigameSyncPacket::spectating,
 			ByteBufCodecs.BOOL,
 			SMinigameSyncPacket::open,
+			ByteBufCodecs.FLOAT,
+			SMinigameSyncPacket::cascadeSpeed,
 			SMinigameSyncPacket::new);
 
 	@Override
@@ -124,7 +127,8 @@ public record SMinigameSyncPacket(
 						session.opponentName(),
 						session.result(),
 						receiver != session.player(),
-						open),
+						open,
+						session.cascadeSpeed()),
 				receiver);
 	}
 }

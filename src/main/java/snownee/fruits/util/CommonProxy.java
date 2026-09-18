@@ -426,6 +426,7 @@ public class CommonProxy implements ModInitializer {
 		MinigameModule.MINIGAME_GOALS_COMPLETED = makeCustomStat(
 				MinigameModule.MINIGAME_GOALS_COMPLETED,
 				StatFormatter.DEFAULT);
+		UseBlockCallback.EVENT.register(MinigameModule::onUseBlock);
 	}
 
 	public static Identifier makeCustomStat(Identifier id, StatFormatter formatter) {

@@ -10,12 +10,16 @@ import snownee.kiwi.config.KiwiConfig;
 @KiwiConfig
 public final class FFCommonConfig {
 
+	@KiwiConfig.Path("market.currencyValues")
 	@ConfigUI.Typed(key = String.class, value = Integer.class)
 	public static Map<String, Integer> currencyValues = Map.of(
 			"minecraft:emerald", 100,
 			"minecraft:emerald_block", 900);
+	@KiwiConfig.Path("market.currencyName")
 	public static String currencyName = "G";
+	@KiwiConfig.Path("market.marketStats")
 	public static boolean marketStats = true;
+	@KiwiConfig.Path("market.marketStatsDays")
 	@KiwiConfig.Range(min = 1, max = 365)
 	public static int marketStatsDays = 30;
 
@@ -117,6 +121,10 @@ public final class FFCommonConfig {
 	// poisonous potato drop: 0.02
 	@KiwiConfig.Path("integration.hauntedHarvestRottenAppleChance")
 	public static float rottenAppleChance = 0.03f;
+
+	@KiwiConfig.Path("minigame.soloPerDay")
+	@KiwiConfig.Range(min = 0)
+	public static int minigameSoloPerDay = 1;
 
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();

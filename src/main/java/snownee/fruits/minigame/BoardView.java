@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.IntConsumer;
 
 import org.joml.Matrix3x2f;
 import org.jspecify.annotations.Nullable;
@@ -72,9 +73,15 @@ public final class BoardView implements PathRules.Board {
 	private boolean allowDiagonal = true;
 	private final long[] iceHitAt = new long[MinigameConfig.CELL_COUNT];
 	private List<Stage> stages = List.of();
+	private IntConsumer clearListener;
+	private Runnable beeHiveListener;
+	private int nextSoundStage;
+	private int clearSoundOrdinal;
+	private boolean beeHiveFired;
 	private long animStart;
 	private long animDuration;
 	private boolean animating;
+	private float playbackSpeed = 1f;
 	private final Set<Integer> locking = new HashSet<>();
 	private final Set<Integer> unlocking = new HashSet<>();
 	private long lockAnimStart;
@@ -95,10 +102,22 @@ public final class BoardView implements PathRules.Board {
 		}
 	}
 
+	public void setClearListener(IntConsumer listener) {
+		clearListener = listener;
+	}
+
+	public void setBeeHiveListener(Runnable listener) {
+		beeHiveListener = listener;
+	}
+
 	public void layout(int x, int y, int cell) {
 		this.x = x;
 		this.y = y;
 		this.cell = cell;
+	}
+
+	public void setPlaybackSpeed(float playbackSpeed) {
+		this.playbackSpeed = Math.max(0.01f, playbackSpeed);
 	}
 
 	public int gridSize() {
@@ -110,7 +129,7 @@ public final class BoardView implements PathRules.Board {
 	}
 
 	public boolean busy() {
-		return animating && Util.getMillis() - animStart < animDuration;
+		return animating && (Util.getMillis() - animStart) * playbackSpeed < animDuration;
 	}
 
 	public void playBeeHint() {
@@ -156,7 +175,7 @@ public final class BoardView implements PathRules.Board {
 			boolean allowDiagonal,
 			boolean animateClear) {
 		this.allowDiagonal = allowDiagonal;
-		if (state == null) {
+		if (state == null && animateClear) {
 			long now = Util.getMillis();
 			for (BoardStep step : steps) {
 				if (step instanceof BoardStep.Ice ice) {
@@ -192,6 +211,9 @@ public final class BoardView implements PathRules.Board {
 			}
 			animStart = Util.getMillis();
 			animating = true;
+			nextSoundStage = 0;
+			clearSoundOrdinal = 0;
+			beeHiveFired = false;
 			if (state == null) {
 				pieces = timeline.result();
 			}
@@ -398,7 +420,7 @@ public final class BoardView implements PathRules.Board {
 			unlocking.clear();
 		}
 		if (animating) {
-			long elapsed = now - animStart;
+			long elapsed = (long) ((now - animStart) * playbackSpeed);
 			if (elapsed < animDuration) {
 				renderStages(graphics, elapsed, lockT);
 			} else {
@@ -415,9 +437,13 @@ public final class BoardView implements PathRules.Board {
 	private void renderStages(GuiGraphicsExtractor graphics, long elapsed, float lockT) {
 		renderBackground(graphics);
 		long acc = 0;
-		for (Stage stage : stages) {
-			if (elapsed < acc + stage.duration()) {
-				float t = (elapsed - acc) / (float) stage.duration();
+		for (int i = 0; i < stages.size(); i++) {
+			Stage stage = stages.get(i);
+			long duration = stage.duration();
+			if (elapsed < acc + duration) {
+				fireClearSounds(i);
+				fireBeeHive(stage, elapsed - acc);
+				float t = (elapsed - acc) / (float) duration;
 				if (stage.beePath() != null) {
 					renderBeeStage(graphics, stage, t, lockT);
 				} else if (stage.squash() != null) {
@@ -429,8 +455,31 @@ public final class BoardView implements PathRules.Board {
 				}
 				return;
 			}
-			acc += stage.duration();
+			fireClearSounds(i);
+			fireBeeHive(stage, duration);
+			acc += duration;
 		}
+	}
+
+	private void fireClearSounds(int activeIndex) {
+		while (nextSoundStage <= activeIndex) {
+			Stage stage = stages.get(nextSoundStage);
+			if (stage.beePath() == null && stage.squash() == null && stage.fromRow() == null) {
+				clearListener.accept(clearSoundOrdinal++);
+			}
+			nextSoundStage++;
+		}
+	}
+
+	private void fireBeeHive(Stage stage, long local) {
+		if (beeHiveFired || stage.beePath() == null || !stage.consumed()) {
+			return;
+		}
+		if (local < stage.duration() - SHRINK_MS) {
+			return;
+		}
+		beeHiveFired = true;
+		beeHiveListener.run();
 	}
 
 	private void renderStatic(GuiGraphicsExtractor graphics, float lockT) {
@@ -438,8 +487,7 @@ public final class BoardView implements PathRules.Board {
 		long now = Util.getMillis();
 		for (int i = 0; i < MinigameConfig.CELL_COUNT; i++) {
 			Piece piece = pieces[i];
-			float sway = pathHighlight.contains(i) || (piece != null && piece.type().fixed()) ? 0f : swayAt(i, now);
-			drawCell(graphics, piece, cellX(i), cellY(i), tileScale() * iceScale(i), lockVisual(i, lockT), sway);
+			drawCell(graphics, piece, cellX(i), cellY(i), tileScale() * iceScale(i), lockVisual(i, lockT), swayFor(i, piece, now));
 		}
 	}
 
@@ -497,15 +545,17 @@ public final class BoardView implements PathRules.Board {
 			clear[index] = true;
 		}
 		float base = tileScale();
+		long now = Util.getMillis();
 		@Nullable Piece[] grid = stage.grid();
 		for (int i = 0; i < MinigameConfig.CELL_COUNT; i++) {
 			float scale = clear[i] ? base * (1f - t) : base;
-			drawCell(graphics, grid[i], cellX(i), cellY(i), scale * iceScale(i), lockVisual(i, lockT));
+			drawCell(graphics, grid[i], cellX(i), cellY(i), scale * iceScale(i), lockVisual(i, lockT), swayFor(i, grid[i], now));
 		}
 	}
 
 	private void renderFallStage(GuiGraphicsExtractor graphics, Stage stage, float t, float lockT) {
 		float scale = tileScale();
+		long now = Util.getMillis();
 		float[] fromRow = Objects.requireNonNull(stage.fromRow());
 		float[] fromCol = stage.fromCol();
 		@Nullable Piece[] grid = stage.grid();
@@ -527,7 +577,8 @@ public final class BoardView implements PathRules.Board {
 						x + Math.round(px * cell),
 						y + Math.round(py * cell),
 						scale * iceScale(index),
-						lockVisual(index, lockT));
+						lockVisual(index, lockT),
+						swayFor(index, piece, now));
 			}
 		}
 	}
@@ -536,6 +587,7 @@ public final class BoardView implements PathRules.Board {
 		renderBackground(graphics);
 		float[] squash = Objects.requireNonNull(stage.squash());
 		float decay = (float) (Math.cos(t * Math.PI) * (1f - t));
+		long now = Util.getMillis();
 		@Nullable Piece[] grid = stage.grid();
 		for (int i = 0; i < MinigameConfig.CELL_COUNT; i++) {
 			drawCell(
@@ -545,16 +597,17 @@ public final class BoardView implements PathRules.Board {
 					cellY(i),
 					tileScale() * iceScale(i),
 					lockVisual(i, lockT),
-					0f,
+					swayFor(i, grid[i], now),
 					squash[i] * decay);
 		}
 	}
 
 	private void renderBeeStage(GuiGraphicsExtractor graphics, Stage stage, float t, float lockT) {
 		renderBackground(graphics);
+		long now = Util.getMillis();
 		@Nullable Piece[] grid = stage.grid();
 		for (int i = 0; i < MinigameConfig.CELL_COUNT; i++) {
-			drawCell(graphics, grid[i], cellX(i), cellY(i), tileScale() * iceScale(i), lockVisual(i, lockT));
+			drawCell(graphics, grid[i], cellX(i), cellY(i), tileScale() * iceScale(i), lockVisual(i, lockT), swayFor(i, grid[i], now));
 		}
 		List<Integer> cells = Objects.requireNonNull(stage.beePath());
 		Piece bee = Objects.requireNonNull(stage.bee());
@@ -723,6 +776,13 @@ public final class BoardView implements PathRules.Board {
 		}
 		float t = elapsed / (float) HINT_MS;
 		return 1f + 0.4f * (1f - Math.abs(2f * t - 1f));
+	}
+
+	private float swayFor(int index, @Nullable Piece piece, long now) {
+		if (pathHighlight.contains(index) || (piece != null && piece.type().fixed())) {
+			return 0f;
+		}
+		return swayAt(index, now);
 	}
 
 	private float swayAt(int index, long now) {

@@ -14,6 +14,14 @@ public record Piece(PieceType type, @Nullable CompoundTag data, @Nullable Compou
 		return new Piece(type, null, null);
 	}
 
+	/** 深拷贝一份，避免把同一份（可能可变的）NBT 数据放置到多个格子或多次对局中。 */
+	public Piece copy() {
+		return new Piece(
+				type,
+				data == null ? null : data.copy(),
+				serverData == null ? null : serverData.copy());
+	}
+
 	public static Piece large(PieceType type, int length) {
 		CompoundTag data = new CompoundTag();
 		data.putInt(LENGTH_KEY, length);

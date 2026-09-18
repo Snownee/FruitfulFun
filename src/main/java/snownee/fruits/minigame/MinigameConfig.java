@@ -18,5 +18,7 @@ public final class MinigameConfig {
 	public static final int MAX_GOAL_RULES = 4;
 	public static final int MAX_SPECTATORS = 64;
 	public static final int CASCADE_INTERVAL_TICKS = 8;
+	public static final int CASCADE_SPEEDUP_INTERVAL = 4;
+	public static final float CASCADE_MAX_SPEEDUP = 3f;
 	public static final int ICE_BREAKS = 3;
 }
