@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.StatType;
@@ -34,7 +33,7 @@ public final class MarketCatalog {
 				continue;
 			}
 			ItemStack stack = new ItemStack(item);
-			if (!isTagged(stack) || !isUnlocked(player, item, owned)) {
+			if (MarketCurrency.unitPrice(stack, player.registryAccess()) <= 0 || !isUnlocked(player, item, owned)) {
 				continue;
 			}
 			result.add(stack);
@@ -43,7 +42,9 @@ public final class MarketCatalog {
 	}
 
 	public static boolean isUnlocked(ServerPlayer player, ItemStack stack) {
-		return !stack.isEmpty() && isTagged(stack) && isUnlocked(player, stack.getItem(), ownedItems(player));
+		return !stack.isEmpty()
+				&& MarketCurrency.unitPrice(stack, player.registryAccess()) > 0
+				&& isUnlocked(player, stack.getItem(), ownedItems(player));
 	}
 
 	private static Set<Item> ownedItems(ServerPlayer player) {
@@ -56,10 +57,6 @@ public final class MarketCatalog {
 			}
 		}
 		return items;
-	}
-
-	private static boolean isTagged(ItemStack stack) {
-		return stack.is(ConventionalItemTags.CROPS) || stack.is(ConventionalItemTags.NATURAL_LOGS);
 	}
 
 	private static boolean isUnlocked(ServerPlayer player, Item item, Set<Item> owned) {

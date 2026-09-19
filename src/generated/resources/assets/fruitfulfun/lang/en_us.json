@@ -499,6 +499,8 @@
   "gui.fruitfulfun.market.cancel": "Cancel",
   "gui.fruitfulfun.market.catalog": "Order",
   "gui.fruitfulfun.market.confirm": "Confirm",
+  "gui.fruitfulfun.market.currency_entry": "%s = %s",
+  "gui.fruitfulfun.market.currency_info": "Deposit currency into the market:",
   "gui.fruitfulfun.market.empty": "Nothing discovered yet",
   "gui.fruitfulfun.market.order_mode.off": "Order: OFF",
   "gui.fruitfulfun.market.order_mode.on": "Order: ON",

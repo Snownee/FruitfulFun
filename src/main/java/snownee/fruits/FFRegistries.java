@@ -11,6 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import snownee.fruits.bee.BeeVariant;
 import snownee.fruits.gadget.scent.ScentType;
+import snownee.fruits.market.MarketPrice;
 import snownee.kiwi.Kiwi;
 
 public class FFRegistries {
@@ -25,6 +26,7 @@ public class FFRegistries {
 	public static final ResourceKey<Registry<ScentType>> SCENT_TYPE_KEY = ResourceKey.createRegistryKey(FruitfulFun.id("scent_type"));
 	public static final MappedRegistry<ScentType> SCENT_TYPE = register(SCENT_TYPE_KEY, ScentType.class, null);
 	public static final ResourceKey<Registry<BeeVariant>> BEE_VARIANT_KEY = ResourceKey.createRegistryKey(FruitfulFun.id("bee_variant"));
+	public static final ResourceKey<Registry<MarketPrice>> MARKET_PRICE_KEY = ResourceKey.createRegistryKey(FruitfulFun.id("market_price"));
 
 	private static <T> MappedRegistry<T> register(ResourceKey<Registry<T>> registryKey, Class<?> clazz, @Nullable Identifier defaultId) {
 		FabricRegistryBuilder<T, ? extends MappedRegistry<T>> builder;

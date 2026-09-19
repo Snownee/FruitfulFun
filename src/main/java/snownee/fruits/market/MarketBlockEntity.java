@@ -96,7 +96,7 @@ public class MarketBlockEntity extends BaseContainerBlockEntity {
 			if (have >= target) {
 				continue;
 			}
-			long unit = MarketCurrency.unitPrice(order);
+			long unit = MarketCurrency.unitPrice(order, level.registryAccess());
 			if (unit <= 0) {
 				continue;
 			}

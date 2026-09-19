@@ -30,6 +30,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FFTreeGrowers;
 import snownee.fruits.FruitType;
 import snownee.fruits.FruitfulFun;
+import snownee.fruits.Hooks;
 
 public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 	public FFDynamicRegistryProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
@@ -41,6 +42,9 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 		entries.addAll(registries.lookupOrThrow(Registries.CONFIGURED_FEATURE));
 		entries.addAll(registries.lookupOrThrow(Registries.PLACED_FEATURE));
 		entries.addAll(registries.lookupOrThrow(FFRegistries.BEE_VARIANT_KEY));
+		if (Hooks.market) {
+			entries.addAll(registries.lookupOrThrow(FFRegistries.MARKET_PRICE_KEY));
+		}
 		addBannerPatterns(entries);
 	}
 
