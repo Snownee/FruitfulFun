@@ -7,6 +7,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.recipe.IRecipeLookup;
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -46,6 +47,13 @@ public class FFJEICompat implements IModPlugin {
 		}
 
 		LycheeCompatClient.addInformation(registration::addItemStackInfo);
+	}
+
+	@Override
+	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+		if (Hooks.gadget) {
+			registration.addCraftingStation(RecipeTypes.BREWING, GadgetModule.BREWER.get());
+		}
 	}
 
 	@Override

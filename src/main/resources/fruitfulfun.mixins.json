@@ -98,6 +98,7 @@
 		"haunt.EntityRendererMixin",
 		"haunt.LocalPlayerMixin",
 		"haunt.RemotePlayerMixin",
+		"jei.RecipeTransferManagerMixin",
 		"ritual.EntityRendererMixin",
 		"vac.LivingEntitySoundMixin",
 		"vac.MinecraftMixin"
