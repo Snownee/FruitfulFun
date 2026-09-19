@@ -47,13 +47,13 @@ import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BrewingStandBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.duck.FFBrewingStand;
+import snownee.fruits.gadget.brewer.BrewerBlock;
 import snownee.fruits.gadget.brewer.RemoteBrewerContainerData;
 import snownee.fruits.gadget.crafter.BuzzyCrafterBlock;
 import snownee.fruits.gadget.crafter.BuzzyCrafterBlockEntity;
@@ -217,7 +217,7 @@ public class GadgetModule extends AbstractModule {
 			RainDetectorBlockEntity::new,
 			RainDetectorBlock.class);
 	@KiwiModule.Category(value = Categories.FUNCTIONAL_BLOCKS, after = "brewing_stand")
-	public static final BlockObject<Block> BREWER = block(BrewingStandBlock::new, () -> Blocks.BREWING_STAND);
+	public static final BlockObject<Block> BREWER = block(BrewerBlock::new, () -> Blocks.BREWING_STAND);
 	@KiwiModule.Name("brewer")
 	public static final KiwiGO<MenuType<BrewingStandMenu>> BREWER_MENU = go(() -> new MenuType<>(
 			(containerId, inventory) -> new BrewingStandMenu(
