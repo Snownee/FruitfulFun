@@ -77,6 +77,7 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentedCandleBlock;
+import snownee.fruits.minigame.MinigameModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.KiwiModules;
@@ -125,6 +126,18 @@ public class FFBlockTags extends FabricTagsProvider.BlockTagsProvider {
 		valueLookupBuilder(BlockTags.WOODEN_DOORS).add(CITRUS_DOOR.get(), REDLOVE_DOOR.get(), REDLOVE_SLIDING_DOOR.get());
 		valueLookupBuilder(ConventionalBlockTags.RELOCATION_NOT_SUPPORTED).add(REDLOVE_SLIDING_DOOR.get());
 		valueLookupBuilder(BlockTags.FLOWER_POTS).add(
+				POTTED_APPLE.get(),
+				POTTED_CITRON.get(),
+				POTTED_GRAPEFRUIT.get(),
+				POTTED_LEMON.get(),
+				POTTED_LIME.get(),
+				POTTED_TANGERINE.get(),
+				POTTED_ORANGE.get(),
+				POTTED_POMELO.get(),
+				POTTED_REDLOVE.get(),
+				POTTED_CHERRY.get(),
+				POTTED_POMEGRANATE.get());
+		valueLookupBuilder(MinigameModule.MINIGAME_TRIGGER).add(
 				POTTED_APPLE.get(),
 				POTTED_CITRON.get(),
 				POTTED_GRAPEFRUIT.get(),

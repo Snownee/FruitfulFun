@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -93,6 +94,8 @@ import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentType;
 import snownee.fruits.gadget.vac.VacGunItem;
+import snownee.fruits.minigame.MinigameManager;
+import snownee.fruits.minigame.MinigameModule;
 import snownee.fruits.guide.BookFFConditionTypes;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.Kiwi;
@@ -125,6 +128,9 @@ public class CommonProxy implements ModInitializer {
 		}
 		if (Hooks.farmersdelight) {
 			addBuiltinPack(modContainer, "farmersdelight");
+		}
+		if (Hooks.market) {
+			addBuiltinPack(modContainer, "market");
 		}
 		if (FFCommonConfig.villageAppleTreeWorldGen) {
 			addBuiltinPack(modContainer, "apple_tree_in_village");
@@ -279,10 +285,11 @@ public class CommonProxy implements ModInitializer {
 		}
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			if (Hooks.gadget) {
-				dispatcher.register(FFCommands.register());
-			}
+			dispatcher.register(FFCommands.register());
 		});
+
+		ServerTickEvents.END_SERVER_TICK.register(server -> MinigameManager.tick());
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> MinigameManager.onDisconnect(handler.getPlayer()));
 
 		LycheeCompat.init();
 	}
@@ -409,6 +416,17 @@ public class CommonProxy implements ModInitializer {
 			level.playSound(null, blockPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
 			level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
 		}
+	}
+
+	public static void initMinigameModule() {
+		MinigameModule.MINIGAME_PIECES_CLEARED = makeCustomStat(
+				MinigameModule.MINIGAME_PIECES_CLEARED,
+				StatFormatter.DEFAULT);
+		MinigameModule.MINIGAME_LINE_CLEARS = makeCustomStat(MinigameModule.MINIGAME_LINE_CLEARS, StatFormatter.DEFAULT);
+		MinigameModule.MINIGAME_GOALS_COMPLETED = makeCustomStat(
+				MinigameModule.MINIGAME_GOALS_COMPLETED,
+				StatFormatter.DEFAULT);
+		UseBlockCallback.EVENT.register(MinigameModule::onUseBlock);
 	}
 
 	public static Identifier makeCustomStat(Identifier id, StatFormatter formatter) {

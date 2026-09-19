@@ -104,6 +104,12 @@ import snownee.fruits.gadget.crafter.BuzzyCrafterRenderer;
 import snownee.fruits.gadget.vac.AirVortexParticle;
 import snownee.fruits.gadget.vac.ItemProjectileColor;
 import snownee.fruits.gadget.vac.ItemProjectileRenderer;
+import snownee.fruits.minigame.FruitBoardScreen;
+import snownee.fruits.minigame.network.SMinigameSyncPacket;
+import snownee.fruits.market.MarketModule;
+import snownee.fruits.market.MarketScreen;
+import snownee.fruits.market.network.SMarketCatalogPacket;
+import snownee.fruits.market.network.SMarketSyncPacket;
 import snownee.kiwi.BlockObject;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.client.TooltipEvents;
@@ -145,6 +151,28 @@ public class ClientProxy implements ClientModInitializer {
 	public static void openEditGeneNameScreen() {
 		Minecraft.getInstance().setScreen(new EditGeneNameScreen());
 	}
+
+	public static void openMinigameScreen(SMinigameSyncPacket packet) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.screen instanceof FruitBoardScreen screen) {
+			screen.update(packet);
+		} else if (packet.open()) {
+			minecraft.setScreen(new FruitBoardScreen(packet, packet.spectating()));
+		}
+	}
+
+	public static void openMarketCatalog(SMarketCatalogPacket packet) {
+		if (Minecraft.getInstance().screen instanceof MarketScreen screen) {
+			screen.setCatalog(packet.pos(), packet.catalog(), packet.money(), packet.orders());
+		}
+	}
+
+	public static void updateMarket(SMarketSyncPacket packet) {
+		if (Minecraft.getInstance().screen instanceof MarketScreen screen && screen.pos().equals(packet.pos())) {
+			screen.setSync(packet.money(), packet.orders());
+		}
+	}
+
 
 	public static @Nullable ItemProjectileColor getItemProjectileColor(ItemStack itemStack) {
 		ItemProjectileColor color;
@@ -311,6 +339,10 @@ public class ClientProxy implements ClientModInitializer {
 
 		if (Hooks.ritual) {
 			ActionRenderer.register(BeeModule.TRANSFORM_BEES.getOrCreate(), new TransformBeesRenderer());
+		}
+
+		if (Hooks.market) {
+			MenuScreens.register(MarketModule.MARKET_MENU.getOrCreate(), MarketScreen::new);
 		}
 	}
 

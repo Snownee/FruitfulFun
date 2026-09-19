@@ -98,11 +98,13 @@ public class FFItemTags extends FabricTagsProvider.ItemTagsProvider {
 
 		var fruits = valueLookupBuilder(ConventionalItemTags.FRUIT_FOODS);
 		var citrusFruits = valueLookupBuilder(CITRUS_FRUITS);
+		var crops = valueLookupBuilder(ConventionalItemTags.CROPS);
 		var villagerPicksUp = valueLookupBuilder(ItemTags.VILLAGER_PICKS_UP);
 		FFRegistries.FRUIT_TYPE.forEach($ -> {
 			if (CITRUS_LOG.is($.log.get())) {
 				TagKey<Item> tagKey = itemTag("c:crops/%s".formatted(BuiltInRegistries.ITEM.getKey($.fruit.get()).getPath()));
 				citrusFruits.addTag(tagKey);
+				crops.addTag(tagKey);
 				valueLookupBuilder(tagKey).add($.fruit.get());
 			} else {
 				fruits.add($.fruit.get());
@@ -113,6 +115,9 @@ public class FFItemTags extends FabricTagsProvider.ItemTagsProvider {
 		valueLookupBuilder(itemTag("c:crops/apple")).add(Items.APPLE, REDLOVE.get());
 		valueLookupBuilder(itemTag("c:crops/cherry")).add(CHERRY.get());
 		valueLookupBuilder(itemTag("c:crops/pomegranate")).add(POMEGRANATE.asItem());
+		crops.addTag(itemTag("c:crops/apple"))
+				.addTag(itemTag("c:crops/cherry"))
+				.addTag(itemTag("c:crops/pomegranate"));
 		valueLookupBuilder(ItemTags.FOX_FOOD).addTag(ConventionalItemTags.FRUIT_FOODS);
 		getOrCreateRawBuilder(ItemTags.PANDA_FOOD).addOptionalElement(RICE_WITH_FRUITS.key());
 		valueLookupBuilder(ConventionalItemTags.EDIBLE_WHEN_PLACED_FOODS).addOptional(CHORUS_FRUIT_PIE.get().asItem());
