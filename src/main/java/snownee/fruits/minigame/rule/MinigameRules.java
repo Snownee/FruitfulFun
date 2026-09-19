@@ -4,7 +4,7 @@ import java.util.List;
 
 public final class MinigameRules {
 	public static final List<MinigameRule> SINGLE = List.of(
-			new LootboxRule(10),
+			new LootboxRule(14),
 			new FinaleRule());
 	public static final List<MinigameRule> VERSUS = List.of(
 			new LockOpponentRule(4),
