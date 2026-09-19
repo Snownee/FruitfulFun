@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public class MixinPlugin implements IMixinConfigPlugin {
 	private boolean supp;
 	private boolean bz;
+	private boolean jei;
 
 	private static boolean isLoaded(String modId) {
 		return FabricLoader.getInstance().isModLoaded(modId);
@@ -22,6 +23,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 	public void onLoad(String mixinPackage) {
 		supp = isLoaded("supplementaries");
 		bz = isLoaded("the_bumblezone");
+		jei = isLoaded("jei");
 	}
 
 	@Override
@@ -36,6 +38,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
 		}
 		if (mixinClassName.startsWith("snownee.fruits.mixin.bz.")) {
 			return bz;
+		}
+		if (mixinClassName.startsWith("snownee.fruits.mixin.jei.")) {
+			return jei;
 		}
 		return true;
 	}
