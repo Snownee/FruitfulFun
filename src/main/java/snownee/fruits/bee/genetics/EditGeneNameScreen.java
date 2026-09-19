@@ -28,7 +28,7 @@ public class EditGeneNameScreen extends Screen {
 
 	@Override
 	protected void init() {
-		FFPlayer player = Objects.requireNonNull(FFPlayer.of(Minecraft.getInstance().player));
+		FFPlayer player = FFPlayer.of(Objects.requireNonNull(Minecraft.getInstance().player));
 		int x = width / 2;
 		int y = height / 2 - 10;
 		List<String> values = player.fruits$getGeneNames().keySet().stream().sorted().toList();
@@ -56,7 +56,7 @@ public class EditGeneNameScreen extends Screen {
 	}
 
 	private void updateValues(String code) {
-		FFPlayer player = Objects.requireNonNull(FFPlayer.of(Minecraft.getInstance().player));
+		FFPlayer player = FFPlayer.of(Objects.requireNonNull(Minecraft.getInstance().player));
 		Objects.requireNonNull(nameField).setValue(player.fruits$getGeneName(code));
 		Objects.requireNonNull(descField).setValue(player.fruits$getGeneDesc(code));
 		changed = false;
@@ -65,9 +65,9 @@ public class EditGeneNameScreen extends Screen {
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		super.extractRenderState(graphics, mouseX, mouseY, a);
-		graphics.centeredText(font, title, width / 2, 20, 0xFFFFFF);
-		graphics.text(font, Objects.requireNonNull(nameField).getMessage(), nameField.getX(), nameField.getY() - 14, 0xFFFFFF);
-		graphics.text(font, Objects.requireNonNull(descField).getMessage(), descField.getX(), descField.getY() - 14, 0xFFFFFF);
+		graphics.centeredText(font, title, width / 2, 20, 0xFFFFFFFF);
+		graphics.text(font, Objects.requireNonNull(nameField).getMessage(), nameField.getX(), nameField.getY() - 14, 0xFFFFFFFF);
+		graphics.text(font, Objects.requireNonNull(descField).getMessage(), descField.getX(), descField.getY() - 14, 0xFFFFFFFF);
 	}
 
 	@Override

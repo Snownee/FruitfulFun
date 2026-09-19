@@ -21,6 +21,7 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.guide.GuideModule;
+import snownee.fruits.market.MarketModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
@@ -99,6 +100,9 @@ public final class FFCreativeTab extends AbstractModule {
 				add(GadgetModule.BUZZY_CRAFTER);
 				add(GadgetModule.BUZZY_SHIELD);
 				addByTemplate("*_candle");
+			}
+			if (Hooks.market) {
+				add(MarketModule.MARKET);
 			}
 		}
 

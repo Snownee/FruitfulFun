@@ -1,0 +1,15 @@
+package snownee.fruits.minigame.rule;
+
+import java.util.List;
+
+public final class MinigameRules {
+	public static final List<MinigameRule> SINGLE = List.of(
+			new LootboxRule(14),
+			new FinaleRule());
+	public static final List<MinigameRule> VERSUS = List.of(
+			new LockOpponentRule(4),
+			new FinaleRule());
+
+	private MinigameRules() {
+	}
+}

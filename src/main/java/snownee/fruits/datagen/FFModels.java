@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.properties.conditional.IsUsingItem;
 import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
@@ -47,6 +48,9 @@ import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentedCandleBlock;
 import snownee.fruits.guide.GuideModule;
+import snownee.fruits.market.MarketBlock;
+import snownee.fruits.market.MarketModule;
+import snownee.fruits.minigame.MinigameModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.ItemObject;
 
@@ -152,6 +156,16 @@ public class FFModels extends FabricModelProvider {
 		createCandle(generators, GadgetModule.PEACE_CANDLE.get());
 //		createCandle(generators, GadgetModule.HEAVY_CANDLE.get());
 		generators.createHorizontallyRotatedBlock(GadgetModule.BUZZY_CRAFTER.get(), TexturedModel.ORIENTABLE);
+		generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(
+				MinigameModule.BATTLE_TABLE.get(),
+				plainVariant(ModelLocationUtils.getModelLocation(Blocks.CRAFTING_TABLE))));
+		generators.registerSimpleItemModel(MinigameModule.BATTLE_TABLE.get(),
+				ModelLocationUtils.getModelLocation(Blocks.CRAFTING_TABLE));
+		generators.blockStateOutput.accept(MultiVariantGenerator.dispatch(MarketModule.MARKET.get())
+				.with(PropertyDispatch.initial(MarketBlock.FACING)
+						.generate(facing -> variant(plainModel(ModelLocationUtils.getModelLocation(Blocks.BARREL))
+								.withYRot(barrelRotation(facing))))));
+		generators.registerSimpleItemModel(MarketModule.MARKET.get(), ModelLocationUtils.getModelLocation(Blocks.BARREL));
 		createSlidingDoor(generators, CherryModule.REDLOVE_SLIDING_DOOR.get());
 		generators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(
 				GadgetModule.RAIN_DETECTOR.get(),
@@ -432,5 +446,14 @@ public class FFModels extends FabricModelProvider {
 
 	public static ConditionBuilder condition() {
 		return new ConditionBuilder();
+	}
+
+	private static Quadrant barrelRotation(Direction facing) {
+		return switch (facing) {
+			case EAST -> Quadrant.R90;
+			case SOUTH -> Quadrant.R180;
+			case WEST -> Quadrant.R270;
+			default -> Quadrant.R0;
+		};
 	}
 }

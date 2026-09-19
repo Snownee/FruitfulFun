@@ -75,6 +75,8 @@ import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.guide.GuideModule;
+import snownee.fruits.market.MarketModule;
+import snownee.fruits.minigame.MinigameModule;
 import snownee.fruits.pomegranate.PomegranateModule;
 import snownee.kiwi.KiwiGO;
 import snownee.kiwi.recipe.AlternativesIngredientBuilder;
@@ -150,6 +152,28 @@ public class FFRecipes extends FabricRecipeProvider {
 						.requires(GRAPEFRUIT.get())
 						.unlockedBy("has_grapefruit", has(GRAPEFRUIT.get()))
 						.save(output);
+				shaped(RecipeCategory.DECORATIONS, MinigameModule.BATTLE_TABLE.get())
+						.pattern("PPP")
+						.pattern("CBC")
+						.pattern("C C")
+						.define('P', CoreModule.CITRUS_PLANKS.get())
+						.define('C', Items.COPPER_INGOT)
+						.define('B', Items.BLACK_CONCRETE)
+						.unlockedBy("has_copper", has(Items.COPPER_INGOT))
+						.save(output);
+
+				RecipeOutput marketExporter = withConditions(
+						output,
+						new ModuleLoadedCondition(FruitfulFun.id("market")));
+				shaped(RecipeCategory.DECORATIONS, MarketModule.MARKET.get())
+						.pattern("P P")
+						.pattern("PEP")
+						.pattern("SSS")
+						.define('P', ItemTags.PLANKS)
+						.define('E', Items.EMERALD)
+						.define('S', ItemTags.WOODEN_SLABS)
+						.unlockedBy("has_emerald", has(Items.EMERALD))
+						.save(marketExporter);
 
 				RecipeOutput beeExporter = withConditions(
 						output,
