@@ -499,6 +499,8 @@
 	"gui.fruitfulfun.market.cancel": "取消",
 	"gui.fruitfulfun.market.catalog": "订货",
 	"gui.fruitfulfun.market.confirm": "确定",
+	"gui.fruitfulfun.market.currency_entry": "%s = %s",
+	"gui.fruitfulfun.market.currency_info": "将货币存入市场方块：",
 	"gui.fruitfulfun.market.empty": "尚未发现任何可订购物品",
 	"gui.fruitfulfun.market.order_mode.off": "订货:关",
 	"gui.fruitfulfun.market.order_mode.on": "订货:开",

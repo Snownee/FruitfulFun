@@ -21,6 +21,7 @@ import snownee.fruits.datagen.guide.FruitfulFunBook;
 import snownee.fruits.datagen.guide.RitualMultiblockProvider;
 import snownee.fruits.food.datagen.FoodBlockLoot;
 import snownee.fruits.gadget.datagen.GadgetBlockLoot;
+import snownee.fruits.market.MarketPrices;
 import snownee.fruits.market.datagen.MarketBlockLoot;
 import snownee.fruits.minigame.datagen.MinigameBlockLoot;
 import snownee.fruits.minigame.datagen.MinigameLootTables;
@@ -79,5 +80,8 @@ public class FFDataGen implements DataGeneratorEntrypoint {
 		registryBuilder.add(Registries.CONFIGURED_FEATURE, FFDynamicRegistryProvider::configureConfiguredFeatures);
 		registryBuilder.add(Registries.PLACED_FEATURE, FFDynamicRegistryProvider::configurePlacedFeatures);
 		registryBuilder.add(FFRegistries.BEE_VARIANT_KEY, BeeVariants::bootstrap);
+		if (Hooks.market) {
+			registryBuilder.add(FFRegistries.MARKET_PRICE_KEY, MarketPrices::bootstrap);
+		}
 	}
 }

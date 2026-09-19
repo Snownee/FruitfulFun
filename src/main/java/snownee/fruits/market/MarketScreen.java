@@ -1,7 +1,9 @@
 package snownee.fruits.market;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.jspecify.annotations.Nullable;
@@ -16,13 +18,17 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import snownee.fruits.FFCommonConfig;
 import snownee.fruits.market.network.CSetOrderPacket;
 
 public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
@@ -146,6 +152,10 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		if (catalogOpen || quantityOpen) {
 			return;
 		}
+		if (hoveredSlot != null && hoveredSlot.index == MarketMenu.CURRENCY_SLOT) {
+			graphics.setComponentTooltipForNextFrame(font, currencyTooltip(), mouseX, mouseY);
+			return;
+		}
 		if (hoveredSlot != null && hoveredSlot.index < MarketMenu.MARKET_SLOTS) {
 			ItemStack stack = hoveredSlot.getItem();
 			if (stack.isEmpty()) {
@@ -161,15 +171,39 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		super.extractTooltip(graphics, mouseX, mouseY);
 	}
 
+	private HolderLookup.Provider registries() {
+		return minecraft.level.registryAccess();
+	}
+
 	private List<Component> tooltipFor(ItemStack stack) {
 		List<Component> lines = new ArrayList<>(getTooltipFromContainerItem(stack));
-		long unit = MarketCurrency.unitPrice(stack);
-		lines.add(Component.translatable("gui.fruitfulfun.market.unit_price", MarketCurrency.format(unit)));
-		if (stack.getCount() > 1) {
-			lines.add(Component.translatable(
-					"gui.fruitfulfun.market.total_price",
-					MarketCurrency.format(unit * stack.getCount())));
+		long unit = MarketCurrency.unitPrice(stack, registries());
+		if (unit > 0) {
+			lines.add(Component.translatable("gui.fruitfulfun.market.unit_price", MarketCurrency.format(unit)));
+			if (stack.getCount() > 1) {
+				lines.add(Component.translatable(
+						"gui.fruitfulfun.market.total_price",
+						MarketCurrency.format(unit * stack.getCount())));
+			}
 		}
+		return lines;
+	}
+
+	private List<Component> currencyTooltip() {
+		List<Component> lines = new ArrayList<>();
+		lines.add(Component.translatable("gui.fruitfulfun.market.currency_info"));
+		FFCommonConfig.currencyValues.entrySet().stream()
+				.sorted(Comparator.<Map.Entry<String, Integer>>comparingInt(Map.Entry::getValue)
+						.thenComparing(Map.Entry::getKey))
+				.forEach(entry -> {
+					Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(entry.getKey()));
+					if (item != null) {
+						lines.add(Component.translatable(
+								"gui.fruitfulfun.market.currency_entry",
+								new ItemStack(item).getHoverName(),
+								MarketCurrency.formatCompact(entry.getValue())));
+					}
+				});
 		return lines;
 	}
 
@@ -333,11 +367,6 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 			return true;
 		}
 		return super.charTyped(event);
-	}
-
-	@Override
-	public boolean isPauseScreen() {
-		return false;
 	}
 
 	private void openCatalog(int slot) {
@@ -512,7 +541,7 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		EditBox editBox = Objects.requireNonNull(quantityEdit);
 		editBox.setRectangle(QUANTITY_WIDTH - 40, 18, left + 20, top + 20);
 		editBox.extractRenderState(graphics, mouseX, mouseY, 0);
-		long unit = MarketCurrency.unitPrice(quantityItem);
+		long unit = MarketCurrency.unitPrice(quantityItem, registries());
 		centeredText(
 				graphics,
 				Component.translatable(
