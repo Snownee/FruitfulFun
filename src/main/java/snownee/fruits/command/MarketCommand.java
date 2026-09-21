@@ -11,7 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
@@ -40,7 +40,7 @@ public class MarketCommand {
 		int days = FFCommonConfig.marketStatsDays;
 		MarketSalesData data = MarketSales.data(level);
 		data.prune(day, days);
-		Map<Identifier, Long> totals = data.totals(day, days);
+		Map<ResourceKey<Item>, Long> totals = data.totals(day, days);
 		long total = totals.values().stream().mapToLong(Long::longValue).sum();
 		source.sendSuccess(() -> Component.translatable("command.fruitfulfun.market.sales.total", days, total), false);
 		if (totals.isEmpty()) {
@@ -71,7 +71,7 @@ public class MarketCommand {
 		source.sendSuccess(() -> Component.translatable("command.fruitfulfun.market.sales.total", count, total), false);
 		int shown = 0;
 		for (long d = day; d > day - count; d--) {
-			Map<Identifier, Long> items = data.itemsOf(d);
+			Map<ResourceKey<Item>, Long> items = data.itemsOf(d);
 			if (items.isEmpty()) {
 				continue;
 			}
@@ -91,14 +91,14 @@ public class MarketCommand {
 		return shown;
 	}
 
-	private static List<Map.Entry<Identifier, Long>> sorted(Map<Identifier, Long> map) {
+	private static List<Map.Entry<ResourceKey<Item>, Long>> sorted(Map<ResourceKey<Item>, Long> map) {
 		return map.entrySet().stream()
-				.sorted(Comparator.<Map.Entry<Identifier, Long>>comparingLong(Map.Entry::getValue).reversed())
+				.sorted(Comparator.<Map.Entry<ResourceKey<Item>, Long>>comparingLong(Map.Entry::getValue).reversed())
 				.toList();
 	}
 
-	private static Component itemName(Identifier id) {
-		Item item = BuiltInRegistries.ITEM.getValue(id);
-		return item == null ? Component.literal(id.toString()) : new ItemStack(item).getHoverName();
+	private static Component itemName(ResourceKey<Item> key) {
+		Item item = BuiltInRegistries.ITEM.getValue(key);
+		return item == null ? Component.literal(key.identifier().toString()) : new ItemStack(item).getHoverName();
 	}
 }

@@ -22,8 +22,6 @@ public class MarketMenu extends AbstractContainerMenu {
 	public static final int IMAGE_WIDTH = 196;
 	public static final int IMAGE_HEIGHT = 168;
 
-	private final Container market;
-	private final Container currency;
 	private final @Nullable MarketBlockEntity blockEntity;
 
 	public MarketMenu(int id, Inventory inventory) {
@@ -41,12 +39,10 @@ public class MarketMenu extends AbstractContainerMenu {
 			Container currency,
 			@Nullable MarketBlockEntity blockEntity) {
 		super(MarketModule.MARKET_MENU.get(), id);
-		this.market = market;
-		this.currency = currency;
 		this.blockEntity = blockEntity;
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 9; col++) {
-				addSlot(new Slot(market, col + row * 9, MARKET_X + col * 18, MARKET_Y + row * 18));
+				addSlot(new MarketSlot(market, col + row * 9, MARKET_X + col * 18, MARKET_Y + row * 18));
 			}
 		}
 		addSlot(new CurrencySlot(currency, 0, CURRENCY_X, CURRENCY_Y));
@@ -79,7 +75,7 @@ public class MarketMenu extends AbstractContainerMenu {
 				if (!moveItemStackTo(stack, MARKET_SLOTS + 1, slots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (MarketCurrency.isCurrency(stack) && !slots.get(CURRENCY_SLOT).hasItem()) {
+			} else if (MarketCurrency.isCurrency(stack)) {
 				if (!moveItemStackTo(stack, CURRENCY_SLOT, CURRENCY_SLOT + 1, false)) {
 					return ItemStack.EMPTY;
 				}
@@ -116,6 +112,17 @@ public class MarketMenu extends AbstractContainerMenu {
 		@Override
 		public boolean mayPlace(ItemStack stack) {
 			return MarketCurrency.isCurrency(stack);
+		}
+	}
+
+	public static class MarketSlot extends Slot {
+		public MarketSlot(Container container, int index, int x, int y) {
+			super(container, index, x, y);
+		}
+
+		@Override
+		public boolean mayPlace(ItemStack stack) {
+			return !MarketCurrency.isCurrency(stack);
 		}
 	}
 }

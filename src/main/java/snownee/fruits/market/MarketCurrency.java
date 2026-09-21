@@ -1,5 +1,7 @@
 package snownee.fruits.market;
 
+import org.jspecify.annotations.Nullable;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,10 +27,18 @@ public final class MarketCurrency {
 	}
 
 	public static long unitPrice(ItemStack stack, HolderLookup.Provider registries) {
+		MarketPrice price = findPrice(stack, registries);
+		return price == null ? 0 : price.price();
+	}
+
+	public static @Nullable MarketPrice findPrice(ItemStack stack, HolderLookup.Provider registries) {
 		if (stack.isEmpty()) {
-			return 0;
+			return null;
 		}
-		Holder<Item> item = stack.typeHolder();
+		return findPrice(stack.typeHolder(), registries);
+	}
+
+	public static @Nullable MarketPrice findPrice(Holder<Item> item, HolderLookup.Provider registries) {
 		MarketPrice tagPrice = null;
 		for (Holder.Reference<MarketPrice> holder : registries.lookupOrThrow(FFRegistries.MARKET_PRICE_KEY).listElements().toList()) {
 			MarketPrice price = holder.value();
@@ -36,13 +46,13 @@ public final class MarketCurrency {
 				continue;
 			}
 			if (price.items().unwrap().left().isEmpty()) {
-				return price.price();
+				return price;
 			}
 			if (tagPrice == null) {
 				tagPrice = price;
 			}
 		}
-		return tagPrice == null ? 0 : tagPrice.price();
+		return tagPrice;
 	}
 
 	public static String format(long money) {

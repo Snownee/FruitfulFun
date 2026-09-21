@@ -163,13 +163,13 @@ public class ClientProxy implements ClientModInitializer {
 
 	public static void openMarketCatalog(SMarketCatalogPacket packet) {
 		if (Minecraft.getInstance().screen instanceof MarketScreen screen) {
-			screen.setCatalog(packet.pos(), packet.catalog(), packet.money(), packet.orders());
+			screen.setCatalog(packet.pos(), packet.catalog(), packet.money(), packet.orders(), packet.prices());
 		}
 	}
 
 	public static void updateMarket(SMarketSyncPacket packet) {
 		if (Minecraft.getInstance().screen instanceof MarketScreen screen && screen.pos().equals(packet.pos())) {
-			screen.setSync(packet.money(), packet.orders());
+			screen.setSync(packet.money(), packet.orders(), packet.prices());
 		}
 	}
 

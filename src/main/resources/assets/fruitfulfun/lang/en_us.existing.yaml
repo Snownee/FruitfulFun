@@ -336,6 +336,54 @@ fruitfulfun.config.geneticsDifficulty.desc: Easy - Real gene names will be shown
 fruitfulfun.config.minigame.soloPerDay: Solo Games Per Day
 fruitfulfun.config.minigame.soloPerDay.desc: Maximum number of solo games a non-operator player can start each in-game day. Set to 0 to disable.
 
+fruitfulfun.config.market.dynamicPricing.mode.desc: >-
+  How the market reacts to buying. Disabled - every item always costs its base price; no
+  random fluctuation and no demand effect. SoftResponse - any buying slowly raises the price
+  on a logarithmic curve, so the more that is bought the higher it goes, but even with many
+  players it stays well below the cap and returns to base when buying stops. Incremental -
+  the price rises only while buying is above the recent norm (a rush or new players) and
+  settles back to base once buying returns to normal. Requires marketStats to be true.
+fruitfulfun.config.market.dynamicPricing.defaultVolatility.desc: >-
+  Size of the random daily price wobble. 0.1 makes each item wander within about plus or
+  minus 10% of its demand-based value and drift back toward the middle every day. 0 disables
+  the wobble. Each item's own volatility multiplies this, so an item with volatility 0 never
+  wobbles.
+fruitfulfun.config.market.dynamicPricing.demandHalfLifeDays.desc: >-
+  How long SoftResponse mode remembers purchases, in game days. A purchase still counts for
+  50% after this many days, 25% after twice as long, and so on. Higher values let demand
+  build up over a longer stretch and make prices recover more slowly. SoftResponse only.
+fruitfulfun.config.market.dynamicPricing.softResponseStrength.desc: >-
+  How strongly SoftResponse mode reacts to demand: the multiplier is 1 + strength x
+  ln(1 + demand / scale). Higher means the same amount of buying raises prices more. With the
+  default 0.4, demand equal to the scale raises the price by about 28%.
+fruitfulfun.config.market.dynamicPricing.softDemandScale.desc: >-
+  The demand at which SoftResponse starts to noticeably raise the price (demand is roughly the
+  number of items bought, weighted by demandHalfLifeDays). Smaller values let even modest
+  buying move the price; larger values mean only heavy, sustained buying does.
+fruitfulfun.config.market.dynamicPricing.incrementalShortHalfLifeDays.desc: >-
+  Incremental mode's "current" buying-rate window in game days. Short values (1-2) make the
+  price react quickly to today's buying. Incremental only.
+fruitfulfun.config.market.dynamicPricing.incrementalLongHalfLifeDays.desc: >-
+  Incremental mode's "normal" buying-rate window in game days, used as the baseline. Only
+  buying above this baseline raises the price. Higher values make the baseline adapt more
+  slowly, so a lasting increase in buying keeps prices high for longer before they settle.
+  Incremental only.
+fruitfulfun.config.market.dynamicPricing.incrementalScaleK.desc: >-
+  The excess buying rate (items per day above the baseline) that pushes the price halfway to
+  the cap in Incremental mode, i.e. half of (maxDemandFactor - 1) times the base price.
+  Smaller values make small rushes swing the price a lot; larger values mean only big rushes
+  move it.
+fruitfulfun.config.market.dynamicPricing.maxDemandFactor.desc: >-
+  The highest demand-driven multiplier in Incremental mode. 10 means a full rush can lift a
+  price toward 10x its base (it approaches but never quite reaches it). Incremental only.
+fruitfulfun.config.market.dynamicPricing.minMultiplier.desc: >-
+  The lowest the final price can go, as a fraction of the item's base price (defined in the
+  market data pack). 0.8 means prices never fall below 80% of base.
+fruitfulfun.config.market.dynamicPricing.maxMultiplier.desc: >-
+  The highest the final price can go, as a multiple of the item's base price. 11 means no
+  item can ever cost more than 11x base. This is the hard cap that also limits SoftResponse
+  mode when demand is enormous.
+
 fruitfulfun.beeName: '%s %s'
 fruitfulfun.beeName.0: Acacia
 fruitfulfun.beeName.1: Agave

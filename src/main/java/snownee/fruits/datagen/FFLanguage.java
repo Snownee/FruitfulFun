@@ -50,6 +50,8 @@ public class FFLanguage extends KiwiLanguageProvider {
 		builder.add("gui.fruitfulfun.market.currency_info", "Deposit currency into the market:");
 		builder.add("gui.fruitfulfun.market.currency_entry", "%s = %s");
 		builder.add("gui.fruitfulfun.market.empty", "Nothing discovered yet");
+		builder.add("gui.fruitfulfun.market.trend_up", "+%s%% vs yesterday");
+		builder.add("gui.fruitfulfun.market.trend_down", "-%s%% vs yesterday");
 		builder.add("command.fruitfulfun.market.sales.total", "Total sold in the last %s days: %s");
 		builder.add("command.fruitfulfun.market.sales.item", "%s: %s");
 		builder.add("command.fruitfulfun.market.sales.day", "%s days ago:");

@@ -505,6 +505,8 @@
 	"gui.fruitfulfun.market.order_mode.off": "订货:关",
 	"gui.fruitfulfun.market.order_mode.on": "订货:开",
 	"gui.fruitfulfun.market.total_price": "总价：%s",
+	"gui.fruitfulfun.market.trend_down": "较昨日 -%s%%",
+	"gui.fruitfulfun.market.trend_up": "较昨日 +%s%%",
 	"gui.fruitfulfun.market.unit_price": "单价：%s",
 	"gui.fruitfulfun.minigame": "水果连连连",
 	"gui.fruitfulfun.minigame.boardHeader": "%s：%s   剩余步数：%s",

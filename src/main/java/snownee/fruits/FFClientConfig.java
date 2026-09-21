@@ -19,4 +19,9 @@ public final class FFClientConfig {
 	public static boolean foodStatusEffectTooltip = true;
 	@KiwiConfig.Path("food.specialEffectTooltip")
 	public static boolean foodSpecialEffectTooltip = true;
+
+	@KiwiConfig.Path("market.priceUpColor")
+	public static int marketPriceUpColor = 0xFF5555;
+	@KiwiConfig.Path("market.priceDownColor")
+	public static int marketPriceDownColor = 0x55FF55;
 }
