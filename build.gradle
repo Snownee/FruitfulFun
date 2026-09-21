@@ -186,6 +186,7 @@ publishMods {
         requires("fabric-api")
         requires("kiwi-fabric")
         requires("lychee-fabric")
+        requires("modonomicon")
         optional("jade")
     }
     modrinth {
@@ -197,6 +198,7 @@ publishMods {
         requires("fabric-api")
         requires("kiwi")
         requires("lychee")
+        requires("modonomicon")
         optional("jade")
     }
 }
