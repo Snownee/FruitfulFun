@@ -1,5 +1,6 @@
 package snownee.fruits.market.network;
 
+import java.util.List;
 import java.util.Objects;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,14 +20,20 @@ import snownee.kiwi.network.PayloadContext;
 import snownee.kiwi.network.PlayPacketHandler;
 
 @KiwiPacket
-public record CSetOrderPacket(int slot, ItemStack order) implements CustomPacketPayload {
+public record CSetOrderPacket(List<Change> changes) implements CustomPacketPayload {
 	public static final Type<CSetOrderPacket> TYPE = new Type<>(FruitfulFun.id("market_set_order"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, CSetOrderPacket> STREAM_CODEC = StreamCodec.composite(
+	public static final StreamCodec<RegistryFriendlyByteBuf, Change> CHANGE_CODEC = StreamCodec.composite(
 			ByteBufCodecs.VAR_INT,
-			CSetOrderPacket::slot,
+			Change::slot,
 			ItemStack.OPTIONAL_STREAM_CODEC,
-			CSetOrderPacket::order,
-			CSetOrderPacket::new);
+			Change::order,
+			Change::new);
+	public static final StreamCodec<RegistryFriendlyByteBuf, CSetOrderPacket> STREAM_CODEC = CHANGE_CODEC
+			.apply(ByteBufCodecs.list())
+			.map(CSetOrderPacket::new, CSetOrderPacket::changes);
+
+	public record Change(int slot, ItemStack order) {
+	}
 
 	@Override
 	public Type<CSetOrderPacket> type() {
@@ -45,19 +52,27 @@ public record CSetOrderPacket(int slot, ItemStack order) implements CustomPacket
 				if (blockEntity == null || !menu.stillValid(player)) {
 					return;
 				}
-				int slot = packet.slot();
-				if (slot < 0 || slot >= MarketMenu.MARKET_SLOTS) {
-					return;
+				boolean dirty = false;
+				for (Change change : packet.changes()) {
+					int slot = change.slot();
+					if (slot < 0 || slot >= MarketMenu.MARKET_SLOTS) {
+						continue;
+					}
+					ItemStack order = change.order();
+					if (order.isEmpty()) {
+						blockEntity.setOrderSilent(slot, ItemStack.EMPTY);
+						dirty = true;
+						continue;
+					}
+					if (!MarketCatalog.isUnlocked(player, order)) {
+						continue;
+					}
+					blockEntity.setOrderSilent(slot, order.copyWithCount(Mth.clamp(order.getCount(), 1, order.getMaxStackSize())));
+					dirty = true;
 				}
-				ItemStack order = packet.order();
-				if (order.isEmpty()) {
-					blockEntity.setOrder(slot, ItemStack.EMPTY);
-					return;
+				if (dirty) {
+					blockEntity.changed();
 				}
-				if (!MarketCatalog.isUnlocked(player, order)) {
-					return;
-				}
-				blockEntity.setOrder(slot, order.copyWithCount(Mth.clamp(order.getCount(), 1, order.getMaxStackSize())));
 			});
 		}
 
@@ -68,6 +83,10 @@ public record CSetOrderPacket(int slot, ItemStack order) implements CustomPacket
 	}
 
 	public static void send(int slot, ItemStack order) {
-		KPacketSender.sendToServer(new CSetOrderPacket(slot, order));
+		send(List.of(new Change(slot, order)));
+	}
+
+	public static void send(List<Change> changes) {
+		KPacketSender.sendToServer(new CSetOrderPacket(List.copyOf(changes)));
 	}
 }

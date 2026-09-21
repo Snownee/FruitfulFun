@@ -46,7 +46,7 @@ public class MarketMenu extends AbstractContainerMenu {
 			}
 		}
 		addSlot(new CurrencySlot(currency, 0, CURRENCY_X, CURRENCY_Y));
-		addStandardInventorySlots(inventory, 8, 84);
+		addStandardInventorySlots(inventory, 8, 85);
 		if (blockEntity != null && inventory.player instanceof ServerPlayer serverPlayer) {
 			blockEntity.addViewer(serverPlayer);
 		}

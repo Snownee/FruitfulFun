@@ -3,10 +3,12 @@ package snownee.fruits.market;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
 
@@ -62,6 +64,8 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 	private int catalogSlot = -1;
 	private int catalogScroll;
 	private @Nullable Button orderModeButton;
+
+	private int dragSource = -1;
 
 	private boolean quantityOpen;
 	private int quantitySlot = -1;
@@ -270,6 +274,9 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 				graphics.itemDecorations(font, order, slot.x, slot.y);
 			}
 		}
+		if (dragSource != -1 && slot.index == marketSlotAt(mouseX, mouseY) && slot.index != dragSource) {
+			graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 0x40FFFFFF);
+		}
 	}
 
 	@Override
@@ -294,6 +301,10 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		if (orderMode && !isOverOrderModeButton(event)) {
 			if (hoveredSlot != null && hoveredSlot.index < MarketMenu.MARKET_SLOTS) {
 				if (event.button() == 0) {
+					if (event.hasControlDown() && !orders.get(hoveredSlot.index).isEmpty()) {
+						dragSource = hoveredSlot.index;
+						return true;
+					}
 					openCatalog(hoveredSlot.index);
 					return true;
 				}
@@ -334,7 +345,24 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 			sliderDragging = false;
 			return true;
 		}
+		if (dragSource != -1) {
+			int target = marketSlotAt(event.x(), event.y());
+			if (target != -1 && target != dragSource) {
+				CSetOrderPacket.send(target, orders.get(dragSource).copy());
+			}
+			dragSource = -1;
+			return true;
+		}
 		return super.mouseReleased(event);
+	}
+
+	private int marketSlotAt(double mouseX, double mouseY) {
+		for (Slot slot : menu.slots) {
+			if (slot.index < MarketMenu.MARKET_SLOTS && isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY)) {
+				return slot.index;
+			}
+		}
+		return -1;
 	}
 
 	@Override
@@ -370,10 +398,87 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 			}
 			return true;
 		}
+		if (!isTextFieldFocused()) {
+			if (event.isCopy()) {
+				copyOrders();
+				return true;
+			}
+			if (event.isPaste()) {
+				pasteOrders();
+				return true;
+			}
+		}
 		if (orderMode && isItemMoveKey(event)) {
 			return true;
 		}
 		return super.keyPressed(event);
+	}
+
+	private boolean isTextFieldFocused() {
+		return getFocused() instanceof EditBox editBox && editBox.isFocused();
+	}
+
+	private void copyOrders() {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < MarketMenu.MARKET_SLOTS; i++) {
+			ItemStack order = orders.get(i);
+			if (order.isEmpty()) {
+				continue;
+			}
+			if (builder.length() > 0) {
+				builder.append(", ");
+			}
+			builder.append(order.getCount()).append(' ').append(BuiltInRegistries.ITEM.getKey(order.getItem()));
+		}
+		if (builder.length() == 0) {
+			return;
+		}
+		Objects.requireNonNull(minecraft).keyboardHandler.setClipboard(builder.toString());
+	}
+
+	private void pasteOrders() {
+		String clipboard = Objects.requireNonNull(minecraft).keyboardHandler.getClipboard();
+		Set<Item> unlocked = new HashSet<>();
+		for (ItemStack stack : catalog) {
+			unlocked.add(stack.getItem());
+		}
+		List<ItemStack> parsed = new ArrayList<>(MarketMenu.MARKET_SLOTS);
+		for (String raw : clipboard.split("[,\r\n]+")) {
+			if (parsed.size() >= MarketMenu.MARKET_SLOTS) {
+				break;
+			}
+			String[] parts = raw.trim().split("\\s+", 2);
+			if (parts.length < 2) {
+				continue;
+			}
+			int count;
+			try {
+				count = Integer.parseInt(parts[0]);
+			} catch (NumberFormatException e) {
+				continue;
+			}
+			if (count < 1) {
+				continue;
+			}
+			String idText = parts[1].trim();
+			Identifier id = Identifier.tryParse(idText.indexOf(':') >= 0 ? idText : "minecraft:" + idText);
+			if (id == null) {
+				continue;
+			}
+			Item item = BuiltInRegistries.ITEM.getOptional(id).orElse(null);
+			if (item == null || !unlocked.contains(item)) {
+				continue;
+			}
+			parsed.add(new ItemStack(item, Mth.clamp(count, 1, Math.max(1, item.getDefaultMaxStackSize()))));
+		}
+		if (parsed.isEmpty()) {
+			return;
+		}
+		List<CSetOrderPacket.Change> changes = new ArrayList<>(MarketMenu.MARKET_SLOTS);
+		for (int i = 0; i < MarketMenu.MARKET_SLOTS; i++) {
+			changes.add(new CSetOrderPacket.Change(i, i < parsed.size() ? parsed.get(i) : ItemStack.EMPTY));
+		}
+		CSetOrderPacket.send(changes);
 	}
 
 	private boolean isItemMoveKey(KeyEvent event) {
@@ -446,6 +551,7 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		EditBox editBox = Objects.requireNonNull(quantityEdit);
 		editBox.setValue(Integer.toString(initial));
 		editBox.setFocused(true);
+		setFocused(editBox);
 		editBox.setCursorPosition(editBox.getValue().length());
 		quantityOpen = true;
 		sliderDragging = false;
@@ -458,6 +564,7 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		if (editBox != null) {
 			editBox.setFocused(false);
 		}
+		setFocused(null);
 	}
 
 	private void confirmQuantity() {
