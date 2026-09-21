@@ -1,0 +1,12 @@
+{
+  "type": "modonomicon:text",
+  "condition": {
+    "type": "fruitfulfun:eval",
+    "expression": "CFG('fruitfulfun.common.beehiveTrade')"
+  },
+  "id": "trade",
+  "show_title_separator": true,
+  "sort_number": 2,
+  "text": "book.fruitfulfun.guide.beekeeping.genetics.trade.text",
+  "title": "book.fruitfulfun.guide.beekeeping.genetics.trade.title"
+}

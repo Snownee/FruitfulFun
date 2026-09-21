@@ -1,8 +1,8 @@
 {
   "type": "modonomicon:text",
   "condition": {
-    "type": "fruitfulfun:module_loaded",
-    "module": "fruitfulfun:bee"
+    "type": "fruitfulfun:eval",
+    "expression": "HAS('@fruitfulfun:bee')"
   },
   "id": "planting",
   "show_title_separator": true,

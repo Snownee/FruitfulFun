@@ -1,0 +1,10 @@
+{
+  "type": "modonomicon:smithing_recipe",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "weak_candle",
+  "recipe_id_1": "fruitfulfun:weak_candle",
+  "sort_number": 4,
+  "text": "block.fruitfulfun.weak_candle.tip.shift"
+}

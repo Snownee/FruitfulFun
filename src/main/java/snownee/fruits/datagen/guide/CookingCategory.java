@@ -64,19 +64,17 @@ public class CookingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
 			pageTitle("西柚意式奶冻");
 			pageText(lines("""
-					用西柚、奶油、鸡蛋、明胶与糖制成的丝滑奶冻。
-
-					若安装了农夫乐事（Farmer's Delight），需要使用烹饪锅制作。
+					西柚的酸、奶油的柔、蛋与明胶共同凝成了一轮安静的月亮。传说它诞生于女巫的炼药锅事故：本想做药水，却做出了甜品。入口先苦后甜，像在废弃矿井里找到钻石。村民说，吃下后，雷声都会变轻柔。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:grapefruit_panna_cotta")
-					.withTitle1(context().pageTitle())
-					.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
+			page(
+					"recipe",
+					() -> BookCraftingRecipePageModel.create()
+							.withRecipeId1("fruitfulfun:grapefruit_panna_cotta")
+							.withTitle1(context().pageTitle())
+							.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
 			pageTitle("配方");
 		}
 
@@ -114,16 +112,14 @@ public class CookingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
 			pageTitle("多瑙河之波");
 			pageText(lines("""
-					红心果与巧克力交织的经典蛋糕。
+					可可、鸡蛋与奶油一层层叠成波浪，切面便涌出深红与棕黑的河流。红心果像小舟，在巧克力长河里漂流。有人说，吃下这块蛋糕，能听见彼方的圆舞曲；也有人说，那只是饥饿的幻听。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:donauwelle")
-					.withTitle1(context().pageTitle()));
+			page(
+					"recipe",
+					() -> BookCraftingRecipePageModel.create().withRecipeId1("fruitfulfun:donauwelle").withTitle1(context().pageTitle()));
 			pageTitle("配方");
 		}
 
@@ -162,19 +158,17 @@ public class CookingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
 			pageTitle("蜂蜜柚子茶");
 			pageText(lines("""
-					用柚子与蜂蜜泡成的热饮，饮用后可以清除有害效果。
-
-					若安装了农夫乐事（Farmer's Delight），需要使用烹饪锅制作。
+					蜂蜜与柚子熬成金色热饮，蒸腾起袅袅热气。一口下肚，会让人不自觉想起那个你记忆中蜜蜂在阳光中舞蹈的美好午后。要我说，比起端着牛奶桶豪饮，它才是老派探险家的优雅之选。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:honey_pomelo_tea")
-					.withTitle1(context().pageTitle())
-					.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
+			page(
+					"recipe",
+					() -> BookCraftingRecipePageModel.create()
+							.withRecipeId1("fruitfulfun:honey_pomelo_tea")
+							.withTitle1(context().pageTitle())
+							.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
 			pageTitle("配方");
 		}
 
@@ -212,19 +206,17 @@ public class CookingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
 			pageTitle("水果竹筒饭");
 			pageText(lines("""
-					用竹筒蒸熟的米饭，混入各色水果，清香可口。
-
-					若安装了农夫乐事（Farmer's Delight），需要使用烹饪锅制作。
+					劈开青竹，蒸汽带着果园的耳语涌出。五彩的果肉碎交织在软糯的米粒间，细嚼之下，既有丛林露水般的清新，又有谷物带来的充沛体力。旅人常带一节上路，吃一口，仿佛脚下不是石砖，而是柔软草地。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:rice_with_fruits")
-					.withTitle1(context().pageTitle())
-					.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
+			page(
+					"recipe",
+					() -> BookCraftingRecipePageModel.create()
+							.withRecipeId1("fruitfulfun:rice_with_fruits")
+							.withTitle1(context().pageTitle())
+							.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
 			pageTitle("配方");
 		}
 
@@ -262,16 +254,16 @@ public class CookingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
 			pageTitle("柠檬烤鸡");
 			pageText(lines("""
-					用柠檬与香草慢烤的整鸡，香气扑鼻。
+					整只鸡抹上柠檬汁与香草，在烤架上慢慢转，直到皮脆得像金锭。咬下去，酸香与肉汁一起爆开，像庆典烟花落在舌尖。厨师坚称，关键不是火候，而是对鸡说「晚安」。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:lemon_roast_chicken")
-					.withTitle1(context().pageTitle()));
+			page(
+					"recipe",
+					() -> BookCraftingRecipePageModel.create()
+							.withRecipeId1("fruitfulfun:lemon_roast_chicken")
+							.withTitle1(context().pageTitle()));
 			pageTitle("配方");
 		}
 
@@ -309,16 +301,16 @@ public class CookingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
 			pageTitle("紫颂果派");
 			pageText(lines("""
-					用紫颂果烘烤而成的派，蕴含神秘的力量。
+					末地旅人把紫颂果捣成紫色果泥，裹进酥皮，再送入烤箱烘烤。据说那味道并不十分可口，有人曾声称，吃下它后，脑海里久久回荡着末地生灵的那些含混不清的怨语。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:chorus_fruit_pie")
-					.withTitle1(context().pageTitle()));
+			page(
+					"recipe",
+					() -> BookCraftingRecipePageModel.create()
+							.withRecipeId1("fruitfulfun:chorus_fruit_pie")
+							.withTitle1(context().pageTitle()));
 			pageTitle("配方");
 		}
 

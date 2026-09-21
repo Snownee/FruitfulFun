@@ -1,9 +1,8 @@
 {
   "type": "modonomicon:crafting_recipe",
   "condition": {
-    "type": "fruitfulfun:module_loaded",
-    "inverted": true,
-    "module": "fruitfulfun:farmersdelight"
+    "type": "fruitfulfun:eval",
+    "expression": "!HAS('@fruitfulfun:farmersdelight')"
   },
   "id": "recipe",
   "recipe_id_1": "fruitfulfun:honey_pomelo_tea",

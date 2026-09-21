@@ -36,6 +36,12 @@ repositories {
         name = "Greenhouse Maven"
         url = 'https://maven.greenhouse.lgbt/releases/'
     }
+    maven {
+        url "https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
+        content {
+            includeGroup "com.klikli_dev"
+        }
+    }
     maven { url = "https://api.modrinth.com/maven" }
     flatDir { dir 'libs' }
     // Add repositories to retrieve artifacts from in here.
@@ -72,10 +78,10 @@ dependencies {
     compileOnlyApi("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}")
     implementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}")
 
-//    implementation "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
-//    annotationProcessor "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
-    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
-    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+    implementation "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
+    annotationProcessor "libs:Kiwi-mc26.1-Fabric-${project.kiwi_version}"
+//    implementation "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
+//    annotationProcessor "maven.modrinth:kiwi:${project.kiwi_version}+fabric"
 //    implementation "libs:Lychee-mc26.1-Fabric-${project.lychee_version}"
     implementation "maven.modrinth:lychee:${project.lychee_version}+fabric"
     implementation "maven.modrinth:jade:${project.jade_version}+fabric"
@@ -93,7 +99,8 @@ dependencies {
 //    implementation "maven.modrinth:suggestion-tweaker:1.20-1.5.1+fabric"
     implementation "maven.modrinth:advancement-info:26.1.1-fabric-1.3.1"
 
-    implementation "maven.modrinth:modonomicon:3ptweCLT"
+//    implementation "maven.modrinth:modonomicon:6vDUtYef"
+    implementation("com.klikli_dev:modonomicon-26.1.2-fabric:2.5.1") { transitive = false }
 }
 
 loom {

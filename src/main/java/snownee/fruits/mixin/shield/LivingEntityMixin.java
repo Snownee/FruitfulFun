@@ -1,7 +1,6 @@
 package snownee.fruits.mixin.shield;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -19,9 +18,6 @@ import snownee.fruits.gadget.shield.BuzzyShieldItem;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
-	@Shadow
-	protected ItemStack useItem;
-
 	@WrapOperation(
 			method = "getItemBlockingWith",
 			at = @At(
@@ -34,41 +30,28 @@ public abstract class LivingEntityMixin {
 		return original.call(item, itemStack, user);
 	}
 
-//	@WrapOperation(
-//			method = "hurtServer",
-//			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurtCurrentlyUsedShield(F)V"))
-//	private void recordDamage(
-//			LivingEntity instance,
-//			float damageAmount,
-//			Operation<Void> original,
-//			@Share("damage") LocalFloatRef damageRecord) {
-//		damageRecord.set(damageAmount);
-//		original.call(instance, damageAmount);
-//	}
-//
-//	@Inject(
-//			method = "hurtServer", at = @At(
-//			value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z", ordinal = 1))
-//	private void onBlocked(
-//			DamageSource source,
-//			float amount,
-//			CallbackInfoReturnable<Boolean> cir,
-//			@Share("damage") LocalFloatRef damageRecord,
-//			@Local(argsOnly = true) LocalFloatRef damageRef,
-//			@Local(index = 4) LocalBooleanRef blockedRef,
-//			@Local(index = 5) LocalFloatRef blockedDamageRef) {
-//		if (!Hooks.gadget || !(useItem.getItem() instanceof BuzzyShieldItem)) {
-//			return;
-//		}
-//		float newDamage = BuzzyShieldItem.onBlock((LivingEntity) (Object) this, source, damageRecord.get(), useItem);
-//		if (newDamage > 0) {
-//			blockedRef.set(false);
-//		}
-//		if (newDamage != damageRef.get()) {
-//			blockedDamageRef.set(damageRecord.get() - newDamage);
-//			damageRef.set(newDamage);
-//		}
-//	}
+	@WrapOperation(
+			method = "hurtServer",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/LivingEntity;applyItemBlocking(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)F"))
+	private float buzzyShieldBlock(
+			LivingEntity self,
+			ServerLevel level,
+			DamageSource source,
+			float damage,
+			Operation<Float> original) {
+		float blocked = original.call(self, level, source, damage);
+		if (!Hooks.gadget || blocked <= 0) {
+			return blocked;
+		}
+		ItemStack shield = self.getItemBlockingWith();
+		if (shield == null || !(shield.getItem() instanceof BuzzyShieldItem)) {
+			return blocked;
+		}
+		float remaining = BuzzyShieldItem.onBlock(self, source, damage, shield);
+		return damage - remaining;
+	}
 
 	@Inject(
 			method = "hurtServer", at = @At(

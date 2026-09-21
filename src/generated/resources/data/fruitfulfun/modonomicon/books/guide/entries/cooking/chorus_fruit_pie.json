@@ -7,8 +7,8 @@
   },
   "category": "fruitfulfun:cooking",
   "condition": {
-    "type": "fruitfulfun:module_loaded",
-    "module": "fruitfulfun:food"
+    "type": "fruitfulfun:eval",
+    "expression": "HAS('@fruitfulfun:food')"
   },
   "description": "book.fruitfulfun.guide.cooking.chorus_fruit_pie.description",
   "icon": {

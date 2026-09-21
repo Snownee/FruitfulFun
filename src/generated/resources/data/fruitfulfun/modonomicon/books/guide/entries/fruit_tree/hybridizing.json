@@ -1,0 +1,22 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:fruit_tree",
+  "condition": {
+    "type": "fruitfulfun:eval",
+    "expression": "HAS('@fruitfulfun:bee')"
+  },
+  "description": "book.fruitfulfun.guide.fruit_tree.hybridizing.description",
+  "icon": {
+    "id": "fruitfulfun:pomegranate_sapling"
+  },
+  "id": "fruitfulfun:fruit_tree/hybridizing",
+  "name": "book.fruitfulfun.guide.fruit_tree.hybridizing.name",
+  "sort_number": 2,
+  "x": 0,
+  "y": 0
+}

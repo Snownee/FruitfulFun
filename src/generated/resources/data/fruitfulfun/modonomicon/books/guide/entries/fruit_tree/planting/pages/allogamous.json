@@ -1,0 +1,12 @@
+{
+  "type": "modonomicon:text",
+  "condition": {
+    "type": "fruitfulfun:eval",
+    "expression": "CFG('fruitfulfun.common.allogamousTrees')"
+  },
+  "id": "allogamous",
+  "show_title_separator": true,
+  "sort_number": 1,
+  "text": "book.fruitfulfun.guide.fruit_tree.planting.allogamous.text",
+  "title": "book.fruitfulfun.guide.fruit_tree.planting.allogamous.title"
+}

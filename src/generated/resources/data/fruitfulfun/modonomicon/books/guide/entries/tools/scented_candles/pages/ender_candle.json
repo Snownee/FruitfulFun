@@ -1,0 +1,10 @@
+{
+  "type": "modonomicon:smithing_recipe",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "ender_candle",
+  "recipe_id_1": "fruitfulfun:ender_candle",
+  "sort_number": 3,
+  "text": "block.fruitfulfun.ender_candle.tip.shift"
+}

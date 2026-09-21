@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:spotlight",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "citrus",
+  "item": "#c:crops/citrus",
+  "sort_number": 0,
+  "text": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.citrus.text",
+  "title": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.citrus.title"
+}

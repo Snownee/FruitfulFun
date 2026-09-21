@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "exorcise",
+  "show_title_separator": true,
+  "sort_number": 1,
+  "text": "book.fruitfulfun.guide.beekeeping.haunting.exorcise.text",
+  "title": "book.fruitfulfun.guide.beekeeping.haunting.exorcise.title"
+}

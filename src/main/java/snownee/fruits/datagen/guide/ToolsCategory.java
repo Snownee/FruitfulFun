@@ -11,9 +11,11 @@ import com.klikli_dev.modonomicon.api.datagen.book.BookEntryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookIconModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookCraftingRecipePageModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookSmithingRecipePageModel;
+import com.klikli_dev.modonomicon.api.datagen.book.page.BookSpotlightPageModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookTextPageModel;
 
 import snownee.fruits.gadget.GadgetModule;
+import snownee.fruits.market.MarketModule;
 
 public class ToolsCategory extends IndexModeCategoryProvider {
 
@@ -28,11 +30,12 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 		add(new ScentedCandlesEntry(this).generate());
 		add(new BrewerEntry(this).generate());
 		add(new RainDetectorEntry(this).generate());
+		add(new MarketEntry(this).generate());
 	}
 
 	@Override
 	protected BookCategoryModel additionalSetup(BookCategoryModel category) {
-		return super.additionalSetup(category).withCondition(GuideUtil.moduleLoaded("gadget"));
+		return super.additionalSetup(category).withCondition(GuideUtil.eval("HAS('@fruitfulfun:gadget') || HAS('@fruitfulfun:market')"));
 	}
 
 	@Override
@@ -42,12 +45,12 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 	@Override
 	protected String categoryDescription() {
-		return lines("实用的机器与装备，让农业更高效。");
+		return lines("实用的机器与装备，让生活更便利。");
 	}
 
 	@Override
 	protected BookIconModel categoryIcon() {
-		return BookIconModel.create(GadgetModule.BUZZY_CRAFTER.get());
+		return BookIconModel.create(GadgetModule.BUZZY_CRAFTER);
 	}
 
 	@Override
@@ -63,19 +66,19 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("蜜蜂驱动的合成台");
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			pageTitle("嗡嗡合成台");
 			pageText(lines("""
-					嗡嗡合成台能收集归巢蜜蜂的能量，并利用这份能量自动完成合成。
-
-					归巢的蜜蜂越多、越勤快，它就转得越快。
-
-					右击顶部可以放入材料，空手点击可以取出产物。
+					嗡嗡合成台可以收集归巢蜜蜂的能量，并将这份能量注入其上方的物品或方块。
+					
+					自动化这一过程十分轻松：将物品丢在合成台上方，物品会被自动吸入容器。在合成台上方放置一个完整方块，容器中的物品会从合成台下方弹出。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:buzzy_crafter"));
+			page("recipe", () -> BookCraftingRecipePageModel.create().withRecipeId1("fruitfulfun:buzzy_crafter"));
+		}
+
+		@Override
+		protected BookEntryModel additionalSetup(BookEntryModel entry) {
+			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("gadget"));
 		}
 
 		@Override
@@ -85,12 +88,12 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected String entryDescription() {
-			return "蜜蜂驱动的自动合成台。";
+			return "蜜蜂驱动的合成装置。";
 		}
 
 		@Override
 		protected BookIconModel entryIcon() {
-			return BookIconModel.create(GadgetModule.BUZZY_CRAFTER.get());
+			return BookIconModel.create(GadgetModule.BUZZY_CRAFTER);
 		}
 
 		@Override
@@ -107,19 +110,22 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("蜜蜂之盾");
-			pageText(lines("""
-					一面由蜜蜂驱动的盾牌。
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			pageTitle("蜂群之盾");
+			pageText(
+					lines("""
+							一面由蜜脾打造而成的盾牌。
+							
+							举盾时只能抵消半数伤害。但完美格挡（在受击前的一刻举盾）会抵消全部伤害，击退周围的敌人，并召唤蜂群反击攻击者。
+							
+							每次格挡都会消耗{0}，注意盾牌上的能量显示。
+							"""), entryLink("能量", "tools", "buzzy_shield"));
+			page("recipe", () -> BookSmithingRecipePageModel.create().withRecipeId1("fruitfulfun:buzzy_shield"));
+		}
 
-					完美格挡（刚举盾的瞬间）会击退周围的敌人，并召唤蜜蜂反击攻击者。
-
-					每次格挡都会消耗能量，注意盾牌上的电量显示。
-					"""));
-			page("recipe", () -> BookSmithingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:buzzy_shield"));
+		@Override
+		protected BookEntryModel additionalSetup(BookEntryModel entry) {
+			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("gadget"));
 		}
 
 		@Override
@@ -129,12 +135,12 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected String entryDescription() {
-			return "召唤蜜蜂反击的盾牌。";
+			return "能召唤蜂群的盾牌。";
 		}
 
 		@Override
 		protected BookIconModel entryIcon() {
-			return BookIconModel.create(GadgetModule.BUZZY_SHIELD.get());
+			return BookIconModel.create(GadgetModule.BUZZY_SHIELD);
 		}
 
 		@Override
@@ -151,25 +157,39 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("气味的力量");
-			pageText(lines("""
-					点燃不同的香薰蜡烛，会散发出不同的气味，影响周围的生物：
-					向日葵味：防止幻翼生成
-					樱桃味：防止流浪商人生成
-					瓶子草味：阻止传送与末影人搬方块
-					郁金香味：削弱生物，并让效果持续时间翻倍
-					玫瑰味：防止敌对生物与蝙蝠生成
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			pageTitle("植物的魔法");
+			pageText(
+					lines("""
+							点燃香味蜡烛，其散发的魔力能够影响周围的区块。根据堆叠蜡烛数量的不同，其影响的范围可从1个区块增至最高7×7个区块。
+							
+							香味蜡烛需要消耗能量来保持燃烧状态。你可以将蜡烛放置在{0}上，一边充能，一边让其生效。
+							<#if bee>
+							
+							对地面使用嗡嗡分析仪可以查看当前区块内生效的气味。
+							<#endif>
+							"""),
+					entryLink("嗡嗡合成台", "tools", "buzzy_crafter"));
 
-					它们由蜡烛与对应的植物在锻造台中合成。
-					"""));
+			String[] candles = {
+					"phantom_candle", "wandering_trader_candle", "ender_candle", "weak_candle", "peace_candle"};
+			for (String candle : candles) {
+				page(
+						candle,
+						() -> BookSmithingRecipePageModel.create()
+								.withRecipeId1("fruitfulfun:" + candle)
+								.withText("block.fruitfulfun." + candle + ".tip.shift"));
+			}
+		}
+
+		@Override
+		protected BookEntryModel additionalSetup(BookEntryModel entry) {
+			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("gadget"));
 		}
 
 		@Override
 		protected String entryName() {
-			return "香薰蜡烛";
+			return "香味蜡烛";
 		}
 
 		@Override
@@ -179,7 +199,7 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected BookIconModel entryIcon() {
-			return BookIconModel.create(GadgetModule.PHANTOM_CANDLE.get());
+			return BookIconModel.create(GadgetModule.PHANTOM_CANDLE);
 		}
 
 		@Override
@@ -196,22 +216,25 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("自动酿造");
+			page(
+					"intro",
+					() -> BookSpotlightPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText())
+							.withItem(GadgetModule.BREWER));
+			pageTitle("酿造机");
 			pageText(lines("""
-					通过龙之仪式，酿造台会转化为酿造机（见{0}章节）。
-
-					酿造机会把产物自动输送到下方的容器。
-
-					持续酿造同一种产物，它还会越酿越快，最高提速 100%。
-					"""), categoryLink("仪式", "ritual"));
+					酿造机能把产物自动输送到下方的容器。
+					
+					持续酿造同一种产物，它还会越酿越快，最高提速100%。
+					"""));
 		}
 
 		@Override
 		protected BookEntryModel additionalSetup(BookEntryModel entry) {
-			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("ritual"));
+			return super.additionalSetup(entry)
+					.withCondition(GuideUtil.moduleLoaded("gadget"))
+					.withCondition(GuideUtil.moduleLoaded("ritual"));
 		}
 
 		@Override
@@ -226,7 +249,7 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected BookIconModel entryIcon() {
-			return BookIconModel.create(GadgetModule.BREWER.get());
+			return BookIconModel.create(GadgetModule.BREWER);
 		}
 
 		@Override
@@ -243,25 +266,28 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("探测降雨");
+			page(
+					"intro",
+					() -> BookSpotlightPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText())
+							.withItem(GadgetModule.RAIN_DETECTOR));
+			pageTitle("雨天探测器");
 			pageText(lines("""
-					通过龙之仪式获得（见{0}章节）。
-
-					它会像阳光探测器一样输出红石信号，只不过检测的是降雨而非阳光。
-					"""), categoryLink("仪式", "ritual"));
+					它的工作方式和阳光探测器差不多，只不过它根据降水强度输出红石信号。
+					"""));
 		}
 
 		@Override
 		protected BookEntryModel additionalSetup(BookEntryModel entry) {
-			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("ritual"));
+			return super.additionalSetup(entry)
+					.withCondition(GuideUtil.moduleLoaded("gadget"))
+					.withCondition(GuideUtil.moduleLoaded("ritual"));
 		}
 
 		@Override
 		protected String entryName() {
-			return "雨探测器";
+			return "雨天探测器";
 		}
 
 		@Override
@@ -271,12 +297,67 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected BookIconModel entryIcon() {
-			return BookIconModel.create(GadgetModule.RAIN_DETECTOR.get());
+			return BookIconModel.create(GadgetModule.RAIN_DETECTOR);
 		}
 
 		@Override
 		protected String entryId() {
 			return "rain_detector";
+		}
+	}
+
+	public static class MarketEntry extends IndexModeEntryProvider {
+
+		public MarketEntry(CategoryProviderBase parent) {
+			super(parent);
+		}
+
+		@Override
+		protected void generatePages() {
+			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			pageTitle("自动商店");
+			pageText(lines("""
+					市场方块是一个会自动进货农产品的商店。你只需要存入金钱、下达订单，它每天日出时都会把订好的货物补齐，等待你取走。
+					
+					将货币放入界面右侧的槽位即可存入金钱。你可以将鼠标悬停在该槽位上来查看支持的货币与对应的面额。
+					"""));
+
+			page("ordering", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			pageTitle("下单与进货");
+			pageText(lines("""
+					点击「订货」按钮后，左键点击任意格子可以打开商品目录，选择物品与数量即可下单；右键点击格子则取消订单。订单会以半透明物品显示。
+					
+					商品目录只会列出你见过的物品：曾经持有、合成、使用、丢弃过，并且有标价的物品。
+					
+					每个游戏日的日出时，市场都会用存有的金钱按订单进货，直到补满或金钱耗尽为止。
+					"""));
+
+			page("recipe", () -> BookCraftingRecipePageModel.create().withRecipeId1("fruitfulfun:market"));
+		}
+
+		@Override
+		protected BookEntryModel additionalSetup(BookEntryModel entry) {
+			return super.additionalSetup(entry).withCondition(GuideUtil.moduleLoaded("market"));
+		}
+
+		@Override
+		protected String entryName() {
+			return "市场方块";
+		}
+
+		@Override
+		protected String entryDescription() {
+			return "按订单自动进货的商店。";
+		}
+
+		@Override
+		protected BookIconModel entryIcon() {
+			return BookIconModel.create(MarketModule.MARKET);
+		}
+
+		@Override
+		protected String entryId() {
+			return "market";
 		}
 	}
 }

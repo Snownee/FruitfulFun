@@ -1,0 +1,10 @@
+{
+	"prefixes": [
+		"book.fruitfulfun.guide."
+	],
+	"define": {
+		"fd": "has:@fruitfulfun:farmersdelight",
+		"bee": "has:@fruitfulfun:bee",
+		"gadget": "has:@fruitfulfun:gadget"
+	}
+}

@@ -9,12 +9,11 @@ import com.klikli_dev.modonomicon.api.datagen.SingleBookSubProvider;
 import com.klikli_dev.modonomicon.api.datagen.book.BookCategoryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookEntryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookIconModel;
-import com.klikli_dev.modonomicon.api.datagen.book.page.BookCraftingRecipePageModel;
+import com.klikli_dev.modonomicon.api.datagen.book.page.BookSpotlightPageModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookTextPageModel;
 
 import net.minecraft.world.item.Items;
 import snownee.fruits.bee.BeeModule;
-import snownee.fruits.cherry.CherryModule;
 
 public class BeekeepingCategory extends IndexModeCategoryProvider {
 
@@ -25,13 +24,9 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 	@Override
 	protected void generateEntries() {
 		add(new BeeIntroEntry(this).generate());
-		add(new InspectorEntry(this).generate());
-		add(new TraitsEntry(this).generate());
-		add(new HybridizingEntry(this).generate());
+		add(new GeneticsEntry(this).generate());
 		add(new RidingEntry(this).generate());
 		add(new HauntingEntry(this).generate());
-		add(new MerchantsEntry(this).generate());
-		add(new MutagenEntry(this).generate());
 	}
 
 	@Override
@@ -46,12 +41,12 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 
 	@Override
 	protected String categoryDescription() {
-		return lines("蜜蜂不仅酿蜜，还能帮你培育新树种。");
+		return lines("那些鲜为人知的蜜蜂知识。");
 	}
 
 	@Override
 	protected BookIconModel categoryIcon() {
-		return BookIconModel.create(BeeModule.INSPECTOR.get());
+		return BookIconModel.create(BeeModule.INSPECTOR);
 	}
 
 	@Override
@@ -67,18 +62,28 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("蜜蜂的新面貌");
+			page(
+					"traits", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
+			pageTitle("基因与性状");
 			pageText(lines("""
-					本模组为蜜蜂添加了全新的玩法。
+					蜜蜂的特性决定了它们的能力与性格。
+					
+					有些蜜蜂速度更快，有些性情温和，有些善于战斗，有些甚至能当坐骑。这些特性都是由它们的基因决定的，并且可以遗传给后代。
+					"""));
 
-					蜜蜂可以采集花粉、记住花粉的来源，并为你授粉出新的果树。
-
-					用蜜脾就能把蜜蜂从蜂巢里带出来，方便转移蜂群。
-
-					蜜蜂会慢慢自行恢复生命，新出生的蜜蜂还会随机获得一个名字。
+			page(
+					"transporting", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
+			pageTitle("轻松转运蜜蜂");
+			pageText(lines("""
+					对蜂巢或蜂箱使用蜜脾，然后在之后一段时间内，你就可以如拿着精准采集工具般挖掘这个方块，而不惹怒其中的蜜蜂。
+					
+					使用拴绳拴住蜜蜂后对着蜂巢或蜂箱按下使用键后，可以令蜜蜂立即归巢。
+					
+					吹响特定的号角，可以令周围的蜜蜂立即归巢。
 					"""));
 		}
 
@@ -103,34 +108,53 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 		}
 	}
 
-	public static class InspectorEntry extends IndexModeEntryProvider {
+	public static class GeneticsEntry extends IndexModeEntryProvider {
 
-		public InspectorEntry(CategoryProviderBase parent) {
+		public GeneticsEntry(CategoryProviderBase parent) {
 			super(parent);
 		}
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page(
+					"intro", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
 			pageTitle("研究蜜蜂");
 			pageText(lines("""
-					嗡嗡分析仪是研究蜜蜂的必备工具。
-
-					对蜜蜂使用，可以看到它的特性与携带的花粉。
-
-					副手拿一本书与笔，再对蜜蜂使用，可以把记录写进书里。
-
-					对书架使用，可以为基因命名；配合香薰蜡烛，对方块使用还能查看残留的气味。
+					嗡嗡分析仪是研究蜜蜂的必备工具。对蜜蜂长按交互键，可以看到它的特性、基因型与携带的花粉。<#if cfg:fruitfulfun.common.inspectorShowOffspringPotential>潜行状态下交互可以锁定一只蜜蜂，然后当你分析其他蜜蜂时，就会显示它与被锁定蜜蜂的后代可能出现的特性变化。<#endif>
+					
+					副手拿一本书与笔，再对蜜蜂使用，可以把记录写进书里。对书架使用，可以为基因代号取个新名字。
 					"""));
-			page("recipe", () -> BookCraftingRecipePageModel.create()
-					.withRecipeId1("fruitfulfun:inspector"));
+
+			page(
+					"mutagen", () -> BookSpotlightPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText())
+							.withItem(BeeModule.MUTAGEN));
+			pageTitle("酿造突变剂");
+			pageText(lines("""
+					突变剂可以大幅提高特定基因在后代中的突变率。使用方法：繁殖前手持突变剂与亲代交互。
+					<#if cfg:fruitfulfun.common.mutagenRecipe>
+					
+					突变剂由瓶子草酿造而成<#if cfg:fruitfulfun.common.imperfectMutagenChance!=0>，并且有一定概率酿制失败。酿坏的突变剂没法使用，但可以回收成玻璃瓶<#endif>。
+					<#endif>
+					"""));
+
+			page(
+					"trade", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText())
+							.withCondition(GuideUtil.eval("CFG('fruitfulfun.common.beehiveTrade')")));
+			pageTitle("蜜蜂交易");
+			pageText(lines("""
+					<#if FFBeekeeper>蜂农<#else>流浪商人<#endif>有时会向你收购带有蜜蜂的蜂箱。蜜蜂的特性越稀有，他们的出价就越高。
+					"""));
 		}
 
 		@Override
 		protected String entryName() {
-			return "嗡嗡分析仪";
+			return "深入基因学";
 		}
 
 		@Override
@@ -140,107 +164,12 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected BookIconModel entryIcon() {
-			return BookIconModel.create(BeeModule.INSPECTOR.get());
+			return BookIconModel.create(BeeModule.MUTAGEN);
 		}
 
 		@Override
 		protected String entryId() {
-			return "inspector";
-		}
-	}
-
-	public static class TraitsEntry extends IndexModeEntryProvider {
-
-		public TraitsEntry(CategoryProviderBase parent) {
-			super(parent);
-		}
-
-		@Override
-		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("特性与基因");
-			pageText(lines("""
-					蜜蜂的特性决定了它们的能力与性格。
-
-					有些蜜蜂跑得更快，有些性情温和，有些甚至能当坐骑。
-
-					每个世界里蜜蜂的基因代码都是随机生成的，效果需要你亲自摸索。
-
-					安装 Jade 模组可以获得更直观的基因与花粉信息。
-					"""));
-		}
-
-		@Override
-		protected String entryName() {
-			return "蜜蜂特性";
-		}
-
-		@Override
-		protected String entryDescription() {
-			return "能力与性格的差异。";
-		}
-
-		@Override
-		protected BookIconModel entryIcon() {
-			return BookIconModel.create(Items.SUGAR);
-		}
-
-		@Override
-		protected String entryId() {
-			return "traits";
-		}
-	}
-
-	public static class HybridizingEntry extends IndexModeEntryProvider {
-
-		public HybridizingEntry(CategoryProviderBase parent) {
-			super(parent);
-		}
-
-		@Override
-		protected void generatePages() {
-			page("pollen", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("花粉与授粉");
-			pageText(lines("""
-					蜜蜂会记住自己采集过的花粉。
-
-					当它带着特定组合的花粉为另一棵树授粉时，就有可能结出全新的树种。
-
-					拥有「高级授粉」特性的蜜蜂，能解锁更稀有的杂交配方。
-					"""));
-			page("examples", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("一点提示");
-			pageText(lines("""
-					同一个树族之间相互杂交，往往就能诞生新的成员。
-
-					试试让蜜蜂在不同品种的树叶之间往返，再观察果树的反应。
-					"""));
-		}
-
-		@Override
-		protected String entryName() {
-			return "授粉与杂交";
-		}
-
-		@Override
-		protected String entryDescription() {
-			return "用花粉培育全新的树种。";
-		}
-
-		@Override
-		protected BookIconModel entryIcon() {
-			return BookIconModel.create(CherryModule.CHERRY.get());
-		}
-
-		@Override
-		protected String entryId() {
-			return "hybridizing";
+			return "genetics";
 		}
 	}
 
@@ -252,16 +181,19 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page(
+					"intro", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
 			pageTitle("骑蜂飞行");
 			pageText(lines("""
-					只有你自己繁殖出来的、拥有「可骑乘」特性的蜜蜂才允许装鞍，幼蜂不行。
-
-					飞行高度有限制：雨天无法飞行，某些群系也限制了高度。
-
-					用剪刀可以卸下鞍。
+					你可以给拥有「可骑乘」特性的蜜蜂装上鞍，然后骑上它<#if cfg:fruitfulfun.common.beeRiding.heightLimit>低空<#endif>飞行。一般来说，只有由你繁殖的成年蜜蜂才会如此信任你，允许你骑乘它。
+					<#if cfg:fruitfulfun.common.beeRiding.rainingLimit || cfg:fruitfulfun.common.beeRiding.beeRidingEnvironmentAttrRules>
+					
+					骑乘蜜蜂也存在一些环境限制。<#if cfg:fruitfulfun.common.beeRiding.rainingLimit>比如，没有「耐雨性」的蜜蜂无法在雨中被骑乘。<#endif>
+					<#endif>
+					
+					对蜜蜂使用剪刀可以卸下鞍。
 					"""));
 		}
 
@@ -272,7 +204,7 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected String entryDescription() {
-			return "骑着蜜蜂翱翔天际。";
+			return "小众的交通方式，兼顾速度和风格。";
 		}
 
 		@Override
@@ -294,17 +226,27 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
+			page(
+					"intro", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
 			pageTitle("鬼魂蜂的秘密");
-			pageText(lines("""
-					鬼魂蜂能让你的灵魂「附身」到其他生物身上，从它们的视角行动。
+			pageText(
+					lines("""
+							鬼魂蜂能让你的灵魂「附身」到其他生物上，并且时刻以被附身者的视角旁观他们的行动。
+							
+							要实现「附身」，要先与鬼魂蜂交互，附身到鬼魂蜂上，然后操控它尽快靠近你想要附身的目标。这时再与目标交互就能附身到目标了。附身时按下潜行键可以立即解除附身。
+							"""));
 
-					粉红蜂还藏着属于自己的特殊技能。
-
-					至于如何得到鬼魂蜂——见{0}章节。
-					"""), categoryLink("仪式", "ritual"));
+			page(
+					"exorcise", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
+			pageTitle("驱赶附身者");
+			pageText(
+					lines("""
+							如果想要驱赶走附身在自己身上的捣蛋鬼，你需要站在火中承受一段时间的伤害（经测试，灵魂火焰的效果立竿见影）。附身者解除附身的时刻最为脆弱，受伤时会承受更多伤害。
+							"""));
 		}
 
 		@Override
@@ -330,90 +272,6 @@ public class BeekeepingCategory extends IndexModeCategoryProvider {
 		@Override
 		protected String entryId() {
 			return "haunting";
-		}
-	}
-
-	public static class MerchantsEntry extends IndexModeEntryProvider {
-
-		public MerchantsEntry(CategoryProviderBase parent) {
-			super(parent);
-		}
-
-		@Override
-		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("从商人手中获得蜜蜂");
-			pageText(lines("""
-					流浪商人偶尔会出售珍贵的树苗。
-
-					养蜂人村民会出售蜂箱。
-
-					若世界中找不到养蜂人，流浪商人会代为出售蜂箱。
-					"""));
-		}
-
-		@Override
-		protected String entryName() {
-			return "商人与蜜蜂";
-		}
-
-		@Override
-		protected String entryDescription() {
-			return "从商人手中获得树苗与蜂箱。";
-		}
-
-		@Override
-		protected BookIconModel entryIcon() {
-			return BookIconModel.create(Items.EMERALD);
-		}
-
-		@Override
-		protected String entryId() {
-			return "merchants";
-		}
-	}
-
-	public static class MutagenEntry extends IndexModeEntryProvider {
-
-		public MutagenEntry(CategoryProviderBase parent) {
-			super(parent);
-		}
-
-		@Override
-		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create()
-					.withTitle(context().pageTitle())
-					.withText(context().pageText()));
-			pageTitle("酿造突变剂");
-			pageText(lines("""
-					在酿造台上酿造突变剂，然后喂给蜜蜂。
-
-					受到影响的蜜蜂，产下的后代更容易发生变异。
-
-					酿坏的突变剂没法使用，但可以回收成玻璃瓶。
-					"""));
-		}
-
-		@Override
-		protected String entryName() {
-			return "突变剂";
-		}
-
-		@Override
-		protected String entryDescription() {
-			return "让蜜蜂的后代更容易变异。";
-		}
-
-		@Override
-		protected BookIconModel entryIcon() {
-			return BookIconModel.create(BeeModule.MUTAGEN.get());
-		}
-
-		@Override
-		protected String entryId() {
-			return "mutagen";
 		}
 	}
 }

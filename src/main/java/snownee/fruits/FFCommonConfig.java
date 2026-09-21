@@ -45,7 +45,7 @@ public final class FFCommonConfig {
 	public static boolean appleSaplingFromHeroOfTheVillage = true;
 	@KiwiConfig.GameRestart
 	public static boolean villageAppleTreeWorldGen = false;
-	@KiwiConfig.Range(min = 0, max = 64)
+	@KiwiConfig.Range(min = 0, max = 99)
 	public static int wanderingTraderSaplingPrice = 12;
 	public static boolean beehiveTrade = true;
 	@KiwiConfig.Range(min = 0)

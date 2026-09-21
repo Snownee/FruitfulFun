@@ -31,7 +31,7 @@ public record BeeIsVariant(ResourceKey<BeeVariant> variant) implements Contextua
 		Entity entity = lycheeContext.get(LycheeContextKey.LOOT_PARAMS).get(LootContextParams.THIS_ENTITY);
 		if (entity instanceof Bee) {
 			BeeAttributes attributes = BeeAttributes.of(entity);
-			if (attributes.variant().is(variant)) {
+			if (attributes.variant().map($ -> $.is(variant)).orElse(false)) {
 				return i;
 			}
 		}
