@@ -2,7 +2,7 @@ package snownee.fruits.market;
 
 import java.util.Map;
 
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import snownee.fruits.FFCommonConfig;
@@ -19,13 +19,13 @@ public final class MarketSales {
 		return level.getServer().overworld().getDataStorage().computeIfAbsent(MarketSalesData.TYPE);
 	}
 
-	public static void record(ServerLevel level, Map<Item, Long> counts) {
+	public static void record(ServerLevel level, Map<Holder<Item>, Long> counts) {
 		if (!FFCommonConfig.marketStats || counts.isEmpty()) {
 			return;
 		}
 		long day = currentDay(level);
 		MarketSalesData data = data(level);
-		counts.forEach((item, count) -> data.add(day, BuiltInRegistries.ITEM.getKey(item), count));
+		counts.forEach((item, count) -> data.add(day, item.unwrapKey().orElseThrow(), count));
 		data.prune(day, FFCommonConfig.marketStatsDays);
 	}
 }

@@ -2,7 +2,9 @@ package snownee.fruits.market;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,11 +25,13 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import snownee.fruits.FFClientConfig;
 import snownee.fruits.FFCommonConfig;
 import snownee.fruits.market.network.CSetOrderPacket;
 
@@ -49,6 +53,7 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 
 	private BlockPos pos = BlockPos.ZERO;
 	private final NonNullList<ItemStack> orders = NonNullList.withSize(MarketMenu.MARKET_SLOTS, ItemStack.EMPTY);
+	private final Map<ResourceKey<Item>, MarketPricing.PriceEntry> prices = new HashMap<>();
 	private List<ItemStack> catalog = List.of();
 	private long money;
 
@@ -75,26 +80,36 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		return pos;
 	}
 
-	public void setCatalog(BlockPos pos, List<ItemStack> catalog, long money, List<ItemStack> orders) {
+	public void setCatalog(
+			BlockPos pos,
+			List<ItemStack> catalog,
+			long money,
+			List<ItemStack> orders,
+			List<MarketPricing.PriceEntry> prices) {
 		this.pos = pos;
 		this.catalog = List.copyOf(catalog);
-		setSync(money, orders);
+		setSync(money, orders, prices);
 	}
 
-	public void setSync(long money, List<ItemStack> orders) {
+	public void setSync(long money, List<ItemStack> orders, List<MarketPricing.PriceEntry> prices) {
 		this.money = money;
 		for (int i = 0; i < MarketMenu.MARKET_SLOTS; i++) {
 			this.orders.set(i, i < orders.size() ? orders.get(i) : ItemStack.EMPTY);
+		}
+		this.prices.clear();
+		for (MarketPricing.PriceEntry entry : prices) {
+			this.prices.put(entry.item(), entry);
 		}
 	}
 
 	@Override
 	protected void init() {
 		super.init();
-		orderModeButton = addRenderableWidget(Button.builder(orderModeMessage(), $ -> {
-			orderMode = !orderMode;
-			updateOrderModeButton();
-		}).bounds(leftPos, Math.max(2, topPos - 22), 60, 20).build());
+		orderModeButton = addRenderableWidget(Button.builder(
+				orderModeMessage(), $ -> {
+					orderMode = !orderMode;
+					updateOrderModeButton();
+				}).bounds(leftPos, Math.max(2, topPos - 22), 60, 20).build());
 		EditBox editBox = new EditBox(font, 0, 0, QUANTITY_WIDTH - 40, 18, Component.empty());
 		editBox.setMaxLength(5);
 		quantityEdit = editBox;
@@ -172,14 +187,34 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 	}
 
 	private HolderLookup.Provider registries() {
-		return minecraft.level.registryAccess();
+		return Objects.requireNonNull(minecraft.level).registryAccess();
+	}
+
+	private long priceOf(ItemStack stack) {
+		MarketPricing.PriceEntry entry = prices.get(stack.typeHolder().unwrapKey().orElseThrow());
+		return entry != null ? entry.price() : MarketCurrency.unitPrice(stack, registries());
+	}
+
+	private float deltaOf(ItemStack stack) {
+		MarketPricing.PriceEntry entry = prices.get(stack.typeHolder().unwrapKey().orElseThrow());
+		return entry != null ? entry.delta() : 0;
 	}
 
 	private List<Component> tooltipFor(ItemStack stack) {
 		List<Component> lines = new ArrayList<>(getTooltipFromContainerItem(stack));
-		long unit = MarketCurrency.unitPrice(stack, registries());
+		long unit = priceOf(stack);
 		if (unit > 0) {
 			lines.add(Component.translatable("gui.fruitfulfun.market.unit_price", MarketCurrency.format(unit)));
+			float delta = deltaOf(stack);
+			if (Math.abs(delta) >= 0.05f) {
+				boolean up = delta > 0;
+				String percent = String.format(Locale.ROOT, "%.1f", Math.abs(delta));
+				int color = up ? FFClientConfig.marketPriceUpColor : FFClientConfig.marketPriceDownColor;
+				lines.add(Component.translatable(
+								up ? "gui.fruitfulfun.market.trend_up" : "gui.fruitfulfun.market.trend_down",
+								percent)
+						.withStyle(style -> style.withColor(color)));
+			}
 			if (stack.getCount() > 1) {
 				lines.add(Component.translatable(
 						"gui.fruitfulfun.market.total_price",
@@ -541,7 +576,7 @@ public class MarketScreen extends AbstractContainerScreen<MarketMenu> {
 		EditBox editBox = Objects.requireNonNull(quantityEdit);
 		editBox.setRectangle(QUANTITY_WIDTH - 40, 18, left + 20, top + 20);
 		editBox.extractRenderState(graphics, mouseX, mouseY, 0);
-		long unit = MarketCurrency.unitPrice(quantityItem, registries());
+		long unit = priceOf(quantityItem);
 		centeredText(
 				graphics,
 				Component.translatable(

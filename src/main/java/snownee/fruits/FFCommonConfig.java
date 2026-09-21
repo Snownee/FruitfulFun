@@ -10,18 +10,9 @@ import snownee.kiwi.config.KiwiConfig;
 @KiwiConfig
 public final class FFCommonConfig {
 
-	@KiwiConfig.Path("market.currencyValues")
-	@ConfigUI.Typed(key = String.class, value = Integer.class)
-	public static Map<String, Integer> currencyValues = Map.of(
-			"minecraft:emerald", 100,
-			"minecraft:emerald_block", 900);
-	@KiwiConfig.Path("market.currencyName")
-	public static String currencyName = "G";
-	@KiwiConfig.Path("market.marketStats")
-	public static boolean marketStats = true;
-	@KiwiConfig.Path("market.marketStatsDays")
-	@KiwiConfig.Range(min = 1, max = 365)
-	public static int marketStatsDays = 30;
+	public enum MarketPricingMode {
+		Disabled, SoftResponse, Incremental
+	}
 
 	public enum DropMode {
 		NoDrop, Independent, OneByOne
@@ -125,6 +116,51 @@ public final class FFCommonConfig {
 	@KiwiConfig.Path("minigame.soloPerDay")
 	@KiwiConfig.Range(min = 0)
 	public static int minigameSoloPerDay = 1;
+
+	@KiwiConfig.Path("market.currencyValues")
+	@ConfigUI.Typed(key = String.class, value = Integer.class)
+	public static Map<String, Integer> currencyValues = Map.of(
+			"minecraft:emerald", 100,
+			"minecraft:emerald_block", 900);
+	@KiwiConfig.Path("market.currencyName")
+	public static String currencyName = "G";
+	@KiwiConfig.Path("market.marketStats")
+	public static boolean marketStats = true;
+	@KiwiConfig.Path("market.marketStatsDays")
+	@KiwiConfig.Range(min = 1, max = 365)
+	public static int marketStatsDays = 30;
+	@KiwiConfig.Path("market.dynamicPricing.mode")
+	public static MarketPricingMode marketPricingMode = MarketPricingMode.SoftResponse;
+	@KiwiConfig.Path("market.dynamicPricing.defaultVolatility")
+	@KiwiConfig.Range(min = 0, max = 0.8)
+	public static float defaultVolatility = 0.1f;
+	@KiwiConfig.Path("market.dynamicPricing.demandHalfLifeDays")
+	@KiwiConfig.Range(min = 0.1, max = 30)
+	public static float demandHalfLifeDays = 3;
+	@KiwiConfig.Path("market.dynamicPricing.softResponseStrength")
+	@KiwiConfig.Range(min = 0, max = 5)
+	public static float softResponseStrength = 0.4f;
+	@KiwiConfig.Path("market.dynamicPricing.softDemandScale")
+	@KiwiConfig.Range(min = 1, max = 100000)
+	public static float softDemandScale = 64;
+	@KiwiConfig.Path("market.dynamicPricing.incrementalShortHalfLifeDays")
+	@KiwiConfig.Range(min = 0.1, max = 30)
+	public static float incrementalShortHalfLifeDays = 1.5f;
+	@KiwiConfig.Path("market.dynamicPricing.incrementalLongHalfLifeDays")
+	@KiwiConfig.Range(min = 1, max = 365)
+	public static float incrementalLongHalfLifeDays = 12;
+	@KiwiConfig.Path("market.dynamicPricing.incrementalScaleK")
+	@KiwiConfig.Range(min = 1, max = 100000)
+	public static float incrementalScaleK = 64;
+	@KiwiConfig.Path("market.dynamicPricing.maxDemandFactor")
+	@KiwiConfig.Range(min = 1, max = 100)
+	public static float maxDemandFactor = 10;
+	@KiwiConfig.Path("market.dynamicPricing.minMultiplier")
+	@KiwiConfig.Range(min = 0.01, max = 1)
+	public static float minMarketMultiplier = 0.8f;
+	@KiwiConfig.Path("market.dynamicPricing.maxMultiplier")
+	@KiwiConfig.Range(min = 1, max = 100)
+	public static float maxMarketMultiplier = 11;
 
 	public static DropMode getDropMode(LevelAccessor level) {
 		MinecraftServer server = level.getServer();

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.StatType;
@@ -25,18 +26,18 @@ public final class MarketCatalog {
 	private MarketCatalog() {
 	}
 
-	public static List<ItemStack> compute(ServerPlayer player) {
+	public static List<Holder<Item>> compute(ServerPlayer player) {
 		Set<Item> owned = ownedItems(player);
-		List<ItemStack> result = new ArrayList<>();
-		for (Item item : BuiltInRegistries.ITEM) {
-			if (item == Items.AIR) {
+		List<Holder<Item>> result = new ArrayList<>();
+		for (Holder<Item> holder : BuiltInRegistries.ITEM.asHolderIdMap()) {
+			if (holder.value() == Items.AIR) {
 				continue;
 			}
-			ItemStack stack = new ItemStack(item);
-			if (MarketCurrency.unitPrice(stack, player.registryAccess()) <= 0 || !isUnlocked(player, item, owned)) {
+			MarketPrice price = MarketCurrency.findPrice(holder, player.registryAccess());
+			if (price == null || price.price() <= 0 || !isUnlocked(player, holder.value(), owned)) {
 				continue;
 			}
-			result.add(stack);
+			result.add(holder);
 		}
 		return result;
 	}

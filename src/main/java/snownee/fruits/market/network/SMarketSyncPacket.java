@@ -3,14 +3,18 @@ package snownee.fruits.market.network;
 import java.util.List;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.market.MarketBlockEntity;
+import snownee.fruits.market.MarketCatalog;
+import snownee.fruits.market.MarketPricing;
 import snownee.fruits.util.ClientProxy;
 import snownee.kiwi.network.KPacketSender;
 import snownee.kiwi.network.KiwiPacket;
@@ -21,7 +25,8 @@ import snownee.kiwi.network.PlayPacketHandler;
 public record SMarketSyncPacket(
 		BlockPos pos,
 		long money,
-		List<ItemStack> orders) implements CustomPacketPayload {
+		List<ItemStack> orders,
+		List<MarketPricing.PriceEntry> prices) implements CustomPacketPayload {
 	public static final Type<SMarketSyncPacket> TYPE = new Type<>(FruitfulFun.id("market_sync"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, SMarketSyncPacket> STREAM_CODEC = StreamCodec.composite(
 			BlockPos.STREAM_CODEC,
@@ -30,6 +35,8 @@ public record SMarketSyncPacket(
 			SMarketSyncPacket::money,
 			ItemStack.OPTIONAL_LIST_STREAM_CODEC,
 			SMarketSyncPacket::orders,
+			MarketPricing.PriceEntry.STREAM_CODEC.apply(ByteBufCodecs.list()),
+			SMarketSyncPacket::prices,
 			SMarketSyncPacket::new);
 
 	@Override
@@ -50,9 +57,12 @@ public record SMarketSyncPacket(
 	}
 
 	public static void send(MarketBlockEntity blockEntity, ServerPlayer player) {
-		KPacketSender.send(new SMarketSyncPacket(
-				blockEntity.getBlockPos(),
-				blockEntity.getMoney(),
-				blockEntity.orders()), player);
+		List<Holder<Item>> items = MarketCatalog.compute(player);
+		KPacketSender.send(
+				new SMarketSyncPacket(
+						blockEntity.getBlockPos(),
+						blockEntity.getMoney(),
+						blockEntity.orders(),
+						MarketPricing.priceEntries(player.level(), items)), player);
 	}
 }
