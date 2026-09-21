@@ -161,8 +161,12 @@ public class MarketBlockEntity extends BaseContainerBlockEntity implements World
 	}
 
 	public void setOrder(int index, ItemStack stack) {
-		orders.set(index, stack);
+		setOrderSilent(index, stack);
 		changed();
+	}
+
+	public void setOrderSilent(int index, ItemStack stack) {
+		orders.set(index, stack);
 	}
 
 	public void addViewer(ServerPlayer player) {
