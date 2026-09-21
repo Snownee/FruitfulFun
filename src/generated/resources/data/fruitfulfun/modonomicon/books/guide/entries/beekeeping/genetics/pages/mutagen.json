@@ -1,0 +1,13 @@
+{
+  "type": "modonomicon:spotlight",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "mutagen",
+  "item": {
+    "id": "fruitfulfun:mutagen"
+  },
+  "sort_number": 1,
+  "text": "book.fruitfulfun.guide.beekeeping.genetics.mutagen.text",
+  "title": "book.fruitfulfun.guide.beekeeping.genetics.mutagen.title"
+}

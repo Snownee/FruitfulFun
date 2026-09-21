@@ -53,7 +53,7 @@ public class RitualMultiblockProvider extends MultiblockProvider {
 						"*+*+*+*+*")
 				.display('*', () -> Blocks.LIME_TERRACOTTA)
 				.display('+', () -> Blocks.WHITE_CONCRETE)
-				.display('0', () -> FoodModule.CHORUS_FRUIT_PIE.get(), "[servings=4]")
+				.display('0', FoodModule.CHORUS_FRUIT_PIE, "[servings=4]")
 				.tag('C', CoreModule.CANDLES, "[lit=true]", () -> Blocks.CANDLE, "[lit=true]")
 				.blockstate('H', () -> Blocks.DRAGON_WALL_HEAD, "[facing=south]")
 				.build(false);

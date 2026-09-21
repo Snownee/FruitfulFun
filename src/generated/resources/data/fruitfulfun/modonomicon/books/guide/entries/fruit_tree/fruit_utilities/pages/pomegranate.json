@@ -1,0 +1,13 @@
+{
+  "type": "modonomicon:spotlight",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "pomegranate",
+  "item": {
+    "id": "fruitfulfun:pomegranate"
+  },
+  "sort_number": 2,
+  "text": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.pomegranate.text",
+  "title": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.pomegranate.title"
+}

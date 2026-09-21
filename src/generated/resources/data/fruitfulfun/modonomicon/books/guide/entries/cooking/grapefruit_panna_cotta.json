@@ -7,8 +7,8 @@
   },
   "category": "fruitfulfun:cooking",
   "condition": {
-    "type": "fruitfulfun:module_loaded",
-    "module": "fruitfulfun:food"
+    "type": "fruitfulfun:eval",
+    "expression": "HAS('@fruitfulfun:food')"
   },
   "description": "book.fruitfulfun.guide.cooking.grapefruit_panna_cotta.description",
   "icon": {

@@ -1,0 +1,21 @@
+{
+  "type": "modonomicon:content",
+  "background": {
+    "height": 26,
+    "sprite": "modonomicon:modonomicon/themes/default/node/entry_backgrounds/square_gold",
+    "width": 26
+  },
+  "category": "fruitfulfun:fruit_tree",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "description": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.description",
+  "icon": {
+    "id": "fruitfulfun:redlove"
+  },
+  "id": "fruitfulfun:fruit_tree/fruit_utilities",
+  "name": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.name",
+  "sort_number": 3,
+  "x": 0,
+  "y": 0
+}

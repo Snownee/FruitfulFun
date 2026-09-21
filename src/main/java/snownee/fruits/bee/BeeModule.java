@@ -72,6 +72,8 @@ import snownee.kiwi.KiwiModule;
 import snownee.kiwi.KiwiModule.Category;
 import snownee.kiwi.KiwiModule.Name;
 import snownee.kiwi.loader.event.InitEvent;
+import snownee.kiwi.shadowed.com.ezylang.evalex.data.EvaluationValue;
+import snownee.kiwi.util.KEval;
 import snownee.lychee.LootContextKeys;
 import snownee.lychee.LycheeRegistries;
 import snownee.lychee.RecipeTypes;
@@ -114,11 +116,13 @@ public class BeeModule extends AbstractModule {
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
 	@Name("mutagen")
 	public static final KiwiGO<DataComponentType<Mutagen>> MUTAGEN_CONTENT = go(
-			() -> DataComponentType.<Mutagen>builder().persistent(
-					Mutagen.CODEC).networkSynchronized(Mutagen.STREAM_CODEC).build(),
+			() -> DataComponentType.<Mutagen>builder().persistent(Mutagen.CODEC).networkSynchronized(Mutagen.STREAM_CODEC).build(),
 			Registries.DATA_COMPONENT_TYPE);
 	public static final KiwiGO<DataComponentType<Unit>> MERCHANT_OFFER = go(
-			() -> DataComponentType.<Unit>builder().persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC).build(),
+			() -> DataComponentType.<Unit>builder()
+					.persistent(Unit.CODEC)
+					.networkSynchronized(Unit.STREAM_CODEC)
+					.build(),
 			Registries.DATA_COMPONENT_TYPE);
 	public static final KiwiGO<DataComponentType<String>> MERCHANT_OFFER_ADVANCEMENT = go(
 			() -> DataComponentType.<String>builder().persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build(),
@@ -127,8 +131,7 @@ public class BeeModule extends AbstractModule {
 			() -> DataComponentType.<BoundEntity>builder()
 					.persistent(BoundEntity.CODEC)
 					.networkSynchronized(BoundEntity.STREAM_CODEC)
-					.build(),
-			Registries.DATA_COMPONENT_TYPE);
+					.build(), Registries.DATA_COMPONENT_TYPE);
 	public static final KiwiGO<SimpleParticleType> GHOST = go(() -> new SimpleParticleType(false));
 	public static final String WAXED_MARKER_NAME = "@FruitfulFunWaxed";
 	public static final int WAXED_TICKS = 1200;
@@ -173,7 +176,7 @@ public class BeeModule extends AbstractModule {
 		}
 	}
 
-	public static void addBeekeeperTrades(MerchantOffers offers, AbstractVillager villager) {
+	public static Set<VillagerProfession> beekeeperProfessions() {
 		if (BEEKEEPER_PROFESSIONS == null) {
 			ImmutableSet.Builder<VillagerProfession> builder = ImmutableSet.builder();
 			for (Holder<VillagerProfession> profession : BuiltInRegistries.VILLAGER_PROFESSION.asHolderIdMap()) {
@@ -182,13 +185,18 @@ public class BeeModule extends AbstractModule {
 				}
 			}
 			BEEKEEPER_PROFESSIONS = builder.build();
+			KEval.DataAccessor.INSTANCE.setData("FFBeekeeper", EvaluationValue.booleanValue(!BEEKEEPER_PROFESSIONS.isEmpty()));
 		}
+		return BEEKEEPER_PROFESSIONS;
+	}
+
+	public static void addBeekeeperTrades(MerchantOffers offers, AbstractVillager villager) {
 		if (villager instanceof Villager v) {
-			if (!BEEKEEPER_PROFESSIONS.contains(v.getVillagerData().profession().value())) {
+			if (!beekeeperProfessions().contains(v.getVillagerData().profession().value())) {
 				return;
 			}
 		} else if (villager.getType() == EntityType.WANDERING_TRADER) {
-			if (!BEEKEEPER_PROFESSIONS.isEmpty()) {
+			if (!beekeeperProfessions().isEmpty()) {
 				return;
 			}
 		} else {
@@ -266,6 +274,8 @@ public class BeeModule extends AbstractModule {
 				}
 			}
 			ALLOGAMOUS_ITEMS = allogamousItems.build();
+
+			beekeeperProfessions();
 		});
 	}
 

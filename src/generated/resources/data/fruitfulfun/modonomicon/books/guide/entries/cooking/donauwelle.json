@@ -10,12 +10,12 @@
     "type": "modonomicon:and",
     "children": [
       {
-        "type": "fruitfulfun:module_loaded",
-        "module": "fruitfulfun:food"
+        "type": "fruitfulfun:eval",
+        "expression": "HAS('@fruitfulfun:food')"
       },
       {
-        "type": "fruitfulfun:module_loaded",
-        "module": "fruitfulfun:cherry"
+        "type": "fruitfulfun:eval",
+        "expression": "HAS('@fruitfulfun:cherry')"
       }
     ]
   },

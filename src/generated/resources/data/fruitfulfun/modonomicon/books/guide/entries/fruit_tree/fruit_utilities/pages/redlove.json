@@ -1,0 +1,13 @@
+{
+  "type": "modonomicon:spotlight",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "redlove",
+  "item": {
+    "id": "fruitfulfun:redlove"
+  },
+  "sort_number": 1,
+  "text": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.redlove.text",
+  "title": "book.fruitfulfun.guide.fruit_tree.fruit_utilities.redlove.title"
+}

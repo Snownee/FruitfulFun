@@ -41,7 +41,7 @@ public class FruitfulFunBook extends SingleBookSubProvider {
 
 	@Override
 	protected String bookName() {
-		return "妙趣果园指南（未完成）";
+		return "妙趣果园指南";
 	}
 
 	@Override
@@ -52,12 +52,11 @@ public class FruitfulFunBook extends SingleBookSubProvider {
 	@Override
 	protected String bookDescription() {
 		return GuideUtil.lines("""
-				欢迎阅读《妙趣果园指南》！
+				欢迎来到《妙趣果园》！
 				
-				这本书记录了 Fruitful Fun 模组的种种玩法：
-				果树、养蜂、仪式、工具与烹饪。
+				这是一个以水果和养蜂为主题的休闲模组。你可以点击右侧的栏目来查看你感兴趣的主题。
 				
-				有些内容需要你亲自去发现。
+				模组的部分内容仍在开发中，敬请期待。
 				""");
 	}
 }

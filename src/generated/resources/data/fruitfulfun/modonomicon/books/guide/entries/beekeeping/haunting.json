@@ -7,8 +7,8 @@
   },
   "category": "fruitfulfun:beekeeping",
   "condition": {
-    "type": "fruitfulfun:module_loaded",
-    "module": "fruitfulfun:ritual"
+    "type": "fruitfulfun:eval",
+    "expression": "HAS('@fruitfulfun:ritual')"
   },
   "description": "book.fruitfulfun.guide.beekeeping.haunting.description",
   "icon": {
@@ -16,7 +16,7 @@
   },
   "id": "fruitfulfun:beekeeping/haunting",
   "name": "book.fruitfulfun.guide.beekeeping.haunting.name",
-  "sort_number": 5,
+  "sort_number": 3,
   "x": 0,
   "y": 0
 }

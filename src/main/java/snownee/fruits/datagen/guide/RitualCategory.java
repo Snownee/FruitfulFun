@@ -23,7 +23,6 @@ public class RitualCategory extends IndexModeCategoryProvider {
 	@Override
 	protected void generateEntries() {
 		add(new DragonRitualEntry(this).generate());
-		add(new RitualRecipesEntry(this).generate());
 	}
 
 	@Override
@@ -67,22 +66,36 @@ public class RitualCategory extends IndexModeCategoryProvider {
 							.withText(context().pageText()));
 			pageTitle("搭建阵型");
 			pageText(lines("""
-					在平坦的地面上摆好阵型：
-					中央放一块完整的紫颂果派
-					一个（或多个）龙首朝向中央
-					四周按图摆放点燃的蜡烛
+					要搭建仪式场所，你需要至少1个龙首、1块紫颂果派和12根任意的蜡烛。摆放方式如图所示。
 					
-					支撑方块是什么并不重要。
+					你需要最后放置紫颂果派来开始仪式。仪式开始后，应当尽快将想要转化的物品投入中央。
 					
-					把物品投入中央，仪式会将其转化为另一种物品。
-					
-					龙首越多，产出的龙息越多。仪式进行时会生成危险的龙息，当心别靠太近！
+					如果没有及时投入物品，将会在地面产生额外的龙息。龙首越多（至多4个），产出的龙息越多。请小心，不要被龙息伤到。
 					"""));
 			page(
 					"multiblock", () -> BookMultiblockPageModel.create()
 							.withMultiblockId(modLoc("ritual"))
 							.withText(context().pageText()));
 			pageText(lines("图中展示了完整的仪式结构。"));
+
+			page(
+					"recipes", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText()));
+			pageTitle("仪式配方");
+			pageText(
+					lines("""
+							仪式可以把物品转化为另一种物品。以下是一些已为人知的配方：
+							
+							玻璃瓶 → 龙息
+							石榴 → 附魔石榴
+							<#if gadget>
+							酿造台 → {0}
+							阳光探测器 → {1}
+							<#endif>
+							"""),
+					entryLink("酿造机", "tools", "brewer"),
+					entryLink("雨天探测器", "tools", "rain_detector"));
 		}
 
 		@Override
@@ -97,59 +110,12 @@ public class RitualCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected BookIconModel entryIcon() {
-			return BookIconModel.create(FoodModule.CHORUS_FRUIT_PIE.get());
+			return BookIconModel.create(FoodModule.CHORUS_FRUIT_PIE);
 		}
 
 		@Override
 		protected String entryId() {
 			return "dragon_ritual";
-		}
-	}
-
-	public static class RitualRecipesEntry extends IndexModeEntryProvider {
-
-		public RitualRecipesEntry(CategoryProviderBase parent) {
-			super(parent);
-		}
-
-		@Override
-		protected void generatePages() {
-			page(
-					"intro", () -> BookTextPageModel.create()
-							.withTitle(context().pageTitle())
-							.withText(context().pageText()));
-			pageTitle("已知的配方");
-			pageText(lines("""
-					仪式可以把普通物品转化为稀有之物。以下是一些已为人知的配方：
-					
-					玻璃瓶 → 龙息
-					酿造台 → 酿造机
-					阳光探测器 → 雨探测器
-					石榴 → 附魔石榴
-					蜂箱（夜晚的苍白花园）→ 鬼魂蜂
-					
-					还有更多配方等待你去发现。
-					"""));
-		}
-
-		@Override
-		protected String entryName() {
-			return "仪式配方";
-		}
-
-		@Override
-		protected String entryDescription() {
-			return "已知的仪式配方一览。";
-		}
-
-		@Override
-		protected BookIconModel entryIcon() {
-			return BookIconModel.create(Items.DRAGON_BREATH);
-		}
-
-		@Override
-		protected String entryId() {
-			return "ritual_recipes";
 		}
 	}
 }

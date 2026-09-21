@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "ordering",
+  "show_title_separator": true,
+  "sort_number": 1,
+  "text": "book.fruitfulfun.guide.tools.market.ordering.text",
+  "title": "book.fruitfulfun.guide.tools.market.ordering.title"
+}

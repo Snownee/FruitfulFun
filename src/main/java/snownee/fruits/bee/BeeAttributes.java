@@ -197,11 +197,11 @@ public class BeeAttributes {
 		}
 	}
 
-	public Holder<BeeVariant> variant() {
-		return forcedVariant != null ? forcedVariant : Objects.requireNonNull(variant);
+	public Optional<Holder<BeeVariant>> variant() {
+		return Optional.ofNullable(forcedVariant != null ? forcedVariant : variant);
 	}
 
-	public void setForcedVariant(Holder<BeeVariant> forcedVariant) {
+	public void setForcedVariant(@Nullable Holder<BeeVariant> forcedVariant) {
 		this.forcedVariant = forcedVariant;
 		dirty = true;
 	}

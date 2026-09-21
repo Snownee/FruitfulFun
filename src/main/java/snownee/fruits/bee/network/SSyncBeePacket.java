@@ -2,6 +2,7 @@ package snownee.fruits.bee.network;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,7 @@ import snownee.kiwi.network.PlayPacketHandler;
 public record SSyncBeePacket(
 		int id,
 		List<UUID> trusted,
-		Holder<BeeVariant> variant,
+		Optional<Holder<BeeVariant>> variant,
 		List<Trait> traits,
 		long mutagenEndsIn) implements CustomPacketPayload {
 	public static final CustomPacketPayload.Type<SSyncBeePacket> TYPE = new CustomPacketPayload.Type<>(FruitfulFun.id("sync_bee"));
@@ -36,7 +37,7 @@ public record SSyncBeePacket(
 			SSyncBeePacket::id,
 			UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()),
 			SSyncBeePacket::trusted,
-			BeeVariant.STREAM_CODEC,
+			BeeVariant.STREAM_CODEC.apply(ByteBufCodecs::optional),
 			SSyncBeePacket::variant,
 			Trait.STREAM_CODEC.apply(ByteBufCodecs.list()),
 			SSyncBeePacket::traits,
@@ -57,7 +58,7 @@ public record SSyncBeePacket(
 				if (entity instanceof Bee) {
 					BeeAttributes attributes = BeeAttributes.of(entity);
 					attributes.setTrusted(packet.trusted());
-					attributes.setForcedVariant(packet.variant());
+					attributes.setForcedVariant(packet.variant().orElse(null));
 					attributes.genes().setTraits(packet.traits());
 					attributes.setMutagenEndsIn(packet.mutagenEndsIn(), entity.level().getGameTime());
 				}
