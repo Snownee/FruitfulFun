@@ -47,8 +47,8 @@ repositories {
     }
     // Farmer's Delight Refabricated
     maven {
-        name = "Greenhouse Maven"
-        url = 'https://maven.greenhouse.lgbt/releases/'
+        name = "Cassian's Maven"
+        url = 'https://maven.cassian.cc'
     }
     exclusiveContent {
         forRepository {
