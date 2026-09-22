@@ -42,9 +42,7 @@ public class FFDynamicRegistryProvider extends FabricDynamicRegistryProvider {
 		entries.addAll(registries.lookupOrThrow(Registries.CONFIGURED_FEATURE));
 		entries.addAll(registries.lookupOrThrow(Registries.PLACED_FEATURE));
 		entries.addAll(registries.lookupOrThrow(FFRegistries.BEE_VARIANT_KEY));
-		if (Hooks.market) {
-			entries.addAll(registries.lookupOrThrow(FFRegistries.MARKET_PRICE_KEY));
-		}
+		entries.addAll(registries.lookupOrThrow(FFRegistries.MARKET_PRICE_KEY));
 		addBannerPatterns(entries);
 	}
 

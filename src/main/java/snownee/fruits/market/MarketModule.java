@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mojang.serialization.Codec;
 
-import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -13,7 +12,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.kiwi.AbstractModule;
@@ -49,6 +47,5 @@ public class MarketModule extends AbstractModule {
 
 	public MarketModule() {
 		Hooks.market = true;
-		DynamicRegistries.registerSynced(FFRegistries.MARKET_PRICE_KEY, MarketPrice.CODEC, MarketPrice.CODEC);
 	}
 }
