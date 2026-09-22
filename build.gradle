@@ -143,8 +143,9 @@ dependencies {
 
     implementation("com.klikli_dev:modonomicon-26.1.2-neoforge:2.5.1") { transitive = false }
 
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    annotationProcessor fileTree(dir: "libs", include: ["*.jar"])
+    // Exclude the Fabric Kiwi kept in libs for the Fabric branch; NeoForge uses the maven artifact.
+    implementation fileTree(dir: "libs", include: ["*.jar"], exclude: ["Kiwi-*Fabric*.jar"])
+    annotationProcessor fileTree(dir: "libs", include: ["*.jar"], exclude: ["Kiwi-*Fabric*.jar"])
 
     implementation 'com.google.errorprone:error_prone_annotations:2.36.0'
 }
