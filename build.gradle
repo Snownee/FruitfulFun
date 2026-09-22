@@ -61,6 +61,13 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        name = "Modonomicon"
+        url = "https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
+        content {
+            includeGroup "com.klikli_dev"
+        }
+    }
     flatDir { dir 'libs' }
 }
 
@@ -132,7 +139,7 @@ dependencies {
         exclude(group: "net.fabricmc")
     }
 
-    implementation "maven.modrinth:modonomicon:MHAZ9gLw"
+    implementation("com.klikli_dev:modonomicon-26.1.2-neoforge:2.5.1") { transitive = false }
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     annotationProcessor fileTree(dir: "libs", include: ["*.jar"])
