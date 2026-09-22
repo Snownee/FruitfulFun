@@ -106,6 +106,8 @@ sourceSets {
     main.java.exclude "snownee/fruits/food/datagen/**"
     main.java.exclude "snownee/fruits/gadget/datagen/GadgetBlockLoot.java"
     main.java.exclude "snownee/fruits/gadget/datagen/package-info.java"
+    main.java.exclude "snownee/fruits/market/datagen/**"
+    main.java.exclude "snownee/fruits/minigame/datagen/**"
     main.java.exclude "snownee/fruits/pomegranate/datagen/**"
     main.java.exclude "snownee/fruits/compat/farmersdelight/FarmersDelightBlockLoot.java"
 }
