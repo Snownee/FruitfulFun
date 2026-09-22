@@ -18,7 +18,10 @@ public class FFRegistries {
 
 	public static void init() {
 		Kiwi.registerInstantRegistry(FRUIT_TYPE_KEY);
-		DynamicRegistries.registerSynced(BEE_VARIANT_KEY, BeeVariant.DIRECT_CODEC, BeeVariant.NETWORK_CODEC);
+		if (!Hooks.neoforge) {
+			DynamicRegistries.registerSynced(BEE_VARIANT_KEY, BeeVariant.DIRECT_CODEC, BeeVariant.NETWORK_CODEC);
+			DynamicRegistries.registerSynced(FFRegistries.MARKET_PRICE_KEY, MarketPrice.CODEC, MarketPrice.CODEC);
+		}
 	}
 
 	public static final ResourceKey<Registry<FruitType>> FRUIT_TYPE_KEY = ResourceKey.createRegistryKey(FruitfulFun.id("fruit_type"));
