@@ -119,7 +119,7 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 							举盾时只能抵消半数伤害。但完美格挡（在受击前的一刻举盾）会抵消全部伤害，击退周围的敌人，并召唤蜂群反击攻击者。
 							
 							每次格挡都会消耗{0}，注意盾牌上的能量显示。
-							"""), entryLink("能量", "tools", "buzzy_shield"));
+							"""), entryLink("能量", "tools", "buzzy_crafter"));
 			page("recipe", () -> BookSmithingRecipePageModel.create().withRecipeId1("fruitfulfun:buzzy_shield"));
 		}
 
@@ -333,6 +333,28 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 					"""));
 
 			page("recipe", () -> BookCraftingRecipePageModel.create().withRecipeId1("fruitfulfun:market"));
+
+			page("shortcuts", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			pageTitle("快捷操作");
+			pageText(lines("""
+					订货模式开启时，按住Ctrl拖拽某个订单格子，可以把它复制到另一个格子。
+					
+					按下Ctrl+C可以将当前全部订单复制到剪贴板，Ctrl+V则会把剪贴板中的订单粘贴到界面并覆盖现有订单。
+					"""));
+
+			page(
+					"dynamic_pricing", () -> BookTextPageModel.create()
+							.withTitle(context().pageTitle())
+							.withText(context().pageText())
+							.withCondition(GuideUtil.eval("CFG('fruitfulfun.common.market.dynamicPricing.mode') != 'Disabled'")));
+			pageTitle("无形的大手……（模拟）");
+			pageText(lines("""
+					<#if CFG('fruitfulfun.common.market.dynamicPricing.mode') == 'Incremental'>
+					每天，市场会根据整个世界的需求量动态调整商品价格。商品需求变高后，价格会上升，需求变低后，价格也会相应回落。
+					<#else>
+					每天，市场会根据整个世界的需求量动态调整商品价格。商品需求变高后，价格会上升，需求稳定后，价格会逐渐回落。
+					<#endif>
+					"""));
 		}
 
 		@Override

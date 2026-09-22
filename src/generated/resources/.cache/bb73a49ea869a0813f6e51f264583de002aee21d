@@ -62,9 +62,11 @@ c5149b5be46805808f7d78ddeeb1dc8120560e1e data/fruitfulfun/modonomicon/books/guid
 e529a5e06f788db4a3dec06bd304db9ca9648acf data/fruitfulfun/modonomicon/books/guide/entries/tools/buzzy_shield/pages/intro.json
 cc2620746aa1341b481b0e9237c2766c4bd599e5 data/fruitfulfun/modonomicon/books/guide/entries/tools/buzzy_shield/pages/recipe.json
 78efd17c6ffc1157ebf19c1be8510e66c3a620e2 data/fruitfulfun/modonomicon/books/guide/entries/tools/market.json
+9bca128358d40d19143148d9ff2ae88b3c150ad7 data/fruitfulfun/modonomicon/books/guide/entries/tools/market/pages/dynamic_pricing.json
 de37b5f1b6c3b772b26fded63abe7f23c648614f data/fruitfulfun/modonomicon/books/guide/entries/tools/market/pages/intro.json
 9dfb95d6befb73ec5fef6564b37c5636e8edb4d8 data/fruitfulfun/modonomicon/books/guide/entries/tools/market/pages/ordering.json
 51aa4d9c125a79f48abce97cb4f4a802d38cb494 data/fruitfulfun/modonomicon/books/guide/entries/tools/market/pages/recipe.json
+17c26697c6cf5b38ce16ddde461c8fa54c8c9838 data/fruitfulfun/modonomicon/books/guide/entries/tools/market/pages/shortcuts.json
 aea4cc99cb2ee1cd0ecb848991c0c294d8ffef3c data/fruitfulfun/modonomicon/books/guide/entries/tools/rain_detector.json
 1523171de93a61c5a1cce2e272cc4e5179f3f5d2 data/fruitfulfun/modonomicon/books/guide/entries/tools/rain_detector/pages/intro.json
 e21f3c3d1cdbbc5d106444b7faa7ac417df7988f data/fruitfulfun/modonomicon/books/guide/entries/tools/scented_candles.json

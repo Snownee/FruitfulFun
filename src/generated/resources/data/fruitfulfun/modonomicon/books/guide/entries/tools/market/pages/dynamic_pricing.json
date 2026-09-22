@@ -1,0 +1,12 @@
+{
+  "type": "modonomicon:text",
+  "condition": {
+    "type": "fruitfulfun:eval",
+    "expression": "CFG('fruitfulfun.common.market.dynamicPricing.mode') != 'Disabled'"
+  },
+  "id": "dynamic_pricing",
+  "show_title_separator": true,
+  "sort_number": 4,
+  "text": "book.fruitfulfun.guide.tools.market.dynamic_pricing.text",
+  "title": "book.fruitfulfun.guide.tools.market.dynamic_pricing.title"
+}

@@ -1,0 +1,11 @@
+{
+  "type": "modonomicon:text",
+  "condition": {
+    "type": "modonomicon:none"
+  },
+  "id": "shortcuts",
+  "show_title_separator": true,
+  "sort_number": 3,
+  "text": "book.fruitfulfun.guide.tools.market.shortcuts.text",
+  "title": "book.fruitfulfun.guide.tools.market.shortcuts.title"
+}
