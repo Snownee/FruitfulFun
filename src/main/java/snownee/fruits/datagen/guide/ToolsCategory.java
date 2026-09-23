@@ -66,7 +66,10 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			page("intro", () -> BookSpotlightPageModel.create()
+					.withTitle(context().pageTitle())
+					.withText(context().pageText()))
+					.withItem(GadgetModule.BUZZY_CRAFTER);
 			pageTitle("嗡嗡合成台");
 			pageText(lines("""
 					嗡嗡合成台可以收集归巢蜜蜂的能量，并将这份能量注入其上方的物品或方块。
@@ -110,7 +113,10 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			page("intro", () -> BookSpotlightPageModel.create()
+					.withTitle(context().pageTitle())
+					.withText(context().pageText())
+					.withItem(GadgetModule.BUZZY_SHIELD));
 			pageTitle("蜂群之盾");
 			pageText(
 					lines("""
@@ -314,7 +320,10 @@ public class ToolsCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected void generatePages() {
-			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
+			page("intro", () -> BookSpotlightPageModel.create()
+					.withTitle(context().pageTitle())
+					.withText(context().pageText())
+					.withItem(MarketModule.MARKET));
 			pageTitle("自动商店");
 			pageText(lines("""
 					市场方块是一个会自动进货农产品的商店。你只需要存入金钱、下达订单，它每天日出时都会把订好的货物补齐，等待你取走。

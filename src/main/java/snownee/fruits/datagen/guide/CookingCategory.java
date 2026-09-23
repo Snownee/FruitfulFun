@@ -10,9 +10,13 @@ import com.klikli_dev.modonomicon.api.datagen.book.BookCategoryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookEntryModel;
 import com.klikli_dev.modonomicon.api.datagen.book.BookIconModel;
 import com.klikli_dev.modonomicon.api.datagen.book.condition.BookAndConditionModel;
-import com.klikli_dev.modonomicon.api.datagen.book.page.BookCraftingRecipePageModel;
 import com.klikli_dev.modonomicon.api.datagen.book.page.BookTextPageModel;
+import com.klikli_dev.modonomicon.api.datagen.book.page.BookViewerRecipePageModel;
 
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import snownee.fruits.CoreModule;
+import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.food.FoodModule;
 
 public class CookingCategory extends IndexModeCategoryProvider {
@@ -65,16 +69,19 @@ public class CookingCategory extends IndexModeCategoryProvider {
 		@Override
 		protected void generatePages() {
 			page("intro", () -> BookTextPageModel.create().withTitle(context().pageTitle()).withText(context().pageText()));
-			pageTitle("西柚意式奶冻");
+			pageTitle("葡萄柚意式奶冻");
 			pageText(lines("""
-					西柚的酸、奶油的柔、蛋与明胶共同凝成了一轮安静的月亮。传说它诞生于女巫的炼药锅事故：本想做药水，却做出了甜品。入口先苦后甜，像在废弃矿井里找到钻石。村民说，吃下后，雷声都会变轻柔。
+					葡萄柚的酸、奶油的柔、蛋与明胶共同凝成了一轮安静的月亮。传说它诞生于女巫的炼药锅事故：本想做药水，却做出了甜品。入口先苦后甜，像在废弃矿井里找到钻石。村民说，吃下后，雷声都会变轻柔。
 					"""));
 			page(
 					"recipe",
-					() -> BookCraftingRecipePageModel.create()
+					() -> BookViewerRecipePageModel.create()
 							.withRecipeId1("fruitfulfun:grapefruit_panna_cotta")
-							.withTitle1(context().pageTitle())
-							.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
+							.withRecipe1($ -> $
+									.withBackground(true)
+									.withScale(0.8F)
+									.withInput(new ItemStackTemplate(CoreModule.GRAPEFRUIT.asItem()))
+									.withOutput(new ItemStackTemplate(FoodModule.GRAPEFRUIT_PANNA_COTTA.asItem()))));
 			pageTitle("配方");
 		}
 
@@ -85,12 +92,12 @@ public class CookingCategory extends IndexModeCategoryProvider {
 
 		@Override
 		protected String entryName() {
-			return "西柚意式奶冻";
+			return "葡萄柚意式奶冻";
 		}
 
 		@Override
 		protected String entryDescription() {
-			return "用西柚制成的丝滑奶冻。";
+			return "用葡萄柚制成的丝滑奶冻。";
 		}
 
 		@Override
@@ -119,7 +126,13 @@ public class CookingCategory extends IndexModeCategoryProvider {
 					"""));
 			page(
 					"recipe",
-					() -> BookCraftingRecipePageModel.create().withRecipeId1("fruitfulfun:donauwelle").withTitle1(context().pageTitle()));
+					() -> BookViewerRecipePageModel.create()
+							.withRecipeId1("fruitfulfun:donauwelle")
+							.withRecipe1($ -> $
+									.withBackground(true)
+									.withScale(0.8F)
+									.withInput(new ItemStackTemplate(CherryModule.REDLOVE.asItem()))
+									.withOutput(new ItemStackTemplate(FoodModule.DONAUWELLE.asItem()))));
 			pageTitle("配方");
 		}
 
@@ -165,10 +178,13 @@ public class CookingCategory extends IndexModeCategoryProvider {
 					"""));
 			page(
 					"recipe",
-					() -> BookCraftingRecipePageModel.create()
+					() -> BookViewerRecipePageModel.create()
 							.withRecipeId1("fruitfulfun:honey_pomelo_tea")
-							.withTitle1(context().pageTitle())
-							.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
+							.withRecipe1($ -> $
+									.withBackground(true)
+									.withScale(0.8F)
+									.withInput(new ItemStackTemplate(CoreModule.POMELO.asItem()))
+									.withOutput(new ItemStackTemplate(FoodModule.HONEY_POMELO_TEA.asItem()))));
 			pageTitle("配方");
 		}
 
@@ -213,10 +229,13 @@ public class CookingCategory extends IndexModeCategoryProvider {
 					"""));
 			page(
 					"recipe",
-					() -> BookCraftingRecipePageModel.create()
+					() -> BookViewerRecipePageModel.create()
 							.withRecipeId1("fruitfulfun:rice_with_fruits")
-							.withTitle1(context().pageTitle())
-							.withCondition(GuideUtil.moduleNotLoaded("farmersdelight")));
+							.withRecipe1($ -> $
+									.withBackground(true)
+									.withScale(0.8F)
+									.withInput(new ItemStackTemplate(CoreModule.TANGERINE.asItem()))
+									.withOutput(new ItemStackTemplate(FoodModule.RICE_WITH_FRUITS.asItem()))));
 			pageTitle("配方");
 		}
 
@@ -261,9 +280,13 @@ public class CookingCategory extends IndexModeCategoryProvider {
 					"""));
 			page(
 					"recipe",
-					() -> BookCraftingRecipePageModel.create()
+					() -> BookViewerRecipePageModel.create()
 							.withRecipeId1("fruitfulfun:lemon_roast_chicken")
-							.withTitle1(context().pageTitle()));
+							.withRecipe1($ -> $
+									.withBackground(true)
+									.withScale(0.8F)
+									.withInput(new ItemStackTemplate(CoreModule.LEMON.asItem()))
+									.withOutput(new ItemStackTemplate(FoodModule.LEMON_ROAST_CHICKEN_BLOCK.asItem()))));
 			pageTitle("配方");
 		}
 
@@ -308,9 +331,13 @@ public class CookingCategory extends IndexModeCategoryProvider {
 					"""));
 			page(
 					"recipe",
-					() -> BookCraftingRecipePageModel.create()
+					() -> BookViewerRecipePageModel.create()
 							.withRecipeId1("fruitfulfun:chorus_fruit_pie")
-							.withTitle1(context().pageTitle()));
+							.withRecipe1($ -> $
+									.withBackground(true)
+									.withScale(0.8F)
+									.withInput(new ItemStackTemplate(Items.CHORUS_FRUIT))
+									.withOutput(new ItemStackTemplate(FoodModule.CHORUS_FRUIT_PIE.asItem()))));
 			pageTitle("配方");
 		}
 

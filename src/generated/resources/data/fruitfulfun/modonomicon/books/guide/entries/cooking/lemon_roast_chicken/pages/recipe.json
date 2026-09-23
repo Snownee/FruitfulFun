@@ -1,10 +1,28 @@
 {
-  "type": "modonomicon:crafting_recipe",
+  "type": "modonomicon:viewer_recipe",
   "condition": {
     "type": "modonomicon:none"
   },
   "id": "recipe",
+  "recipe1": {
+    "input": [
+      {
+        "type": "item_stack",
+        "value": {
+          "id": "fruitfulfun:lemon"
+        }
+      }
+    ],
+    "output": [
+      {
+        "type": "item_stack",
+        "value": {
+          "id": "fruitfulfun:lemon_roast_chicken_block"
+        }
+      }
+    ],
+    "scale": 0.8
+  },
   "recipe_id_1": "fruitfulfun:lemon_roast_chicken",
-  "sort_number": 1,
-  "title1": "book.fruitfulfun.guide.cooking.lemon_roast_chicken.recipe.title"
+  "sort_number": 1
 }

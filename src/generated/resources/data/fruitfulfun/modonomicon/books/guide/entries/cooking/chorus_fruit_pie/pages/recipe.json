@@ -1,10 +1,28 @@
 {
-  "type": "modonomicon:crafting_recipe",
+  "type": "modonomicon:viewer_recipe",
   "condition": {
     "type": "modonomicon:none"
   },
   "id": "recipe",
+  "recipe1": {
+    "input": [
+      {
+        "type": "item_stack",
+        "value": {
+          "id": "minecraft:chorus_fruit"
+        }
+      }
+    ],
+    "output": [
+      {
+        "type": "item_stack",
+        "value": {
+          "id": "fruitfulfun:chorus_fruit_pie"
+        }
+      }
+    ],
+    "scale": 0.8
+  },
   "recipe_id_1": "fruitfulfun:chorus_fruit_pie",
-  "sort_number": 1,
-  "title1": "book.fruitfulfun.guide.cooking.chorus_fruit_pie.recipe.title"
+  "sort_number": 1
 }

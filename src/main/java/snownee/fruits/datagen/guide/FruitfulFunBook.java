@@ -19,11 +19,15 @@ public class FruitfulFunBook extends SingleBookSubProvider {
 				.withGenerateBookItem(false)
 				.withCustomBookItem(modLoc("guide"))
 				.withShowRecentlyUnlocked(false)
+				.withDefaultAllowPageSplit(true)
+				.withDefaultAutoScale(false)
 				.withTheme(theme -> theme
 						.withId(modLoc("theme"))
 						.withLayout(layout -> layout
 								.withBookTextOffsetWidth(-3)
-								.withBookTextOffsetX(3)));
+								.withBookTextOffsetX(3)
+								.withIndexTextOffsetWidth(-3)
+								.withIndexTextOffsetX(3)));
 	}
 
 	@Override

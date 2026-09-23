@@ -2,6 +2,8 @@
   "allow_open_book_with_invalid_links": true,
   "creative_tab": "modonomicon:modonomicon",
   "custom_book_item": "fruitfulfun:guide",
+  "default_allow_page_split": true,
+  "default_auto_scale": false,
   "description": "book.fruitfulfun.guide.description",
   "display_mode": "index",
   "font": "modonomicon:default",
