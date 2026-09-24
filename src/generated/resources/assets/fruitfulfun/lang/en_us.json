@@ -624,6 +624,7 @@
   "item.fruitfulfun.grapefruit": "Grapefruit",
   "item.fruitfulfun.guide": "Guide",
   "item.fruitfulfun.heart_banner_pattern": "Heart Charge Banner Pattern",
+  "item.fruitfulfun.honey_gem": "Honey Gem",
   "item.fruitfulfun.inspector": "Buzzy Inspector",
   "item.fruitfulfun.lemon": "Lemon",
   "item.fruitfulfun.lemon_roast_chicken": "Plate of Lemon Roast Chicken",
@@ -732,6 +733,7 @@
   "tip.fruitfulfun.cropNeedsPollination": "%s (needs pollination)",
   "tip.fruitfulfun.extinguishFire": "Extinguishes Fire",
   "tip.fruitfulfun.halveAttackCd": " Halve attack cooldown",
+  "tip.fruitfulfun.honeyGemUse": " Makes a wild bee trust you",
   "tip.fruitfulfun.invalidMutagen": "This mutagen is not usable for some reason.",
   "tip.fruitfulfun.leavesUsInPeace": "Fruitful Fun detected that you have Leaves Us In Peace installed, which will cause the new leaves to disappear immediately after the bees have finished pollinating them. For a better experience, it is recommended to set the \"Unknown leaves only match self\" option in the Leaves Us In Peace's configuration to \"No\". This message will be displayed only once.",
   "tip.fruitfulfun.lockBee": " Lock the bee for offspring potential analysis",
@@ -751,6 +753,7 @@
   "tip.fruitfulfun.whenPerfectBlock": "When Perfect Block:",
   "tip.fruitfulfun.whenSneakUseOnBee": "Sneak + Use on Bee:",
   "tip.fruitfulfun.whenUseOnAnimal": "Use on Animal:",
+  "tip.fruitfulfun.whenUseOnBee": "Use on Bee:",
   "tip.fruitfulfun.whenUseOnBlock": "Use on Block:",
   "tip.fruitfulfun.whenUseOnBookshelf": "Use on Bookshelf:"
 }

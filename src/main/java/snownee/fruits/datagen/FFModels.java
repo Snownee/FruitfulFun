@@ -186,6 +186,7 @@ public class FFModels extends FabricModelProvider {
 		generators.itemModelOutput.accept(BeeModule.MUTAGEN.get(), ItemModelUtils.tintedModel(model, MutagenTintSource.INSTANCE));
 		buzzyShield(GadgetModule.BUZZY_SHIELD.get());
 		inspector(BeeModule.INSPECTOR.get());
+		flat(BeeModule.HONEY_GEM);
 
 		flat(CoreModule.TANGERINE);
 		flat(CoreModule.LIME);

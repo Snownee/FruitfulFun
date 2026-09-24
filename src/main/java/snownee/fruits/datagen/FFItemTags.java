@@ -133,6 +133,7 @@ public class FFItemTags extends FabricTagsProvider.ItemTagsProvider {
 		tagAppender.addOptional(BeeModule.MUTAGEN.get());
 		getOrCreateRawBuilder(HYDRATING_DRINKS).addOptionalElement(HONEY_POMELO_TEA.key());
 		valueLookupBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
+		valueLookupBuilder(BeeModule.BEE_WEARABLE).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
 		valueLookupBuilder(GADGET_TOKEN).add(Items.EMERALD_BLOCK);
 		valueLookupBuilder(TULIPS)
 				.add(Items.ORANGE_TULIP)

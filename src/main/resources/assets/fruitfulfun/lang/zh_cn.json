@@ -597,6 +597,7 @@
 	"item.fruitfulfun.grapefruit": "西柚",
 	"item.fruitfulfun.guide": "指南",
 	"item.fruitfulfun.heart_banner_pattern": "心形旗帜图案",
+	"item.fruitfulfun.honey_gem": "蜂蜜宝石",
 	"item.fruitfulfun.inspector": "嗡嗡分析仪",
 	"item.fruitfulfun.lemon": "柠檬",
 	"item.fruitfulfun.lemon_roast_chicken": "盘装柠檬烤鸡",
@@ -705,6 +706,7 @@
 	"tip.fruitfulfun.cropNeedsPollination": "%s（需要授粉）",
 	"tip.fruitfulfun.extinguishFire": "扑灭火焰",
 	"tip.fruitfulfun.halveAttackCd": " 减半攻击冷却",
+	"tip.fruitfulfun.honeyGemUse": " 让一只野蜂信任你",
 	"tip.fruitfulfun.invalidMutagen": "这瓶突变剂因为某种原因不可用。",
 	"tip.fruitfulfun.leavesUsInPeace": "妙趣果园检测到你同时安装了Leaves Us In Peace。这将导致蜜蜂授粉完成的新树叶立即消失。为了更好的体验，建议将Leaves Us In Peace配置中的\"Unknown leaves only match self\"选项设为“否”。本条消息将只显示一次。",
 	"tip.fruitfulfun.lockBee": " 锁定蜜蜂以分析后代潜力",
@@ -724,6 +726,7 @@
 	"tip.fruitfulfun.whenPerfectBlock": "完美格挡时：",
 	"tip.fruitfulfun.whenSneakUseOnBee": "潜行+对蜜蜂使用：",
 	"tip.fruitfulfun.whenUseOnAnimal": "对动物使用时：",
+	"tip.fruitfulfun.whenUseOnBee": "对蜜蜂使用时：",
 	"tip.fruitfulfun.whenUseOnBlock": "对方块使用时：",
 	"tip.fruitfulfun.whenUseOnBookshelf": "对书架使用时："
 }

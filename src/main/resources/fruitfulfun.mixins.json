@@ -82,7 +82,7 @@
 		"bee.LivingEntityRendererMixin",
 		"brewer.BrewingStandScreenMixin",
 		"cherry.BlockMixin",
-		"cherry.LivingEntityFlowerCrownMixin",
+		"cherry.FlowerCrownParticlesMixin",
 		"cherry.UntintedParticleLeavesBlockMixin",
 		"client.CameraMixin",
 		"client.GameRendererMixin",
