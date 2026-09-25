@@ -1,0 +1,134 @@
+// PackSquash integration for Fruitful Fun.
+//
+// Produces the canonical (optimized) mod jar and renames the raw jar task output
+// with an "-unoptimized" classifier, so the distributed file keeps the usual name.
+// Requires network access the first time to fetch the PackSquash binary.
+//
+// PackSquash only treats top-level assets/ and data/ as pack content, so bundled
+// packs under resourcepacks/ and root-level JSON files are optimized separately.
+//
+// See https://github.com/ComunidadAylas/PackSquash
+
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+def packSquashVersion = '0.4.1'
+def rawJarClassifier = 'unoptimized'
+
+def jarTask = tasks.named('jar', Jar)
+jarTask.configure { archiveClassifier = rawJarClassifier }
+def rawJar = jarTask.flatMap { it.archiveFile }
+
+def optimizedJar = layout.buildDirectory.file(provider {
+    def jar = jarTask.get()
+    "libs/${jar.archiveBaseName.get()}-${jar.archiveVersion.get()}.jar"
+})
+ext.optimizedJarFile = optimizedJar
+
+def squashJarTask = tasks.register('squashJar') {
+    group = 'build'
+    description = 'Optimizes the mod jar with PackSquash, keeping the canonical jar name for the result.'
+    dependsOn jarTask
+
+    inputs.file(rawJar)
+    outputs.file(optimizedJar)
+
+    doLast {
+        def workDir = layout.buildDirectory.dir('packsquash').get().asFile
+        def osName = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+        def arch = System.getProperty('os.arch').toLowerCase(Locale.ROOT)
+        def aarch64 = arch.contains('aarch64') || arch.contains('arm64')
+
+        String asset
+        String binaryName
+        if (osName.contains('windows')) {
+            if (aarch64) {
+                throw new GradleException('PackSquash has no Windows ARM64 build; run this task on x64 or install PackSquash manually.')
+            }
+            asset = 'packsquash.exe-x86_64-pc-windows-gnu.zip'
+            binaryName = 'packsquash.exe'
+        } else if (osName.contains('mac') || osName.contains('darwin')) {
+            asset = 'packsquash-universal2-apple-darwin.zip'
+            binaryName = 'packsquash'
+        } else {
+            asset = aarch64 ? 'packsquash-aarch64-unknown-linux-gnu.zip' : 'packsquash-x86_64-unknown-linux-gnu.zip'
+            binaryName = 'packsquash'
+        }
+
+        def archive = new File(workDir, asset)
+        if (!archive.exists()) {
+            workDir.mkdirs()
+            logger.lifecycle("Downloading PackSquash ${packSquashVersion} (${asset})...")
+            new URL("https://github.com/ComunidadAylas/PackSquash/releases/download/v${packSquashVersion}/${asset}").withInputStream { input ->
+                archive.withOutputStream { output -> output << input }
+            }
+        }
+        copy { from zipTree(archive); into workDir }
+
+        def binary = new File(workDir, binaryName)
+        binary.setExecutable(true, false)
+
+        def extractDir = new File(workDir, 'input')
+        delete extractDir
+        extractDir.mkdirs()
+        copy { from zipTree(rawJar.get().asFile); into extractDir }
+
+        def toml = new File(workDir, 'packsquash.toml')
+        def slash = { File f -> f.absolutePath.replace('\\', '/') }
+        def runPackSquash = { File packDir, File zipOut ->
+            toml.text = """\
+pack_directory = '${slash(packDir)}'
+output_file_path = '${slash(zipOut)}'
+validate_pack_metadata_file = false
+automatic_minecraft_quirks_detection = false
+automatic_asset_types_mask_detection = false
+recompress_compressed_files = true
+zip_spec_conformance_level = 'pedantic'
+
+['**/*']
+force_include = true
+"""
+            delete zipOut
+            def execOutput = providers.exec {
+                workingDir workDir
+                commandLine binary.absolutePath, '--no-emoji', toml.absolutePath
+            }
+            def execResult = execOutput.result.get()
+            if (execResult.exitValue != 0) {
+                logger.error(execOutput.standardOutput.get())
+                logger.error(execOutput.standardError.get())
+                throw new GradleException("PackSquash failed with exit code ${execResult.exitValue}")
+            }
+        }
+
+        // PackSquash sees resourcepacks/<name> as opaque custom files, so optimize each bundled pack on its own first.
+        def bundledPacksDir = new File(extractDir, 'resourcepacks')
+        if (bundledPacksDir.isDirectory()) {
+            bundledPacksDir.listFiles().findAll { it.isDirectory() }.sort { it.name }.each { packDir ->
+                logger.lifecycle("Optimizing bundled pack ${packDir.name}...")
+                def packOut = new File(workDir, "bundled-${packDir.name}.zip")
+                runPackSquash(packDir, packOut)
+                delete packDir
+                packDir.mkdirs()
+                copy { from zipTree(packOut); into packDir }
+                delete packOut
+            }
+        }
+
+        // Root-level JSON files are not pack assets, so PackSquash leaves them untouched; minify them here.
+        extractDir.listFiles().findAll { it.isFile() && it.name.endsWith('.json') }.each { f ->
+            f.setText(JsonOutput.toJson(new JsonSlurper().parse(f, 'UTF-8')), 'UTF-8')
+        }
+
+        def outFile = new File(workDir, 'out.zip')
+        runPackSquash(extractDir, outFile)
+
+        def target = optimizedJar.get().asFile
+        target.parentFile.mkdirs()
+        copy { from outFile; into target.parentFile; rename { target.name } }
+        logger.lifecycle("PackSquash produced ${target.name} (${target.length()} bytes)")
+    }
+}
+
+tasks.named('build') { dependsOn squashJarTask }
+tasks.configureEach { if (name.startsWith('publish')) { dependsOn squashJarTask } }

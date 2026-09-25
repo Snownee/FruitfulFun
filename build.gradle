@@ -160,6 +160,8 @@ jar {
     }
 }
 
+apply from: 'gradle/packsquash.gradle'
+
 configurations.all {
     resolutionStrategy {
         force "dev.architectury:architectury-fabric:${project.architectury_version}"
@@ -167,7 +169,7 @@ configurations.all {
 }
 
 publishMods {
-    file = jar.archiveFile
+    file = project.optimizedJarFile
     changelog = file('CHANGELOG.md').exists() ? file('CHANGELOG.md').text : ''
     type = ['release': STABLE, 'beta': BETA, 'alpha': ALPHA][release_type]
     modLoaders.add("fabric")
