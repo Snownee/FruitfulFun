@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeAttributes;
 import snownee.fruits.bee.genetics.Trait;
+import snownee.fruits.cosmetic.Hats;
 import snownee.fruits.duck.FFLivingEntity;
 
 @Mixin(Mob.class)
@@ -40,7 +41,18 @@ public class RideableBeeMobMixin {
 	@Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
 	private void mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> ci) {
 		Mob mob = (Mob) (Object) this;
-		if (Hooks.bee && mob instanceof Bee bee && !bee.isDeadOrDying()) {
+		if (mob.isDeadOrDying()) {
+			return;
+		}
+		// Head cosmetics work for any entity that owns the slot (default: bees).
+		if (Hooks.cosmetic) {
+			InteractionResult cosmetic = Hats.interact(player, hand, mob);
+			if (cosmetic.consumesAction()) {
+				ci.setReturnValue(cosmetic);
+				return;
+			}
+		}
+		if (Hooks.bee && mob instanceof Bee bee) {
 			InteractionResult result = Hooks.playerInteractBee(player, hand, bee);
 			if (result.consumesAction()) {
 				ci.setReturnValue(result);

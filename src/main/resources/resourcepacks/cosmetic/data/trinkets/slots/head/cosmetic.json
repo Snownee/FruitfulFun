@@ -1,0 +1,5 @@
+{
+	"icon": "trinkets:container/slots/hat",
+	"order": -256,
+	"validator_predicates": ["fruitfulfun:head_cosmetic"]
+}

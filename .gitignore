@@ -30,6 +30,7 @@ run
 /src_test
 /delete_duplicates.txt
 /src26/
+/models/
 /tmp_src26_java.txt
 /tmp_120_files.txt
 /tmp_120_java.txt
@@ -37,3 +38,7 @@ run
 /neo-loom-dev-1.17/
 /Oracle-Index-26.1.2/
 /versioned_docs/
+
+# python
+__pycache__/
+*.pyc

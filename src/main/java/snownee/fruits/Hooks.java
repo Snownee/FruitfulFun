@@ -64,7 +64,7 @@ import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.SlidingDoorBlock;
 import snownee.fruits.block.entity.FruitTreeBlockEntity;
 import snownee.fruits.block.entity.SlidingDoorEntity;
-import snownee.fruits.compat.trinkets.TrinketsCompat;
+import snownee.fruits.cosmetic.Hats;
 import snownee.fruits.duck.FFBee;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
@@ -76,6 +76,7 @@ import snownee.kiwi.util.KUtil;
 public final class Hooks {
 
 	public static boolean bee;
+	public static boolean cosmetic;
 	public static boolean food;
 	public static boolean farmersdelight;
 	public static boolean ritual;
@@ -87,6 +88,7 @@ public final class Hooks {
 	public static boolean jade = Platform.isModLoaded("jade");
 	public static boolean hauntedHarvest = Platform.isModLoaded("hauntedharvest");
 	public static boolean neoforge = Platform.isModLoaded("neoforge");
+	public static boolean trinkets = Platform.isModLoaded("trinkets_updated");
 	public static final Set<MobEffect> scentEffects = Sets.newHashSet();
 
 	private Hooks() {
@@ -203,33 +205,10 @@ public final class Hooks {
 		BeeAttributes attributes = BeeAttributes.of(bee);
 		ItemStack held = player.getItemInHand(hand);
 		boolean isClientSide = player.level().isClientSide();
-		if (CommonProxy.trinkets && Hooks.bee && (player.isCreative() || attributes.trusts(player.getUUID()))) {
-			if (player.getMainHandItem().isEmpty() && player.getOffhandItem().isEmpty() && player.isSecondaryUseActive() &&
-					TrinketsCompat.hasHeadItem(bee)) {
-				if (!isClientSide) {
-					ItemStack old = TrinketsCompat.takeHeadItem(bee);
-					player.getInventory().placeItemBackInInventory(old);
-					if (!old.isEmpty()) {
-						bee.level().playSound(null, bee, TrinketsCompat.getEquipSound(bee, old).value(), SoundSource.PLAYERS, 1.0f, 1.0f);
-						bee.gameEvent(GameEvent.UNEQUIP, player);
-					}
-				}
-				return InteractionResult.SUCCESS_SERVER;
-			}
-			if (held.is(BeeModule.BEE_WEARABLE)) {
-				if (!isClientSide) {
-					if (!TrinketsCompat.hasHeadItem(bee)) {
-						TrinketsCompat.equipHeadItem(bee, held.split(1));
-					} else {
-						ItemStack old = TrinketsCompat.takeHeadItem(bee);
-						TrinketsCompat.equipHeadItem(bee, held.split(1));
-						bee.gameEvent(GameEvent.UNEQUIP, player);
-						player.getInventory().placeItemBackInInventory(old);
-					}
-					bee.level().playSound(null, bee, TrinketsCompat.getEquipSound(bee, held).value(), SoundSource.PLAYERS, 1.0f, 1.0f);
-					bee.gameEvent(GameEvent.EQUIP, player);
-				}
-				return InteractionResult.SUCCESS_SERVER;
+		if (Hooks.cosmetic) {
+			InteractionResult result = Hats.interact(player, hand, bee);
+			if (result != InteractionResult.PASS) {
+				return result;
 			}
 		}
 		if (BeeModule.INSPECTOR.is(held)) {

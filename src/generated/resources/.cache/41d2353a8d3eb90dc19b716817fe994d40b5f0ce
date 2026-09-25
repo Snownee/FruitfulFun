@@ -27,7 +27,7 @@ c3bbd8db74775f8f6b1e5df5535223b30ce6da30 data/c/tags/item/tools/shield.json
 376569dbddc8613cdeea80ca46f353fccbec049c data/dehydration/tags/item/hydrating_drinks.json
 03160e2eeefeadae9651bc095354b6a99cbac756 data/farmersdelight/tags/item/cabinets/wooden.json
 c3bbd8db74775f8f6b1e5df5535223b30ce6da30 data/farmersdelight/tags/item/offhand_equipment.json
-25bbe90ffe0ca5269d170ca96014b673dda63998 data/fruitfulfun/tags/item/bee_wearable.json
+e9968da093cf62a0dc9e9deb49e7cd85b958dc84 data/fruitfulfun/tags/item/bee_wearable.json
 0ac0ef7a2e783dfde56025e24bf0a1271323ea72 data/fruitfulfun/tags/item/citrus_logs.json
 0e0c0feb4a8835a0c65177a9d393fce230258d8d data/fruitfulfun/tags/item/gadget_token.json
 d26dc07bee99857723898a2668a02ee0352edab4 data/fruitfulfun/tags/item/redlove_logs.json
@@ -55,4 +55,4 @@ adf2fee6eba2646a672a79ad96326074f8511a9c data/minecraft/tags/item/wooden_fences.
 16a270f5e66fae4787355d4c5522bd5e91f5cbf4 data/minecraft/tags/item/wooden_slabs.json
 191e400e2965488593034206e87f8460df3a222b data/minecraft/tags/item/wooden_stairs.json
 13f64ff9508bfd6a94e26b2003afa7b7e96889d0 data/minecraft/tags/item/wooden_trapdoors.json
-25bbe90ffe0ca5269d170ca96014b673dda63998 data/trinkets/tags/item/head/hat.json
+e9968da093cf62a0dc9e9deb49e7cd85b958dc84 data/trinkets/tags/item/head/hat.json

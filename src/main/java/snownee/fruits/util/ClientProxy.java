@@ -324,7 +324,7 @@ public class ClientProxy implements ClientModInitializer {
 			ParticleProviderRegistry.getInstance().register(FoodModule.SMOKE.getOrCreate(), FoodSmokeParticle.Factory::new);
 		}
 
-		if (CommonProxy.trinkets) {
+		if (Hooks.cosmetic && Hooks.trinkets) {
 			TrinketsCompat.init();
 		}
 

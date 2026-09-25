@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
+import snownee.fruits.cosmetic.CosmeticModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.guide.GuideModule;
@@ -56,7 +57,7 @@ public final class FFCreativeTab extends AbstractModule {
 		}
 
 		void run() {
-			map.remove(CherryModule.REDLOVE_CROWN.get());
+			map.remove(CosmeticModule.REDLOVE_CROWN.get());
 			if (Hooks.guide) {
 				add(GuideModule.GUIDE);
 			}
@@ -86,13 +87,19 @@ public final class FFCreativeTab extends AbstractModule {
 			add(CherryModule.STRIPPED_REDLOVE_LOG);
 			add(CherryModule.STRIPPED_REDLOVE_WOOD);
 			addByTemplate("redlove_*");
-			add(CherryModule.CHERRY_CROWN);
-			add(CherryModule.REDLOVE_CROWN);
 			add(CherryModule.PEACH_PINK_PETALS);
 			addByTemplate("*_banner_pattern");
 			if (Hooks.bee) {
 				add(BeeModule.INSPECTOR);
 				add(BeeModule.MUTAGEN);
+			}
+			if (Hooks.cosmetic) {
+				add(CosmeticModule.CHERRY_CROWN);
+				add(CosmeticModule.REDLOVE_CROWN);
+				add(CosmeticModule.MUSHROOM_HAT);
+				add(CosmeticModule.WITCH_HAT);
+				add(CosmeticModule.SHARK_HAT);
+				add(CosmeticModule.STRAW_HAT);
 			}
 			if (Hooks.gadget) {
 				add(GadgetModule.RAIN_DETECTOR);

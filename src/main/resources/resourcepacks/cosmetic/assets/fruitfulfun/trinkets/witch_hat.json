@@ -1,0 +1,65 @@
+{
+	"target": [
+		"fruitfulfun:witch_hat"
+	],
+	"render": [
+		{
+			"type": "item",
+			"model_part": "head",
+			"display_context": "head",
+			"transformation": {
+				"translation": [
+					0,
+					0,
+					0
+				],
+				"scale": [
+					0.625,
+					0.625,
+					0.625
+				],
+				"left_rotation": [
+					0,
+					1,
+					0,
+					0
+				],
+				"right_rotation": [
+					0,
+					0,
+					0,
+					1
+				]
+			}
+		},
+		{
+			"type": "item",
+			"model_part": "bone",
+			"display_context": "head",
+			"transformation": {
+				"translation": [
+					0.0,
+					0.125,
+					0.3
+				],
+				"scale": [
+					0.4,
+					0.4,
+					0.4
+				],
+				"left_rotation": [
+					0,
+					1,
+					0,
+					0
+				],
+				"right_rotation": [
+					-0.2164396,
+					0.0,
+					0.0,
+					0.976296
+				]
+			}
+		}
+	]
+}

@@ -115,7 +115,6 @@ public class BeeModule extends AbstractModule {
 	public static final ItemObject<MutagenItem> MUTAGEN = item(MutagenItem::new);
 	@Category(value = Categories.INGREDIENTS)
 	public static final ItemObject<HoneyGemItem> HONEY_GEM = item(HoneyGemItem::new);
-	public static final TagKey<Item> BEE_WEARABLE = itemTag(FruitfulFun.ID, "bee_wearable");
 	public static final KiwiGO<MobEffect> MUTAGEN_EFFECT = go(() -> new MobEffect(MobEffectCategory.NEUTRAL, 0xF3DCEB));
 	@Name("mutagen")
 	public static final KiwiGO<DataComponentType<Mutagen>> MUTAGEN_CONTENT = go(

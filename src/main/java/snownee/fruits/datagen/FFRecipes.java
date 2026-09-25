@@ -72,6 +72,7 @@ import snownee.fruits.CoreModule;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.bee.BeeModule;
 import snownee.fruits.cherry.CherryModule;
+import snownee.fruits.cosmetic.CosmeticModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.guide.GuideModule;
@@ -139,8 +140,8 @@ public class FFRecipes extends FabricRecipeProvider {
 				hangingSign(REDLOVE_HANGING_SIGN_ITEM.get(), STRIPPED_CITRUS_LOG.get());
 				shelf(CITRUS_SHELF.get(), STRIPPED_CITRUS_LOG.get());
 				shelf(REDLOVE_SHELF.get(), STRIPPED_REDLOVE_LOG.get());
-				flowerCrown(output, CherryModule.CHERRY_CROWN.get(), Items.CHERRY_LEAVES);
-				flowerCrown(output, CherryModule.REDLOVE_CROWN.get(), CherryModule.REDLOVE_LEAVES.get());
+				flowerCrown(output, CosmeticModule.CHERRY_CROWN.get(), Items.CHERRY_LEAVES);
+				flowerCrown(output, CosmeticModule.REDLOVE_CROWN.get(), CherryModule.REDLOVE_LEAVES.get());
 
 				shapeless(RecipeCategory.MISC, HEART_BANNER_PATTERN.get())
 						.requires(Items.PAPER)

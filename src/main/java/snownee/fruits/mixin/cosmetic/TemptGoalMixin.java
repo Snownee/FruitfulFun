@@ -1,4 +1,4 @@
-package snownee.fruits.mixin.bee;
+package snownee.fruits.mixin.cosmetic;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,8 +16,8 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import snownee.fruits.Hooks;
-import snownee.fruits.cherry.item.FlowerCrownItem;
-import snownee.fruits.util.CommonProxy;
+import snownee.fruits.cosmetic.Hats;
+import snownee.fruits.cosmetic.item.FlowerCrownItem;
 
 @Mixin(TemptGoal.class)
 public class TemptGoalMixin {
@@ -31,10 +31,10 @@ public class TemptGoalMixin {
 
 	@Inject(method = "shouldFollow", at = @At("HEAD"), cancellable = true)
 	private void shouldFollow(LivingEntity player, CallbackInfoReturnable<Boolean> cir) {
-		if (!isBee) {
+		if (!isBee || !Hooks.cosmetic) {
 			return;
 		}
-		if (CommonProxy.getFlowerCrown(player) != null || Stream.of(player.getMainHandItem(), player.getOffhandItem())
+		if (Hats.isWearingFlowerCrown(player) || Stream.of(player.getMainHandItem(), player.getOffhandItem())
 				.anyMatch(i -> i.getItem() instanceof FlowerCrownItem)) {
 			cir.setReturnValue(true);
 		}

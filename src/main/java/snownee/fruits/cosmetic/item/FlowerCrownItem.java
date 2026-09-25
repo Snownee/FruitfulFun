@@ -1,4 +1,4 @@
-package snownee.fruits.cherry.item;
+package snownee.fruits.cosmetic.item;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -6,8 +6,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import snownee.fruits.FFClientConfig;
-import snownee.fruits.cherry.CherryModule;
-import snownee.fruits.util.CommonProxy;
+import snownee.fruits.cosmetic.CosmeticModule;
+import snownee.fruits.cosmetic.Hats;
 import snownee.kiwi.item.ModItem;
 
 public class FlowerCrownItem extends ModItem {
@@ -32,7 +32,7 @@ public class FlowerCrownItem extends ModItem {
 		if (random.nextInt(i) != 0) {
 			return;
 		}
-		FlowerCrownItem item = CommonProxy.getFlowerCrown(entity);
+		FlowerCrownItem item = Hats.getFlowerCrown(entity);
 		if (item == null) {
 			return;
 		}
@@ -49,7 +49,7 @@ public class FlowerCrownItem extends ModItem {
 	}
 
 	public ParticleOptions getParticle() {
-		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Vanilla && CherryModule.CHERRY_CROWN.is(this)) {
+		if (FFClientConfig.cherryParticle == FFClientConfig.CherryParticleOption.Vanilla && CosmeticModule.CHERRY_CROWN.is(this)) {
 			return ParticleTypes.CHERRY_LEAVES;
 		}
 		return particle;

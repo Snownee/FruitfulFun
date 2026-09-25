@@ -44,6 +44,7 @@ import snownee.fruits.bee.genetics.MutagenTintSource;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.cherry.CherryModule;
 import snownee.fruits.client.Head;
+import snownee.fruits.cosmetic.CosmeticModule;
 import snownee.fruits.food.FoodModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentedCandleBlock;
@@ -208,8 +209,12 @@ public class FFModels extends FabricModelProvider {
 		flat(CherryModule.REDLOVE_BOAT);
 		flat(CherryModule.REDLOVE_CHEST_BOAT);
 
-		flowerCrown(CherryModule.CHERRY_CROWN);
-		flowerCrown(CherryModule.REDLOVE_CROWN);
+		flowerCrown(CosmeticModule.CHERRY_CROWN);
+		flowerCrown(CosmeticModule.REDLOVE_CROWN);
+		hat(CosmeticModule.MUSHROOM_HAT);
+		hat(CosmeticModule.WITCH_HAT);
+		hat(CosmeticModule.SHARK_HAT);
+		hat(CosmeticModule.STRAW_HAT);
 
 		flat(GuideModule.GUIDE);
 	}
@@ -255,6 +260,12 @@ public class FFModels extends FabricModelProvider {
 						new Head(),
 						ItemModelUtils.plainModel(item.key().withPrefix("block/")),
 						ItemModelUtils.plainModel(itemGenerators.createFlatItemModel(item.get(), ModelTemplates.FLAT_ITEM))));
+	}
+
+	private void hat(ItemObject<?> item) {
+		Objects.requireNonNull(itemGenerators).itemModelOutput.accept(
+				item.get(),
+				ItemModelUtils.plainModel(item.key().withPrefix("block/")));
 	}
 
 	private void flat(ItemLike item) {

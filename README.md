@@ -105,3 +105,10 @@ dragon heads. The kind of supporting blocks doesn't matter. Once the structure i
 Chorus Fruit Pie to activate it. The more Dragon Heads you use, the more Dragon Breath you will get.
 
 </details>
+
+## Credits
+
+["\[Minecraft\] Shark"](https://skfb.ly/6UPpX) by sedona1029 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+["Witch Items"](https://skfb.ly/o7OOo) by sedona1029 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+[Chihuahua](https://blockbenchworkshop.com/model/megadeker/chihuahua) by megadeker is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+["Minecraft Hats Mini-pack 1"](https://skfb.ly/pG9RG) by VoxelBear is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).

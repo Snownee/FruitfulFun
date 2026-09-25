@@ -54,7 +54,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -86,10 +85,8 @@ import snownee.fruits.bee.HauntingManager;
 import snownee.fruits.bee.genetics.GeneticSavedData;
 import snownee.fruits.bee.genetics.Trait;
 import snownee.fruits.cherry.CherryModule;
-import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.command.FFCommands;
 import snownee.fruits.compat.lychee.LycheeCompat;
-import snownee.fruits.compat.trinkets.TrinketsCompat;
 import snownee.fruits.duck.FFPlayer;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.gadget.scent.ScentType;
@@ -110,7 +107,6 @@ import snownee.kiwi.util.KUtil;
 public class CommonProxy implements ModInitializer {
 	private static final TagKey<Item> KNIVES = AbstractModule.itemTag("c", "tools/knives");
 	private static final Map<ScentType, AttachmentType<Long>> SCENT_ATTACHMENT_TYPES = Maps.newHashMap();
-	public static boolean trinkets = Platform.isModLoaded("trinkets_updated");
 
 	public static void maybeGrowCrops(ServerLevel world, BlockPos pos, BlockState state, boolean defaultResult, Runnable defaultAction) {
 		if (defaultResult) {
@@ -120,6 +116,9 @@ public class CommonProxy implements ModInitializer {
 
 	public static void addBuiltinPacks() {
 		ModContainer modContainer = FabricLoader.getInstance().getModContainer(FruitfulFun.ID).orElseThrow();
+		if (Hooks.cosmetic) {
+			addBuiltinPack(modContainer, "cosmetic");
+		}
 		if (Hooks.food) {
 			addBuiltinPack(modContainer, "food");
 		}
@@ -386,18 +385,6 @@ public class CommonProxy implements ModInitializer {
 						context.hasTag(ConventionalBiomeTags.IS_JUNGLE_TREE) || context.hasFeature(VegetationFeatures.TREES_PLAINS),
 				GenerationStep.Decoration.VEGETAL_DECORATION,
 				key);
-	}
-
-	@Nullable
-	public static FlowerCrownItem getFlowerCrown(LivingEntity entity) {
-		ItemStack stack = entity.getItemBySlot(EquipmentSlot.HEAD);
-		if (stack.getItem() instanceof FlowerCrownItem item) {
-			return item;
-		}
-		if (trinkets) {
-			return TrinketsCompat.getFlowerCrown(entity);
-		}
-		return null;
 	}
 
 	public static boolean isLitCandle(BlockState blockState) {

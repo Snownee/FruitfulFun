@@ -28,6 +28,11 @@ modules:
       value: cherry
     target: snownee.fruits.cherry.CherryModule
   - data:
+      dependencies: '@cherry'
+      modId: fruitfulfun
+      value: cosmetic
+    target: snownee.fruits.cosmetic.CosmeticModule
+  - data:
       dependencies: farmersdelight
       value: farmersdelight
     target: snownee.fruits.compat.farmersdelight.FarmersDelightModule
@@ -63,6 +68,7 @@ modules:
 optionals:
   - target: snownee.fruits.FFCreativeTab
   - target: snownee.fruits.bee.BeeModule
+  - target: snownee.fruits.cosmetic.CosmeticModule
   - target: snownee.fruits.compat.farmersdelight.FarmersDelightModule
   - target: snownee.fruits.food.FoodModule
   - target: snownee.fruits.gadget.GadgetModule

@@ -1,6 +1,5 @@
 package snownee.fruits.cherry;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
@@ -9,7 +8,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.HangingSignItem;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.SignItem;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
-import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -52,7 +49,6 @@ import snownee.fruits.FruitfulFun;
 import snownee.fruits.block.FruitLeavesBlock;
 import snownee.fruits.block.SlidingDoorBlock;
 import snownee.fruits.cherry.block.CherryLeavesBlock;
-import snownee.fruits.cherry.item.FlowerCrownItem;
 import snownee.fruits.cherry.item.RedloveItem;
 import snownee.kiwi.AbstractModule;
 import snownee.kiwi.BlockObject;
@@ -191,9 +187,6 @@ public class CherryModule extends AbstractModule {
 	public static final ItemObject<Item> HEART_BANNER_PATTERN = CoreModule.bannerPattern(HEART_TAG);
 	public static final KiwiGO<SoundEvent> EQUIP_CROWN = go(() -> SoundEvent.createVariableRangeEvent(FruitfulFun.id(
 			"item.armor.equip_crown")));
-	@Category(value = Categories.INGREDIENTS, after = "turtle_helmet")
-	public static final ItemObject<FlowerCrownItem> CHERRY_CROWN = flowerCrown(PETAL_CHERRY);
-	public static final ItemObject<FlowerCrownItem> REDLOVE_CROWN = flowerCrown(PETAL_REDLOVE);
 	public static final KiwiGO<ConsumeEffect.Type<SpeedUpBreedingCooldownConsumeEffect>> SPEED_UP_BREEDING_COOLDOWN = go(() -> new ConsumeEffect.Type<>(
 			SpeedUpBreedingCooldownConsumeEffect.CODEC,
 			SpeedUpBreedingCooldownConsumeEffect.STREAM_CODEC));
@@ -217,14 +210,6 @@ public class CherryModule extends AbstractModule {
 			DispenserBlock.registerBehavior(REDLOVE_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.REDLOVE_BOAT.get()));
 			DispenserBlock.registerBehavior(REDLOVE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(FFBoats.REDLOVE_CHEST_BOAT.get()));
 		});
-	}
-
-	public static ItemObject<FlowerCrownItem> flowerCrown(KiwiGO<SimpleParticleType> particle) {
-		return item($ -> new FlowerCrownItem(
-				$.delayedComponent(
-						DataComponents.EQUIPPABLE,
-						_ -> Equippable.builder(EquipmentSlot.HEAD).setEquipSound(EQUIP_CROWN.holderOrThrow()).build()),
-				particle.getOrCreate()));
 	}
 
 	public static final class Foods {

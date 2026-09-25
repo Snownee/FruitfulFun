@@ -10,12 +10,10 @@ import static snownee.fruits.CoreModule.SNOWFLAKE_BANNER_PATTERN;
 import static snownee.fruits.CoreModule.STRIPPED_CITRUS_LOG;
 import static snownee.fruits.CoreModule.STRIPPED_CITRUS_WOOD;
 import static snownee.fruits.cherry.CherryModule.CHERRY;
-import static snownee.fruits.cherry.CherryModule.CHERRY_CROWN;
 import static snownee.fruits.cherry.CherryModule.HEART_BANNER_PATTERN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_BOAT;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_CHEST_BOAT;
-import static snownee.fruits.cherry.CherryModule.REDLOVE_CROWN;
 import static snownee.fruits.cherry.CherryModule.REDLOVE_SHELF;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_LOG;
 import static snownee.fruits.cherry.CherryModule.STRIPPED_REDLOVE_WOOD;
@@ -48,6 +46,7 @@ import snownee.fruits.FFRegistries;
 import snownee.fruits.FruitfulFun;
 import snownee.fruits.Hooks;
 import snownee.fruits.bee.BeeModule;
+import snownee.fruits.cosmetic.CosmeticModule;
 import snownee.fruits.gadget.GadgetModule;
 import snownee.fruits.guide.GuideModule;
 import snownee.kiwi.KiwiGO;
@@ -132,8 +131,20 @@ public class FFItemTags extends FabricTagsProvider.ItemTagsProvider {
 				.forEach(tagAppender::addOptional);
 		tagAppender.addOptional(BeeModule.MUTAGEN.get());
 		getOrCreateRawBuilder(HYDRATING_DRINKS).addOptionalElement(HONEY_POMELO_TEA.key());
-		valueLookupBuilder(HAT).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
-		valueLookupBuilder(BeeModule.BEE_WEARABLE).add(CHERRY_CROWN.get(), REDLOVE_CROWN.get());
+		valueLookupBuilder(HAT)
+				.addOptional(CosmeticModule.CHERRY_CROWN.get())
+				.addOptional(CosmeticModule.REDLOVE_CROWN.get())
+				.addOptional(CosmeticModule.MUSHROOM_HAT.get())
+				.addOptional(CosmeticModule.WITCH_HAT.get())
+				.addOptional(CosmeticModule.SHARK_HAT.get())
+				.addOptional(CosmeticModule.STRAW_HAT.get());
+		valueLookupBuilder(CosmeticModule.HEAD_COSMETIC)
+				.addOptional(CosmeticModule.CHERRY_CROWN.get())
+				.addOptional(CosmeticModule.REDLOVE_CROWN.get())
+				.addOptional(CosmeticModule.MUSHROOM_HAT.get())
+				.addOptional(CosmeticModule.WITCH_HAT.get())
+				.addOptional(CosmeticModule.SHARK_HAT.get())
+				.addOptional(CosmeticModule.STRAW_HAT.get());
 		valueLookupBuilder(GADGET_TOKEN).add(Items.EMERALD_BLOCK);
 		valueLookupBuilder(TULIPS)
 				.add(Items.ORANGE_TULIP)
